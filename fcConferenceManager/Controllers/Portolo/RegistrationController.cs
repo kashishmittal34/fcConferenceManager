@@ -247,7 +247,7 @@ namespace fcConferenceManager.Controllers
                         response.address1 = reader["address1"].ToString();
                         response.address2 = reader["address2"].ToString();
                         response.name = reader["AssistantName"].ToString();
-                        response.zipcode = double.Parse(reader["zipcode"].ToString());
+                        response.zipcode = reader["zipcode"].ToString();
                         response.State = reader["State"].ToString();
                         response.timezone = reader["timezone"].ToString();
                         response.countrycode = reader["countrycode"].ToString();

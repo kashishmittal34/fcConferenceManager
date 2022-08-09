@@ -344,11 +344,6 @@ namespace fcConferenceManager.Controllers
                         SqlDataReader reader = cmd.ExecuteReader();
                         if (reader.HasRows.ToString() == "True")
                         {
-
-
-
-
-
                             while (reader.Read())
                             {
                                 UserResponse response = new UserResponse();
@@ -410,84 +405,19 @@ namespace fcConferenceManager.Controllers
                                 //}
                                 //else
                                 //{
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                 //    response.CV = reader["CV"].ToString();
 
                                 //}
 
                                 userList.Add(response);
                             }
-
-
-
-
                         }
                         reader.Close();
                         //cmd.ExecuteNonQuery();
                         con.Close();
                     }
                 }
-
-
-
             }
-
             catch (Exception)
             {
                 if (Session["User"] == null)
@@ -496,12 +426,10 @@ namespace fcConferenceManager.Controllers
                 }
 
             }
-
             return userList;
-
         }
 
-        // GET: Account/Details/5
+      // GET: Account/Details/5
         public ActionResult Details(int id)
         {
             return View("~/Views/Portolo/Account/Details.cshtml");

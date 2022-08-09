@@ -25,6 +25,8 @@ namespace fcConferenceManager.Controllers
         {
             
 
+			loginResponse objlt = (loginResponse)Session["User"];
+            if (objlt == null) return Redirect("~/Account/Portolo");														
             ViewBag.portolodropdown = getdropdownprtlo();
             ViewBag.Country = GetCountryDropDown();
             ViewBag.organization = GetOrganizationDropDown();
@@ -92,7 +94,7 @@ namespace fcConferenceManager.Controllers
                 ViewBag.timeZone = GetTimeZoneDropDown(user.countrypkey);
                 return View("~/Views/Portolo/Registration/RegistrationNew.cshtml", user);
             }
-            return View("~/Views/Portolo/Registration/RegistrationNew.cshtml", user);
+            return Redirect("/Account/ProfilePage");
         }
         [HttpPost]
         public ActionResult RegistrationSubmit(UserRequest request, HttpPostedFileBase file, HttpPostedFileBase CVfile,bool? save)
@@ -240,7 +242,10 @@ namespace fcConferenceManager.Controllers
 
          public List<UserResponse> RegistrationList(int? id, int? PortoloKey )
         {
-
+           if (Session["User"] == null)
+            {
+                Redirect("~/account/portolo");
+            }
                 loginResponse objlt = (loginResponse)Session["User"];
                int Id = objlt.Id;
             
@@ -281,9 +286,7 @@ namespace fcConferenceManager.Controllers
                         response.city = reader["city"].ToString();
                         response.address1 = reader["address1"].ToString();
                         response.address2 = reader["address2"].ToString();
-                        //response.name = reader["AssistantName"].ToString();
-                        //response.zipcode = double.Parse(reader["zipcode"].ToString());
-                        response.zipcode = double.Parse(reader["ZipCode"].ToString());
+                        response.zipcode = reader["ZipCode"].ToString();
                         response.State = reader["State"].ToString();
                         response.timezone = reader["timezone"].ToString();
                         //response.countrycode = reader["countrycode"].ToString();
