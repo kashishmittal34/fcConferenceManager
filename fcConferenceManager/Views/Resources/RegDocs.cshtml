@@ -1,0 +1,519 @@
+﻿
+@{
+    ViewBag.Title = "RegDocs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<style>
+    .SectionTitle
+    {
+        color: #00008b;
+        font-weight: bold;
+    }
+
+    .lblTitle
+    {
+        font-size: 18pt;
+        color: Navy;
+        background-color: transparent;
+    }
+
+    .btnSmall
+    {
+        background-color: #fff;
+        border: 1px solid black;
+        border-radius: 2px;
+        font-size: 10pt;
+    }
+
+    #tblRegDocs thead
+    {
+        display: none;
+    }
+    label.label
+    {
+        line-height: 1;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row pt-2">
+        <div class="col-md-8">
+            <h2 id="lblTitle">Clinical Research Laws, Regulations & Guidelines</h2>
+        </div>
+        <div class="col-md-4">
+            <div class="justify-content-end justify-content-lg-end flex-wrap pull-right me-2 mt-1">
+                <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 ">Return</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12  mt-2">
+            <div class="magi-align-center magi-botom-space magi-flex magi-left-space">
+                <div id="phDoc" style="display:none ;width:100%">
+                    <label class="SectionTitle">Documents:</label>
+                    <div style="padding-left:5px;" class="magi-paddingLeft0">
+                        <button type="button" id="btnselect" class="btn mb-1 btnSelect" style="padding: 0px 8px !important; height: 20px">Select</button>
+                        <button type="button" id="btnSearchAll" class="btn mb-1" style="padding: 0px 8px !important; height: 20px">Search All</button>
+                        <a id="lkDisplay" href="" class="htmlLinkSmall"></a>
+                    </div>
+                </div>
+                <div id="phCheck">
+                    <label class="SectionTitle">Categories:</label>
+                    <button type="button" id="btnClear" class="btn mb-1" style="padding: 0px 8px !important; height: 20px">Clear</button>
+                    <button type="button" id="btnSelect" class="btn mb-1 btnSelect" style="padding: 0px 8px !important; height: 20px">Select</button>
+                    <label> to search one document </label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 mt-2">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="d-flex align-items-md-center mb-2 ">
+                        <input type="checkbox" id="ckCFR" value="CFR" name="ckCFR" class="mx-1" /><label for="ckCFR" class="label"> U.S. Code of Federal Regulations (CFR)</label>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="d-flex align-items-md-center mb-2 ">
+                        <input type="checkbox" id="ckStatutes" value="STA" name="ckStatutes" class="mx-1" /><label for="ckStatutes" class="label"> U.S. Statutes</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="d-flex align-items-md-center mb-2 ">
+                        <input type="checkbox" id="ckICH" value="ICH" name="ckICH" class="mx-1" /><label for="ckICH" class="label"> International Conference on Harmonisation (ICH)</label>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="d-flex align-items-md-center mb-2 ">
+                        <input type="checkbox" id="chGuidances" value="FDA" name="chGuidances" class="mx-1" /><label for="chGuidances" class="label"> FDA Guidances & Misc.</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="d-flex align-items-md-center mb-2 ">
+                            <input type="checkbox" id="ckInternational" value="INT" name="ckInternational" class="mx-1" /><label for="ckInternational" class="label"> International</label>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-md-center mb-2 ">
+                                <input type="checkbox" id="ckOther" value="OTH" name="ckOther" class="mx-1" /><label for="ckOther" class="label"> Other</label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-12 mt-2">
+                        <span class="magi-dbock" style="display:inline">
+                            <a href="/SendEmail">Suggest </a><label style="margin-left:4px"> documents for indexing.</label>
+                        </span>
+                    </div>
+                    <div class="col-md-12  mt-2">
+                        <div class="magi-align-center magi-botom-space magi-flex magi-left-space">
+                            <label class="SectionTitle"> Search For:</label>
+                            <input id="txtTitle" maxlength="150" title="Title" class="input-sm" style="max-width:300px;width:100%;" />
+                            <button type="button" id="btnSearch" class="btn mb-1">Search</button>
+                            <a id="btnNotes" href="" class="ms-1" style="font-size:15px">Notes</a>
+                            <a class="ms-1" href="/RegDocsContent">Contents Page</a>
+                        </div>
+                        <div style="display:inline; visibility: hidden" id="dvCurrentSearch">
+                            <input type="checkbox" id="ckCurrentSrch" class="me-1" /><label for="ckCurrentSrch"> Search within results below</label>
+                            <input type="hidden" id="txtLastSearch" value="" />
+                        </div>
+                    </div>
+                    <div class="col-md-12 mt-2">
+                        <label class="SectionTitle">Results for</label>
+                        <label class="SectionTitle" id="lblResult"></label>
+                    </div>
+                    <div class="col-md-12 mt-2">
+                        <table id="tblRegDocs" data-page-length="25" cellspacing="0" style=" border: solid 1px lightgray;" width="100%"></table>
+                    </div>
+                </div>
+
+
+                <div class="modal fade" id="popupNotes" tabindex="-1" aria-labelledby="rwPopNotes" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" style="width:800px;">
+                        <div class="modal-content">
+                            <div class="modal-header modalBlueHeader">
+                                <h5 class="lblTitle">Notes</h5>
+                                <div>
+                                    <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                                </div>
+                            </div>
+                            <div class="modal-body p-1">
+                                <div class="row p-2">
+                                    <div class="modal-body p-2" style="max-height:650px; height:600px; overflow:auto;">
+                                        <div class="row col-md-12 p-2">
+                                            Search Options:
+                                            <table cellspacing="5" cellpadding="0">
+                                                @*style="margin-left: 0.25in"*@
+                                                <tbody>
+                                                    <tr valign="top">
+                                                        <td class="pe-5">Category</td>
+                                                        <td>Select one category or all categories.</td>
+                                                    </tr>
+
+                                                    <tr valign="top">
+                                                        <td class="pe-5">Word or phrase</td>
+                                                        <td>Search on a word such as "adverse" or a phrase such as "adverse event".</td>
+                                                    </tr>
+
+                                                    <tr valign="top">
+                                                        <td class="pe-5">Beginning of word </td>
+                                                        <td>Search on the beginning of a word. For example, searching on "investigat" finds "investigator" and "investigational", but not "subinvestigator". </td>
+                                                    </tr>
+
+                                                    <tr valign="top">
+                                                        <td class="pe-5">Any text  </td>
+                                                        <td>Search on text that may occur in the middle of a word or across words. For example, searching on "investigator" finds "subinvestigators"; searching on “to cha” finds “to chance”.  </td>
+                                                    </tr>
+
+                                                    <tr valign="top">
+                                                        <td class="pe-5">Punctuation is significant</td>
+                                                        <td>Limit results based on the presence or absence of punctuation. For example, searching on "FDA-approved" finds only "FDA-approved", while searching on "FDA approved" finds only "FDA approved". With this option unselected, searching on "crossover" will find both "crossover" and "cross-over". </td>
+                                                    </tr>
+
+                                                    <tr valign="top">
+                                                        <td class="pe-5">Search within results below  </td>
+                                                        <td>If your initial search returns too many results, this option allows you to search only amongst the results previously found. </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <br />
+                                            Citation Search:
+                                            <ul style="margin-top: 0px" class="m-2 bulletpara">
+                                                <li>If the text in the search box looks like a citation, such as "45 CFR 164.512" or "21 CFR 17.45(b)(3)", the response is to show the regulation (such as 45 CFR 164 or 21 CFR 17) with the cited passage highlighted. </li>
+                                                <li>You can use spaces instead of the other punctuation: "21 cfr 17 45 b 3".</li>
+                                                <li>Currently, only CFR citations are recognized.</li>
+                                            </ul>
+                                            Tips:
+                                            <ul style="margin-top: 0px" class="m-2 bulletpara">
+                                                <li>Indenting has been added to make the text more readable.</li>
+                                                <li>Subsection numbers in the original documents that obviously appear to be missing have been added.</li>
+                                                <li>Searches only find instances where the exact text in the search box is found. For example, searching for “event adverse” finds no results. </li>
+                                                <li>Results are displayed based on the number of times the search term is found in the document. </li>
+                                                <li>Surrounding a search phrase with quotation marks has no effect, unless you select "Punctuation is significant".</li>
+                                                <li>Words such as “and” and “or” are interpreted as part of the search phrase. </li>
+                                                <li>Red underlining indicates where the search term has been found in the title.  Searches in the body of the article are not shown. </li>
+                                                <li>Search terms that are singular and present-case with U.S. English spelling are more likely to find results. </li>
+                                                <li>Use the arrows on the left to view other pages in a document. Use the arrows on the right to skip to the next page where the search term is found.</li>
+                                            </ul>
+                                            <br />
+                                            <span>
+                                                <br />
+                                                Disclaimer: Documents are presented on a best-efforts basis. For regulatory or legal advice, consult with regulatory or legal counsel.
+                                            </span>
+
+                                        </div>
+                                        <div style="padding: 20px 10px 10px 10px">
+                                            <label id="lblPopText" style="font-size:9pt"></label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="rdDocuments" tabindex="-1" aria-labelledby="rdDocuments" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" style="width:600px;">
+                        <div class="modal-content">
+                            <div class="modal-header modalBlueHeader">
+                                <h5 class="lblTitle">Select a document to search</h5>
+                                <div>
+                                    <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                                </div>
+                            </div>
+                            <div class="modal-body p-1">
+                                <div class="row p-2">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td style="vertical-align: top; padding-left :10px;padding-top:10px">
+                                                <input type="radio" name="rdDoc" id="CFR" value="CFR" class="me-2" /><label for="CFR">U.S. Code of Federal Regulations (CFR)</label><br />
+                                                <input type="radio" name="rdDoc" id="ICH" value="ICH" class="me-2" /><label for="ICH">International Conference on Harmonisation (ICH)</label><br />
+                                                <input type="radio" name="rdDoc" id="INT" value="INT" class="me-2" /><label for="INT">International</label><br />
+                                                <input type="radio" name="rdDoc" id="STA" value="STA" class="me-2" /><label for="STA">U.S. Statutes</label><br />
+                                                <input type="radio" name="rdDoc" id="FDA" value="FDA" class="me-2" /><label for="FDA">FDA Guidances & Misc.</label><br />
+                                                <input type="radio" name="rdDoc" id="OTH" value="OTH" class="me-2" /><label for="OTH">Other</label><br />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-top :20px ;display:inline">
+                                                <label id="lbldocuments" style="visibility:hidden">Document: </label>
+                                                <label>
+                                                    <select name="ddDocuments" id="ddDocuments" style="visibility:hidden; max-width:400px">
+                                                        <option>All</option>
+                                                    </select>
+                                                </label>
+                                                <input type="hidden" id="hdnSelectDocument" value="" />
+                                                <input type="hidden" id="hdnSelectradiobtn" value="" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: left; padding-right: 10px;padding-top :20px">
+                                                <button type="button" id="btnSearchAllpopup" class="btn mb-1">Search All Documents</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="RadWindow1" tabindex="-1" aria-labelledby="RadWindow1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" style="width:600px;">
+                        <div class="modal-content">
+                            <div class="modal-header modalBlueHeader">
+                                <h5 class="lblTitle"></h5>
+                                <div>
+                                    <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                                </div>
+                            </div>
+                            <div class="modal-body p-1">
+                                <div class="row p-2">
+                                    <label id="lblText">This document is copyrighted by The International Council for Harmonisation of Technical Requirements for Pharmaceuticals for Human Use (ICH) and is available at </label>
+                                    <asp:Label ID="lblText" runat="server" Text="" />
+                                    <br />
+                                    <a id="aICH" href=""></a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+
+        RefreshRegDocTable();
+
+        function RefreshRegDocTable() {
+            var DataSet = null;
+
+            var cbCFR = $("#ckCFR").prop('checked');
+            var cbStatutes = $("#ckStatutes").prop('checked');
+            var cbICH = $("#ckICH").prop('checked');
+            var cbGuid = $("#chGuidances").prop('checked');
+            var cbInt = $("#ckInternational").prop('checked');
+            var cbOth = $("#ckOther").prop('checked');
+            var ddindexvalue = $("#ddDocuments").prop('selectedIndex');
+            var lkDisplay = $("#lkDisplay").text();
+            var txt = $('#txtTitle').val().toString();
+            //if (txt != "") {
+            //    document.getElementById("lblResult").innerHTML = '"' + txt + '"';
+            //}
+            var lastSearchText = $('#txtLastSearch').val().toString();
+            var ckCurrentSrch = $("#ckCurrentSrch").prop('checked');
+            var data = {
+                txtTitle: txt,
+                lkDisplay: lkDisplay,
+                ddDocuments: ddindexvalue,
+                ckCurrentSrch: ckCurrentSrch,
+                ckCFR: cbCFR,
+                ckStatutes: cbStatutes,
+                ckICH: cbICH,
+                chGuidances: cbGuid,
+                ckInternational: cbInt,
+                ckOther: cbOth,
+                previousSearch: lastSearchText
+            }
+            var result = CommonFunctions.AjaxCall('Get', '/Resources/RefreshRegDocs', data, '', 'Error While Fetching Data.');
+            if (result !== null || result !== "ERROR") {
+                if (result.msg === "OK")
+                    DataSet = JSON.parse(result.Source);
+                document.getElementById("dvCurrentSearch").style.visibility = (DataSet.length === 0) ? "hidden" : "visible";
+                $("#ckCurrentSrch").prop('checked', false);
+
+            }
+
+            $('#tblRegDocs').dataTable({
+                paging: true, bPaginate: false, bInfo: false, bLengthChange: false, bFilter: false, rowsPerPageOptions: false, ordering: false, sorting: false, searching: false, "order": [[0, "desc"]],
+                bDestroy: true,
+                fixedHeader: true,
+                data: DataSet,
+                columns: [
+
+                    {
+                        title: "",
+                        data: { pKey: "pKey", Url: "Url", Category: "Category", Title: "Title", Occur: "Occur", Text1: "Text1", Text2: "Text2", Text3: "Text3" },
+                        render: function (data) {
+                            var hreftext = "";
+                            hreftext = (((data.Url != "") && data.Category.toString().indexOf('ICH') > 0) ? "showSearchWindow(" + (data.pKey).toString() + ", 0, 2)" : ("RegDocsRecords?Pkey=" + data.pKey.toString() + "&search='" + txt + "'"));
+                            var occur = (data.Occur == "" ? data.Occur : "(" + data.Occur + ")");
+                            return `<a href="${hreftext}"><label style="font-size:10pt;">${data.Title}</label></a>
+                                        <label style="font-size:10pt;">${occur}</label><br/>
+                                      <span style="font-size:10pt ;font-weight:100;">${data.Text1}</span>
+                                      <span style="font-size:10pt;font-weight:100;">${data.Text2}</span>
+                                      <span style="font-size:10pt;font-weight:100;">${data.Text3}</span>
+                                      <span style="font-size:10pt;font-weight:100;">...[more]<br/></span>
+                                     `;
+                            //<label style="font-size:10pt;font-weight:100;">${data.Text1}</label>
+                            //<label style="font-size:10pt;font-weight:100;">${data.Text2}</label>
+                            //<label style="font-size:10pt;font-weight:100;">${data.Text3}</label>
+                            //<label style="font-size:10pt;font-weight:100;">...[more]<br/></label>
+                        }
+                    }
+
+                ],
+
+            });
+
+        }
+
+        function showSearchWindow(key, count, wndType) {
+            try {
+                $('#<%=txtpKeyForSearch.ClientID%>').val(key);
+                $('#<%=txtCountNumber.ClientID%>').val(count);
+                $('#<%=txtWndType.ClientID%>').val(wndType);
+                $('#<%=btnSearchThisText.ClientID%>').click();
+                //ShowGuideLinesWindow(true);
+                return false;
+            }
+            catch (ex) {
+                console.log(ex);
+            }
+        }
+
+
+        $('#btnNotes').on('click', function (e) {
+            $('#popupNotes').modal('show');
+            e.preventDefault();
+        });
+
+        $('#ckCFR ,#ckStatutes,#ckICH,#chGuidances,#ckInternational,#ckOther').change(function () {
+            RefreshRegDocTable();
+        });
+
+        $('#btnSearch').on('click', function (e) {
+
+            var txt = $('#txtTitle').val().toString();
+            var lastSearchText = $('#txtLastSearch').val().toString();
+            var labelResult = $('#lblResult').html().toString().replace('"', '').replace('"', '');
+            if (txt === "") {
+                document.getElementById("lblResult").innerHTML = "";
+                document.getElementById("txtLastSearch").value = "";
+            } else {
+                if (($('#ckCurrentSrch').is(":checked"))) {
+                    document.getElementById("lblResult").innerHTML = '"' + labelResult + '+' + txt + '"';
+                    document.getElementById("txtLastSearch").value = lastSearchText + "/" + txt;
+                } else {
+                    document.getElementById("lblResult").innerHTML = '"' + txt + '"';
+                    document.getElementById("txtLastSearch").value = txt;
+                }
+            }
+
+            RefreshRegDocTable();
+            e.preventDefault();
+        });
+
+        $('.btnSelect').on('click', function (e) {
+
+            var ddindexvalue = $('#hdnSelectDocument').val();
+            if (ddindexvalue > 0) {
+                var selectedradiobtn = $('#hdnSelectradiobtn').val();
+                $(selectedradiobtn).prop("checked", true);
+                $("ddDocuments").prop('selectedIndex', ddindexvalue);
+            }
+
+            $('#rdDocuments').modal('show');
+            e.preventDefault();
+        });
+        $('#btnSearchAll').on('click', function () {
+            document.getElementById("txtTitle").value = "";
+            RefreshRegDocTable();
+        });
+
+        $('#btnSearchAllpopup').on('click', function () {
+
+            $('input[type=radio][name="rdDoc"]').prop('checked', false);
+            document.getElementById("txtTitle").value = "";
+            document.getElementById("hdnSelectDocument").value = "0";
+            document.getElementById("hdnSelectradiobtn").value = "";
+            $('#ckCFR').prop('checked', false);
+            $('#ckStatutes').prop('checked', false);
+            $('#ckICH').prop('checked', false);
+            $('#chGuidances').prop('checked', false);
+            $('#ckInternational').prop('checked', false);
+            $('#ckOther').prop('checked', false);
+
+            $("ddDocuments").prop('selectedIndex', '0');
+            document.getElementById("lbldocuments").style.visibility = "hidden";
+            document.getElementById("ddDocuments").style.visibility = "hidden";
+
+            $("#phDoc").hide();
+            document.getElementById("phCheck").style.display = "block";
+            $("#lkDisplay").text("");
+            $('#rdDocuments').modal('hide');
+            RefreshRegDocTable();
+        });
+
+
+        $('input[type=radio][name=rdDoc]').change(function () {
+
+            var selValue = this.value;
+
+            var data = { type: selValue };
+            $("#ddDocuments").empty();
+            var result = CommonFunctions.AjaxCall('Get', '/Resources/BindddDocument', data, '', 'Error While Fetching Data.');
+            if (result !== null || result !== "ERROR") {
+                if (result.msg === "OK") {
+                    var v = "<option>All</option>";
+                    $.each(result.ddDoclist, function (i, v1) {
+                        v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                    });
+                    $("#ddDocuments").html(v);
+                }
+                document.getElementById("lbldocuments").style.visibility = "visible";
+                document.getElementById("ddDocuments").style.visibility = "visible";
+            }
+        });
+
+        $('#ddDocuments').change(function () {
+            document.getElementById("hdnSelectDocument").value = $("#ddDocuments").prop('selectedIndex');
+            document.getElementById("hdnSelectradiobtn").value = $('input[name="rdDoc"]:checked').attr('id');
+            var text = $("#rdDocuments option:selected").text();
+            $('#rdDocuments').modal('hide');
+            $('a#lkDisplay').text(text);
+            $("#phDoc").show();
+            document.getElementById("phCheck").style.display = "none";
+            document.getElementById("txtTitle").value = "";
+            document.getElementById("lblResult").innerHTML = "";
+            RefreshRegDocTable();
+        })
+
+        $("#lkDisplay").on('click', function (e) {
+            var lkDisplay = $("#lkDisplay").text();
+            var data = { linktext: lkDisplay };
+            $("#ddDocuments").empty();
+            var result = CommonFunctions.AjaxCall('Get', '/Resources/lkDisplayLink', data, '', 'Error While Fetching Data.');
+            if (result !== null || result !== "ERROR") {
+                if (result.msg === "OK") {
+                    window.location.href = result.link;
+                } else if (result.msg === "popup") {
+                    var a = document.getElementById('aICH');
+                    a.href = result.popuplink;
+                    $('#RadWindow1').modal('show');
+                }
+            }
+            e.preventDefault();
+
+        });
+
+        $("#btnClear").on('click', function () {
+
+            document.getElementById("txtTitle").value = "";
+            $("input:checkbox").prop('checked', false);
+            RefreshRegDocTable();
+        });
+    });
+</script>

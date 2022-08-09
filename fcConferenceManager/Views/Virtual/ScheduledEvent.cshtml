@@ -1,0 +1,422 @@
+﻿
+@{
+    ViewBag.Title = "ScheduledEvent";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="/Css/multiple-select.css" rel="stylesheet" />
+<script src="/Scripts/multiple-select.js" type="text/javascript"></script>
+<link href="~/Css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<style>
+    .cbold
+    {
+        font-weight: bold;
+    }
+
+    table.dataTable thead th, table.dataTable thead td
+    {
+        padding: 10px 8px;
+    }
+</style>
+
+<div class="container-fluid  mt-3">
+    <div class="row">
+        <div class='magiSidebarWrapper pe-md-0 mb-3 mb-md-0'>
+            @if (ViewBag.leftPanel_Visible == true)
+            {
+                Html.RenderAction("_PartialLeftPanel", "MyMagi");
+            }
+            @{
+                Html.RenderAction("ChatPanelAction", "MyMagi");
+            }
+        </div>
+        <div class="col-md-12 col-lg-9 flex-grow-1">
+            <div class="col-md-12 d-inline-flex flex-wrap mb-2">
+                <div class="col-md-8"><h2>@ViewBag.PageTitle</h2></div>
+                <div class="col-md-4">
+                    <p class="float-end d-flex justify-content-center align-items-center">
+                        @{
+                            if (Model.HelpIconInfo != null)
+                            {
+                                if ((Model.HelpIconInfo.PageIconVisible))
+                                {
+                                    string bAutoplay = (Model.HelpIconInfo.bAutoPlay) ? "true" : "false";
+                                    <input type="hidden" id="vidAutoPlayType" value="@bAutoplay" />
+                                    @Html.Raw("<input id='PageHelpIcon' type='image' src='/images/icons/videoPlay2.png' value='' width='32' class='me-1 mb-1' style='vertical-align: middle;'/>")
+                                }
+                            }
+                        }
+                        @if (ViewBag.VirtualDropdown_Visible)
+                        {
+                            <select id="VirtualEventDropDown" class="mb-1 me-1">
+                                @if (Model.ddEventVirtualData != null)
+                                {
+                                    foreach (System.Data.DataRow dr in Model.ddEventVirtualData.Rows)
+                                    {
+                                        @Html.Raw("<option value='" + dr["pKey"] + "' " + ((ViewBag.SelectedDropDown == dr["pKey"].ToString()) ? "selected>" : ">") + dr["strText"] + "</option>")
+                                    }
+                                }
+                            </select>
+                        }
+                        <a id="cmdReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1">Return</a>  @*pull-right*@
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-12 magi-content-wrapper d-flex mb-2">
+                <div class="">
+                    <input type="hidden" id="ddDateSel" value="@ViewBag.ddDate_SelectedValue" />
+                    @Html.DropDownList("ddDate", null, new { @class = "form-control", id = "ddDate" })
+                </div>
+                <div>
+                    <label class="Font10 ms-2 mt-1">Activities that are on your schedule and public events</label>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <table id="tblScheduleEvent" class="magi-table" data-page-length="25" cellspacing="0" style=" border: solid 1px lightgray;" width="100%"></table>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modelDesiciption" tabindex="-1" aria-labelledby="modelDesiciption" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader">
+                <h5 class="modal-title" id="lblHost"></h5>
+                <div>
+                    <button id="closeDesiciption" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                </div>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row p-2">
+                    <div class="col-xs-12 mb-1" id="modalEvtUpdatesVirtualBody" style=" max-height:400px; overflow-y:auto;">
+                        <div class="col-md-12 p-0">
+                            <table class="magi-table" id="tblDescription"></table>
+                        </div>
+                    </div>
+                    <label id="lblDesc" class="Font10" style="display: none"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modelIframeVideo" tabindex="-1" aria-labelledby="modelIframeVideo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header justify-content-end" style=" background-color: #fff !important; padding: 0px !important;">
+                <label id="closeIframeVideo" class="pull-right  float-end mb-2" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+            </div>
+            <div class="modal-body" id="modelHelpMediaBody">
+                <div class="row p-2">
+                    <iframe id="IframeVideo" width="400" height="400"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modelNavInstructions" tabindex="-1" aria-labelledby="modelNavInstructions" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader">
+                <h5 class="modal-title" id="NavigationInstructions">Navigation Instructions</h5>
+                <div>
+                    <button id="closeNavInstructions" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row p-2">
+                    <div class="col-xs-12" id="modalNavBody" style="height:400px; overflow-y:scroll;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modelEvtUpdatesVirtual" tabindex="-1" aria-labelledby="modelEvtUpdatesVirtual" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader">
+                <h5 class="modal-title" id="EvtUpdatesVirtual">Event Updates</h5>
+                <div>
+                    <button id="closeEvtUpdatesVirtual" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                </div>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row p-2">
+                    <div class="col-xs-12 mb-1" id="modalEvtUpdatesVirtualBody" style="height:400px; overflow-y:scroll;">
+                    </div>
+                    <div class="text-center">
+                        <button id="closeEvtUpdatesVirtual" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (ViewBag.OpenSurveyRadWindow)
+{
+    <div class="modal fade" id="rwSurveyQuestion" tabindex="-1" aria-labelledby="rwSurveyQuestion" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="rwSurveyQuestionTitle">Registration Questions</h5>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div class="col-xs-12 pt-1">
+                            @Html.Raw(ViewBag.lblRegText)
+                        </div>
+                        <div class="text-center">
+                            <button id="cmdSaveQ" type="button" class="btn">Proceed</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#rwSurveyQuestion').modal('show');
+            $('#cmdSaveQ').click(function (e) {
+                e.preventDefault();
+                var result = CommonFunctions.AjaxCall('Post', '/Virtual/cmdSaveQClick', '', 'json', 'Error While Updating Schedule');
+                if (result !== null && result !== "ERROR") {
+                    if (result.msg === "OK") {
+                        parent.location.href = result.URL;
+                    }
+                    else
+                        CommonFunctions.Alert("Error Occurred while updating");
+                }
+                else
+                    CommonFunctions.Alert("Error Occurred while updating");
+            });
+        });
+    </script>
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#ddDate').val(($('#ddDateSel').val()));
+        RefreshScheduleEvent();
+        function RefreshScheduleEvent() {
+            var DataSet = null;
+            var result = CommonFunctions.AjaxCall('Get', '/Virtual/RefreshScheduledBoothTable', { dateSelected: $('#ddDate').val() }, '', 'Error While Fetching Data.');
+            if (result !== null || result !== "ERROR") {
+                if (result.msg === "OK")
+                    DataSet = JSON.parse(result.Source);
+            }
+
+            $('#tblScheduleEvent').dataTable({
+                paging: true,
+                bPaginate: false,
+                bInfo: false,
+                bLengthChange: false,
+                bFilter: false,
+                rowsPerPageOptions: false,
+                ordering: true,
+                sorting: true,
+                searching: false,
+                "order": [[0, "desc"]],
+                bDestroy: true,
+                fixedHeader: true,
+                data: DataSet,
+                columns: [
+                    {
+                        title: "Event Date",
+                        data: "EventDate",
+                        width: 100,
+                    },
+                    {
+                        title: "Event Day",
+                        data: "EventDay",
+                        width: 100,
+                    },
+                    {
+                        title: "Time",
+                        data: "Time",
+                        width: 150,
+                    },
+                    {
+                        title: "Type",
+                        data: "type",
+                        width: 100,
+                    },
+                    {
+                        title: "Host",
+                        data: "Host",
+                        width: 100,
+                    },
+                    {
+                        title: "Title",
+                        data: "Title",
+                        width: 500,
+                    },
+                    {
+                        title: "Action",
+                        data: { SessionSCShow: "SessionSCShow", SessionSC: "SessionSC", ShowCondition: "ShowCondition", ShowCalendarButton: "ShowCalendarButton", },
+                        render: function (data) {
+                            var html = '';
+                            let description = encodeURI(data.Description);
+                            if (data.SessionSCShow === 1)
+                                html += '<a id="lnkSchedule" data-text="' + data.SessionSC + '" data-id="' + data.EventSession_pkey + '" class="cmdSchedule me-1" style="cursor:pointer;">' + data.SessionSC + '</a>';
+
+                            if (data.ScheduleType !== 5)
+                                html += '<a id="lnkDetail" data-mkey="' + data.Meeting_pkey + '" data-stype="' + data.ScheduleType + '"  data-key="' + data.RoundTableSchedule_pkeys + '" data-type="' + data.type + '"  data-id="' + data.EventSession_pkey + '"   data-desc="' + description + '"  class="cmdDes me-1" style="cursor:pointer;">Details</a>';
+
+                            if (data.ShowCondition === 1) {
+                                if (data.ScheduleType === -1)
+                                    html += '<a href="/MyMAGI/MySchedule" id="lnkview" class="cmdview me-1" style="cursor:pointer;">Attend</a>';
+                                if (data.ScheduleType !== -1)
+                                    html += '<a id="lnkjoin" data-chat3="' + data.PrivateGroupChat3 + '" data-chat2="' + data.PrivateGroupChat2 + '" data-chat1="' + data.PrivateGroupChat1 + '" data-gchat="' + data.GroupChatLink + '" data-mURLKey="' + data.MeetingUrl_pkey + '" data-mkey="' + data.Meeting_pkey + '" data-stype="' + data.ScheduleType + '"  data-key="' + data.RoundTableSchedule_pkeys + '" class="cmdJoin me-1" style="cursor:pointer;">' + data.lnkText + '</a>';
+                            }
+
+                            if (data.ShowCalendarButton === 1)
+                                html += '<a id="linkDownload" data-start="' + data.StartDate + '" data-end="' + data.EndTime + '" data-title="' + data.Title + '" data-desc="' + description + '"   class="cmdDownload me-1" style="cursor:pointer;">Download ICS</a>';
+
+                            return html;
+                        }
+                    },
+
+                ],
+            });
+        }
+        function RefreshDescription(DataSet) {
+            $('#tblDescription').dataTable({
+                paging: false, bPaginate: false, bInfo: false, bLengthChange: false, bFilter: false, rowsPerPageOptions: false,
+                searching: false, bDestroy: true, fixedHeader: true, ordering: true, sorting: true, "order": [[0, "desc"]],
+                data: DataSet,
+                columns: [
+                    {
+                        title: "Title",
+                        data: "Title",
+                        width: 100,
+                    },
+                    {
+                        title: "Description",
+                        data: "Description",
+                        width: 100,
+                    },
+                    {
+                        title: "Speakers",
+                        data: "Speaker",
+                        width: 150,
+                    },
+                ]
+            });
+        }
+        $('#ddDate').change(function () {
+            RefreshScheduleEvent();
+        });
+        $(document).on('click', '.cmdSchedule', function () {
+            var data = $(this)[0];
+            var sessiontext = data.dataset["text"];
+            var esID = data.dataset["id"];
+            var info = { ESPkey: esID, SessionSC: sessiontext };
+            var result = CommonFunctions.AjaxCall('POST', '/Virtual/CmdScheduleEvent', info, 'json', 'Error Occurred While Updating Schedule Event');
+            if (result === "OK")
+                RefreshScheduleEvent();
+            else
+                CommonFunctions.Alert("Error Occurred While Updating Schedule Event");
+        });
+        $(document).on('click', '.cmdDownload', function () {
+            var data = $(this)[0];
+            var _Description = data.dataset["desc"];
+            var title = data.dataset["title"];
+            var _Start = data.dataset["start"];
+            var _End = data.dataset["end"];
+            var html = title;
+            var div = document.createElement("div");
+            div.innerHTML = html;
+            var _Title = div.textContent || div.innerText || "";
+            div.remove();
+            window.location = '/Virtual/DownloadScheduleEventFile?title=' + encodeURIComponent(_Title) + "&Desc=" + encodeURIComponent(_Description) + "&StartDate=" + _Start + "&EndTime=" + _End;
+        });
+        $(document).on('click', '.cmdDes', function () {
+            var data = $(this)[0];
+            var _Description = data.dataset["desc"], _SType = data.dataset["stype"], _MKey = data.dataset["mkey"],
+                _RKey = data.dataset["key"], _Type = data.dataset["type"], _Id = data.dataset["id"],
+                Info = { Id: _Id, Type: _Type, RKey: _RKey, MKey: _MKey, Stype: _SType, Description: _Description };
+
+            var result = CommonFunctions.AjaxCall('Get', '/Virtual/RefreshDetailsDescription', Info, 'json', 'Error While Fetching Data.');
+            var DataSet = null;
+            if (result !== null && result !== "ERROR") {
+                if (result.msg === "OK") {
+                    DataSet = JSON.parse(result.Source);
+                    $('#lblHost').text(result.TypeHost);
+                }
+            }
+            if (DataSet !== null) {
+                console.log(DataSet);
+                RefreshDescription(DataSet);
+                $('#modelDesiciption').modal('show');
+            }
+            else
+                CommonFunctions.Alert("Error Occurred While Updating Descriptions");
+        });
+        $(document).on('click', '.cmdJoin', function () {
+            var data = $(this)[0];
+            var _SType = data.dataset["stype"], _MKey = data.dataset["mkey"], _MUrlKey = data.dataset["mURLKey"],
+                _RKey = data.dataset["key"], _strGroupChatLink = "";
+            switch (_SType) {
+                case 0: _strGroupChatLink = data.dataset["gchat"];
+                    break;
+                case 5: _strGroupChatLink = data.dataset["gchat"];
+                    break;
+                case 2: _strGroupChatLink = data.dataset["chat1"];
+                    break;
+                case 3: _strGroupChatLink = data.dataset["chat2"];
+                    break;
+                case 4: _strGroupChatLink = data.dataset["chat3"];
+                    break;
+            }
+            var Info = { RKey: _RKey, MUrlKey: _MUrlKey, MKey: _MKey, Stype: _SType, strGroupChatLink: _strGroupChatLink };
+            var result = CommonFunctions.AjaxCall('POST', '/Virtual/RefreshJoinData', Info, 'json', 'Error Occurred While Updating Schedule Event');
+            if (result !== null && result !== "ERROR") {
+                if (result.msg === "OK") {
+                    if (result.New)
+                        window.open(_strGroupChatLink, '_blank').focus();
+                    if (result.RefreshScheduledBooth)
+                        RefreshScheduleEvent();
+                }
+            }
+            else
+                CommonFunctions.Alert("Error Occurred While Updating Schedule Event");
+        });
+        $('#VirtualEventDropDown').multipleSelect({
+            multiple: false, isopen: false, placeholder: 'Show All', selectAll: false, selectAllText: 'Select all', multiple: false, multipleWidth: 'auto', filter: false, width: 'auto', height: 28, maxHeight: 450, onClick: function () { onChangeVirtual(); },
+        });
+        function onChangeVirtual() {
+            var Data = { DropDownValue: $('#VirtualEventDropDown').val() };
+            switch ($('#VirtualEventDropDown').val()) {
+                case "9":
+                    var result = CommonFunctions.AjaxCall('Get', '/Home/GetNavigationInstructions', '', 'json', 'Error accessing text block data.');
+                    if (result.msg === "OK") {
+                        $('#modalNavBody').html(result.Content);
+                        $('#modelNavInstructions').modal('show');
+                    }
+                    else
+                        CommonFunctions.Alert(result.msg);
+                    break;
+                case "27":
+                    var result = CommonFunctions.AjaxCall('Get', '/Home/GetEventUpdatesContent', '', 'json', 'Error loading Event Updates');
+                    if (result.msg === "OK") {
+                        $('#modalEvtUpdatesVirtualBody').html(result.Content);
+                        $('#modelEvtUpdatesVirtual').modal('show');
+                    }
+                    else
+                        CommonFunctions.Alert(result);
+                    break;
+                case "21":
+                    OpenChatWindow();
+                    break;
+                default:
+                    var result = CommonFunctions.AjaxCall('Post', '/Home/VirtualDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+                    if (result.ActionType === "Redirect")
+                        window.location.href = result.RedirectionUrl;
+                    break;
+            }
+        }
+    });
+</script>

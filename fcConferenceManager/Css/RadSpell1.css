@@ -1,0 +1,11 @@
+﻿body,
+body *
+{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 10pt;
+}
+
+/*.RadForm.rfdButton.rfdScrollBars.rfdRadio.rfdCheckbox body button
+{
+    width: 110px !important;
+}*/

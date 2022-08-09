@@ -1,0 +1,66 @@
+﻿
+@{
+    ViewBag.Title = "Testimonials";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+   #role{
+        font-style:italic ;
+    }
+    ul#myList li:first-child
+    {
+        margin-top: 0;
+    }
+    .li {
+        width: 100%;
+        font-size: 11pt;
+        font-weight:bold;
+					 
+        margin-top: 15px; 
+        display: block;
+    }
+    .li-role {
+        width: 100%;
+        font-size: 11pt;
+					 
+        font-style :italic ;     
+        display: block;
+    }
+</style>
+
+    <div class="magiMySessionMainWrapper mt-3">
+        <div class="container-fluid">
+            <div class="row">
+                @{
+                    Html.RenderAction("_PartialEventInfo", "Home");
+                }
+                <div class="col-md-8 col-lg-9 flex-grow-1">
+                    <div class="col-md-12">
+                       <div class="row">
+                            <div class="col-8">
+                                <h2 id="lblTitle" >@ViewBag.PageTitle</h2>
+                            </div>
+                            <div class="col-4">
+                                <div class="justify-content-end justify-content-lg-end flex-wrap pull-right me-2 mt-1">
+                                    <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 ">Return</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <ul id="myList" style="padding-left:0px">
+                                @foreach (fcConferenceManager.Models.Testimonials testimonials in (List<fcConferenceManager.Models.Testimonials>)ViewBag.Testimonials)
+                                {
+                                    <li class="li"><b>"@testimonials.Comment"</b></li>
+                                    <li class="li-role" id="role">@testimonials.Role</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+

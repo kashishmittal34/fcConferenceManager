@@ -1,0 +1,40 @@
+﻿@model Elimar.Models.ElimarResponse
+@{
+    ViewBag.Title = "Elimar";
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+}
+
+    <link rel="stylesheet" type="text/css" href="css/App4Min.css">
+    <style>
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            padding: 10px 15px;
+            box-shadow: 0 1px 5px #00000040;
+        }
+        .btnOrange {
+            background-color: orange;
+            border-radius: 2px;
+            border: 2px solid orange;
+            color: #fff;
+            padding: 3px 8px !important;
+                   }
+        
+    </style>
+
+
+<header>
+    
+        <img id="imgLogoHeader" src="https://www.elimarsystems.com/Images/CommonImages/220401_125659logo1.png" style="height: 60px;">
+
+        <input type="submit" name="Login" value="Sign In" id="Login" class="btnOrange" style="cursor: pointer;">
+
+</header>
+<div style="margin:25px">
+    <span id="lblContent">
+        @Model.AppTextBlock
+       
+    </span>
+</div>

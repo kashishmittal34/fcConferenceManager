@@ -1,0 +1,94 @@
+﻿@using PagedList.Mvc
+@model  PagedList.IPagedList<fcConferenceManager.Models.Milestone>
+@{
+    ViewBag.Title = "Milestones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <style>
+        .lblTitle {
+            padding-bottom: 8px;
+            padding-top: 8px;
+            display: inline-block;
+            color: Navy;
+            background-color: transparent;
+        }
+
+        #milestone {
+            font-size: 10pt;         
+            margin-top: 5px;
+            margin-right: 50px;
+            display: inline-grid;
+            border : groove ;
+            margin-bottom:0px;
+        }
+        #milestone tr {
+            line-height:inherit ;
+            margin-bottom :auto ;
+
+        }
+        .formbody{
+            margin-left : 1% ;
+        }
+        #years {
+            width: 10%;
+            text-align:center;
+        }
+    </style>
+</head>
+<body class="formbody">
+    <div class="lblTitle"><h2>@ViewBag.PageTitle</h2></div>
+    <div>
+        @using (Html.BeginForm())
+        {
+        <div style="display:inline-block ;">
+            <label for="Date"><b>Date :</b></label> &nbsp;
+            <select name="years" id="years" >
+                <option value="">ALL</option>
+                <option value="-5000 1699">< 1700</option>
+                <option value="1700 1799">1700-1799</option>
+                <option value="1800 1899">1800-1899</option>
+                <option value="1900 1999">1900-1999</option>
+                <option value="2000 5000">2000+</option>
+            </select> &nbsp;
+           <input type="submit" value="Search" />
+
+        </div>
+
+            <table id="milestone" class="display" width="100%" cellspacing="0">
+
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <tr>
+                        <td id="years">@Model[i].Years</td>
+                        <td>@Model[i].Title</td>
+
+                    </tr>
+
+                }
+
+            </table>
+            <div style="background-color:aliceblue;">
+                <div id="container" style="margin-left: 20px">
+                    <p></p>
+                    <p></p>
+                    <div class="pagination" style="margin-left: 400px">
+                        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+                        of &nbsp; @Model.PageCount  &nbsp; &nbsp; @Html.PagedListPager(Model, page => Url.Action("Milestones", "Resources", new { page })) &nbsp;
+                    </div>
+                </div>
+            </div>
+
+        }
+
+
+
+
+
+    </div>
+    
+</body>
+</html>
+

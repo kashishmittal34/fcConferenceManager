@@ -1,0 +1,72 @@
+﻿
+@{
+    ViewBag.Title = "BecomeSponsor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+	 
+						 
+							
+							  
+						
+					
+									  
+	 
+
+    .mainbody
+    {
+        border: solid;
+        border-radius: 12px;
+        padding-left: 2px;
+        border-width: 1px;
+        border-color: lightgray;
+    }
+
+    .divbody
+    {
+        padding-left: 10px;
+    }
+</style>
+<div class="magiMySessionMainWrapper mt-3">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+            <div class="col-md-8 col-lg-9 flex-grow-1 ">
+                <div class="mb-3  p-2 mainbody">
+                    <div class="row pt-2">
+                        <div class="col-md-7">
+                            <h2 id="lblTitle" class="lblTitle magi-inline-block">@ViewBag.PageTitle</h2>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="justify-content-end text-end flex-wrap mt-1">
+
+                                <span>@Html.DropDownList("OverViewDropDown", null, new { @class = "bg-light mb-1 me-1 d-inline", id = "OverViewDropDown" })</span>
+                                <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 ">Return</a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-2">
+                        @Html.Raw(@ViewBag.FormText)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="@ViewBag.OverViewDropDownSelected" id="DropdownSelected" />
+<script>
+    $(document).ready(function () {
+        $('#OverViewDropDown').change(function () {
+            var Data = { DropDownValue: $('#OverViewDropDown').val() };
+            var result = CommonFunctions.AjaxCall('Post', '/MAGI/OverViewDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+            if (result.ActionType === "Redirect")
+                window.location.href = result.RedirectionUrl;
+        });
+        $('#OverViewDropDown').val($('#DropdownSelected').val());
+    });
+</script>

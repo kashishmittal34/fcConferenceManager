@@ -1,0 +1,175 @@
+﻿
+@{
+    ViewBag.Title = "MagiNews";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <style>
+        .lblTitle {
+            padding-bottom: 8px;
+            padding-top: 8px;
+            display: inline-block;
+            color: Navy;
+            background-color: transparent;
+        }
+
+        .group {
+            display: inline-block;
+            font-size: 10pt;
+        }
+
+            .group label {
+                font-size: 8pt;
+            }
+
+        .fixeLabelGap {
+            float: left;
+            width: 160px;
+        }
+
+        #news {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #news {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+            #news td, #news th {
+                text-align: left;
+                padding: 8px;
+            }
+
+            #news tr:nth-child(even) {
+                background-color: white;
+                height: 2px;
+                font-size: 10pt;
+            }
+
+            #news th {
+                background-color: #00a1ff;
+                color: white;
+            }
+
+        .headingbackground {
+            background-color: #f3f3b9
+        }
+
+        .searchbar {
+            background-color: lightblue;
+            padding-bottom: 10px;
+        }
+        .headtitle{
+            display :inline-block
+        }
+    </style>
+</head>
+<form action="/Resources/MagiNewsList">
+
+    <div class="magiMySessionMainWrapper mt-3">
+        <div class="container-fluid">
+            <div class="row">
+                @*@{Html.RenderPartial("_PartialEventInfo");}*@
+                <td class="magi-mobile-flex-item">
+                    <table class="magi-mobile-fluid">
+                        <tbody>
+                            <tr class="magi-mobile-flex magi-mobile-justify-content-between">
+                                <td class="magi-mobile-flex-item">
+                                    <span id="cphMain_lblTitle" class="lblTitle">@ViewBag.PageTitle</span>
+                                </td>
+                                <td class="imgRefresh magi-paddingTop0 magi-mobile-flex-item">
+                                    @*<input type="image" name="ctl00$cphMain$imgReset" id="cphMain_imgReset" title="Reset the filter" src="images/icons/undo.png" style="height:32px;">*@
+                                    <input type="image" name="ctl00$cphMain$imgSearch" id="cphMain_imgSearch" title="Refresh the list" src="~/Images/redo.png" style="height:32px;" alt="Submit" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+
+                      <div class="col-md-8 col-lg-9 flex-grow-1">
+                        <div class="searchbar">
+                            <div class="group">
+                                <label for="Title">Title</label><br />
+                                <input type="text" placeholder="" name="Title" id="Title">
+                            </div>
+                            <div class="group">
+                                <label for="Authors">Authors</label><br />
+                                <input type="text" placeholder="" name="Author" id="Author">
+                            </div>
+                            <div class="group">
+                                <label for="Publication">Publication</label><br />
+                                <input type="text" placeholder="" name="Publication" id="Publication" />
+
+                            </div>
+                            <div class="group">
+                                <label for="Topic">Topic</label>
+                                @Html.DropDownList("Topic", null, "ALL", new { @class = "form-control", id = "Name" })
+
+                            </div>
+                            <div class="group">
+
+                                @*<button id="close-image" style ="border-collapse :collapse"><img src="~/Images/redo.png" style=" height :32px;width:32px;" /></button>*@
+                            </div>
+                        </div><br />
+
+                        <div>
+                            <table id="news">
+                                <tr>
+
+                                    <th>
+                                        Title
+                                    </th>
+                                    <th>
+                                        Topic
+                                    </th>
+                                    <th>
+                                        Authors
+                                    </th>
+                                    <th>
+                                        Publications
+                                    </th>
+                                    <th>
+                                        URL
+                                    </th>
+
+                                </tr>
+                                @{ foreach (var item in Model)
+                                    {
+                                        <tr>
+
+                                            <td>
+                                                @item.Title
+                                            </td>
+                                            <td>
+                                                @item.Topic
+                                            </td>
+                                            <td>
+                                                @item.Author
+                                            </td>
+                                            <td>
+                                                @item.Publication
+                                            </td>
+                                            <td>
+                                                <a href="@item.URL">Link</a>
+                                            </td>
+
+
+                                        </tr>
+
+                                    }
+                                }
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+</div>
+        </div>
+    </div>
+</form>
+

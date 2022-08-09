@@ -1,0 +1,639 @@
+﻿@model Elimar.Models.TaskListRequest
+
+@{
+    ViewBag.Title = "tasklist";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script type="text/javascript" language="javascript">
+        $(document).ready(function () {
+            var plandates = $("#plandates").val();
+            if (plandates != "3") {
+                $("#datepicker").prop('disabled', true);
+                $("#datepicker1").prop('disabled', true);
+                $("#datepicker").val(null);
+                $("#datepicker1").val(null);
+            }
+            else if (plandates == "3") {
+                $("#datepicker").prop('disabled', false);
+                $("#datepicker1").prop('disabled', false);
+            }
+        });
+        var checkids = "";
+        const checkidsarray = [];
+        var model = {
+            pKey: "",
+            plandates: "",
+            forecast: "",
+            number: "",
+            title: "",
+            status: "",
+            category: "",
+            active: "",
+            reviewed: "",
+            tasklistrange: "",
+            repeat: ""
+        };
+        function callAjax(e) {
+            $("#deletetask").click(function (e) {
+                if (checkidsarray.length == 0) {
+                    checkidsarray.length = 0;
+                    $(':checkbox').each(function () {
+                        $(":checkbox:checked").each(function () {
+                            if (!checkidsarray.includes(this.value)) {
+                                if (this.value != "on") {
+                                    checkidsarray.push(this.value);
+                                }
+                            }
+                        });
+
+                    });
+                }
+                debugger;
+                if (checkidsarray.length == 0) {
+                    alert('Select Rows To Delete');
+                    return false;
+                }
+                else {
+                    if (confirm("Do you want to delete selected tasks")) {
+                        // do stuff
+                    } else {
+                        checkidsarray.length = 0;
+                        return false;
+                    }
+                }
+                debugger;
+                $.ajax({
+                    type: "POST",
+                    url: "@ViewBag.Baseurl/Task/DeleteTask/",
+
+                    data: {
+                        primarykey: checkidsarray.toString() // < note use of 'this' here
+                    },
+                    success: function (result) {
+                        alert("Deleted");
+                        checkidsarray.length = 0;
+                        location.reload();
+                    },
+                    error: function (result) {
+                        alert('error');
+
+                    }
+                });
+            });
+        }
+        debugger;
+        function deleteConfirmation() {
+            return confirm("Are you sure you want to delete?");
+        }
+        function copyTaskcallAjax(e) {
+            $("#copytask").click(function (e) {
+                if (checkidsarray.length == 0) {
+                    checkidsarray.length = 0;
+                    $(':checkbox').each(function () {
+                        $(":checkbox:checked").each(function () {
+                            if (!checkidsarray.includes(this.value)) {
+                                if (this.value != "on") {
+                                    checkidsarray.push(this.value);
+                                }
+                            }
+                        });
+                    });
+                }
+                if (checkidsarray.length == 0) {
+                    alert(' Select Rows To Copy');
+                    return false;
+                }
+                if (confirm("Do You Want To Copy Selected Tasks")) {
+                    // do stuff
+                } else {
+                    checkidsarray.length = 0;
+                    return false;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "@ViewBag.Baseurl/Task/CopyTask/",
+                    data: {
+                        primaryKey: checkidsarray.toString() // < note use of 'this' here
+                    },
+                    success: function (result) {
+                        checkidsarray.length = 0;
+                        alert('Copied');
+                        location.reload();
+                    },
+                    error: function (result) {
+                        alert('error');
+                    }
+                });
+            });
+        }
+        function getval(e) {
+            if (e.value != "3") {
+                $("#datepicker").prop('disabled', true);
+                $("#datepicker1").prop('disabled', true);
+                $("#datepicker").val(null);
+                $("#datepicker1").val(null);
+            }
+            else if (e.value == "3") {
+                $("#datepicker").prop('disabled', false);
+                $("#datepicker1").prop('disabled', false);
+            }
+        }
+        function Checkboxchange(e) {
+            $('#select-all').click(function (event) {
+                if (this.checked) {
+                    checkidsarray.length = 0;
+                    // Iterate each checkbox
+                    $(':checkbox').each(function () {
+                        this.checked = true;
+                        if (this.value != "on") {
+                            checkidsarray.push(this.value);
+                        }
+                    });
+                } else {
+                    $(':checkbox').each(function () {
+                        this.checked = false;
+                    });
+                }
+            });
+        }
+        function onclickajax() {
+            $.ajax({
+                type: "POST",
+                url: "@ViewBag.Baseurl/Task/addTask/",
+                success: function (result) {
+                },
+                error: function (result) {
+                    alert('error');
+                }
+            });
+        }
+        function excellsheet() {
+            $.ajax({
+                type: "POST",
+                url: "@ViewBag.Baseurl/Task/DownloadExcel/",
+                success: function (response) {
+                    var blob = new Blob([response], { type: 'application/vnd.ms-excel' });
+                    var downloadUrl = URL.createObjectURL(blob);
+                    var a = document.createElement("a");
+                    a.href = downloadUrl;
+                    // a.download = "downloadFile.xlsx";
+                    a.download = "PublicTasks_{0:yyMMdd_HH.mm}";
+                    document.body.appendChild(a);
+                    a.click();
+                },
+                error: function (result) {
+                    alert('error');
+                }
+            });
+        }
+        function dateval(e) {
+            $("#duedatehidden").val($("#datepicker").val());
+        }
+        function removeSpaces(string) {
+            return string.split(' ').join('');
+        }
+        function refresh() {
+            $("#plandates").val(0);
+            $("#datepicker").val("");
+            $("#datepicker1").val("");
+            $("#number").val("");
+            $("#title").val("");
+            $("#status").val(0);
+            $("#category").val(0);
+            $("#active").val("");
+            $("#reviewed").val("");
+            $("#tasklistrange").val(0);
+            $("#repeat").val(0);
+        }
+
+        window.onload = function () {
+            debugger;
+            document.getElementById("#click").click();
+        }
+    </script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            $("#datepicker").datepicker({
+                dateFormat: "mm/dd/y"
+            });
+        });
+        $(function () {
+
+            $("#datepicker1").datepicker({
+                dateFormat: "mm/dd/y"
+            });
+        });
+
+        function SelectedIndexChangedCategory(e) {
+            //Form post
+            $('#dropdownCategory').val(e);
+
+        }
+        function SelectedIndexChangedStatus(e) {
+            //Form post
+            $('#dropdownStatus').val(e);
+
+        }
+        function SelectedIndexChangedRepeat(e) {
+            //Form post
+            $('#dropdownRepeat').val(e);
+
+        }
+    </script>
+    <style>
+        .lblTitle {
+            font-size: 18pt;
+            color: orange;
+            background-color: transparent;
+        }
+
+        .dropdown {
+            padding-right: 50px;
+            border-width: 1px;
+            /* padding: 4px 25px 2px 5px;*/
+            border-width: -15px;
+            border-style: solid;
+            display: block;
+            position: relative;
+            height: 24px;
+        }
+
+        .rgHeader {
+            padding: 2px !important;
+            background-color: #1e90ff;
+            color: white !important;
+            height: 18px !important;
+            border-left-color: #1e90ff !important;
+        }
+
+        a:hover {
+            color: orange;
+        }
+    </style>
+</head>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <title>Portolo</title>
+    <meta name="description"
+          content="A web design and development company with 10+ years of experience in building results-driven web solutions for your custom business needs." />
+</head>
+
+   <body>
+
+    @using (Html.BeginForm("TaskList", "Task", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "validateInputs(e)" }))
+    {
+        <!--<header class="header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <nav class="navbar">
+                            <div class="logo">Logo<span>Magi</span></div>
+                            <div class="push-left">
+                                <button id="menu-toggler" data-class="menu-active" class="hamburger">
+                                    <span class="hamburger-line hamburger-line-top"></span>
+                                    <span class="hamburger-line hamburger-line-middle"></span>
+                                    <span class="hamburger-line hamburger-line-bottom"></span>
+                                </button>-->
+
+                                <!--  Menu compatible with wp_nav_menu  -->
+                                <!--<ul id="primary-menu" class="menu nav-menu">
+                                    <li class="menu-item current-menu-item"><a class="nav__link" href="#">Home</a></li>
+                                    <li class="menu-item dropdown">
+                                        <a class="nav__link" href="#">About</a>
+                                        <ul class="sub-nav">
+                                            <li><a class="sub-nav__link" href="#">link 1</a></li>
+                                            <li><a class="sub-nav__link" href="#">link 2</a></li>
+                                            <li><a class="sub-nav__link" href="#">link 3 - long link - long link - long link</a></li>
+                                        </ul>
+
+                                    </li>
+                                    <li class="menu-item dropdown">
+                                        <a class="nav__link mr-0" href="#">Contact</a>
+                                        <ul class="sub-nav">
+                                            <li><a class="sub-nav__link" href="#">link 1</a></li>
+                                            <li><a class="sub-nav__link" href="#">link 2</a></li>
+                                            <li><a class="sub-nav__link" href="#">link 3 - long link - long link - long link</a></li>
+                                        </ul>
+                                    </li>
+
+                                </ul>
+
+
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+
+        </header>
+        <div class="strip-info">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="d-flex justify-content-between align-items-baseline">
+                            <div class="botm-links">
+                                <a href="">Task list</a>
+                                <a href="">Score Card</a>
+                                <a href="">Process Mapping Tools</a>
+                                <a href="">My Profile</a>
+                            </div>
+                            <div class="log-in-out">
+                                <button href="" class="brdr-1">Logout</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>-->
+
+        <section class="task-list-form">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <div class="controls">
+                                <label><span><h2>Task List</h2></span></label>
+                                <input type="image" name="ctl00$cphMain$imgReset" id="cphMain_imgReset" title="Refresh Page" src="~/icons/undo.png" onClick="refresh(this)" style="height:32px;">
+                                <input type="image" name="ctl00$cphMain$imgSearch" id="click" title="Refresh the list" src="~/icons/redo.png" style="height:32px;">
+
+                                <a href=""><i class="fa-solid fa-arrow-left"></i></a>
+                                <a href="@ViewBag.Baseurl/Task/TaskList"><i class="fa-solid fa-magnifying-glass"></i></a>
+                                <div class="controls" style="text-align: right; vertical-align: top;">
+                                <button type="button" name="deletetasklist" value="Delete" id="deletetask" class="brdr-1 btn-sm" onclick="callAjax(this)">  Delete</button>
+                                <button type="button" name="copytasklist" value="Copy" id="copytask" class="brdr-1 btn-sm" onclick="copyTaskcallAjax(this)">  Copy</button>
+                                <a class="brdr-1 btn-sm" style="background-color: #eee; " href="@ViewBag.Baseurl/task/addtask"> Create new</a>
+                                <a class="brdr-1 btn-sm" style="background-color:#eee;" href="@ViewBag.Baseurl/task/DownloadExcel">Download</a>
+
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect1">Plan Dates:</label>
+                                        <select class="form-control form-control-sm" id="exampleFormControlSelect1">
+                                            <option value="0" @(ViewBag.Request.plandates == "0" ? "selected" : "")>All</option>
+                                            <option value="1" @(ViewBag.Request.plandates == "1" ? "selected" : "")>Past Week</option>
+                                            <option value="2" @(ViewBag.Request.plandates == "2" ? "selected" : "")>Next Week</option>
+                                            <option value="3" @(ViewBag.Request.plandates == "3" ? "selected" : "")>Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect1">Plan Dates:</label>
+                                        @*<input type="date" class="form-control form-control-sm" disabled>*@
+                                        <input type="text" class="form-control form-control-sm" id="datepicker" @*style=" width: 121px;"*@ value="@ViewBag.Request.duedate" placeholder="mm/dd/yy" onchange="dateval(this);" />
+                                        <input type="text" style="display: none" value="@ViewBag.Request.duedate" name="duedate" id="duedatehidden" />
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect1">Plan Dates:</label>
+                                        @*<input type="date" class="form-control form-control-sm" disabled>*@
+                                        <input type="text" class="form-control form-control-sm" id="datepicker1" @*style=" width: 121px"*@ value="@ViewBag.Request.forecast" name="forecast" placeholder="mm/dd/yy" />
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect1">Number:</label>
+                                        @*<input type="text" class="form-control form-control-sm">*@
+                                        <input tpye="text" class="form-control form-control-sm" value="@ViewBag.Request.number" id="number" onblur="this.value=removeSpaces(this.value);" name="number">
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect1">Title:</label>
+                                        @*<input type="text" class="form-control form-control-sm">*@
+                                        <input tpye="text" class="form-control form-control-sm" value="@ViewBag.Request.title" id="title" onblur="this.value=removeSpaces(this.value);" name="title">
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect1">Status</label>
+                                        @*<select class="form-control form-control-sm" id="exampleFormControlSelect1">*@
+                                        @Html.DropDownListFor(n => n.status, new SelectList(Model.commondropdownlist.statusdropdowns,
+                "pKey", "TaskStatusID", @ViewBag.Request.status), new { @class = "form-control form-control-sm" /*, @style = "width:138px;height:24px"*/, @onchange = "SelectedIndexChangedRepeat(this.value)" })
+
+                                        @*</select>*@
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect1">Catagory:</label>
+                                        @*<select class="form-control form-control-sm" id="exampleFormControlSelect1">*@
+                                        @Html.DropDownListFor(n => n.category, new SelectList(Model.commondropdownlist.categorydropdowns,
+               "pKey", "TaskCategoryID", @ViewBag.Request.category), new { @class = "form-control form-control-sm",/* @style = "width:138px;height:24px",*/ @onchange = "SelectedIndexChangedRepeat(this.value)" })
+
+                                        @*</select>*@
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect1">Active:</label>
+                                        <select class="form-control form-control-sm" id="active" name="active">
+                                            <option value="" @(ViewBag.Request.active == "" ? "selected" : "")>All</option>
+                                            <option value="true" @(ViewBag.Request.active == "true" ? "selected" : "")>Active</option>
+                                            <option value="false" @(ViewBag.Request.active == "false" ? "selected" : "")>Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect1">Reviewed:</label>
+                                        <select class="form-control form-control-sm" id="reviewed" name="reviewed">
+                                            <option value="" @(ViewBag.Request.reviewed == "" ? "selected" : "")>All</option>
+                                            <option value="true" @(ViewBag.Request.reviewed == "true" ? "selected" : "")>Yes</option>
+                                            <option value="false" @(ViewBag.Request.reviewed == "false" ? "selected" : "")>No</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect1">Task List Range:</label>
+                                        <select class="form-control form-control-sm" id="tasklistrange" name="tasklistrange">
+                                            <option value="0" @(ViewBag.Request.tasklistrange == "0" ? "selected" : "")>All</option>
+                                            <option value="1" @(ViewBag.Request.tasklistrange == "1" ? "selected" : "")> Back 1 year</option>
+                                            <option value="2" @(ViewBag.Request.tasklistrange == "2" ? "selected" : "")> Back 2 year</option>
+                                            <option value="3" @(ViewBag.Request.tasklistrange == "3" ? "selected" : "")> Back 3 year</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect1">Repeat:</label>
+                                        @*<select class="form-control form-control-sm" id="exampleFormControlSelect1">   </select>*@
+                                        @Html.DropDownListFor(n => n.repeat, new SelectList(Model.commondropdownlist.repeatdropdowns,
+                           "pKey", "TaskRepeatID", @ViewBag.Request.repeat), new { @class = "form-control form-control-sm",/* @style = "width:138px;height:24px",*/ @onchange = "SelectedIndexChangedRepeat(this.value)" })
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="emp-db">
+
+                                <div class="card">
+                                    <div class="emp-data">
+                                        <table class="table table-bordered mb-0">
+
+                                            <tr class="table-hd" style="background-color: #996642;">
+                                                <th>
+                                                    @*<input type="checkbox" aria-label="Checkbox for following text input">*@
+                                                    <input type="checkbox" name="select-all" onchange="Checkboxchange(this);" id="select-all" />
+
+                                                </th>
+                                                <th>Number</th>
+                                                <th>Name</th>
+                                                <th>Title</th>
+                                                <th>Description</th>
+                                                <th>Plan</th>
+                                                <th>Due Date</th>
+                                                <th>Category</th>
+                                                <th>Forecast</th>
+                                                <th>Status</th>
+                                                <th>Most Recent Note</th>
+                                            </tr>
+
+                                            @if (ViewBag.TaskListResponse != null)
+                                            {
+                                                foreach (var item in ViewBag.TaskListResponse)
+                                                {
+
+                                                    <tr>
+                                                        <td>
+                                                            <input type="checkbox" value="@item.pKey" class="ItemsCheckboxForAllTasks" id="check" />
+                                                        </td>
+                                                        <td valign="top">
+                                                            <a style="color:black" href="@Url.Action("EditTask", new { id = item.pKey })"> @item.number</a>
+                                                        </td>
+                                                        <td>
+                                                            @item.name
+                                                        </td>
+                                                        <td>
+                                                            @item.title
+                                                        </td>
+                                                        <td>
+                                                            @item.description
+                                                        </td>
+                                                        <td>
+                                                            @if (item.plan != null)
+                                                            {
+                                                                @item.plan.ToString("MM\\/dd\\/yy");
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            @if (item.duedate != null)
+                                                            {
+                                                                @item.duedate.ToString("MM\\/dd\\/yy");
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            @if (item.forecast != null)
+                                                            {
+                                                                @item.forecast.ToString("MM\\/dd\\/yy");
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            @item.TaskCategoryID
+                                                        </td>
+                                                        <td>
+                                                            @item.TaskStatusID
+                                                        </td>
+                                                        <td>
+                                                            @item.mostrecentnote
+                                                        </td>
+                                                    </tr>
+
+
+                                                }
+                                            }
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
+
+
+
+
+
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <p>	© 2022 by Elimar Systems. All Rights Reserved <a href="#" class="ml-5">Website Terms of Use</a></p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+
+
+
+
+
+
+
+
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+                integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+                crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                // Toggle menu on click
+                $("#menu-toggler").click(function () {
+                    toggleBodyClass("menu-active");
+                });
+
+                function toggleBodyClass(className) {
+                    document.body.classList.toggle(className);
+                }
+
+            });
+        </script>
+
+     }
+    </body>
+</html>
+

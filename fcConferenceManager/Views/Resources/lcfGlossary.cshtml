@@ -1,0 +1,422 @@
+﻿
+@{
+    ViewBag.Title = "lcfGlossary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<style>
+
+    .lblTitleTop
+    {
+        color: #00008b;
+        font-weight: bold;
+        background-color: transparent;
+        font-weight: 700;
+    }
+
+    .SectionTitle
+    {
+        color: #00008b;
+        font-weight: bold;
+    }
+
+    .lblTitle
+    {
+        font-size: 18pt;
+        color: Navy;
+        background-color: transparent;
+    }
+
+    #tbllcfGlossary
+    {
+        font-size: 11pt;
+        width: 100%;
+        display: table;
+        background-color: white;
+    }
+
+    #tbllcfGlossary td
+    {
+        border: none;
+        padding: 10px;
+    }
+
+    #tbllcfGlossary thead
+    {
+        display: none;
+    }
+
+    .btnSmall
+    {
+        background-color: #fff;
+        border: 1px solid black;
+        border-radius: 2px;
+        font-size: 10pt;
+    }
+
+    #lblName
+    {
+        color: red;
+        font-size: 10pt;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row pt-2">
+        <div class="col-md-8">
+            <label id="lblTitle" class="lblTitle">Glossary for Informed Consent</label>
+        </div>
+        <div class="col-md-4">
+            <div class="justify-content-end justify-content-lg-end flex-wrap pull-right me-2 mt-1">
+                <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 ">Return</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12  mt-2">
+        <label id="lblMsg" style="width:100%;height:40px;border:1px solid black; padding-top:5px; display:none"></label>
+        <label id="L454">Please</label>
+        <a href="/SendEmail.aspx?E=1&C=Associations+Directory">send us</a>
+        <label> corrections, additions and deletions.</label>
+        <br />
+    </div>
+    <div class="col-md-12  mt-2">
+        <div class="row gx-1">
+            <div style="width:70px;">
+                <label class="lblTitleTop"> Search:</label>
+            </div>
+            <div class="col-md-3 mb-2">
+                <input id="txtGenSearch" maxlength="150" title="Search" class="input-sm" />
+            </div>
+            <div class="col-md-5">
+                <button type="button" id="btnSrch" class="btn mb-1">Search</button>
+                @if (ViewBag.ID > 0)
+                {
+                    <button type="button" id="btnSrchSave" style="background-color:yellow" class="btn mb-1">Save</button>
+                    <button type="button" id="btnSavedSrch" class="btn  mb-1">Saved Searches</button>
+
+                }
+                <input type="hidden" id="SearchItemPkey" value="" />
+                <a id="btnNotes" href="" class="ms-1" style="font-size:15px">Notes</a>
+            </div>
+        </div>
+        <div class="row mt-2 gx-1">
+            <div style="width:70px;">
+
+            </div>
+            <div class="col-md-11">
+                <span class="">
+                    <input type="checkbox" id="chkDefinition" /><label class="ms-1" for="chkDefinition"> Include definitions in search</label>
+                </span>
+                <span class="ms-2  ml-10" id="dvCurrentSearch" style="visibility:hidden">
+                    <input type="checkbox" id="ckCurrentSrch" /><label class="ms-1" for="ckCurrentSrch"> Search within results below</label>
+                    <input type="hidden" id="txtLastSearch" value="" />
+                </span>
+            </div>
+
+        </div>
+        <div class="col-md-12 mt-2">
+            <span>
+                Definitions in this glossary are very simplified. Use them to replace or clarify terms that may be unfamiliar
+                to study subjects. Do not use them without understanding the concepts. More complete definitions of clinical research terms are in the
+                <a target="_top" href="Glossary">Glossary for Clinical Research</a>
+            </span>
+        </div>
+    </div>
+    <div class="col-md-12 mt-2">
+        <label id="lblText" class="SectionTitle">Clinical Research Glossary results for</label>
+        <label id="lblResult" class="SectionTitle"></label>
+        <label id="lblcount" style=" padding-left:15px;"></label>
+    </div>
+    <div class="col-md-12 mt-2 mb-2 p-1" style="border:1px solid lightgrey;">
+        <table id="tbllcfGlossary" data-page-length="25" cellspacing="0" style=" border: solid 1px lightgray;" width="100%"></table>
+    </div>
+
+
+    <div class="modal fade" id="rwPopNotes" tabindex="-1" aria-labelledby="rwPopNotes" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="lblTitle">Glossary Notes</h5>
+                    <div>
+                        <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body p-2" style="max-height:650px; height:600px; overflow:auto;">
+                    <div class="row col-md-12 p-2">
+                        <p>This glossary includes over 4,000 terms and acronyms related to clinical research. The definitions are meant to be understood in the clinical research context. For example, the term “study” is assumed to mean “clinical research study”. (In most cases, the term “study” is used rather than the term “trial.”) The definitions are obviously intended to be accurate; however, in the interest of clarity and brevity, fine points may be excluded. In some cases, the specific source or context of a term, e.g., “(FDA)”, is provided at the end of the definition. CDISC, ICH and caBIG definitions are provided verbatim in their original format and identified as to their source in the form <i>[Source]</i>.</p>
+                        Search Options:
+                        <table style="margin-left: 0.25in" cellspacing="5" cellpadding="0">
+                            <tbody>
+                                <tr valign="top">
+                                    <td>Word or phrase</td>
+                                    <td>Search on a word such as "adverse" or a phrase such as "adverse event".</td>
+                                </tr>
+                                <tr valign="top">
+                                    <td>Beginning of word</td>
+                                    <td>Search on the beginning of a word. For example, searching on "investigat" finds "investigator" and "investigational", but not "subinvestigator".</td>
+                                </tr>
+                                <tr valign="top">
+                                    <td>Any text</td>
+                                    <td>Search on text that may occur in the middle of a word or across words. For example, searching on "investigator" finds "subinvestigators"; searching on “to cha” finds “to chance”.</td>
+                                </tr>
+                                <tr valign="top">
+                                    <td>Include definitions in search</td>
+                                    <td>Search on both the terms defined and their definitions.</td>
+                                </tr>
+                                <tr valign="top">
+                                    <td>Punctuation is significant</td>
+                                    <td>Limit results based on the presence or absence of punctuation. For example, searching on "FDA-approved" finds only "FDA-approved", while searching on "FDA approved" finds only "FDA approved". With this option unselected, searching on "crossover" will find both "crossover" and "cross-over".</td>
+                                </tr>
+                                <tr valign="top">
+                                    <td>Search within results below</td>
+                                    <td>If your initial search returns too many terms, this option allows you to search only amongst the terms previously found.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        Tips:
+                        <ul style="margin-top: 0px" class="m-2 bulletpara">
+                            <li>Searches only find instances where the exact text in the search box is found. For example, searching for “event adverse” finds no results. </li>
+                            <li>Results are displayed in this order: (1) defined terms that begin with the search term, (2) defined terms that include the search term, (3) descriptions that include the search term, (4) descriptions that include a word or phrase that begins with the search term, and (5) all other results. </li>
+                            <li>Searching on a single letter finds only acronyms, credentials, and prescription abbreviations. </li>
+                            <li>Surrounding a search phrase with quotation marks has no effect, unless you select "Punctuation is significant". </li>
+                            <li>Words such as “and” and “or” are interpreted as part of the search phrase. </li>
+                            <li>Red underlining indicates where the search term has been found. </li>
+                            <li>Clicking on a blue underlined term initiates a search on that term. </li>
+                            <li>Search terms that are singular and present-case with U.S. English spelling are more likely to find results. </li>
+                        </ul>
+                    </div>
+                    <div class="row col-md-12 p-2">
+                        <label id="lblPopText" style="font-size:9pt"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="rwPopRetrieve" tabindex="-1" aria-labelledby="rwPopRetrieve" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" style="width:600px;height:100px">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="lblTitle">Saved Searches</h5>
+                    <div>
+                        <button id="btnRtSave" type="button" class="btn" data-bs-dismiss="modal" aria-label="">Search</button>
+                        <button id="btnRtDel" type="button" class="btn" data-bs-dismiss="modal" aria-label="">Delete</button>
+                        <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body p-1">
+                    <div class="row p-2">
+                        <div style="padding: 8px;">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <label>Search terms: </label>
+                                        <asp:Label ID="Label6" ClientIDMode="Static" runat="server" Text="Search terms: " />
+                                    </td>
+                                    <td style="padding-left: 4px;">
+                                        <select id="ddPopRetrieveName" style="width:450px;">
+                                            <options></options>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        var bload = true;
+        RefreshGlossaryTable();
+        function RefreshGlossaryTable() {
+            document.getElementById("lblMsg").innerHTML = "";
+            document.getElementById("lblMsg").style.backgroundColor = "white";
+            document.getElementById("lblMsg").style.display = "none";
+            var DataSet = null;
+            var ckCurrentSrch = $("#ckCurrentSrch").prop('checked');
+            var chkDefinition = $("#chkDefinition").prop('checked');
+            var txt = $('#txtGenSearch').val().toString();
+            var CkCurrent = false;
+            if ($('#ckCurrentSrch').is(":checked")) {
+                CkCurrent = true;
+            }
+            var lastSearchText = $('#txtLastSearch').val().toString();
+
+            var data = {
+                txtGenSearch: txt,
+                chkDefinition: chkDefinition,
+                ckCurrentSrch: ckCurrentSrch,
+                previousSearch: lastSearchText
+            }
+            var result = CommonFunctions.AjaxCall('Get', '/Resources/RefreshlcfGlossary', data, '', 'Error While Fetching Data.');
+            if (result !== null || result !== "ERROR") {
+                if (result.msg === "OK") {
+                    document.getElementById("SearchItemPkey").value = result.intpkey;
+                    var v = "<option value='0'>All</option>";
+                    $.each(result.dropdownvalues, function (i, v1) {
+                        v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                    });
+                    $("#ddPopRetrieveName").html(v);
+                    DataSet = JSON.parse(result.Source);
+                    document.getElementById("lblcount").innerHTML = "";
+                    if (DataSet.length > 0 && txt != "")
+                        document.getElementById("lblcount").innerHTML = DataSet.length.toString() + " Match Found";
+                    else
+                        document.getElementById("lblcount").innerHTML = ($('#txtGenSearch').val().length === 0 ? "" : "0 Match Found");
+
+                    document.getElementById("dvCurrentSearch").style.visibility = (DataSet.length === 0) ? "hidden" : "visible";
+                    $("#ckCurrentSrch").prop('checked', false);
+                }
+            }
+
+            $('#tbllcfGlossary').dataTable({
+                paging: false, bPaginate: false, bInfo: false, bLengthChange: false, bFilter: false, rowsPerPageOptions: false, ordering: false, sorting: false, searching: false, "order": [[0, "desc"]],
+                bDestroy: true,
+                fixedHeader: true,
+                data: DataSet,
+                "oLanguage": {
+                    "sEmptyTable": "No Records Found",
+                },
+                columns: [
+                    {
+                        title: "",
+                        data: "name",
+                        render: function (data) {
+                            return ` <label class= "SectionTitle">${data}</label><br/>`
+                        }
+                    },
+                    {
+                        title: "",
+                        data: { definition: "definition", source: "source" },
+                        render: function (data) {
+                            var sourcetext = ((data.source == "" || data.source == null || data.source == "null" || data.source == "NULL") ? "" : data.source);
+                            return `<label style = "font-size:10pt" >${(data.definition)}</label >
+                                     <label style="font-size:10pt">${sourcetext}</label><br/>`
+                        }
+                    }
+                ],
+            });
+            bload = false;
+        }
+
+        $("#txtGenSearch").keypress(function (e) {
+            if (e.which == 13) {
+                RefreshGlossaryTable();
+            }
+        });
+
+        $('#btnNotes').on('click', function (e) {
+
+            $('#rwPopNotes').modal('show');
+            e.preventDefault();
+        });
+        function GridSearch() {
+            var txt = $('#txtGenSearch').val().toString();
+            var lastSearchText = $('#txtLastSearch').val().toString();
+            var labelResult = $('#lblResult').html().toString().replace('"', '').replace('"', '');
+            if (txt === "") {
+                document.getElementById("lblResult").innerHTML = "";
+                document.getElementById("txtLastSearch").value = "";
+            } else {
+                if (($('#ckCurrentSrch').is(":checked"))) {
+                    document.getElementById("lblResult").innerHTML = '"' + labelResult + '+' + txt + '"';
+                    document.getElementById("txtLastSearch").value = lastSearchText + "/" + txt;
+                } else {
+                    document.getElementById("lblResult").innerHTML = '"' + txt + '"';
+                    document.getElementById("txtLastSearch").value = txt;
+                }
+            }
+            RefreshGlossaryTable();
+        }
+        $('#btnSrch').on('click', function (e) {
+            e.preventDefault();
+            GridSearch();
+        });
+        $("#txtGenSearch").keypress(function (e) {
+            if (e.which == 13)
+                GridSearch();
+        });
+
+        $('#btnSrchSave').on('click', function () {
+            var txt = $('#txtGenSearch').val().toString();
+            var exists = false;
+            var options = document.getElementById("ddPopRetrieveName").options;
+            for (var i = 0; i < options.length; i++)
+                if (options[i].innerText === txt) {
+                    exists = true;
+                    break;
+                }
+
+            if (exists) {
+                document.getElementById("lblMsg").innerHTML = txt.toUpperCase() + " already in dropdown.";
+                document.getElementById("lblMsg").style.backgroundColor = "yellow";
+                document.getElementById("lblMsg").style.display = "inline-block";
+            }
+            else {
+                var intpkey = $('#SearchItemPkey').val();
+                var data = { intpkey: intpkey, type: "lcfGlossary" }
+                var result = CommonFunctions.AjaxCall('Get', '/Resources/SrchSave', data, '', 'Error While Fetching Data.');
+                if (result !== null || result !== "ERROR") {
+                    if (result.msg === "OK") {
+                        var v = "<option value='0'>All</option>";
+                        $.each(result.dropdownvalues, function (i, v1) {
+                            v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                        });
+                        $("#ddPopRetrieveName").html(v);
+                        CommonFunctions.Alert(result.resmsg);
+                    } else {
+                        CommonFunctions.Alert(result.resmsg);
+                    }
+                }
+            }
+        });
+
+        $('#btnSavedSrch').on('click', function () {
+            $('#rwPopRetrieve').modal('show');
+        });
+
+        $('#btnRtSave').on('click', function () {
+            var ddindexvalue = $("#ddPopRetrieveName").prop('selectedIndex');
+            if (ddindexvalue > 0) {
+                document.getElementById("txtGenSearch").value = $('#ddPopRetrieveName :selected').text();
+                RefreshGlossaryTable();
+            } else {
+
+            }
+        });
+
+        $('#btnRtDel').on('click', function () {
+            var ddindexvalue = $("#ddPopRetrieveName").prop('selectedIndex');
+            if (ddindexvalue > 0) {
+                var seletedvalue = $('#ddPopRetrieveName :selected').val();
+                var data = { selectedvalue: seletedvalue }
+                var result = CommonFunctions.AjaxCall('Get', '/Resources/DeleteSearch', data, '', 'Error While Fetching Data.');
+                if (result !== null || result !== "ERROR") {
+                    if (result.msg === "OK") {
+                        var opt = document.getElementById("ddPopRetrieveName");
+                        for (var i = 0; i < opt.length; i++)
+                            if (opt.options[i].value === seletedvalue) {
+                                opt.remove(i);
+                                break;
+                            }
+
+                    } else {
+                        CommonFunctions.Alert(result.resmsg);
+                    }
+                }
+            }
+        });
+
+
+    });
+
+
+</script>

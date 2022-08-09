@@ -1,0 +1,739 @@
+﻿@using Kendo.Mvc.UI
+@model fcConferenceManager.Models.ContactModel
+
+
+@if (ViewBag.ShowModal)
+{
+    <div class="modal fade" id="rwContact" tabindex="-1" aria-labelledby="rwContact" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content pb-3">
+                <div>
+                    <label id="closerwContact" class="pull-right float-end mb-2" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                </div>
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="lblConTitle" style="color: #333;">@Html.Raw(ViewBag.lblConTitleText)</h5>
+                    <label id="lblforThisevent" style="background-color: yellow;font-weight:bold;">Call notes for this event only</label>
+                    <div>
+                        <button id="btnSendSMSshow" class="btn" style="display: @(ViewBag.btnSendSMSshow == "none"? "none":"");">Send Text</button>
+                        <button id="dvemail" class="btn" style="display: @(ViewBag.dvemailVisible? "":"none");">Send Email</button>
+                        <button id="CmdCommSave" class="btn" style="display: @(ViewBag.CmdCommSaveVisible? "":"none");">Save</button>
+                        <button id="cmdConSave" class="btn" style="display: @(ViewBag.cmdConSaveVisible? "":"none");">Save</button>
+                        <button id="cmdConCancel" class="btn" data-bs-dismiss="modal" aria-label="Close" style="display: @(ViewBag.cmdConCancelVisible? "":"none");">Cancel</button>
+                        <button id="cmdClear" class="btn" style="display: @(ViewBag.cmdClearVisible? "":"none");">Clear</button>
+
+                        @*<asp:Button ID="btnSendSMSshow" runat="server" Text=" " CssClass=" " OnClick="btnSendSMSshow_Click" />
+                             <asp:Button ID="dvemail" runat="server" Text=" " CssClass="btnSmall" OnClick="btnSendEmail_Click" />
+                             <asp:Button ID="CmdCommSave" runat="server" Text="" CssClass="btnSmall" Visible="false" OnClick="CmdCommSave_Click" />
+                             <asp:Button ID="cmdConSave" runat="server" Text="Save" CssClass="btnSmall" ValidateRequestMode="Disabled" />
+                            <asp:Button ID="btnClose" runat="server" OnClientClick="return rwCall_Close();" Text="Cancel" Visible="false" CssClass="btnSmall" />*@
+                    </div>
+                </div>
+                <div class="modal-body p-1" style=" overflow-y: auto; overflow-x: hidden; max-height: 600px;">
+                    <input type="hidden" id="hdfSSenderemail" value="" />
+                    <input type="hidden" id="hdfSSenderName" value="" />
+                    <input type="hidden" id="hdfUSenderName" value="" />
+                    <input type="hidden" id="hdfCallSession" value="false" />
+                    <div class="mb-3 row">
+                        @{
+                            List<SelectListItem> ddphoneType = new List<SelectListItem>() { new SelectListItem() { Text ="Phone", Value = "0" } };
+                            if (ViewBag.ddphoneType != null)
+                            {
+                                ddphoneType.AddRange((List<SelectListItem>)ViewBag.ddphoneType);
+                            }
+                        }
+                        <div class="align-items-center col-md-6 d-md-flex">
+                            <label class="fw-bold me-1">Telephone:</label>
+                            <div class="align-items-center d-md-flex flex-lg-row flex-md-column mb-2 mb-md-0">
+                                <div class="Font10 mb-1 mb-lg-0  me-1">
+                                    <a id="hdfskype" class="me-1 ms-1" href="@ViewBag.hdfskypeHref"> <img id="imgSkype" src="/Images/Icons/skype.png" stytle="vertical-align: middle;" /></a>
+                                </div>
+                                <label id="lblCallPhone" class="lblsmall ms-1" style="font-size: 9pt">@ViewBag.lblCallPhoneText</label>
+                                @if (ViewBag.lbltype)
+                                {
+                                    <label id="lbltype" class="lblsmall ms-1" style="font-size: 9pt; padding-left: 5px">@ViewBag.lblTypeText</label>
+                                }
+                                <div class="ms-md-2">
+                                    @if (ViewBag.ddPhoneTypeVisible)
+                                    {
+                                        @(Html.Kendo().DropDownList().DataTextField("Text").DataValueField("Value").Name("ddphoneType").BindTo(ddphoneType).Value(ViewBag.ddPhoneTypeSelected.ToString()).HtmlAttributes(new { style = "font-size: 9pt;" }))
+                                    }
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="align-items-center col-md-6 d-md-flex">
+                            <div class="align-items-center d-md-flex flex-lg-row flex-md-column">
+                                @*OnSelectedIndexChanged="ddphoneType_SelectedIndexChanged"  *@
+                                @if (ViewBag.tbphone2Visible)
+                                {
+                                    <span id="tbphone2" class="d-flex align-items-center">
+                                        @if (ViewBag.hdfskype2Visible)
+                                        {
+                                            <a id="hdfskype2" class="me-1 ms-1 Font10 mb-1 mb-lg-0" href="@ViewBag.hdfskype2Href"><img id="imgSkype2" src="/Images/Icons/skype.png" stytle="vertical-align: middle;" /></a>
+                                        }
+                                        @if (ViewBag.lblCallPhone2Visible)
+                                        {
+                                            <label id="lblCallPhone2" class="lblsmall" style="font-size: 9pt;padding-left: 5px;">@ViewBag.lblCallPhone2Text</label>
+                                        }
+                                        @if (ViewBag.lbltype)
+                                        {
+                                            <label id="lbltype2" class="lblsmall" style="font-size: 9pt; padding-left: 5px">@ViewBag.lblType2Text</label>
+                                        }
+                                    </span>
+                                }
+                                @if (ViewBag.ddPhoneType2Visible)
+                                {
+                                    <div class="me-md-2 ms-md-2">
+                                        @if (ViewBag.ddPhoneType2Visible)
+                                        {
+                                            @(Html.Kendo().DropDownList().DataTextField("Text").DataValueField("Value").Name("ddphoneType2").BindTo(ddphoneType).Value(ViewBag.ddPhoneType2Selected.ToString()).HtmlAttributes(new { style = "font-size: 9pt;" }))
+                                        }
+                                    </div>
+                                }
+                                @if (ViewBag.lblEmergencyVisible)
+                                {
+                                    <label id="lblEmergency" class="lblsmall" style="font-size: 9pt;display:none;">(emergency only)</label>
+                                }
+                                <label id="lbljudiciously" class="lblsmall" style="font-size: 9pt;display:@((ViewBag.lbljudiciouslyVisible) ? "" :"none");">(use judiciously)</label>
+                                <div style="display:@((ViewBag.tdPossible) ? "" :"none");">
+                                    <label id="lblpossible" class="lblSmall ms-2 me-2">Possible Speaker:</label>
+                                    @(Html.Kendo().CheckBox().Name("chkPossible").HtmlAttributes(new { style = "vertical-align:sub;" }).Checked(ViewBag.chkPossible) )
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="display:none;">
+                            @if (ViewBag.lblAlternateVisible)
+                            {
+                                <label id="lblAlternate" class="lblSmall" style="display:none;">Alternate Telephone #:</label>
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-12">
+                                <div style="width: 100%; background-color: beige">
+                                    <label class="fw-bold ms-1">Contact Log:</label>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row gx-0 my-1 align-items-center my-1">
+                                        <div class="col-md-2">
+                                            <label class="lblSmall">Result:</label>
+                                        </div>
+                                        <div class="col-md-5">
+                                            @{
+                                                List<SelectListItem> ddCallResults = new List<SelectListItem>() { new SelectListItem() { Text ="Select", Value = "0" } };
+                                                if (ViewBag.ddCallResults != null)
+                                                {
+                                                    ddCallResults.AddRange((List<SelectListItem>)ViewBag.ddCallResults);
+                                                }
+                                            }
+                                            @(Html.Kendo().DropDownList().DataTextField("Text").DataValueField("Value").Name("ddCallResults").BindTo(ddCallResults).Events(e=>e.Change("onChangedCallResult")).Value(ViewBag.ddCallResultsSelected.ToString()))
+                                        
+                                            @*<asp:Button ID="btnsendEmailpopup" runat="server" style="display:none" Text="" OnClick="btnsendEmailpopup_Click" />
+                                                <asp:Button ID="btnResendemail" runat="server" style="display:none" Text="" OnClick="btnResendemail_Click" />
+                                                <asp:Button ID="btnshowSMS" runat="server" Text="Send Text " style="display:none" CssClass=" btnSmall" OnClick="btnSendSMSshow_Click" />*@
+                                            @*<asp:Button ID="btnsendEmailpopup" runat="server" style="display:none" Text="" OnClick="btnsendEmailpopup_Click" />
+                                                <asp:Button ID="btnResendemail" runat="server" style="display:none" Text="" OnClick="btnResendemail_Click" />
+                                                <asp:Button ID="btnshowSMS" runat="server" Text="Send Text " style="display:none" CssClass=" btnSmall" OnClick="btnSendSMSshow_Click" /><asp:Button ID="btnsendEmailpopup" runat="server" style="display:none" Text="" OnClick="btnsendEmailpopup_Click" />
+                                                <asp:Button ID="btnResendemail" runat="server" style="display:none" Text="" OnClick="btnResendemail_Click" />
+                                                <asp:Button ID="btnshowSMS" runat="server" Text="Send Text " style="display:none" CssClass=" btnSmall" OnClick="btnSendSMSshow_Click" />*@
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row gx-0 align-items-center my-1">
+                                        <div class="col-md-2">
+                                            <label id="lbldateofcontact" class="lblSmall">Date of Contact:</label>
+                                        </div>
+                                        <div class="col-md-5">
+                                            @(Html.Kendo().DatePicker().Name("ddConDate").Format("MM/dd/yy").DateInput().Value(ViewBag.ddConDateSelected.ToString()).HtmlAttributes(new { style = "width: 120px;", title = "datepicker" }))
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="col-ms-12">
+                                    <div class="row gx-0 my-1">
+                                        <div class="col-md-2">
+                                            <label class="lblSmall">Contact by:</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            @(Html.Kendo().RadioGroup().Name("rdConBy").Layout("Horizontal")
+                                                    .Items(i =>
+                                                    {
+                                                        i.Add().Label(ViewBag.ConBy1Text).Value("1");
+                                                        i.Add().Label(ViewBag.ConBy2Text).Value("2");
+                                                        i.Add().Label("Producer").Value("0");
+                                                    }).Value("1"))
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-ms-12">
+                                    <div class="row gx-0 my-1">
+                                        <div class="col-md-2">
+                                            @if (ViewBag.lblmagiContactVisible)
+                                            {
+                                                <label id="lblmagiContact" class="lblSmall">Contact:</label>
+                                            }
+                                        </div>
+                                        <div class="col-md-5">
+                                            @if (ViewBag.rdMagiContactVisible)
+                                            {
+                                                List<SelectListItem> rdMagiContact = new List<SelectListItem>() { new SelectListItem() { Text ="Select", Value = "0" } };
+                                                if (ViewBag.rdMagiContact != null)
+                                                {
+                                                    rdMagiContact.AddRange((List<SelectListItem>)ViewBag.rdMagiContact);
+                                                }
+
+                                                @(Html.Kendo().DropDownList().DataTextField("Text").DataValueField("Value").Name("rdMagiContact").BindTo(rdMagiContact).Value(ViewBag.rdMagiContactSelected.ToString()))
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-12">
+                                <div style="width: 100%; background-color: beige">
+                                    <div class="row my-1 align-items-center">
+                                        <div class="col-md-3"><label class="fw-bold" style="padding-left: 5px;">Follow up:</label></div>
+                                        <div class="col-md-9">
+                                            <span id="trLastFollowDate">
+                                                <label id="Label28" class="lblSmall fw-bold" style="background-color: yellow;">Last Followup Date:</label>
+                                                <label id="lblLastFollowDate" style="font-size: 9pt; font: bold; font-weight: 700; background-color: yellow;">@ViewBag.lblLastFollowDateText</label>
+                                            </span>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row gx-0 my-1 align-items-center">
+                                    <div class="col-md-2">
+                                        <label class="lblSmall">Follow up:</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        @{
+                                            List<SelectListItem> ddCallNext = new List<SelectListItem>(); //{ new SelectListItem() { Text ="Select", Value = "0" } }
+                                            if (ViewBag.ddCallNext != null)
+                                            {
+                                                ddCallNext.AddRange((List<SelectListItem>)ViewBag.ddCallNext);
+                                            }
+                                        }
+                                        @(Html.Kendo().DropDownList().DataTextField("Text").DataValueField("Value").Name("ddCallNext").BindTo(ddCallNext).Value("0").Events(e =>
+                                            {
+                                                e.Change("onChangeddCallNext");
+                                            }))
+                                        @* OnClientSelectedIndexChanged="FollowOnClientSelectedIndexChanged" *@
+                                        @*<asp:Button ID="btncallrefreshfollowup" runat="server" style="display:none" OnClick="btncallrefreshfollowup_Click" />*@
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-12" id="phFollowup">
+                                <div class="gx-0 row my-1 align-items-center">
+                                    <div class="col-md-2">
+                                        <label class="lblSmall">Followup Date:</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @(Html.Kendo().DatePicker().Name("ddConFolDate").Format("MM/dd/yy").DateInput().Value("").HtmlAttributes(new { style = "width: 120px;", title = "datepicker" }))       @*.Value("10/10/2011")*@
+                                    </div>
+                                    <div class="col-md-2 text-end pe-3">
+                                        <label class="lblSmall">Time:</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @(Html.Kendo().TimePicker().Name("dpTime").Value("").Interval(15).HtmlAttributes(new { style = "width: 100%", title = "timepicker" }).DateInput())
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-ms-12">
+                                <div class="row gx-0 my-1 align-items-center">
+                                    <div class="col-md-2">
+                                        <label class="lblSmall">Responding to:</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        @{
+                                            List<SelectListItem> ddResponce = new List<SelectListItem>() {
+                                                new SelectListItem() { Text ="None", Value = "0" },
+                                                new SelectListItem() { Text ="Email", Value = "1" },
+                                                new SelectListItem() { Text ="Telephone Call", Value = "2" },
+                                                new SelectListItem() { Text ="Text", Value = "3" },
+                                            };
+                                        }
+                                        @(Html.Kendo().DropDownList().DataTextField("Text").DataValueField("Value").Name("ddResponce").BindTo(ddResponce).SelectedIndex(ViewBag.ddResponcesSelectIndex))
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-ms-12">
+                                <div class="row gx-0 align-items-center my-1">
+                                    <div class="col-md-2">
+                                        <label class="lblSmall">Limit Caller:</label>
+                                    </div>
+                                    <div class="col-md-10">
+                                        @(Html.Kendo().RadioGroup().Name("rdProducerOnly").Layout("horizontal").Items(i =>
+                                            {
+                                                i.Add().Label("None").Value("0");
+                                                i.Add().Label("Any producer").Value("1");
+                                                i.Add().Label("Next contact by senior producer").Value("2");
+                                                i.Add().Label("Senior producer only").Value("3");
+                                            }).Value("0"))
+                                        @*<asp:ListItem Text="" Value="0" Selected="True" />*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display:none;" id="trConVia">
+                                <label class="lblSmall">Contact via:</label>
+                                @(Html.Kendo().RadioGroup().Name("rdConVia").Layout("horizontal").Items(i =>
+                                {
+                                                i.Add().Label("Email").Value("1");
+                                                i.Add().Label("Phone").Value("2");
+                                                i.Add().Label("Personal Contact").Value("3");
+                                                i.Add().Label("Other").Value("0");
+                                }).Value("0"))
+                            </div>
+                            <div style="display:none;">
+                                <label class="lblSmall">Followup Type:</label>
+                                @(Html.Kendo().CheckBoxGroup().Name("ckChooseoptions").Layout("horizontal").Items(i =>
+                                {
+                                                i.Add().Label("Offer?").Value("1");
+                                                i.Add().Label("Offer").Value("2");
+                                                i.Add().Label("Offered").Value("3");
+                                                i.Add().Label("Assigned").Value("4");
+                                }))
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="lblSmall">Event Notes:</label>
+                            @(Html.Kendo().TextArea().Rows(3).Name("txtPermanent").HtmlAttributes(new { style = "width: 100%;", aria_label = "editor" }))
+                        </div>
+                        <div class="col-md-6">
+                            <label class="lblSmall">Call Notes:</label>
+                            @(Html.Kendo().TextArea().Rows(3).Name("txtConMsg").HtmlAttributes(new { style = "width: 100%;", aria_label = "editor" }))
+                            @(Html.Kendo().TextArea().Rows(3).Name("txtConFolNotes").MaxLength(300).HtmlAttributes(new { style = "display: none;width: 100%;height:55px;font-size:11pt;" }))
+                        </div>
+                    </div>
+                    <div class="row pb-4">
+                        <div class="col-md-12">
+                            <img id="cmdSpkDel" height="16" src="/images/icons/minus.png" title="Delete" style="cursor:pointer;" />
+                            <br />
+                            @( Html.Kendo().Grid<fcConferenceManager.Models.SpeakerLog>((List<fcConferenceManager.Models.SpeakerLog>)ViewBag.SpeakerDataList)
+                              .Name("dgSpkrLog")
+                              .NoRecords("No results found")
+                              .PersistSelection(true)
+                              .Scrollable()
+                              .Events(i=>i.Change("onChangeSpeakerLog"))
+                              .HtmlAttributes(new { style = "height: 200px;" })
+                              .DataSource(i=> i.Custom().Schema(schema => schema.Model(m => m.Id(p => p.pKey))))
+                              .Columns(columns =>
+                              {
+                                columns.Select().Width(30);
+                                columns.Bound(c => c.ContactDate).ClientTemplate(@"#:ContactDateFormat #").Template(@<text> @Html.Raw(((!string.IsNullOrEmpty(item.ContactDate))? Convert.ToDateTime(item.ContactDate).ToString("d"): "")) </text>).HeaderTemplate("Date").Width(80);
+                                columns.Bound(c => c.CtBy).HeaderTemplate("By").Width(40);
+                                columns.Bound(c => c.CtVia).HeaderTemplate("Via").Width(65);
+                                columns.Bound(c => c.ContactMsg).HeaderTemplate("Call Notes").Width(280);
+                                columns.Bound(c => c.FollowupDate).HeaderTemplate("Followup Date").Width(100);
+                                columns.Bound(c => c.FuVia).HeaderTemplate("Followup Via").Width(95);
+                                columns.Bound(c => c.ContactName).HeaderTemplate("Logged By").Width(95);
+                                columns.Bound(c => c.EventID).HeaderTemplate("Event").Width(100);
+                                columns.Bound(c => c.MessageStatusTemplate).ClientTemplate(@"#=MessageStatusTemplate#").Template(@<text> @Html.Raw(item.MessageStatusTemplate) </text>).HeaderTemplate("Email").ClientTemplate(@"#=MessageStatusTemplate#").Width(100);
+                                columns.Command(c => c.Custom("Edit").Text("Edit").HtmlAttributes(new { @class="gridEditButton"}).Click("onClickEditButton")).Width(35).Title("Edit");
+                              }))
+                            @*columns.Bound(c=>c.EditTemplate).ClientTemplate(@"#=EditTemplate#").Template(@<text><img src='/images/icons/gridgray.png' data-id="@item.pKey" class='cmdConEdit' title='Edit' style='cursor:pointer;' /></text>).HeaderTemplate("Edit").Width(35);*@
+                        </div>
+                    </div>
+
+                    <div id="trConEmailSubject" style="display: none">
+                        <label class="lblSmall">Email Subject:</label>
+                        @(Html.Kendo().TextBox().Name("txtConEMailSubj").Value("Follow Up").HtmlAttributes(new { style = "width: 100%;" }))
+                    </div>
+                    <div class="col-md-12" id="phFollowup11" style="display:none;">
+                        <div class="col-md-12" style="display:none;">
+                            <label class="lblSmall">Contact by:</label>
+
+                            @(Html.Kendo().RadioGroup().Name("rdConFolBy").Layout("Horizontal")
+                                                    .Items(i =>
+                                                    {
+                                                        i.Add().Label(ViewBag.ConBy1Text).Value("1");
+                                                        i.Add().Label(ViewBag.ConBy2Text).Value("2");
+                                                        i.Add().Label("Producer").Value("0");
+                                                    }).Value("1"))
+                        </div>
+                        <div class="col-md-12">
+                            <label>Contact via:</label>
+                            @(Html.Kendo().RadioGroup().Name("rdConFolVia").Layout("Horizontal").Items(i =>{  i.Add().Label("Email").Value("1");
+                                                                                          i.Add().Label("Phone").Value("2");
+                                                                                          i.Add().Label("Personal Contact").Value("3");
+                                                                                          i.Add().Label("Other").Value("0");  }).Value("1"))
+                        </div>
+                        <div class="col-md-12" style="display: none;">
+                            <label class="lblSmall">Email Subject:</label>
+                            @(Html.Kendo().TextBox().Name("txtConFolEMailSubj").Value("Follow Up").HtmlAttributes(new { style = "width: 100%;" }))
+                        </div>
+                        <div id="trConFolEmailSubject" style="display: none"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rwConfirms" tabindex="-1" aria-labelledby="rwConfirms" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <div>
+                        <button id="cmdCfSave" type="button" class="btn">Confirm</button>
+                        <button id="cmdCfcancel" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="col-md-12 pt-2">
+                        <label id="lblConfirm"></label>
+                        <label id="lblCountMail" class="mt-2"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rwAddFile" tabindex="-1" aria-labelledby="rwAddFile" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="rwAddFileTitle">Upload File</h5>
+                    <div>
+                        <button id="cmdAttFileSave" type="button" class="btn">Upload"</button>
+                        <button id="cmdAttFileCancel" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="col-md-12 pt-2">
+                        Use the 'Select' button to browse for a file, or use your mouse to drag a file and drop it onto the selection box. Wait for the yellow dot to turn green. Then click "Upload." If you change your mind, click 'Remove' to unselect the file.
+                    </div>
+                    <div class="col-md-12">
+                        <label id="lblUp" style="color: #98442d;"></label><br />
+                        <label id="lblExtensions"></label><br />
+                        @*<telerik:RadAsyncUpload RenderMode="Lightweight" ID="RadAttachedFile" OnClientFileSelected="fileSelected" PostbackTriggers="cmdAttFileSave" runat="server" MaxFileInputsCount="1" OnClientValidationFailed="OnClientValidationFailed" Localization-Select="Select/Drop" DropZones=".dropzone,#RadAttachedFile" />*@
+                        @*<telerik:RadAsyncUpload RenderMode="Lightweight" ID="RadAttachedFile" OnClientFileSelected="fileSelected" PostbackTriggers="cmdAttFileSave" runat="server" MaxFileInputsCount="1" OnClientValidationFailed="OnClientValidationFailed" Localization-Select="Select/Drop" DropZones=".dropzone,#RadAttachedFile" />*@
+                        <label id="lblSizeLimit" class="lblsmall"></label><br />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rdPreview" tabindex="-1" aria-labelledby="rdPreview" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <div>
+                        @*<asp:Button ID="" runat="server" Text="" CssClass="btnSmall" OnClick="cmdReturn_Click" />
+                            <asp:Button ID="btnSendemail1" runat="server" Text="Send Email" CssClass="btnSmall" OnClientClick="return SendCheck_Validate_Contact();" />
+                            <asp:Button ID="Button3" runat="server" Text="Send Email" CssClass="btnSmall" Visible="false" />
+                            <asp:Button ID="btnCancelBoth" runat="server" Text="Cancel" CssClass="btnSmall" OnClick="btnCancelBoth_Click" />*@
+                    </div>
+                </div>
+                <div class="col-md-12" id="phFollowup11" style="display:none;">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rwConfirms" tabindex="-1" aria-labelledby="rwConfirms" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <div>
+                        <button id="cmdCfSave" type="button" class="btn">Confirm</button>
+                        <button id="cmdCfcancel" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="col-md-12 pt-2">
+                        <label id="lblConfirm"></label>
+                        <label id="lblCountMail" class="mt-2"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rwAddFile" tabindex="-1" aria-labelledby="rwAddFile" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="rwAddFileTitle">Upload File</h5>
+                    <div>
+                        <button id="cmdAttFileSave" type="button" class="btn">Upload"</button>
+                        <button id="cmdAttFileCancel" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="col-md-12 pt-2">
+                        Use the 'Select' button to browse for a file, or use your mouse to drag a file and drop it onto the selection box. Wait for the yellow dot to turn green. Then click "Upload." If you change your mind, click 'Remove' to unselect the file.
+                    </div>
+                    <div class="col-md-12">
+                        <label id="lblUp" style="color: #98442d;"></label><br />
+                        <label id="lblExtensions"></label><br />
+                        @*<telerik:RadAsyncUpload RenderMode="Lightweight" ID="RadAttachedFile" OnClientFileSelected="fileSelected" PostbackTriggers="cmdAttFileSave" runat="server" MaxFileInputsCount="1" OnClientValidationFailed="OnClientValidationFailed" Localization-Select="Select/Drop" DropZones=".dropzone,#RadAttachedFile" />*@
+                        @*<telerik:RadAsyncUpload RenderMode="Lightweight" ID="RadAttachedFile" OnClientFileSelected="fileSelected" PostbackTriggers="cmdAttFileSave" runat="server" MaxFileInputsCount="1" OnClientValidationFailed="OnClientValidationFailed" Localization-Select="Select/Drop" DropZones=".dropzone,#RadAttachedFile" />*@
+                        <label id="lblSizeLimit" class="lblsmall"></label><br />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rdPreview" tabindex="-1" aria-labelledby="rdPreview" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <div>
+                        @*<asp:Button ID="" runat="server" Text="" CssClass="btnSmall" OnClick="cmdReturn_Click" />
+                            <asp:Button ID="btnSendemail1" runat="server" Text="Send Email" CssClass="btnSmall" OnClientClick="return SendCheck_Validate_Contact();" />
+                            <asp:Button ID="Button3" runat="server" Text="Send Email" CssClass="btnSmall" Visible="false" />
+                            <asp:Button ID="btnCancelBoth" runat="server" Text="Cancel" CssClass="btnSmall" OnClick="btnCancelBoth_Click" />*@
+                        <asp:Button ID="" runat="server" Text="" CssClass="btnSmall" OnClick="cmdReturn_Click" />
+                        <asp:Button ID="btnSendemail1" runat="server" Text="Send Email" CssClass="btnSmall" OnClientClick="return SendCheck_Validate_Contact();" />
+                        <asp:Button ID="Button3" runat="server" Text="Send Email" CssClass="btnSmall" Visible="false" />
+                        <asp:Button ID="btnCancelBoth" runat="server" Text="Cancel" CssClass="btnSmall" OnClick="btnCancelBoth_Click" />
+                        <button id="cmdReturn" type="button" class="btn">Return</button>
+                        <button id="btnSendemail1" type="button" class="btn">Send Email</button>
+                        <button id="btnCancelBoth" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div class="col-xs-12">
+                            @(Html.Kendo().TextBox().Name("txtReviewsubject").HtmlAttributes(new { style = "width:95%" }))
+                        </div>
+                        <div class="col-xs-12">
+                            @(Html.Kendo().Editor().Name("rdEditorPreview").HtmlAttributes(new { style = "font-size:10pt;width:95%;height:493px;" }))
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="RdFlagComments" tabindex="-1" aria-labelledby="RdFlagComments" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div>
+                    <label id="closeRdFlagComments" class="pull-right float-end mb-2" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                </div>
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="lblFlagCommentTitle">@ViewBag.lblFlagCommentTitleText</h5>
+                    <div>
+                        <button id="btnSaveFlagComments" type="button" class="btn">Save</button>
+                        <button id="btnflagSame" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div class="col-xs-12">
+                            <label class="Font10" id="Label26">Flag:</label>
+                            @(Html.Kendo().DropDownList().Name("dFlag").DataTextField("strText").DataValueField("pKey").Height(400)
+                                                  .DataSource(source =>
+                                                     source.Custom()
+                                                     .Group(group => group.Add("groupId", typeof(string)))
+                                                     .Transport(transport => transport
+                                                     .Read(read => {
+                                                         read.Url("/Operations/GetSpeakerFlagGrouped").DataType("json").Type(HttpVerbs.Get);
+                                                     })).ServerFiltering(false)
+                                                   ).Value(ViewBag.dFlagSelectedValue.ToString()).HtmlAttributes(new { style = "width: 100%;min-width:200px;" }))
+                        </div>
+                        <div class="col-xs-12">
+                            <label class="Label69" id="Label26">Comments:</label>
+                            @(Html.Kendo().TextArea().Name("txtFlagComments").Rows(6).MaxLength(500).Enable(true).HtmlAttributes(new { style = "font-size:10pt;height:140px;background-color: white; color: black;" }))
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rwSendSMS" tabindex="-1" aria-labelledby="RdFlagComments" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div>
+                    <label id="closeRdFlagComments" class="pull-right float-end mb-2" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                </div>
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="lblSmsTitle">Send Text Message</h5>
+                    <div>
+                        <button id="btnSendsms" type="button" class="btn">Save</button>
+                        <button id="btnSendsmsCancel" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div class="col-xs-12">
+                            <label class="Font10" id="Label26">Text:</label>
+                            @(Html.Kendo().TextArea().Name("txtSMS").MaxLength(200).Placeholder("Enter Note").HtmlAttributes(new { style= "font-size:11pt;height:200px;background-color: white; color: black;" }) )
+                        </div>
+                        <div class="col-xs-12">
+                            <label class="Label69" id="Label26">Comments:</label>
+                            @(Html.Kendo().TextArea().Name("txtsignature").Rows(6).MaxLength(200).HtmlAttributes(new { style = "font-size:10pt;height:100px;background-color: white; color: black;" }))
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="@Model.strMobile" id="sMobile"/>
+    <input type="hidden" id="intpKey" value="0" />
+    <input type="hidden" id="hdfCallResult" value="0" />
+    <input type="hidden" id="dFlagSelected" data-selCom="@ViewBag.lblFlagCommentTitleText" value="@ViewBag.dFlagSelected" />
+    <input type="hidden" data-noc="@ViewBag.NEXTACTION_NoCall" data-nca="@ViewBag.NEXTACTION_NEVERCONTACT_AGAIN" data-nfu="@ViewBag.NEXTACTION_NOFOLLOWUP" id="CallActionID" />
+    <input type="hidden" value="" id="SelectedKeys" />
+    <input type="hidden" value="false" id="IsSendEmail" />
+    <input type="hidden" value="" id="strMessageID" />
+    <input type="hidden" value="" id="strMID" />
+    <input type="hidden" value="@(ViewBag.phFollowupVisible? true:false)" id="PhFollowUp" />
+    <input type="hidden" data-id="@Model.intPendingAcctPKey" data-aid="@Model.intAccount_pKey" data-eaid="@Model.intPendingEventAcctPKey" value="@Model.Event_pkey" id="DataElement" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#rwContact').modal('show');
+            $('#cmdSpkDel').click(function (e) {
+                e.preventDefault();
+                CommonFunctions.AjaxasyncCall('Post', '/Operations/DeleteSpeakerLog', { Selection: $('#SelectedKeys').val(), eaID: $('#DataElement').data("eaid") }, "JSON", UpdateSuccess, "Error Occcurred");
+            });
+            $('#cmdConSave').click(function (e) {
+                e.preventDefault();
+                function SuccessResult(result) {
+                    if (result !== null && result !== "ERROR" && result.msg !== "") {
+                        if (result.msg === "OK") {
+                            $('#rwContact').modal('hide');
+                            SpeakerGridRefresh();
+                        }
+                        else
+                            CommonFunctions.Alert(result.msg);
+                    }
+                    else
+                        CommonFunctions.Alert("Error occurred while updating log");
+
+                    CommonFunctions.LoadingStop();
+                }
+                var data = {
+                    eaID: $('#DataElement').data("eaid"),
+                    PendingID: $('#DataElement').data("id"),
+                    AcID: $('#DataElement').data("aid"),
+                    ddResponce: $("#ddResponce").data("kendoDropDownList").value(),
+                    rdMagiContact: $("#rdMagiContact").data("kendoDropDownList").value(),
+                    ddCallResults: $("#ddCallResults").data("kendoDropDownList").value(),
+                    ddCallNext: $("#ddCallNext").data("kendoDropDownList").value(),
+                    conby: $("#rdConBy").data("kendoRadioGroup").value(),
+                    ConFolVia: $("#rdConFolVia").data("kendoRadioGroup").value(),
+                    ddConFolDate: $("#ddConFolDate").val(),
+                    ddConDate: $("#ddConDate").val(),
+                    rpProducerOnly: $("#rdProducerOnly").data("kendoRadioGroup").value(),
+                    txtConMsg: $('#txtConMsg').val(),
+                    txtPermanent: $('#txtPermanent').val(),
+                    phFollowupVisible: ($('#PhFollowUp').val() === "false" ? false : true),
+                    rdConVia: $("#rdConVia").data("kendoRadioGroup").value(),
+                    CtVia: $("#rdConVia").data("kendoRadioGroup").value(),
+                    ConFolBy: $("#rdConFolBy").data("kendoRadioGroup").value(),
+                    strSubject: $('#txtConEMailSubj').val(),
+                    txtConFolEMailSubj: $('#txtConFolEMailSubj').val(),
+                    strFolMsg: $('#txtConFolNotes').val(),
+                    Followtype: $("#ckChooseoptions").data("kendoCheckBoxGroup").value().join(','),
+                    IsSendEmail: ($("IsSendEmail").val() === "false" ? false : true),
+                    FollowUp: false,
+                    strMessageID: $('#strMessageID').val(),
+                    strMID: $('#strMID').val(),
+                    IsPossible: $('#chkPossible')[0].checked,
+                    pKey: $('#intpKey').val()
+                }
+                CommonFunctions.AjaxasyncCall('Post', '/Operations/ConSaveClick', data, "JSON", SuccessResult, "Error Occcurred");
+            });
+            $('#btnSaveFlagComments').click(function (e) {
+                e.preventDefault();
+                function SuccessResult(result) {
+                    if (result !== null && result !== "ERROR" && result.msg !== "") {
+                        if (result.msg === "OK") {
+                            var value = $('#ddCallNext').data("kendoDropDownList").value();
+                            var noc = $('#CallActionID').data("noc");
+                            var nca = $('#CallActionID').data("nca");
+                            var nfu = $('#CallActionID').data("nfu");
+                            var phFollowupVisible = (value !== noc && value !== nca && value !== nfu);
+                            $('#txtFlagComments').val("");
+                            if (!phFollowupVisible)
+                                $('#phFollowup').show();
+                            else
+                                $('#phFollowup').hide();
+
+                            SpeakerGridRefresh();
+                            $('#RdFlagComments').modal('hide');
+                        }
+                        else
+                            CommonFunctions.Alert(result.msg);
+                    }
+                    else
+                        CommonFunctions.Alert("Error occurred while updating log");
+
+                    CommonFunctions.LoadingStop();
+                }
+                var data = {
+                    SpkrFlagId: $('#dFlag').data("kendoDropDownList").value(),
+                    PID: $('#DataElement').data("id"),
+                    EID: $('#DataElement').data("eaid"),
+                    ddCallNext: $("#ddCallNext").data("kendoDropDownList").value(),
+                    FlagComments: $('#txtFlagComments').val(),
+                };
+                CommonFunctions.AjaxasyncCall('Post', '/Operations/SaveFlagComments', data, "JSON", SuccessResult, "Error Occcurred");
+            });
+            $('#cmdClear').click(function (e) {
+                e.preventDefault();
+                $('#cmdCfSave').text("Save");
+                $('#cmdClear').hide();
+                $('#dpTime').val("");
+                $("#ckChooseoptions").data("kendoCheckBoxGroup").value([]);
+                $('#ddCallNext').data("kendoDropDownList").value(dataResult.CallNextAction_pKey);
+                $('#ddCallResults').data("kendoDropDownList").value(dataResult.CallOutcome_pKey);
+                $('#ddResponce').data("kendoDropDownList").value(dataResult.ResponseID);
+                $("#rdConBy").data("kendoRadioGroup").value(1);
+                $("#rdConVia").data("kendoRadioGroup").value(2);
+                $("#rdConBy").data("kendoRadioGroup").value(dataResult.FollowupBy);
+                $("#rdProducerOnly").data("kendoRadioGroup").value("0");
+                $('#txtConMsg').val("");
+                $('#txtConFolEMailSubj').val("Follow Plan");
+                $('#txtConFolNotes').val("");
+                $('#ddConFolDate').val("");
+            });
+            $('#btnSendsms').click(function (e) {
+                e.preventDefault();
+                function SuccessResult(result) {
+                    if (result !== null && result !== "ERROR" && result.msg !== "") {
+                        if (result.msg === "OK") {
+                            $('#strMID').val(result.MID);
+                            $('#rwSendSMS').modal('hide');
+                        }
+                        else
+                            CommonFunctions.Alert(result.msg);
+                    }
+                    else
+                        CommonFunctions.Alert("Error occurred while sending sms");
+
+                    CommonFunctions.LoadingStop();
+                }
+                if ($('#txtSMS').val().trim() === "") {
+                    CommonFunctions.Alert("Enter Text Message.");
+                    return false;
+                }
+                var data = {
+                    eaID: $('#DataElement').data("eaid"),
+                    PendingID: $('#DataElement').data("id"),
+                    AcID: $('#DataElement').data("aid"),
+                    SMS: $('#txtSMS').val().trim(),
+                    Sig: $('#txtsignature').val().trim(),
+                    strMobile: $('#sMobile').val(),
+                };
+                CommonFunctions.AjaxasyncCall('Post', '/Operations/SendSMSContact', data, "JSON", SuccessResult, "Error Occcurred");
+            })
+
+        });
+    </script>
+}
+else
+{
+
+
+}

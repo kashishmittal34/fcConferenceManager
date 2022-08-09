@@ -1,0 +1,25 @@
+/*!
+ * Datetimepicker for Bootstrap 3
+ * ! version : 4.7.14
+ * https://github.com/Eonasdan/bootstrap-datetimepicker/
+ */
+
+
+  .bootstrap-datetimepicker-widget.dropdown-menu.timepicker-sbs {
+    width:310px;
+  }
+.bootstrap-datetimepicker-widget a[data-action] {
+  padding: 6px 0;
+}
+.bootstrap-datetimepicker-widget .timepicker-hour,
+.bootstrap-datetimepicker-widget .timepicker-minute,
+.bootstrap-datetimepicker-widget .timepicker-second {
+  width: 100px;
+  font-weight: bold;
+  font-size: 1.2em;
+  margin: 0;
+}
+.bootstrap-datetimepicker-widget .timepicker {
+  margin:0 0 0 75px;
+  width:150px;
+}

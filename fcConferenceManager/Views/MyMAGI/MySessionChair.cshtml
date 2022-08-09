@@ -1,0 +1,19 @@
+﻿@using System.Data
+@model DataSet
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="magiMySessionMainWrapper mt-3">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+            <div class="col-md-8 col-lg-9 flex-grow-1">
+                @{
+                    Html.RenderAction("_PartialSessionChair", "MyMAGI", new { IsPage = true });
+                }
+            </div>
+        </div>
+    </div>
+</div>

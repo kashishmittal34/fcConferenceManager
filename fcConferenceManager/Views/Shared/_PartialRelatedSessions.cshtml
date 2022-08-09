@@ -1,0 +1,28 @@
+﻿@using System.Data
+@model  DataTable
+@{
+    WebGrid webGrid = new WebGrid(source: (Model.AsEnumerable().Select(p => new
+    {
+        pKey = p.Field<int>("EventSession_pKey"),
+        SessionID = p.Field<string>("SessionID"),
+        attendChecked = p.Field<int>("attendChecked"),
+        watchChecked = p.Field<int>("watchChecked"),
+        slidesChecked = p.Field<int>("slidesChecked"),
+        SessionTitle = p.Field<string>("SessionTitle"),
+        SessionTime = p.Field<string>("SessionTime"),
+    })), canPage: true, rowsPerPage: 10, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent", canSort: false);
+    webGrid.Pager(WebGridPagerModes.All);
+}
+<div class="col-md-12">
+    @webGrid.GetHtml(tableStyle: "table table-hover", headerStyle: "table-default", mode: WebGridPagerModes.All,
+    htmlAttributes: new { @id = "questionsGrid", @class = "Grid" },
+    columns: webGrid.Columns(
+
+        webGrid.Column("Attend", format:  @<text> <input type="checkbox" id="@("Attend_"+ item.pKey)" data-id="@item.pKey" data-info="@item.SessionID" class="relSessionCheck" @((item.attendChecked == 0)? "":"checked")  />  </text> ),
+        webGrid.Column("Watch", format:  @<text> <input type="checkbox" id="@("Watch_"+ item.pKey)"  data-id="@item.pKey" data-info="@item.SessionID" class="relSessionCheck"  @((item.slidesChecked == 0)? "":"checked")  />  </text> ),
+        webGrid.Column("Slide", format:  @<text> <input type="checkbox" id="@("Slide_"+ item.pKey)"  data-id="@item.pKey" data-info="@item.SessionID" class="relSessionCheck"  @((item.watchChecked == 0)? "":"checked")   />  </text> ),
+        webGrid.Column("SessionTitle", "SessionTitle"),
+        webGrid.Column("SessionTime", "SessionTime")
+        
+        ))
+</div>

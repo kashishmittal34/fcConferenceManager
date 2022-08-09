@@ -1,0 +1,360 @@
+@using fcConferenceManager.Models
+@{
+    ViewBag.Title = "MyFAQs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    bool answersAvailable = false;
+    System.Data.DataTable dtAnswer = new System.Data.DataTable();
+    System.Data.DataRow[] subdt = null;
+    if (ViewBag.QuesAnswer!= null)
+    {
+        dtAnswer = (System.Data.DataTable)ViewBag.QuesAnswer;
+        if (dtAnswer.Rows.Count>0)
+        {
+            answersAvailable = true;
+        }
+    }
+}
+<style>
+    details
+    {
+        color: #1c1919;
+    }
+
+    .CategoryList
+    {
+        color: #131111;
+    }
+
+    .FAQ input[id*="txtSuggestion"]
+    {
+        height: auto !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    summary
+    {
+        color: #000;
+    }
+</style>
+<div class="magiMySessionMainWrapper mt-3" id="refdiv">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+            <div class="col-md-8 col-lg-9 flex-grow-1">
+                <div class="row">
+                    <h2 class="col-md-6">My FAQs</h2>
+                    <div class="col-md-6 d-md-flex justify-content-end align-items-center flex-wrap">
+                        @if (ViewBag.VirtualDropdown_Visible)
+                        {
+                            <select id="VirtualEventDropDown" class="me-1 mb-1">
+                                @if (ViewBag.ddEventVirtualData  != null)
+                                {
+                                    System.Data.DataTable dt = (System.Data.DataTable)ViewBag.ddEventVirtualData;
+                                    foreach (System.Data.DataRow dr in dt.Rows)
+                                    {
+                                        @Html.Raw("<option value='" + dr["pKey"] + "' " + ((ViewBag.SelectedDropDown == dr["pKey"].ToString()) ? "selected>" : ">") + dr["strText"] + "</option>")
+                                    }
+                                }
+                            </select>
+                        }
+                        <a id="cmdReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 pull-right">Return</a>
+                    </div>
+                </div>
+                <div>
+                    <span id="lblInstruct ">@Html.Raw(ViewBag.InstructionText)</span>
+                </div>
+                <div style="padding-top:15px">
+                    <div class="d-md-flex col-md-6 ">
+                        Search:
+                        <input id="txtSearch" runat="server" maxlength="50" width="180" type="text" class="Font10 ms-md-2 me-md-2">
+                        <button id="btnSearch" type="button" class="btn me-md-1 ms-md-1 my-1 my-md-0"> Search </button>
+                        <div class=" col-md-3 d-flex">
+                            <input type="button" id="btnExpandAll" value="Expand All" class="lblSmall me-1 ms-1" style="border: none; background-color: #fff; color: blue; text-decoration: underline;">
+                            <input type="button" id="btnCollapseAll" value="Collapse All" class="lblSmall me-1 ms-1" style="border: none; background-color: #fff; color: blue; text-decoration: underline;">
+                        </div>
+                    </div>
+                    <div>
+                        <span id="lblMinChar" style="display:none;color:red;font-weight:bold;" class="Font11">Should be text on search.</span>
+                    </div>
+                    <div class="mt-2">
+                        <table id="tablef" width="100%">
+                            @if (Model != null && Model.Rows.Count>0)
+                            {
+                                foreach (System.Data.DataRow i in Model.Rows)
+                                {
+                                    <tr>
+                                        <td>
+                                            <details id="@("CategoryList_" + i["FAQCategory_pKey"].ToString())" class="CategoryList" style="color: black;">
+                                                <summary class="FAQCategory" id="@i["FAQCategory_pKey"]">@i["FAQCategoryID"]</summary>
+                                                <div style="margin-left:20px;background-color:whitesmoke;color:black;">
+                                                    <table id="FAQstable+@i["FAQCategory_pKey"]" style="padding-left:20px" width="100%">
+                                                        @if (answersAvailable)
+                                                        {
+                                                            subdt = dtAnswer.Select("FAQCategory_pKey =" + i["FAQCategory_pKey"]);
+                                                            if (subdt != null && subdt.Length>0)
+                                                            {
+                                                                @Html.Raw(string.Join(" ", subdt.AsEnumerable().Select(r => "<tr><td>"+ r["Elem"] + "</td></tr>").ToList()))
+                                                            }
+                                                        }
+                                                    </table>
+                                                </div>
+                                            </details>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modelNavInstructions" tabindex="-1" aria-labelledby="modelNavInstructions" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader">
+                <h5 class="modal-title" id="NavigationInstructions">Navigation Instructions</h5>
+                <div>
+                    <button id="closeNavInstructions" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row p-2">
+                    <div class="col-xs-12" id="modalNavBody" style="height:400px; overflow-y:scroll;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modelEvtUpdatesVirtual" tabindex="-1" aria-labelledby="modelEvtUpdatesVirtual" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader">
+                <h5 class="modal-title" id="EvtUpdatesVirtual">Event Updates</h5>
+                <div>
+                    <button id="closeEvtUpdatesVirtual" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                </div>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row p-2">
+                    <div class="col-xs-12 mb-1" id="modalEvtUpdatesVirtualBody" style="height:400px; overflow-y:scroll;">
+                    </div>
+                    <div class="text-center">
+                        <button id="closeEvtUpdatesVirtual" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (ViewBag.OpenSurveyRadWindow)
+{
+    <div class="modal fade" id="rwSurveyQuestion" tabindex="-1" aria-labelledby="rwSurveyQuestion" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="rwSurveyQuestionTitle">Registration Questions</h5>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div class="col-xs-12 pt-1">
+                            @Html.Raw(ViewBag.lblRegText)
+                        </div>
+                        <div class="text-center">
+                            <button id="cmdSaveQ" type="button" class="btn">Proceed</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#rwSurveyQuestion').modal('show');
+            $('#cmdSaveQ').click(function (e) {
+                e.preventDefault();
+                var result = CommonFunctions.AjaxCall('Post', '/Virtual/cmdSaveQClick', '', 'json', 'Error While Updating Schedule');
+                if (result !== null && result !== "ERROR") {
+                    if (result.msg === "OK") {
+                        parent.location.href = result.URL;
+                    }
+                    else
+                        CommonFunctions.Alert("Error Occurred while updating");
+                }
+                else
+                    CommonFunctions.Alert("Error Occurred while updating");
+            });
+        });
+    </script>
+}
+<script>
+    $(document).ready(function () {
+        $("#lblMinChar").hide();
+
+        function onChangeVirtual() {
+            var Data = { DropDownValue: $('#VirtualEventDropDown').val() };
+            switch ($('#VirtualEventDropDown').val()) {
+                case "9":
+                    var result = CommonFunctions.AjaxCall('Get', '/Home/GetNavigationInstructions', '', 'json', 'Error accessing text block data.');
+                    if (result.msg === "OK") {
+                        $('#modalNavBody').html(result.Content);
+                        $('#modelNavInstructions').modal('show');
+                    }
+                    else
+                        CommonFunctions.Alert(result.msg);
+                    break;
+                case "27":
+                    var result = CommonFunctions.AjaxCall('Get', '/Home/GetEventUpdatesContent', '', 'json', 'Error loading Event Updates');
+                    if (result.msg === "OK") {
+                        $('#modalEvtUpdatesVirtualBody').html(result.Content);
+                        $('#modelEvtUpdatesVirtual').modal('show');
+                    }
+                    else
+                        CommonFunctions.Alert(result);
+                    break;
+                case "21":
+                    OpenChatWindow();
+                    break;
+                default:
+                    var result = CommonFunctions.AjaxCall('Post', '/Home/VirtualDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+                    if (result.ActionType === "Redirect")
+                        window.location.href = result.RedirectionUrl;
+                    break;
+            }
+        }
+        $('#VirtualEventDropDown').change(onChangeVirtual);
+        $('#btnSearch').on('click', function () {
+            $("#lblMinChar").hide();
+            var searchtext = document.getElementById("txtSearch").value;
+            if (searchtext != "") {
+                var ids = $('.FAQCategory').map(function () { return $(this).attr('id'); });
+                var data = { CategoryId: 0, searchtext: searchtext };
+                var result = CommonFunctions.AjaxCall('Get', '/MyMAGI/GETFAQsQuestions', data, 'json', 'Error Occurred while Downloading File');
+                if (result.result == "OK") {
+                    var resultData = JSON.parse(result.FAQs);
+                    for (var k in resultData) {
+                        var Category = document.getElementById('CategoryList_' + resultData[k].FAQCategory_pkey);
+                        Category.open = true;
+                        var details = document.getElementsByClassName('Details_' + resultData[k].FAQ_pKey);
+                        var D = Array.from(details);
+                        for (let i = 0; i < D.length; i++)
+                            D[i].open = true;
+                    }
+                }
+                else
+                    CommonFunctions.Alert(result.message);
+            } else
+                $("#lblMinChar").show();
+
+        });
+
+        $('.FAQCategory').on('click', function () {
+            var Categorypkey = ($(this).attr('id'));
+            var id = "FAQstable+" + Categorypkey;
+            var trs = document.getElementsByTagName("table");
+            var rows = document.getElementById(id).rows.length;
+            var details = document.getElementsByClassName('FAQQuestn');
+            var D = Array.from(details);
+            for (let i = 0; i < D.length; i++)
+                D[i].open = false;
+
+            if (rows < 1) {
+                var data = { CategoryId: Categorypkey };
+                var result = CommonFunctions.AjaxCall('Get', '/MyMAGI/GETFAQsQuestions', data, 'json', 'Error Occurred while Downloading File');
+                if (result.result == "OK") {
+                    var resultData = JSON.parse(result.FAQs);
+                    for (var k in resultData) {
+                        var Category = document.getElementById('CategoryList_' + resultData[k].FAQCategory_pkey);
+                        Category.open = true;
+
+                        var details = document.getElementsByClassName('Details_' + resultData[k].FAQ_pKey);
+                        var D = Array.from(details);
+                        for (let i = 0; i < D.length; i++)
+                            D[i].open = true;
+                    }
+                }
+            }
+        });
+
+        async function ExpandAllInfo() {
+            var ids = $('.FAQCategory').map(function () {
+                return $(this).attr('id');
+            });
+            document.getElementById("txtSearch").value = '';
+            for (let i of ids) {
+                var id = "FAQstable+" + i;
+                var rows = document.getElementById(id).rows.length;
+                if (rows < 1) {
+                    var data = { CategoryId: i, searchtext: "" };
+                    var result = CommonFunctions.AjaxCall('Get', '/MyMAGI/GETFAQsQuestions', data, 'json', 'Error Occurred while Downloading File');
+                    if (result.result == "OK") {
+                        var resultData = JSON.parse(result.FAQs);
+                        for (var k in resultData) {
+                            var Category = document.getElementById('CategoryList_' + resultData[k].FAQCategory_pkey);
+                            Category.open = true;
+
+                            var details = document.getElementsByClassName('Details_' + resultData[k].FAQ_pKey);
+                            var D = Array.from(details);
+                            for (let i = 0; i < D.length; i++)
+                                D[i].open = true;
+
+                        }
+                    }
+                    else {
+                        CommonFunctions.Alert(result.message);
+                    }
+                }
+            }
+
+            var details = document.getElementsByClassName('CategoryList');
+            var D = Array.from(details);
+            for (let i = 0; i < D.length; i++) {
+                D[i].open = true;
+            }
+        }
+        function collapseAll() {
+            var details = document.getElementsByClassName('FAQQuestn');
+            var D = Array.from(details);
+            for (let i = 0; i < D.length; i++)
+                D[i].open = false;
+
+            var details = document.getElementsByClassName('CategoryList');
+            var D = Array.from(details);
+            for (let i = 0; i < D.length; i++)
+                D[i].open = false;
+        }
+
+        $('#btnExpandAll').on('click', function () {
+            ExpandAllInfo();
+        });
+
+        $('#btnCollapseAll').on('click', function () {
+            collapseAll();
+        });
+
+    });
+    function SaveFAQSuggestion(FAQ_pKey, FAQCategory_pKey) {
+        var value = $("input[type=radio][name= " + FAQ_pKey + "rdbtn]:checked").val();
+        var text = document.getElementById(FAQ_pKey + "txtSuggestion").value;
+        var data = { QuestionpKey: FAQ_pKey, SelectedValue: value, SuggestionText: text };
+        var result = CommonFunctions.AjaxCall('Get', '/MyMAGI/SubmitFAQs', data, 'json', 'Error Occurred while Downloading File');
+        if (result.result == "OK") {
+        }
+        var id = "FAQstable+" + FAQCategory_pKey;
+        var details = document.getElementsByClassName('FAQQuestn');
+        var D = Array.from(details);
+        for (let i = 0; i < D.length; i++) {
+            D[i].open = false;
+        }
+    }
+</script>
+
+

@@ -1,0 +1,382 @@
+﻿@using fcConferenceManager.Models
+@{
+    ViewBag.Title = "MyOrganization";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var organization = ViewData.Model;
+    string strSelected = "";
+}
+<style>
+    div#modalOne .modal-dialog-centered
+    {
+          max-width: 80%;
+    }
+    .pdl-1{padding-left:15px;}
+
+</style>
+<div class="container-fluid">
+    <div class="row py-3">
+        @{
+            Html.RenderAction("_PartialEventInfo", "Home");
+        }
+        <div class="col-md-8 flex-grow-1">
+            <div class="row">
+                <div class="col-md-4">
+                    @Html.Raw("<h2>My Organization</h2>")
+                </div>
+                <div class="col-md-8  mb-2 mb-md-0">
+                    <div class="d-flex   justify-content-between justify-content-md-end align-items-center">
+                        @if (ViewBag.cmdBoothUpdateVisible)
+                        {
+                            <a href="/MyConsole?1=1" id="cmdboothUpdate" type="button" name="cmdboothUpdate" class="btn me-1" style="text-decoration:none;">My Event Sponsor Console</a>
+                        }
+                        <button id="cmdUpdate" type="button" name="Speakebtn" data-modal="modalOne" class="btn me-1">Update Organization Information</button>
+                        <div>
+                            <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn">Return</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <table style="width: 100%">
+                        <tbody>
+                            <tr>
+                                <td style="vertical-align: top; padding-bottom: 5px" class="magiBreadcrumbWrapper">
+                                    <div id="cphMain_pnl1">
+                                        <div>
+                                            <div id="cphMain_pnlOrg" class="Rounded" style=" background-color:#FFFFFF;width:100%;">
+                                                <p id="refreshOrganizationText" style="padding:10px; margin-bottom:0;"> @Html.Raw(ViewBag.OrgText)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="ctl00_cphMain_rwEdit" class="borderLessDialog magi-custom-popup" style="display:none;">
+                                        <input id="ctl00_cphMain_rwEdit_ClientState" name="ctl00_cphMain_rwEdit_ClientState" type="hidden" autocomplete="off">
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modalOne" tabindex="-1" aria-labelledby="modalOne" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader">
+                <h5 class="lblTitle mt-1">Update Organization</h5>
+                <div>
+                    <button id="EditSave" type="button" class="btn btnYellow" data-bs-dismiss="modal">Save</button>
+                    <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+            <div class="modal-body p-1">
+                <form id="UpdateForm">
+                    <div class="row p-2">
+                        <div class="col-md-6">
+                            <label class="title bold">General Information</label>
+                            <div class="row">
+                                 <div class="col-md-2 float-md-start p-0">
+                                    <label for="name" class="lblSmall pdl-1 mt-1 me-1">Name:</label>
+                                </div>
+                                <div class="col-md-8 float-md-end  p-0">
+                                    <input type="text" name="txtOrgName" ID="txtOrgName" value="@organization.strOrganizationID" Width="100%" MaxLength="100" class="input-sm txtRequired Font11" style="border-left: 6px solid dodgerblue;" />
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                 <div class="col-md-2 float-md-start  p-0">
+                                    <label for="type" class="lblSmall pdl-1 mt-1 me-1">Type:</label>
+                                </div>
+                                <div class="col-md-8 float-md-end  p-0">
+                                    <select id="cbSiteType" name="cbSiteType" style="width:100%">
+                                        <option value="0">Not Specified </option>
+                                        @foreach (System.Data.DataRow dr in ViewBag.SiteTypeTable.Rows)
+                                        {
+                                            strSelected = "";
+                                            if (@organization.intOrganizationType_pKey == Convert.ToInt32(@dr["pKey"].ToString()))
+                                            {
+                                                strSelected = "selected";
+                                            }
+                                            <option value="@dr["pKey"]" @strSelected>@dr["strText"] </option>
+                                        }
+                                    </select>
+                                    <input type="hidden" id="hiddencbSiteType" name="hiddencbSiteType" value="" />
+                                </div>
+                            </div>
+                            <div class="row mt-2" id="siteTypeDiv">
+                             <div class="col-md-3 float-md-start  p-0">
+                                    <label for="sitetype" class="lblSmall float-md-end   mt-1 me-1">Site Type:</label>
+                                </div>
+                                <div class="col-md-7 float-md-end  p-0">
+                                    <select id="cbSite" name="cbSite" style="width:100%;">
+                                        <option value="0">Not Specified </option>
+                                        @foreach (System.Data.DataRow dr in ViewBag.SiteTable.Rows)
+                                        {
+                                            strSelected = "";
+                                            if (@organization.strOrgSiteType == @dr["strText"].ToString())
+                                            {
+                                                strSelected = "selected";
+                                            }
+                                            <option value="@dr["pKey"]" @strSelected>@dr["strText"] </option>
+                                        }
+                                    </select>
+                                    <input type="hidden" id="hiddencbSite" name="hiddencbSite" value="" />
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-2 float-md-start  p-0">
+                                    <label for="parentName:" class="lblSmall pdl-1 mt-1 me-1">Parent Name:</label>
+                                </div>
+                                <div class="col-md-8 float-md-end  p-0">
+                                    <input type="text" name="txtParentOrgName" ID="txtParentOrgName" value="@organization.strParentOrgName" style=" width:100% ; maxlength:50 ;" class="Font11 input-sm " />
+                                </div>
+                            </div>
+
+                            <label class="title bold mt-2">Primary Contact</label>
+                            <div class="row">
+                                <div class="col-md-2  float-md-start  p-0">
+                                    <label for="name" class="lblSmall pdl-1 mt-1 me-1">Name:</label>
+                                </div>
+                                <div class="col-md-8 float-md-end  p-0">
+                                    <input type="text" name="txtPrimaryContactName" ID="txtPrimName" value="@organization.strPrimaryContactName" style=" width:100 ; maxlength:50 ;" class="Font11 input-sm " />
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                               <div class="col-md-2  float-md-start  p-0">
+                                    <label for="phone" class="lblSmall pdl-1 mt-1 me-1">Phone:</label>
+                                </div>
+                                <div class="col-md-8 float-md-end  p-0">
+                                    <input type="text" name="txtPrimPhone" ID="txtPrimPhone" value="@organization.strPrimaryContactPhone" Width="100%" MaxLength="20" class="Font11 input-sm " />
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-2  float-md-start  p-0">
+                                    <label for="email" class="lblSmall pdl-1 mt-1 me-1">Email:</label>
+                                </div>
+                                <div class="col-md-8 float-md-end  p-0">
+                                    <input type="text" name="txtPrimEmail" ID="txtPrimEmail" value="@organization.strPrimaryContactEmail" Width="100%" MaxLength="150" class="Font11 input-sm " />
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-2  float-md-start  p-0">
+                                    <label for="title" class="lblSmall pdl-1 mt-1 me-1">Title:</label>
+                                </div>
+                                <div class="col-md-8 float-md-end  p-0">
+                                    <input type="text" name="txtPrimTitle" ID="txtPrimTitle" value="@organization.strPrimaryContactTitle" Width="100%" MaxLength="50" class="Font11 input-sm " />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="title bold">Mailing Address</label>
+                            <div class="row">
+                                <div class="col-md-2 float-md-start p-0">
+                                    <label for="cbCountry" class="lblSmall pdl-1  mt-1 me-1">Country:</label>
+                                </div>
+                                <div class="col-md-8 float-md-end  p-0">
+                                    <select id="cbCountry" name="cbCountry" style="width:100%;">
+                                        <option value="0">Not Specified </option>
+                                        @foreach (System.Data.DataRow dr in ViewBag.CountryTable.Rows)
+                                        {
+                                            strSelected = "";
+                                            if (@organization.intCountry_Pkey == Convert.ToInt32(@dr["pKey"].ToString()))
+                                            {
+                                                strSelected = "selected";
+
+                                            }
+                                            <option value="@dr["pKey"]" @strSelected>@dr["strText"] </option>
+                                        }
+                                    </select>
+                                    <input type="hidden" id="hiddenCountry" name="hiddenCountry" value="" />
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-2  float-md-start  p-0">
+                                    <label for="txtAddress1" class="lblSmall pdl-1   mt-1 me-1">Address 1:</label>
+                                </div>
+                                <div class="col-md-8  float-md-end  p-0">
+                                    <input type="text" name="txtAddress1" ID="txtAddress1" value="@organization.strAddress1" Width="100%" MaxLength="50" class="Font11 input-sm" />
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-2  float-md-start  p-0">
+                                    <label for="txtAddress2" class="lblSmall pdl-1  mt-1 me-1">Address 2:</label>
+                                </div>
+                                <div class="col-md-8  float-md-end  p-0">
+                                    <input type="text" name="txtAddress2" ID="txtAddress2" value="@organization.strAddress2" Width="100%" MaxLength="50" class="Font11 input-sm" />
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                 <div class="col-md-2  float-md-start  p-0">
+                                    <label for="txtCity" class="lblSmall pdl-1  mt-1 me-1">City:</label>
+                                </div>
+                                <div class="col-md-8  float-md-end  p-0">
+                                    <input type="text" name="txtCity" ID="txtCity" value="@organization.strCity" Width="100%" MaxLength="50" class="Font11 input-sm" />
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-2  float-md-start  p-0">
+                                    <label for="cbState" class="lblSmall pdl-1  mt-1 me-1">State/Zip:</label>
+                                </div>
+                                <div class="col-md-8  float-md-end d-flex p-0">
+                                    <select id="cbState" name="cbState" style="display:inline-block; width:65%;">
+                                        <option value="0"></option>
+                                        @foreach (System.Data.DataRow dr in ViewBag.StateTable.Rows)
+                                        {
+                                            strSelected = "";
+                                            if (@organization.intState_Pkey == Convert.ToInt32(@dr["pKey"].ToString()))
+                                            {
+                                                strSelected = "selected";
+                                            }
+                                            <option value="@dr["pKey"]" @strSelected>@dr["strText"] </option>
+                                        }
+                                    </select>
+                                    <input type="text" name="txtZip" ID="txtZip" value="@organization.strZip" style="width:33% ;display:inline-block;" MaxLength="10" class="Font11 ms-1" />
+                                    <input type="hidden" id="hiddencbState" name="hiddencbState" value="" />
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-2  float-md-start  p-0">
+                                    <label for="cbTimeZone" class="lblSmall pdl-1  mt-1 me-1">Timezone:</label>
+                                </div>
+                                <div class="col-md-8  float-md-end  p-0">
+                                    <select id="cbTimeZone" name="cbTimeZone" style="width:100%;">
+                                        <option value="0">--Select--</option>
+                                        @foreach (System.Data.DataRow dr in ViewBag.TimeZoneTable.Rows)
+                                        {
+                                            strSelected = "";
+                                            if (@organization.intTimezone_pKey == Convert.ToInt32(@dr["pKey"].ToString()))
+                                            {
+                                                strSelected = "selected";
+                                            }
+                                            <option value="@dr["pKey"]" @strSelected>@dr["strText"] </option>
+                                        }
+                                    </select>
+                                    <input type="hidden" id="hiddenTimeZone" name="hiddenTimeZone" value="" />
+                                </div>
+                            </div>
+
+                            <label class="title bold mt-2">Email</label>
+                            <div class="row">
+                               <div class="col-md-2  float-md-start  p-0">
+                                    <label for="email1" class="lblSmall pdl-1  mt-1 me-1">Email 1:</label>
+                                </div>
+                                <div class="col-md-8  float-md-end  p-0">
+                                    <input type="email" name="txtEmail1" ID="txtEmail1" value="@organization.strEmail" Width="100%" MaxLength="150" class="Font11 input-sm" />
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-2  float-md-start  p-0">
+                                    <label for="email2" class="lblSmall pdl-1 me-1">Email 2:</label>
+                                </div>
+                                <div class="col-md-8  float-md-end  p-0">
+                                    <input type="email" name="txtEmail2" ID="txtEmail2" value="@organization.strEmail2" Width="100%" MaxLength="150" class="Font11 input-sm" />
+                                </div>
+                            </div>
+                            <label class="title bold mt-2">Web</label>
+                            <div class="row">
+                                 <div class="col-md-2  float-md-start  p-0">
+                                    <label for="txtURL" class="lblSmall pdl-1  mt-1 me-1">URL:</label>
+                                </div>
+                                <div class="col-md-8  float-md-end  p-0">
+                                    <input type="text" name="txtURL" ID="txtURL" value="@organization.strURL" Width="100%" MaxLength="50" class="Font11 input-sm" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#cmdUpdate').click(function () {
+            $('#modalOne').modal('show');
+        });
+
+        $('#siteTypeDiv').hide();
+        if ($("#cbSiteType").val() === "1")
+            $('#siteTypeDiv').show();
+
+        $("#cbSiteType").change(function () {
+            var ddtext = $("#cbSiteType option:selected").text();
+            $("#hiddencbSiteType").val(ddtext);
+            $('#siteTypeDiv').hide();
+            if ($("#cbSiteType").val() === "1")
+                $('#siteTypeDiv').show();
+        });
+
+        if (ddtext = $("#cbCountry option:selected").val() > 2)
+            document.getElementById("cbState").style.display = "none";
+
+        $("#cbCountry").change(function () {
+            var ddtext = $("#cbCountry option:selected").text();
+            $("#hiddenCountry").val(ddtext);
+
+            var id = $(this).val();
+            document.getElementById("cbState").style.display = (id <= 2) ? "block" : "none";
+
+            $("#cbTimeZone").empty();
+            $.get("BindTimeZones", { Country_Pkey: id }, function (data) {
+                var v = "<option>--Select--</option>";
+                $.each(data, function (i, v1) {
+                    v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                });
+                $("#cbTimeZone").html(v);
+            });
+        });
+
+        $("#cbState").change(function () {
+            var ddtext = $("#cbState option:selected").text();
+            $("#hiddencbState").val(ddtext);
+        });
+
+        $("#cbTimeZone").change(function () {
+            var ddtext = $("#cbTimeZone option:selected").text();
+            $("#hiddenTimeZone").val(ddtext);
+        });
+
+        function ValidateText() {
+            var result = "";
+            var phoneno = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+            var contact = document.getElementById("#txtPrimPhone");
+            var name = document.getElementById("#txtOrgName");
+            if (name === "")
+                result = "Please provide a valid Name";
+
+            return result;
+        }
+
+        $("#EditSave").click(function (e) {
+            e.preventDefault();
+
+            var strValidation = ValidateText();
+            if (strValidation === "") {
+                var ddtext = $("#cbSite option:selected").text();
+                $("#hiddencbSite").val(ddtext);
+
+                var ddtext = $("#cbSiteType option:selected").text();
+                $("#hiddencbSiteType").val(ddtext);
+
+                var ddtextCountry = $("#cbCountry option:selected").text();
+                $("#hiddenCountry").val(ddtextCountry);
+
+                var form = $("#UpdateForm").serialize();
+                var result = CommonFunctions.AjaxCall('Post', "/MyMAGI/UpdateOrganisation", form, 'json', 'Error Occurred While Updating Organization');
+                if (result !== null && result !== "Error") {
+                    if (result.result === "Success") {
+                        CommonFunctions.Alert("Updated");
+                        $('#refreshOrganizationText').html(result.PageMessage);
+                    }
+                    else
+                        CommonFunctions.Alert(result.result);
+                }
+                else
+                    CommonFunctions.Alert("Error Occurred While Updating Organization")
+            } else
+                CommonFunctions.Alert(strValidation);
+        });
+    });
+</script>

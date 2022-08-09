@@ -1,0 +1,32 @@
+﻿@using System.Data
+@model  DataTable
+@{
+    WebGrid webGrid = new WebGrid(source: (Model.AsEnumerable().Select(p => new
+    {
+        Question = p.Field<string>("Question"),
+        Status = p.Field<string>("Status"),
+        Response = p.Field<string>("Response"),
+        pkey = p.Field<int>("pkey"),
+        Active = p.Field<bool>("Active"),
+    })), canPage: true, rowsPerPage: 10, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent", canSort: false);
+    webGrid.Pager(WebGridPagerModes.All);
+}
+<div class="col-xs-12">
+    @webGrid.GetHtml(tableStyle: "table table-hover", headerStyle: "table-default", mode: WebGridPagerModes.All,
+    htmlAttributes: new { @id = "questionsGrid", @class = "Grid" },
+    columns: webGrid.Columns(
+        webGrid.Column("Question", "Question"),
+        webGrid.Column("Status", "Status"),
+        webGrid.Column("Response", "Response"),
+        webGrid.Column("Action", format:
+                                @<text>
+                                    @if (!item.Active)
+                                                {
+                                        <button data-id="@item.pKey" class="btn btnSmall editQuestion">Edit</button>
+                                                }
+                                                else
+                                                {
+                                        <button class="btn btnSmall" style="display:none;">Edit</button>
+                                                }
+                                </text>)))
+</div>

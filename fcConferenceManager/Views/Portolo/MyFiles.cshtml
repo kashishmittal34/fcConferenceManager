@@ -1,0 +1,184 @@
+﻿@model List<fcConferenceManager.Models.Portolo.MyFileUpload>
+
+@{
+    ViewBag.Title = "MyFiles";
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+}
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap"
+      rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="~/Css/style.css" />
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var uri = window.location.toString();
+        if (uri.indexOf("?") > 0) {
+            var clean_uri = uri.substring(0, uri.indexOf("?"));
+            window.history.replaceState({}, document.title, clean_uri);
+        }
+
+    });
+</script>
+<body>
+
+
+    <section class="task-list-form center">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    @using (Html.BeginForm("MyFiles", "Portolo", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            
+                                <h2>My Files</h2>
+                                <hr />
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                 
+                        <div class="row form-group">
+                            <label class="col-9"><b>Upload Files</b></label><br />
+                            <div class="col-md-10">
+                                <input type="file" id="files" name="files" required="required" class="form-control"><br />
+
+                            </div>
+                            <div class="col-9">
+                                <input type="submit" value="Upload" class="btn" style="color:blue" />
+                            </div>
+                        </div>                           
+                        </div>
+                    }
+                    <form id="contact" action="/Portolo/MyFiles" method="get" enctype="multipart/form-data" onsubmit="validateInputs(e);">
+
+                        <div class="row">
+                            <div class="col-lg-12 mt-5">
+
+                                <div class="dash-tabs">
+
+
+
+                                    <div class="col-md-10">
+
+
+                                        <div class="form-group">
+
+                                            <div class="card-header">
+                                                <b>Search</b>
+                                                &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+                                                @Html.TextBox("search")
+
+
+                                                &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+                                                <input type="submit" value="Search" class="btn btn-default" />
+
+
+                                                &nbsp;&nbsp;
+
+                                                <button class="btn btn-default" onclick="location.href='@Url.Action("MyFiles", "Portolo")';return false;">Reset</button>
+
+                                            </div>
+
+                                            <div id="data">
+                                                @if (Model.Count > 0)
+                                                {
+
+
+                                                    var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 5);
+                                                    @grid.GetHtml(tableStyle: "table table-striped table-bordered table-hover", headerStyle: "webgrid-header",
+                                                                 alternatingRowStyle: "webgrid-alternating-row", selectedRowStyle: "webgrid-selected-row",
+                                                                 footerStyle: "webgrid-footer", rowStyle: "webgrid-row-style", mode: WebGridPagerModes.All,
+                                                                 firstText: "<< First", previousText: "< Prev", nextText: "Next >", lastText: "Last >>",
+                                                                 htmlAttributes: new { id = "DataTable" },
+                                                                 columns: grid.Columns(
+                                                                     grid.Column("FileName", header: "File Name", canSort: false),
+
+                                                                     grid.Column(header: "Download", format:
+                                                                                                                                                @<text>
+
+                                                                                                                                                    <a href="~/Portolo/DownloadFile?filePath=@item.FileUrl"><img src="~/Images/Icons/Downloadfileicon.png" style="width: auto; height: contain;align-content:flex-start" title="Download" /></a>
+
+                                                                                                                                                </text>),
+             grid.Column( header: "Copy Link", format:
+@<text>
+    <input type="hidden" value="@ViewBag.apppath" id="sourcePath" />
+    <a class="clipboard"  onclick="funcCopyToClipboard(@item.FileId)"><img src="~/Images/Icons/Copylnk.png" style="width: 30px; height: 20px; align-content:flex-start" /></a>
+</text>),
+grid.Column(header: "Delete", format:
+@<text>
+    <a class="btn btn-default" href="~/Portolo/DeleteFile?pkey=@item.FileId" ,new { onclick="return confirm('Are you sure wants to delete?');" }>Delete</a>
+</text>)));
+                                                }
+                                                else
+                                                {
+                                                    <b>No Details Found.</b>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+    <script>
+        function funcCopyToClipboard(id) {
+            $.ajax({
+                url: "/Portolo/GetFilePath/" + id,
+                type: "GET",
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                success: function (result) {
+                    var searchPath = $('#sourcePath').val() + result.FileUrl;                  
+                    navigator.clipboard.writeText(searchPath);
+                    document.execCommand("copy");
+                    alert("Link Copied!");
+                },
+                error: function (result) {
+                    alert('Sorry!There is Some Error!');
+                }
+              
+            });
+            return false;
+        }
+        
+
+    </script>
+
+
+
+    <script>
+        $.noConflict(false);
+        $(document).ready(function () {
+            // Toggle menu on click
+            $("#menu-toggler").click(function () {
+                toggleBodyClass("menu-active");
+            });
+
+            function toggleBodyClass(className) {
+                document.body.classList.toggle(className);
+            }
+
+        });
+        $.noConflict(true)
+    </script>
+</body>

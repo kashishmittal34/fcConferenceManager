@@ -1,0 +1,137 @@
+@{
+    ViewBag.Title = "Overview";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .lblTitle
+    {
+        padding-bottom: 8px;
+        display: inline-block;
+        color: Navy;
+        background-color: transparent;
+        font-size: 18pt;
+    }
+
+    .content-border
+    {
+        padding: 0.7rem;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+    }
+
+    .divbody
+    {
+        padding-left: 10px;
+    }
+</style>
+<input type="hidden" value="@ViewBag.SelectedValue" id="selected" />
+<div class="magiMySessionMainWrapper mt-3">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+            <div class="col-md-8 col-lg-9 flex-grow-1">
+                <div class="col-md-12 mainbody content-border mb-3">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label id="lblTitle" class="lblTitle magi-inline-block">@ViewBag.PageTitle</label>
+                            @if (ViewBag.phPRelations)
+                            {
+                                <p><span class="me-1">(For more information or to sign up, contact</span><a href="" id="btnPMgr">@ViewBag.cmdPMgr</a>)</p>
+                            }
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-md-flex justify-content-end justify-content-lg-end mt-1">
+                                <div>
+                                    <span>@Html.DropDownList("OverViewDropDown", null, new { @class = "bg-light mb-1 me-1 d-inline", id = "OverViewDropDown" })</span>
+
+                                    @if (ViewBag.btnEditVisible)
+                                    {
+                                        <a id="btnEdit" href="/frmEditStdText.aspx?PK= @ViewBag.mode" type="button" class="btn btnGreen mb-1 mb-1">Edit</a>
+                                    }
+                                    <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 ">Return</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if (ViewBag.phGuaranteeVisible)
+                    {
+                        <div class="col-md-12 mb-2 d-flex" id="phGuarantee">
+                            <img id="Image56" src="~/images/icons/MAGI_guarantee_100.jpg" />
+                            <div class="mt-4">
+                                <label><b>Money-Back Satisfaction Guarantee</b>. MAGI is the only clinical research conference that offers a money-back guarantee</label>
+                                <a id="btnTerms" href="">(terms and conditions)</a><br />
+                                <label>Find out for yourself why 99%+ of participants are satisfied with MAGI conferences.</label>
+                            </div>
+
+                        </div>
+                    }
+                    @*<div class="lblTitle">@ViewBag.PageTitle</div>*@
+                    <div class="col-md-12 mb-2">@Html.Raw(@ViewBag.FormText)</div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="rwPopText" tabindex="-1" aria-labelledby="rwPopText" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl" style="width:800px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="d-flex">
+                            <img src="~/Images/miscellaneous/terms.png" style="height:40px;" />
+                            <h3 class="ml-0 pl-0">@ViewBag.lblPopTextTitle</h3>
+                        </div>
+                        <div>
+                            <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                        </div>
+                    </div>
+                    <div class="modal-body" id="dvInfoBody">
+                        <div style="font-size:9pt;">@Html.Raw(@ViewBag.PopUpText)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+<input type="hidden" value="@ViewBag.OverViewDropDownSelected" id="DropdownSelected" />
+<script>
+    $(document).ready(function ()
+    {
+        var sel = $('#selected').val();
+
+        if (sel > 0)
+            document.getElementById("OverViewDropDown").selectedIndex = sel;
+        else
+            document.getElementById("OverViewDropDown").selectedIndex = -1;
+
+        $("#btnTerms").click(function (e)
+        {
+            $('#rwPopText').modal('show');
+            e.preventDefault();
+			//$('#PopupText').modal('show');										  
+        });
+
+        $("#btnPMgr").click(function (e)
+        {
+            e.preventDefault();
+            var result = CommonFunctions.AjaxCall('Post', '/MAGI/ProgramManager', Data, 'json', 'Error Occurred while redirecting');
+            if (result.ActionType === "OK")
+                window.location.href = result.url;
+        });
+
+        $('#OverViewDropDown').change(function ()
+        {
+            var Data = { DropDownValue: $('#OverViewDropDown').val() };
+            var result = CommonFunctions.AjaxCall('Post', '/MAGI/OverViewDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+            if (result.ActionType === "Redirect")
+                window.location.href = result.RedirectionUrl;
+        });
+        $('#OverViewDropDown').val($('#DropdownSelected').val());
+
+    });
+
+</script>
+

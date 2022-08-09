@@ -1,0 +1,122 @@
+﻿@using System.Data
+@{
+    DataTable ReminderList = new DataTable();
+    bool VisibleTips = false, ListVisible = false;
+    if (ViewData["Reminders"] != null)
+    {
+        ReminderList = (DataTable)ViewData["Reminders"];
+        if (ReminderList != null && ReminderList.Rows.Count > 0)
+        {
+            ListVisible = true;
+        }
+    }
+    if (ViewData["VisibleTips"] != null)
+    {
+        VisibleTips = Convert.ToBoolean(ViewData["VisibleTips"]);
+    }
+}
+
+@if (ViewBag.TimerVisible == true)
+{
+    <div class="d-flex magiEventTimingWrapper justify-content-between mb-2">
+        <div>
+            <span class="magiEventTimingTitle"> Event Time (@ViewData["RegionCode"]) </span>
+            <span class="magiEventTiming mytime"> @ViewData["CurrentTime"] </span>
+        </div>
+        <div>
+            <span class="magiEventTimingTitle"> My Time </span>
+            <span class="magiEventTiming time"> 6:40 PM  </span>
+        </div>
+        <div class="magiEventTimingHour">
+            <span class="d-flex align-items-center">
+                <input type="radio" value="AM/PM" name="TimeTypeCheck" class="timeformatAMPM" checked="checked" />
+                <label>AM/PM</label>
+            </span>
+            <span class="d-flex align-items-center">
+                <input type="radio" value="24Hour" class="timeformatAMPM" name="TimeTypeCheck" />
+                <label>24 Hour</label>
+            </span>
+        </div>
+    </div>
+}
+
+<!-- reminder section-->
+@if (ViewBag.Reminder_Visible == true)
+{
+    <div class="magiReminderWrapper mb-2">
+        <div class="magiReminderTitle">
+            My Reminders
+        </div>
+        <div class="magiReminderItemsWrapper">
+            @if (VisibleTips)
+            {
+                @Html.Raw("<label class='fw-bold' style='color:blue;font-size:11pt;'>" + @ViewData["ReminderTip"] + "</label>")
+            }
+            @if (ListVisible)
+            {
+                <ul class="p-0 list-inline">
+                    @foreach (DataRow dr in ReminderList.Rows)
+                    {
+                        @Html.Raw("<li class='form-check mb-1'>");
+                        @Html.Raw("<input type='checkbox' id='ckDisableReminderAll' data-key='" + dr["pKey"] + "' data-type='" + dr["PageType"] + "' class='form-check-input ckDisableReminderAll' /> <label>" + dr["AlertMessage"] + "</label></li>");
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+}
+<!--end reminder section-->
+
+@if (ViewBag.Reminder_Visible == true)
+{
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+
+            $(document).on('click', '.ckDisableReminderAll', function ()
+            {
+
+                var thisCheck = $(this)[0];
+                var IDKey = (thisCheck.dataset.key === "" ? "0" : thisCheck.dataset.key);
+                var type = thisCheck.dataset.type;
+                var checked = !thisCheck.checked;
+                if (!checked)
+                {
+
+                    var data = { ValuePKey: IDKey, ValueOne: type, itemState: checked };
+                    var result = CommonFunctions.AjaxCall('Post', '/MyMAGI/NotificationCheck', data, 'json', 'Error While Updating Schedule');
+                    if (result === "OK")
+                        $(this).parent('li').remove();
+                    else
+                        CommonFunctions.Alert(result);
+                }
+
+            });
+        });
+    </script>
+}
+@if (ViewBag.TimerVisible == true)
+{
+    <script type="text/javascript">
+        function DigitalClockNotification()
+        {
+
+            var tFormat = $("input[type='radio'].timeformatAMPM:checked").val() == "AM/PM" ? true : false;
+            let time = new Date();
+            let timeFormat = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: tFormat });
+            $('.time').text(timeFormat);
+            convertToServerTimeZone_Notification(tFormat);
+        }
+        function convertToServerTimeZone_Notification(tFormat)
+        {
+            //EST
+            offset = -@ViewData["TimeOffset"];
+            clientDate = new Date();
+            utc = clientDate.getTime() + (clientDate.getTimezoneOffset() * 60000);
+            serverDate = new Date(utc + (3600000 * offset));
+            $('.mytime').text(serverDate.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: tFormat }));
+        }
+        setInterval(() => { DigitalClockNotification(); }, 1000);
+    </script>
+}
+<!--end left sidebar-->

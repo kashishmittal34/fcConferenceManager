@@ -1,0 +1,394 @@
+@model fcConferenceManager.Models.ReportIssue
+@{
+    ViewBag.Title = "MAGI's Clinical Research Conference";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .lblTitle
+    {
+        display: inline-block;
+        color: Navy;
+        background-color: transparent;
+        font-size: 18pt;
+    }
+
+    .group label
+    {
+        font-size: 8pt;
+    }
+
+    .magi-upload-file-wrapper form
+    {
+        position: relative;
+    }
+
+    .magi-upload-file-wrapper form span.mai-upoad-fake-input
+    {
+        width: 100px;
+        border-color: #d3d3d3;
+        border-width: 1px;
+        border-style: solid;
+        min-height: 27px;
+        display: block;
+    }
+
+    .magi-upload-file-wrapper form input[type="file"]
+    {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        opacity: 0;
+        z-index: 1;
+        cursor: pointer;
+    }
+
+    input[type="file"]:active ~ span.btn
+    {
+        top: 2px !important;
+    }
+
+    #uploaded_files
+    {
+        font-size: 10pt;
+        height: 22px;
+        display: inline-block;
+    }
+
+    #clear_Attached_Files, #attached_files
+    {
+        display:none;
+    }
+
+    #clear_Attached_Files
+    {
+        cursor: pointer;
+        margin-left: 15px;
+        font-size: 11px;
+    }
+</style>
+<div>
+    <div class="magiMySessionMainWrapper mt-3">
+        <div class="container-fluid">
+            <div class="row">
+                @{
+                    Html.RenderAction("_PartialEventInfo", "Home");
+                }
+                <div class="col-md-12 col-lg-9 flex-grow-1">
+                    <form id="formIssue" action="/MAGI/SubmitIssue" method="post" enctype="multipart/form-data">
+                        <div class="row mb-2">
+                            <div class="col-8">
+                                <h2 id="lblTitle">@ViewBag.PageTitle</h2>
+                            </div>
+                            <div class="col-4">
+                                <div class="text-end">
+                                    <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1">Return</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <div>@Html.Raw(@ViewBag.FormText)</div>
+                        </div>
+                        <div class="row mb-2 gx-1">
+                            <div class="col-md-4">
+                                <label for="issue" class="Font8">What is the Issue?:</label>
+                                <input type="text" placeholder="" name="Issuetitle" id="Issuetitle" style="border-left: 6px solid dodgerblue;">
+                            </div>
+
+                            <div class="col-md-4">
+                                <span class="Font8">Where is the Issue?(What is the URL/Internet address?):</span>
+                                <input type="text" placeholder="" name="Issuelocation" id="Issuelocation" />
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="issuetype" class="Font8">What type of issue it is?:</label><br />
+                                @Html.DropDownList("IssueType", null, new { @class = "w-100 bg-light", id = "IssueType" })
+                                <input type="hidden" id="IssueTypeName" name="IssueTypeName" />
+                                <input type="hidden" id="IssuepKey" name="IssuepKey" />
+                            </div>
+                        </div>
+
+                        <div class="row gx-1">
+                            <div class="col-md-4">
+                                <label for="issue" class="Font8">User Name:</label>
+                                @if (@ViewBag.UserName != "")
+                                {
+                                    <input type="text" readonly placeholder="@ViewBag.UserName" value="@ViewBag.UserName" name="IssueReportedbyUser" id="IssueReportedbyUser" style="border-left: 6px solid dodgerblue;"><p style="margin-right:5px;" class="m-headingSection"></p>
+                                }
+                                else
+                                {
+                                    <input type="text" placeholder="@ViewBag.UserName" name="IssueReportedbyUser" id="IssueReportedbyUser" style="border-left: 6px solid dodgerblue;"><p style="margin-right:5px;" class="m-headingSection"></p>
+                                }
+                            </div>
+                            <div class="col-md-4">
+                                <label for="Email" class="Font8">Email:</label>
+                                @if (@ViewBag.Email != "")
+                                {
+                                    <input class="fixInputGap" type="Email" readonly placeholder="@ViewBag.Email" value="@ViewBag.Email" name="UserEmail" id="UserEmail" style="border-left: 6px solid dodgerblue;">
+                                }
+                                else
+                                {
+                                    <input class="fixInputGap" type="Email" placeholder="@ViewBag.Email" name="UserEmail" id="UserEmail" style="border-left: 6px solid dodgerblue;">
+                                }
+                            </div>
+                            <div class="col-md-4"></div>
+                        </div>
+                        <div class="col-md-12 group">
+                            <label for="screenshot"> What can you tell us about the issue? Can you include a screenshot? (use Ctrl-V or the right-click menu to paste images into the text body)</label>
+                            <button type="button" id="btnUploadFile" class="btn" style="border:none; font-size:8pt ;color:blue"><u>Upload Image</u></button>
+                        </div>
+                        <div class="col-md-12 group">
+                            <span id="uploaded_files"></span>
+                        </div>
+                        <div class="col-md-12 group">
+                            <textarea id="IssueDetail" placeholder="" name="IssueDetail" rows="20" cols="200" class="mw-100"></textarea>
+                        </div>
+                        <button type="button" id="saveBtn" class="btn mt-2 mb-1 mb-5">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ThankyouPopUp" tabindex="-1" aria-labelledby="ThankyouPopUp" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="height:150px; max-width:510px;">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader">
+                <h5><label id="lblTY">Thank You</label></h5>
+                <div>
+                    <button id="closeModal" type="button" class="btn  me-1 mb-1" data-bs-dismiss="modal" aria-label="Close">Update Issue</button>
+                    <button id="btnTYClose" type="button" class="btn  me-1 mb-1">Submit Issue</button>
+                    <button id="closeModal" type="button" class="btn me-1 mb-1" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <label id="lblTYMsg"></label>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="uploadImage" tabindex="-1" aria-labelledby="uploadImagebl" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="height:150px; max-width:510px;">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader">
+                <h5 class="modal-title">Upload File</h5>
+                <div>
+                    <button id="btnUpload" type="button" class="btn  me-1">Upload</button>
+                    <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div>
+                    Use the "Select" button to browse for a file, or use your mouse to drag a file and drop it onto the selection box. Wait for the yellow dot to turn green. Then click "Upload." If you change your mind, click "Remove" to unselect the file.
+                </div>
+                <br />
+                <div id="UploadDocDiv" class="col-md-12">
+                    <label id="lblUp" style="color: #98442d"> </label><br />
+                    @ViewBag.lblExtensions <br />
+                    <div class="d-flex align-items-center justify-content-between flex-wrap p-2">
+
+                        <div class="magi-upload-file-wrapper">
+                            <span id="attached_files" class="mt-2 lblSmall"></span>
+                            <a id="clear_Attached_Files">
+                            <img src="/images/icons/redcross.png" style="margin-right: 5px;width: 10px;" />Remove</a>
+
+                            <form action="" class="d-flex align-items-center">
+                                <input type="file" id="img_screenshot" class="choose" multiple accept=".csv, .doc, .docx, .gif, .jpeg, .jpg, .pdf, .png, .ppt, .pptx, .rtf, .txt, .xls, .xlsx, .zip " />
+                                <span class="magi-upoad-fake-input me-1"></span>
+                                <span class="mafi-upoad-fake-button btn">Select/Drop</span>
+                            </form>
+                        </div>
+
+                        <div class="smallFont w-100 mt-2">
+                            <span id="lblSizeLimit" class="mt-2 lblSmall">@ViewBag.lblSizeLimit</span>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="strUID" value="@clsUtility.getUniqueID()" />
+                <input type="hidden" id="IssueFiles" value="" />
+            </div>
+        </div>
+    </div>
+</div>
+<a href="@ViewBag.ReturnUrl" id="ReturnLink" style="display:none;"></a>
+@if (ViewBag.Message != "")
+{
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            CommonFunctions.Alert(@ViewBag.Message);
+        });
+    </script>
+}
+<script type="text/javascript">
+
+
+    $(document).ready(function ()
+    {
+        $('#img_screenshot').on('change', function ()
+        {
+            try
+            {
+                var attachedFiles = '';
+                for (i = 0; i < this.files.length; i++)
+                {
+                    if (attachedFiles == '')
+                        attachedFiles += this.files[i].name;
+                    else
+                        attachedFiles += ', ' + this.files[i].name;
+                }
+
+                if (attachedFiles != null && attachedFiles != '')
+                {
+                    $('#clear_Attached_Files').slideDown();
+                }
+
+                $('#attached_files').html(attachedFiles).slideDown();
+            }
+            catch (ex)
+            {
+                console.log(ex);
+            }
+        });
+
+        $('#clear_Attached_Files').on('click', function ()
+        {
+            $('#img_screenshot').val(null);
+            $('#attached_files').html(null);
+            $(this).hide();
+        });
+
+        $("#btnUploadFile").click(function (e)
+        {
+            e.preventDefault();
+            $('#uploadImage').modal('show');
+        });
+
+        $('#btnUpload').click(function (e)
+        {
+            e.preventDefault();
+            var formdata = new FormData(); //FormData object
+            var fileInput = document.getElementById('img_screenshot');
+            var attachedFiles = '';
+
+            for (i = 0; i < fileInput.files.length; i++)   //Iterating through each files selected in fileInput
+            {
+                formdata.append(i, fileInput.files[i], fileInput.files[i].name);
+                if (attachedFiles == '')
+                    attachedFiles += fileInput.files[i].name;
+                else
+                    attachedFiles += ', ' + fileInput.files[i].name;
+            }
+
+            formdata.append("GUID", $('#strUID').val());
+            
+            var result = CommonFunctions.FileUploadAjaxCall('POST', '/MAGI/SubmitIssueImages', formdata, '', false, false, 'Error While Updating Payment.');
+            if (result !== null && result !== "ERROR")
+            {
+                if (result.result === "OK")
+                {
+                    //$('#strUID').val(result.Data);
+                    $('#uploadImage').modal('hide');
+
+                    var filesCtrl = $('#uploaded_files');
+                    var filesNames = filesCtrl.html();
+
+                    var names = filesNames.split(',');
+                    var attachedNames = attachedFiles.split(',');
+
+                    if (filesNames == '')
+                        filesNames = attachedFiles;
+                    else
+                    {
+                        $(names).each(function (i, o)
+                        {
+                            $(attachedNames).each(function (j, q)
+                            {
+                                if (o.toString().trim() == q.toString().trim())
+                                {
+                                    attachedFiles = attachedFiles.replaceAll(', ' + o.toString().trim(), '');
+                                    attachedFiles = attachedFiles.replaceAll(o.toString().trim() + ', ', '');
+                                    attachedFiles = attachedFiles.replaceAll(o.toString().trim(), '');
+                                }
+                            });
+                        });
+
+                        if (attachedFiles != '')
+                            filesNames = filesNames + ', ' + attachedFiles;
+                    }
+                    
+                    filesCtrl.html(filesNames);
+                    CommonFunctions.Alert("File has been uploaded");
+                    $('#clear_Attached_Files').hide();
+                }
+                else
+                    CommonFunctions.Alert(result.result);
+            }
+            else
+                CommonFunctions.Alert("Error Occurred While Uploadinig Images");
+
+            $('#attached_files').html('').slideUp();
+            fileInput.value = '';
+        });
+
+        $("#saveBtn").click(function (e)
+        {
+            e.preventDefault();
+            var data = {
+                Issuetitle: document.getElementById("Issuetitle").value,
+                Issuelocation: document.getElementById("Issuelocation").value,
+                IssueType: document.getElementById("IssueType").value,
+                IssueTypeName: document.getElementById("IssueType").innerText,
+                IssueReportedbyUser: document.getElementById("IssueReportedbyUser").value,
+                UserEmail: document.getElementById("UserEmail").value,
+                IssueDetail: document.getElementById("IssueDetail").value,
+                UID: $('#strUID').val(),
+                intIssue_PKey: $('#IssuepKey').val(),
+            }
+            var result = CommonFunctions.AjaxCall('POST', '/MAGI/SubmitIssueReport', data, 'Error Occurred While Updating Issue');
+            if (result !== null && result !== "ERROR")
+            {
+                if (result.result === "OK")
+                {
+                    document.getElementById("lblTYMsg").innerHTML = result.lblTYMsg;
+                    $('#IssuepKey').val(result.intIssuepKey);
+                    $('#ThankyouPopUp').modal('show');
+                }
+                else
+                    CommonFunctions.Alert(result.msg);
+            }
+            else
+                CommonFunctions.Alert("Error Occurred While Updating Issue");
+        });
+
+        $("#btnTYClose").click(function (e)
+        {
+            e.preventDefault();
+            var data = {
+                Issuetitle: document.getElementById("Issuetitle").value,
+                Issuelocation: document.getElementById("Issuelocation").value,
+                IssueType: document.getElementById("IssueType").value,
+                IssueTypeName: document.getElementById("IssueType").innerText,
+                IssueReportedbyUser: document.getElementById("IssueReportedbyUser").value,
+                UserEmail: document.getElementById("UserEmail").value,
+                IssueDetail: document.getElementById("IssueDetail").value,
+                strIssueFiles: $('#strUID').val(),
+                intIssue_PKey: $('#IssuepKey').val(),
+            }
+            var result = CommonFunctions.AjaxCall('POST', '/MAGI/SubmitIssueMail', data, 'Error Occurred While Updating Issue');
+            if (result !== null && result !== "ERROR")
+            {
+                if (result.result === "OK")
+                {
+                    window.location.href = $('#ReturnLink').attr("href");
+                }
+                else
+                    CommonFunctions.Alert(result.msg);
+            }
+            else
+                CommonFunctions.Alert("Error Occurred While Submitting Issue");
+
+        });
+    });
+</script>
+

@@ -1,0 +1,27 @@
+﻿<div class="table-responsive">
+    <table id="MyHistory" class="table table-sm magi-table" >
+        <thead style=" cursor: pointer;">
+            <tr>
+                <th title="Click here to sort"> Date </th>
+                <th title="Click here to sort"> Page </th>
+                <th title="Click here to sort"> Action </th>
+                <th title="Click here to sort"> By </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model)
+            {
+                <tr>
+                    <td style="width:10%">@i.UpdatedOn</td>
+                    <td style="width:25%">@i.Page</td>
+                    <td style="width:40%">@i.Action</td>
+                    <td style="width:25%">@i.ByName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $("#MyHistory").DataTable({ paging: false, bFilter: false, ordering: true, searching: false, dom: 'tp', order: [[0, "desc"]], bDestroy: true });
+</script>

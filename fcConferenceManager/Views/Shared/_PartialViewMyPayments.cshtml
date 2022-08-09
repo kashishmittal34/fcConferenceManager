@@ -1,0 +1,38 @@
+﻿
+
+<table id="MyPayments" width="100%">
+
+    <tr style="font-weight:100;color:white ; background-color:#0caafe;">
+        <th style="padding-left:2px;">Item# </th>
+        <th>Date    </th>
+        <th> Event </th>
+        <th> Transaction </th>
+        <th> Memo </th>
+        <th> Group Code </th>
+        <th>LoggedBy  </th>
+        <th>Payment </th>
+        <th>Documnet </th>
+        <th> Status </th>
+        <th>Charge  </th>
+        <th>Balance  </th>
+
+    </tr>
+    @foreach (var i in Model.PaymentsTable)
+    {
+        <tr style="font-size:9pt;">
+            <td style="padding-left:2px;">@i.Item</td>
+            <td>@i.Date </td>
+            <td>@i.Event </td>
+            <td style="text-align:center;">@i.Transaction</td>
+            <td>@Html.Raw(@i.Memo) </td>
+            <td>@i.GroupCode </td>
+            <td>@i.LoggedByName </td>
+            <td style="text-align:center;">@i.Payment</td>
+            <td><a href="" style="color:black;"><strong>@i.Document</strong></a> </td>
+            <td style="text-align:center;">@i.Status </td>
+            <td style="text-align:center;">@i.Charge </td>
+            <td style="text-align:center;">@i.Balance </td>
+        </tr>
+    }
+
+</table>

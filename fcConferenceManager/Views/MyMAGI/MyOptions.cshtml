@@ -1,0 +1,2892 @@
+﻿
+@{
+    ViewBag.Title = "MyOptions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (ViewBag.ZoomLoginPopUp == true)
+{
+    Html.RenderAction("_PartialLogin", "Home");
+}
+<link href="/Css/jquery-ui.css" rel="stylesheet" />
+<script src="/Scripts/jquery-ui.min.js" type="text/javascript"></script>
+@if (ViewBag.ZoomLoginPopUp != true)
+{
+    <link href="/Css/multiple-select.css" rel="stylesheet" />
+    <link href="/Css/video-js.css" rel="stylesheet" />
+    <script src="/Scripts/multiple-select.js" type="text/javascript"></script>
+    <script src="/Scripts/video.min.js" type="text/javascript"></script>
+    <script src="/Scripts/Youtube.js" type="text/javascript"></script>
+    <style>
+        #ckRemindMe, #ckRemindMe
+        {
+            margin-left: 3px;
+        }
+
+        .btnSmallYellow
+        {
+            border: 1px solid black;
+            background-color: #ff0;
+        }
+
+        ul.checkbox li
+        {
+            border: 1px transparent solid;
+            display: inline-block;
+            width: 16em;
+        }
+
+        .modalBlueHeader
+        {
+            background-color: dodgerblue !important;
+            color: #fff !important;
+            font-size: 11pt;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+
+        .custompanelheight
+        {
+            /* height: 450px;*/
+            max-height: 450px;
+            box-shadow: 0 2px 6px #9f9f9f;
+        }
+
+        .custompanelheight > div:nth-child(2)
+        {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        table.custom-table-wrapper thead
+        {
+            padding: 2px;
+            background-color: #1e90ff;
+            color: #fff;
+        }
+
+        table.custom-table-wrapper thead tr th
+        {
+            font-weight: normal;
+        }
+
+        table.custom-table-wrapper
+        {
+            width: 100%;
+            border: 1px solid #e6e6e6;
+        }
+
+        table.custom-table-wrapper tr td
+        {
+            border-bottom: 1px solid #e6e6e6;
+        }
+
+        table.custom-table-wrapper tr:nth-child(even) td
+        {
+            background-color: #ededed;
+        }
+
+        .optionSelect
+        {
+            width: 100%;
+        }
+
+        @@media(max-width:1268px) and (min-width:768px)
+        {
+            .custom-wrap
+            {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .custom-wrap input[type="date"]
+            {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+
+            .custom-wrap > div
+            {
+                width: 100%;
+                padding: 0 !important;
+            }
+        }
+
+        @@media(max-width:767px)
+        {
+            .userProfile
+            {
+                max-width: 150px;
+            }
+        }
+
+        #btnTravelReset, #btnJoin
+        {
+            margin-left: 15px;
+        }
+
+        .rcpt
+        {
+            padding-left: 20px;
+            background-image: url(/images/miscellaneous/paidstamp.png);
+            background-position: 90% 0%;
+            background-repeat: no-repeat !important;
+            background-size: 125px;
+        }
+
+        .freeRcpt
+        {
+            padding-left: 20px;
+            background-image: url(/images/miscellaneous/paidstamp.png);
+            background-position: 90% 0%;
+            background-repeat: no-repeat !important;
+            background-size: 125px;
+        }
+
+        .inv
+        {
+            background-Image: none;
+            padding-left: 20px;
+        }
+    </style>
+
+    <div class="container-fluid  mt-3">
+        <div class="row">
+            <div class='magiSidebarWrapper pe-md-0 mb-3 mb-md-0'>
+                @if (ViewBag.leftPanel_Visible == true)
+                {
+                    Html.RenderAction("_PartialLeftPanel", "MyMagi");
+                }
+                @{
+                    Html.RenderAction("ChatPanelAction", "MyMagi");
+                }
+            </div>
+            <div class="col-md-8 col-lg-9 flex-grow-1">
+                <div class="row">
+                    <div class="col-md-6 col-lg-8">
+                        <h2>@ViewBag.lblTitle</h2>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="d-flex flex-md-wrap flex-lg-nowrap align-items-center justify-content-end">
+                            @{
+                                if (Model.HelpIconInfo != null && Model.HelpIconInfo.PageIconVisible)
+                                {
+                                    string bAutoplay = (Model.HelpIconInfo.bAutoPlay) ? "true" : "false";
+                                    <input type="hidden" id="vidAutoPlayType" value="@bAutoplay" />
+                                    @Html.Raw("<input id='PageHelpIcon' type='image' src='/images/icons/videoPlay2.png' value='' width='32' class='me-1 mb-1' style='vertical-align: middle;'/>")
+                                }
+                            }
+                            @if (ViewBag.VirtualDropdown_Visible)
+                            {
+                                <select id="VirtualEventDropDown" class="me-1 mb-1">
+                                    @if (Model.ddEventVirtualData != null)
+                                    {
+                                        System.Data.DataTable dt = (System.Data.DataTable)Model.ddEventVirtualData;
+                                        foreach (System.Data.DataRow dr in dt.Rows)
+                                        {
+                                            @Html.Raw("<option value='" + dr["pKey"] + "' " + ((ViewBag.SelectedDropDown == dr["pKey"].ToString()) ? "selected>" : ">") + dr["strText"] + "</option>")
+                                        }
+                                    }
+                                </select>
+                            }
+                            <a id="cmdReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1">Return</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <label id="lblInstruct"> @Html.Raw(ViewBag.lblInstruct)</label>
+                </div>
+                <div class="row gx-0">
+                    <div class="col-md-6">
+                        <div class="p-md-1" id="DockProfile">
+                            <div class="card card-body custompanelheight m-1 p-0">
+                                <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                    <label class="fw-bold Font8">Profile</label>
+                                    <label id="closeVoucherPopup" for="DockProfile" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                                </div>
+                                <div class="p-2">
+                                    <div class="row m-0">
+                                        <div class="col-md-9 p-0 m-0">
+                                            <div class="col-md-12">
+                                                <label>Your profile is summarized below.</label>&nbsp;
+                                                <a id="AcctEdit" href="/ViewAccount">Edit Profile</a>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label class="pull-left col-md-3">Name:</label>
+                                                <label id="lblAcctName" class="col-md-9">@ViewBag.lblAcctName</label>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label class="pull-left col-md-3">Email:</label>
+                                                <label id="lblAcctEmail" class="col-md-9">@ViewBag.lblAcctEmail</label>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label class="pull-left col-md-3">Phone:</label>
+                                                <label id="lblAcctPhone" class="col-md-9">@ViewBag.lblAcctPhone</label>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label class="pull-left col-md-3">Title:</label>
+                                                <label id="lblAcctTitle" class="col-md-9">@ViewBag.lblAcctTitle</label>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label class="pull-left col-md-3">Department:</label>
+                                                <label id="lblAcctDept" class="col-md-9">@ViewBag.lblAcctDept</label>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label class="pull-left col-md-3">Company:</label>
+                                                <label id="lblAcctOrg" class="col-md-9">@ViewBag.lblAcctOrg</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 p-0">
+                                            <div class="userProfile img-thumbnail img-rounded shadow mt-2 mt-2">
+                                                <img id="imgAcct" src="@ViewBag.ImgURL" onerror="this.src='/accountimages/no-person.jpg'" style="object-fit: contain;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label>Special assistance requested (e.g., audio assist device):</label>
+                                        <input type="checkbox" id="chkArragementEvent" style="display:none" />
+                                        <div class="d-flex mt-2">
+                                            <div class=" flex-grow-1">
+                                                <textarea id="txtSpArrangementEvent" maxlength="70" rows="3" style="width:100%">@ViewBag.strSpecial_Request</textarea>
+                                            </div>
+                                            <div>
+                                                <button id="btnArrangSaveEvent" class="btn btnYellow ms-2">Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @*--------------------------Lunch--------------------*@
+                        @if (ViewBag.DockLunch)
+                        {
+                            <div class="p-md-1" id="DockLunch">
+                                <div class=" card m-1 card-body custompanelheight p-0">
+                                    <div class="modalBlueHeader  d-flex justify-content-between px-2 p-0 align-items-center">
+                                        <label class="fw-bold Font8">Lunch Preferences</label>
+                                        <label id="closeVoucherPopup" for="DockLunch" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                                    </div>
+                                    <div class="p-2">
+                                        <input type="hidden" id="phLunchVal" value="@((ViewBag.phLunch) ? "true" : "false")" />
+
+                                        @if (ViewBag.phLunch)
+                                        {
+                                            <div class="row p-0 m-0">
+                                                <label class="p-0">Select your lunch options below.</label>
+                                            </div>
+                                            <div class="row p-0 pt-1 m-0 mt-1">
+                                                <div class="col-md-12 p-0 table-responsive">
+                                                    <table class="custom-table-wrapper">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Lunch</th>
+                                                                <th>Attend</th>
+                                                                <th style="text-align:center">Meal</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="LunchTableData">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="row col-md-12 p-0 pt-1 m-0 mt-1">
+                                                <label id="lblMealNote" class="p-0">We use the above information to order meals from the hotel. Regardless of your choice, if you show up for lunch on time, we will serve you a meal. We will try to serve you the meal you have chosen. Your meal choice will be in a code on the back of your name tag.</label>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="row col-md-12 p-0 pt-2 m-0 mt-2">
+                                                <label id="lblNotLunch" class="p-0">@ViewBag.lblNotLunch</label>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @*---------------------Coupons-----------*@
+                        @if (ViewBag.DockCouponsVisible)
+                        {
+                            <div class="p-md-1" id="DockCoupons">
+                                <div class=" card m-1 card-body custompanelheight p-0">
+                                    <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                        <label id="lblCouponsTitle" class="fw-bold Font8">@ViewBag.lblCouponsTitle</label>
+                                        <label id="closeVoucherPopup" for="DockCoupons" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                                    </div>
+                                    <div class="p-2">
+                                        <div class="row col-md-12 m-0">
+                                            <label class="p-0" id="lblCoupon">@ViewBag.lblCoupon</label>
+                                            <div id="dlCoupons" class="p-0 mt-2">
+                                                @if (ViewBag.CouponList != null && ((List<clsOneFile>)ViewBag.CouponList).Count > 0)
+                                                {
+                                                    foreach (clsOneFile c in ((List<clsOneFile>)ViewBag.CouponList))
+                                                    {
+                                                        <div class="col-md-12 p-0">
+                                                            <a id="cmdViewCoupon" class="Font11" target="_blank" href="/MyMAGI/ViewCoupon?strFilename=@c.strDisplayName"> @c.strDisplayNameNoExtension </a>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @*--------------------------Badge--------------------*@
+                        @if (ViewBag.DockBadge)
+                        {
+                            <div class="p-md-1" id="DockBadge">
+                                <div class=" card m-1 card-body custompanelheight p-0">
+                                    <div class="modalBlueHeader d-flex justify-content-between align-items-center p-0 px-2">
+                                        <label class="fw-bold Font8">Badge</label>
+                                        <label id="closeVoucherPopup" for="DockBadge" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                                    </div>
+                                    <div class="p-2">
+                                        <div id="phExams">
+                                            <div class="row">
+                                                @if (ViewBag.phBadgeLock1)
+                                                {
+                                                    <div id="phBadgeLock1">
+                                                        <label class="p-0">Your badge is currently locked. If you would like to make any changes to the text or layout, Contact MAGI"</label>
+                                                    </div>
+                                                }
+                                                @if (ViewBag.phBadgeUnLock1)
+                                                {
+                                                    <div id="phBadgeUnLock1">
+                                                        <label>Edit your badge below. Keep it short and specific. If you are a manager, director or VP, say what you manage or direct. Red text indicates the information needs to be shortened. MAGI reviews all badges and may revise them.</label>
+                                                        <a id="btnEditInstruct" href=""> Instructions</a>
+                                                    </div>
+                                                }
+
+                                            </div>
+                                            <div class="row gx-1 mt-1">
+                                                <div class="col-md-6 centered">
+                                                    @if (ViewBag.phBadgeUnLock2)
+                                                    {
+                                                        <div class="col-md-12">
+                                                            <label class="lblSmall">Name:</label><br />
+                                                            <input type="text" id="txtBName" class="input-sm col-md-12  @ViewBag.bNameClass" maxlength="@ViewBag.BNameLen" value="@ViewBag.txtBName" />
+                                                            <input type="hidden" id="hdnBName" value="@ViewBag.txtBName" />
+                                                            <label id="lblBNameLen" class="lblSmall">@ViewBag.lblBNameLen</label>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <label class="lblSmall">Title:</label><br />
+                                                            <input type="text" id="txtBTitle" value="@ViewBag.txtBTitle" maxlength="@ViewBag.BTitleLen" class="input-sm col-md-12 @ViewBag.bTitleClass" />
+                                                            <input type="hidden" id="hdnBTitle" value="@ViewBag.txtBTitle" />
+                                                            <label id="lblBTitleLen" class="lblSmall">@ViewBag.lblBTitleLen</label>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <label class="lblSmall">Organization:</label><br />
+                                                            <input type="text" id="txtBOrg" value="@ViewBag.txtBOrg" maxlength="@ViewBag.BOrgLen" class="input-sm col-md-12 @ViewBag.bOrgClass" />
+                                                            <input type="hidden" id="hdnBOrg" value="@ViewBag.txtBOrg" />
+                                                            <label id="lblBOrgLen" class="lblSmall">@ViewBag.lblBOrgLen</label>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <a id="btnEditPreview" style="font-size:10pt;" href="">Preview edits</a><br />
+                                                            <a id="btnEditReset" style="font-size:10pt;" href="">Reset to profile information</a><br />
+                                                            <a id="btnEditSave" style="font-size:10pt;" href="">Save edits</a><br />
+                                                            <a id="btnEditCancel" style="font-size:10pt;" href="">Cancel edits</a>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="m-1 shadow border">
+                                                        <div class="col-md-12 text-center ">
+                                                            <img id="imgLogo" src="@ViewBag.imgLogo" onerror="this.src='/Images/homepage/magiLogo.png';" height="@ViewBag.imgLogoHeight" style="margin-bottom: 5px;" />
+                                                            <div style="border-top: 1px solid #000;"> <label id="lblBName" class="mt-2" style="font-size:18pt;color: @ViewBag.BNameFore;">@Html.Raw(ViewBag.htmlBName)</label></div>
+                                                            <div class="p-1">
+                                                                <div> <label id="lblBTitle" class="mt-2" style="font-size:18pt;color:@ViewBag.BTitleFore;">@ViewBag.txtBTitle</label></div>
+                                                                <div> <label id="lblBOrganization" class="mt-2" style="font-size:18pt;color:@ViewBag.BOrgFore;">@ViewBag.txtBOrg</label>                                                    </div>
+                                                                <div> <label id="lblBSpecial" class="mt-2" style="font-size:24pt"></label></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @*--------------------------OFFERs--------------------*@
+                        <div class="p-md-1" id="DockOffers">
+                            <div class=" card m-1 card-body custompanelheight p-0">
+                                <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                    <label id="lblCouponsTitle" class="fw-bold Font8">Special Offers</label>
+                                    <label id="closeVoucherPopup" for="DockOffers" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                                </div>
+                                <div class="p-2">
+                                    <div class="row col-md-12 m-0">
+                                        <label class="p-0" id="lblOffer">@Html.Raw(ViewBag.lblOffer)</label>
+                                        @foreach (System.Data.DataRow dr in Model.tblOffers.Rows)
+                                        {
+                                            <label class="p-0">
+                                                <b> @dr["OfferID"]  </b>
+                                                @if ((@dr["LinkVis"].ToString() == "1"))
+                                                {
+                                                    <a class="lblsmall" href="@dr["Link"]" target="_blank"> (more information)</a>
+
+                                                }
+                                            </label><br />
+                                            <label class="p-0 lblsmall" id="lblDescrip">@dr["OfferDescription"]</label>
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        @*-----------Attending ---------------*@
+                        @if (ViewBag.DockAtt)
+                        {
+                            <div class="p-md-1" id="DockAtt">
+                                <div class="card card-body custompanelheight m-1 p-0">
+                                    <div class="modalBlueHeader d-flex justify-content-between  align-items-center px-2 p-0">
+                                        <label class="fw-bold Font8">Attendance Plan</label>
+                                        <label id="closeVoucherPopup" for="DockAtt" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                                    </div>
+
+                                    <div class="p-2">
+                                        <div class="row m-0">
+                                            <label class="m-0 p-0">Enter your expected attendance dates below. We understand these may change, but knowing is helpful for planning food and social activities.</label>
+                                        </div>
+                                        <div class="row p-0 pt-2 m-0">
+                                            <div class="row">
+                                                <label class="lblSmall p-1 px-0">Expected Attendance:</label>
+                                            </div>
+                                            <div class="row gx-0">
+                                                <div class="col-md-12">
+                                                    <div class="col-md-12  p-0">
+                                                        <div class="d-flex custom-wrap">
+                                                            <input type="hidden" value="@ViewBag.dtEventStart" id="dtEvStart" />
+                                                            <input type="hidden" value="@ViewBag.dtEventEnd" id="dtEvEnd" />
+                                                            <input type="hidden" value="@ViewBag.dpAttStart" id="hdnDpAttstart" />
+                                                            <input type="hidden" value="@ViewBag.dpAttEnd" id="hdnDpAttEnd" />
+                                                            <input type="text" id="dpAttStart" value="@ViewBag.dpAttStart" class="input-sm p-0 me-2" />
+                                                            <span>thru</span>
+                                                            <input type="text" id="dpAttEnd" value="@ViewBag.dpAttEnd" class="input-sm p-0 ms-2" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row gx-0 custom-wrap">
+                                                <div class="col-md-6 pe-md-2">
+
+                                                    <label class="lblSmall">Travel Status:</label>
+                                                    <select id="ddTravel" class="input-group Font11">
+                                                        <option value="0">Not Specified</option>
+                                                        @foreach (var item in ViewBag.ddtravel)
+                                                        {
+                                                            if (@item.Value == ViewBag.ddTravelSelectedValue)
+                                                            {
+                                                                <option value="@item.Value" selected>@item.Text</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6 ps-md-2">
+                                                    <label class="lblSmall">Travel Details:</label><br />
+                                                    <input id="txtTravel" class="input-sm Font11 col-md-12" value="@ViewBag.txtTravel" placeholder="Travel Plan" maxlength="100" />
+                                                </div>
+                                            </div>
+                                            <div class="row gx-0 custom-wrap">
+                                                <div class="col-md-6 pe-md-2">
+                                                    <label class="lblSmall">Lodging Status:</label>
+                                                    <select id="ddLodging" class="input-group Font11">
+                                                        <option value="0">Not Specified</option>
+                                                        @foreach (var item in ViewBag.ddLodging)
+                                                        {
+                                                            if (@item.Value == ViewBag.ddLodgingSelectedValue)
+                                                            {
+                                                                <option value="@item.Value" selected>@item.Text</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@item.Value">@item.Text</option>
+                                                            }
+
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6 ps-md-2">
+                                                    <label class="lblSmall">Lodging Details:</label>
+                                                    <input id="txtLodging" class="input-sm Font11 col-md-12" value="@ViewBag.txtLodging" placeholder="Lodging Plan" maxlength="100" />
+                                                </div>
+                                            </div>
+
+                                            <div class="row  pt-2">
+                                                <div class="d-flex p-0">
+                                                    <input type="hidden" id="hdnRegistrationLevel_pKey" value="@ViewBag.intRegistrationLevel_pKey" />
+                                                    <a id="btnTravel" href="">Save updates</a>
+                                                    <a id="btnTravelReset" href="">Reset plan</a>
+                                                    <label>&nbsp;</label>
+                                                    <a id="btnGotoQuestion" href="" style="display:none">Event planning questions</a>
+                                                    &nbsp;<a id="btnCancelPlan" href="javascript://" style="display:none;">Can't join us?</a>
+                                                    &nbsp;<a id="lnkTransfer" href="javascript://" style="display:none;">Transfer registration</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+                        @*-----------Registartion ---------------*@
+                        <div class="p-md-1" id="DockReg">
+                            <div class=" card m-1 card-body custompanelheight p-0">
+                                <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                    <label class="fw-bold Font8">Status</label>
+                                    <label id="closeVoucherPopup" for="DockReg" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                                </div>
+                                <div class="p-2">
+                                    <div>
+                                        <div class="row">
+                                            @if (ViewBag.phOverride)
+                                            {
+                                                <div id="phOverride">
+                                                    <a id="btnOverride" href="">Management Override</a>
+                                                </div>
+                                            }
+                                            <div class="d-flex">
+                                                @if (ViewBag.lnkTransferVoucher)
+                                                {
+                                                    <a id="lnkTransferVoucher" href="javascript:void(0)" class="me-2">Transfer Voucher</a>
+                                                }
+                                                @if (ViewBag.lnkRefundVoucher)
+                                                {
+                                                    <a id="lnkRefundVoucher" href="javascript:void(0)">Refund Voucher</a>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-6">Registration Level:</label>
+                                            <div class=" col-md-6">
+                                                <div class="d-flex">
+                                                    <label id="lblRegType">@ViewBag.lblRegType</label>
+                                                    @if (ViewBag.lnkRegTypeVisible)
+                                                    {
+                                                        <a id="lnkRegType" href="">@ViewBag.lnkRegType</a>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-6 ">Reminder Calls:</label>
+                                            <div class=" col-md-6">
+                                                @if (ViewBag.ckRemindMeChecked)
+                                                {
+                                                    <input type="checkbox" id="ckRemindMe" checked title="We do not distribute printed slides. As the conference approaches, we remind attendees To create their personalized schedule and download their personalized conference book. These items are very useful during the conference. However, If you do not want telephone reminders, uncheck this option." />
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" id="ckRemindMe" title="We do not distribute printed slides. As the conference approaches, we remind attendees To create their personalized schedule and download their personalized conference book. These items are very useful during the conference. However, If you do not want telephone reminders, uncheck this option." />
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-6 ">Limit on Emails You Can Send:</label>
+                                            <label id="lblNetworkingContacts" class="col-md-6">@ViewBag.lblNetworkingContacts</label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-6 ">Limit on Open Connection Requests:</label>
+                                            <label id="lblOpenMessageLimit" class="col-md-6">@ViewBag.lblOpenMessageLimit</label>
+                                        </div>
+                                        @if (ViewBag.lblInterest)
+                                        {
+                                            <div class="row">
+                                                <label id="lblInterest" class="col-md-6 ">Chairing a session: </label>
+                                                <div class="col-md-6">
+                                                    <input type="checkbox" id="ckIntChair" style="display:none" />
+                                                    @if (ViewBag.dlSessionInfo)
+                                                    {
+                                                        <div id="dlSessionInfo" class="col-md-12">
+                                                            @{
+                                                                int i = 0;
+                                                                foreach (System.Data.DataRow dr in Model.tblSessionInfo.Rows)
+                                                                {
+                                                                    i = i + 1;
+                                                                    <label id="lblSessionInfo" title="@dr["SessionTitle"]">@(dr["SessionID"] + ((Model.tblSessionInfo.Rows.Count > i) ? ", " : "") )</label>
+                                                                }
+                                                            }
+                                                        </div>
+                                                    }
+                                                    @if (ViewBag.cmdChrPrfrnc)
+                                                    {
+                                                        <a id="btnChrPrfrnc" href="#">Express interest</a>
+                                                    }
+                                                    <button id="btnClickChairPref" style="display:none"></button>
+                                                </div>
+                                            </div>
+                                        }
+                                        <div class="row">
+                                            <label class="col-md-6 ">MAGI Membership:</label>
+                                            <div class="col-md-6">
+                                                <div class="d-flex p-0">
+                                                    <label id="lblRegMAGI">@ViewBag.lblRegMAGI</label>
+                                                    @if (ViewBag.cmdJoinVisible)
+                                                    {
+                                                        <a id="btnJoin" href="">Join Now</a>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="phRegistration">
+                                            <div class="row">
+                                                <a id="btnRegQuestion" href="/SpeakerRegistrationFeedback?APK=@ViewBag.ID">Registration Questions</a>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-md-6 ">Payment Status:</label>
+                                                <div class="col-md-6 align-content-center">
+                                                    <div class="col-md-12 p-0">
+                                                        <a id="lblRegBal" href="/MyPayments" style="color: @ViewBag.lblRegBalColor">@ViewBag.lblRegBal</a>
+                                                        @if (ViewBag.btnPayNowVisible)
+                                                        {
+                                                            <a id="btnPayNowData" href="javascript://">Pay Now</a>
+                                                        }
+                                                        <br />
+                                                        @if (ViewBag.RedeemVoucherVisible)
+                                                        {
+                                                            <a id="btnRedeemVoucher" href="">Redeem Voucher  </a>
+                                                            <label id="lblRedeemVoucherText"> (if you have a voucher number)</label>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @if (ViewBag.phInvoice)
+                                            {
+                                                <div class="row mt-1">
+                                                    <label class="col-md-6">Invoice/Receipt:</label>
+                                                    <div class="col-md-6 align-content-center">
+                                                        <div class="col-md-12 p-0">
+                                                            @foreach (System.Data.DataRow dr in Model.tblReceipt.Rows)
+                                                            {
+                                                                <a id="@dr["ReceiptNumber"]" href="javascript://" class="btnReceipt me-1">@dr["ReceiptNumberText"] </a>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 mt-1">
+                                                        <a id="CancelReg" href="javascript://">Can't join us?</a>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @*--------------------------Refer--------------------*@
+                        <div class="p-md-1" id="DockRefer">
+                            <div class=" card m-1 card-body custompanelheight p-0">
+                                <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                    <label id="lblCouponsTitle" class="fw-bold Font8">Referrals</label>
+                                    <label id="closeVoucherPopup" for="DockRefer" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                                </div>
+                                <div class="p-2">
+                                    <div class="row col-md-12 m-0">
+                                        <label class="p-0" id="lblRefer">Who referred you to the conference? We want to thank them.</label>
+                                    </div>
+                                    @*<tr>
+                                            <td style="padding-bottom: 6px; display: none;" colspan="2">
+                                                <label class="lblSmall">Referral by:</label><br />
+                                                <telerik:RadDropDownList ID="cbReferType" runat="server" Width="200px" Skin="Metro" DropDownWidth="200px" AutoPostBack="true" />
+                                            </td>
+                                        </tr>*@
+
+                                    <div class="row col-md-12  mt-1">
+                                        <div class="col-md-6 phReferName">
+                                            <label class="lblSmall">Name:</label>
+                                            <input id="txtReferName" MaxLength="50" value="@ViewBag.strReferralName" type="text" class="txtRequired ClearText  input-sm Font11" />
+                                        </div>
+                                        <div class="col-md-6 phReferName">
+                                            <label class="lblSmall">Phone:</label>
+                                            <input id="txtReferPhone" MaxLength="50" value="@ViewBag.strReferralPhone" type="text" class="ClearText  input-sm Font11" />
+                                        </div>
+                                        <div class="col-md-12 phReferName">
+                                            <label class="lblSmall">Email:</label>
+                                            <input id="txtReferEmail" MaxLength="150" value="@ViewBag.strReferralEmail" type="text" class="ClearText input-sm Font11" />
+                                            <button type="button" id="btnSaveRefer" class="btn btnYellow mt-2">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="hdndblAccountAmount" value="@ViewBag.dblAccountAmount" />
+                        @if (ViewBag.bCurrentAttendee)
+                        {
+                            <input type="hidden" id="hdnbCurrentAttendee" value="true" />
+                        }
+                        else
+                        {
+                            <input type="hidden" id="hdnbCurrentAttendee" value="false" />
+                        }
+
+                        @*--------------------------CRCP--------------------*@
+                        <div class="p-md-1" id="DockExam">
+                            @{
+                                string value = (ViewBag.SpeakerAtEvent) ? "true" : "false";
+                                string bConferenceEnd = (ViewBag.bConferenceEnd) ? "true" : "false";
+                            }
+                            <input type="hidden" id="SpeakerAtEvent" value="@value" />
+                            <input type="hidden" id="ConferenceEnd" value="@bConferenceEnd" />
+                            <div class=" card m-1 card-body custompanelheight p-0">
+                                <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                    <label class="fw-bold Font8">Continuing Education, Exams and Assessments</label>
+                                    <label id="closeVoucherPopup" for="DockExam" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                                </div>
+                                <div class="p-2">
+                                    <div id="phExams">
+                                        <div class="row col-md-12 m-0">
+                                            <label class="lblSmall p-0">You are currently signed up for the following:</label>
+                                        </div>
+                                        <div class="row col-md-12 p-0 pt-2 m-0">
+                                            <input type="hidden" value="@ViewBag.Selectedcerts" id="selectedCert" />
+                                            <ul class="checkbox" style=" padding-left: 0pt;">
+                                                @foreach (System.Data.DataRow dr in Model.tblEdOptions.Rows)
+                                                {
+                                                    bool b = (Array.IndexOf(ViewBag.Selectedcerts.Split(','), dr["pkey"].ToString()) > -1);
+                                                    string sSelection = "";
+                                                    if (b)
+                                                    {
+                                                        sSelection = "checked";
+                                                    }
+                                                    <li class="pe-1">
+                                                        <input type="checkbox" name="ckEdOptions" data-text="@dr["ChargeTypeText"]" class="ckEdOptions me-1" id="ckEdOptions_@dr["pkey"]" @sSelection value="@dr["pkey"]" />
+                                                        <label for="ckEdOptions_@dr["pkey"]">@dr["ChargeTypeID"]</label>
+                                                    </li>
+
+                                                }
+                                            </ul>
+                                            <a id="btnEdInfo" class="mt-2 p-0" href="/Events/ContinueEducation">Continuing Education Information</a>
+                                            <div style="display: none">
+                                                <div style="padding-top: 5px">
+                                                    <label class="lblSmall">Interested?</label><br /> <input id="txtEdInt" width="300px" maxlength="50" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @*--------------------------Other Links--------------------*@
+                        <div class="p-md-1" id="rwOtherLink">
+                            <div class=" card m-1 card-body custompanelheight p-0">
+                                <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                    <label id="lblOtherLinkTitle" class="fw-bold Font8">Quick Links:</label>
+                                    <label id="closeVoucherPopup" for="rwOtherLink" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                                </div>
+                                <div class="p-2">
+                                    <div id="phExams">
+                                        <div class="row col-md-12 m-0">
+                                            @if (ViewBag.phOtherLinkVisible)
+                                            {
+                                                <div id="phOtherLink" class="col-md-12 p-0">
+                                                    @foreach (System.Data.DataRow dr in Model.tblOtherLinks.Rows)
+                                                    {
+
+                                                        <a href="/@dr["LinkToPage"]">@dr["DisplayText"]</a><br />
+                                                    }
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div id="dvnotAvailable" class="col-md-12">
+                                                    <label id="lblNotOtherLink">This feature is not yet available.</label>&nbsp;
+                                                    <a id="btnFAOtherLink" href="">click here</a>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            @******************  Receipt  ********************@
+            <div class="modal fade" id="recipetPreview" tabindex="-1" aria-labelledby="recipetPreview" aria-hidden="true" data-bs-backdrop="static">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header modalBlueHeader">
+                            <h5 class="modal-title">Receipt</h5>
+                            <div>
+                                <button id="ExportPDFReciept" type="button" class="btn">Print to PDF</button>
+                                <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                            </div>
+                        </div>
+                        <div class="modal-body p-1">
+                            <div class="row p-2">
+                                <div class="col-md-12">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <img id="image1" src="" style="display:none;margin-bottom:10px;" />
+                                        <label id="lblReceiptNum" class="pull-right justify-content-end" style="font-size:32px; font-family:none;"> Payment Receipt </label>
+                                    </div>
+                                    <label id="lblReciiptTitle" style="font-size:18px;margin-bottom:10px;"> Payment Receipt </label>
+                                    <div id="rcptClass">
+                                        <label id="lblReceiptBody" class="lblReceiptMedium"> Payment Receipt </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @***********************  Cancel Registration  ************************@
+            <input type="hidden" value="@ViewBag.cancelPopupField" id="hdfPopUPField" />
+            <div class="modal fade" id="CancelRegistration" tabindex="-1" aria-labelledby="printScheduleLbl" aria-hidden="true" data-bs-backdrop="static">
+                <!--CancelSpeaker -->
+                @if (ViewBag.cancelPopupField == 1)
+                {
+                    <div class="modal-dialog modal-dialog-centered modal-xl" style="height:200px; width:600px;">
+                        <div class="modal-content">
+                            <div class="modal-header modalBlueHeader">
+                                <h5 class="modal-title">Registration Cancellation</h5>
+                                <div>
+                                    <button id="btnSaveResion" type="button" class="btn  me-1 mb-1">Save</button>
+                                    <button id="closeModal" type="button" class="btn me-1 mb-1" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                                </div>
+                            </div>
+                            <div class="modal-body">
+                                <span>Reason:</span><br />
+                                <textarea id="cancellationReason" placeholder="" name="cancellationReason" rows="3" cols="180"></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+                @*Cancel provisional*@
+                else if (ViewBag.cancelPopupField == 2)
+                {
+                    <div class="modal-dialog modal-dialog-centered modal-xl" style="height:15px; width:400px;" data-bs-backdrop="static">
+                        <div class="modal-content">
+                            <div class="modal-header modalBlueHeader">
+                                <table width="100%">
+                                    <tr>
+                                        <td style="padding-top: 5px">
+                                            <div class="alertify-message">
+                                                <label id="Label85">Can you attend?</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center">
+                                            <div class="alertify-buttons">
+                                                <button id="closeModal" type="button" class="btn  me-1 mb-1" data-bs-dismiss="modal">Yes</button>
+                                                <button id="btnRegCancelProvisionalNo" type="button" class="btn me-1 mb-1" aria-label="Close">No</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @*Registration cancellation for free pass*@
+                else if (ViewBag.cancelPopupField == 3)
+                {
+                    <div class="modal-dialog modal-dialog-centered modal-xl" style="height:200px; width:400px;" data-bs-backdrop="static">
+                        <div class="modal-content">
+                            <div class="modal-header modalBlueHeader">
+                                <table width="100%">
+                                    <tr>
+                                        <td style="padding-top: 5px">
+                                            <div class="alertify-message">
+                                                <label id="Label85">Confirm registration cancellation?</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center">
+                                            <div class="alertify-buttons">
+                                                <button id="btnSaveFreePass" type="button" class="btn  me-1 mb-1">Yes</button>
+                                                <button id="closeModal" type="button" class="btn me-1 mb-1" data-bs-dismiss="modal" aria-label="Close">No</button> @*data-bs-dismiss="modal"*@
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="modal-dialog modal-dialog-centered modal-xl" style="height:100px; width:400px;" data-bs-backdrop="static">
+                        <div class="modal-content">
+                            <div class="modal-header modalBlueHeader">
+                                <h5 class="modal-title"></h5>
+                                <div>
+                                    <button id="closeModal" type="button" class="btn me-1 mb-1" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            </div>
+
+
+            @******************  Transfer Registration   ********************@
+            <div class="modal fade" id="transferRegistration" tabindex="-1" aria-labelledby="transferRegistration" aria-hidden="true" data-bs-backdrop="static">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header modalBlueHeader">
+                            <h5 class="modal-title">Transfer Registration within Organization</h5>
+                            <div>
+                                <button id="btnTransferReg" type="button" class="btn">OK</button>
+                                <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Cancel">Cancel</button>
+                            </div>
+                        </div>
+                        <div class="modal-body p-1">
+                            <div class="row col-md-12 p-0 m-0 pt-2">
+                                <label class="lblSmall p-0">You may transfer your registration to someone with a MAGI account. That person must be within your own organization, as specified on your MAGI profile pages.</label>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12  mt-2">
+                                    <label class="lblSmall">Transferee's last name: </label> <br />
+                                    <input id="txtLastName" maxlength="150" class="input-sm col-md-12" placeholder="Enter name" />
+                                </div>
+                                <div class="col-md-12  mt-2">
+                                    <label class="lblSmall">Transferee's email address:</label> <br />
+                                    <input id="txtTREmail" maxlength="150" class="input-sm col-md-12" placeholder="Enter email address" />
+                                </div>
+                                <div class="col-md-12  mt-2">
+                                    <label class="lblSmall">Reason:</label> <br />
+                                    <textarea id="txtTRComment" multiple maxlength="200" rows="3" class="form-control-sm"></textarea>
+                                    <label id="lblTRcnt" class="lblSmall"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            @******************  Transfer Confirmation   ********************@
+            <div class="modal fade" id="rdTranserConfirm" tabindex="-1" aria-labelledby="rdTranserConfirm" aria-hidden="true" data-bs-backdrop="static">
+                <div class="modal-dialog modal-dialog-centered modal-lg" style="width:600px ; height:200px;">
+                    <div class="modal-content">
+                        <div class="modal-header modalBlueHeader">
+                            <h5 class="modal-title">Registration Transfer Confirmation</h5>
+                            <div>
+                                <button id="btnTRProceed" type="button" class="btn">OK</button>
+                                <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Cancel">Cancel</button>
+                            </div>
+                        </div>
+                        <div class="modal-body p-1">
+                            <table width="100%">
+                                <tr>
+                                    <td>
+                                        <label id="lblConfirms" style="font-size:10pt"></label>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*-============================== Feature Access Popup ======================================*@
+            <div class="modal fade" id="rwFAPopup" tabindex="-1" aria-labelledby="rwFAPopup" aria-hidden="true" data-bs-backdrop="static">
+                <div class="modal-dialog modal-dialog-centered modal-lg" style="width:380px ; height:200px;">
+                    <div class="modal-content">
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="text-align: center; padding-top: 20px">
+                                    <label id="lblFAmsg"></label>
+                                    <br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 3px; text-align: center">
+                                    <button id="btnFAPay" type="button" class="btn">Pay</button>
+                                    <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Cancel">Close</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="rwPaymentMethod" aria-labelledby="rwPaymentMethod" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="col-md-12">
+                    <div class="flex-column flex-md-row modal-header modalBlueHeader">
+                        <h5 class="modal-title mb-1 mb-md-0">Select Payment Method</h5>
+                        <div class="d-flex">
+                            <button id="btnPaymentOpProceed" type="button" class="btn me-1">Proceed</button>
+                            <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        </div>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="row">
+                            <div class="col-md-12 mt-2 mb-3">
+                                <label>Choose your payment method below. You will have one more opportunity to review and confirm your selection.</label>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <input type="hidden" value="@ViewBag.intTobePaidAmount" id="eABal" />
+                                @if (ViewBag.PaymentMethods != null)
+                                {
+                                    System.Data.DataTable dt = (System.Data.DataTable)ViewBag.PaymentMethods;
+                                    if (dt != null && dt.Rows.Count > 0)
+                                    {
+                                        foreach (System.Data.DataRow dr in dt.Rows)
+                                        {
+                                            <input type="radio" id="@("rdPaymentMethod" + dr["pKey"])" class="rdPaymentMethod" name="rdPaymentMethod" value="@dr["pKey"]" />
+                                            <label for="@("rdPaymentMethod" + dr["pKey"])">@dr["strText"]</label><br>
+                                        }
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rwCheck" tabindex="-1" aria-labelledby="rwCheck" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title">Pay by Check</h5>
+                    <div>
+                        <button id="cmdCheckSave" type="button" class="btn">OK</button>
+                        <button id="cmdCheckCancel" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12 mt-2">
+                        <div class="d-flex">
+                            <span ID="Label55" class="col-md-5 text-md-end me-1">Amount: </span>
+                            <div class="col-md-6">
+                                <input id="txtCheckAmount" class="input-sm txtRequired Font11" type="text" min="0" maxlength="10" />
+                            </div>
+                        </div>
+                        <div class="d-flex mt-2">
+                            <span ID="Label556" class="col-md-5 text-md-end me-1">Check number (if known): </span>
+                            <div class="col-md-6">
+                                <input id="txtPayCheckNum" class="input-sm txtRequired Font11" type="text" min="0" maxlength="20" />
+                            </div>
+                        </div>
+                        <div class="d-flex mt-2">
+                            <span ID="Label557" class="col-md-5 text-md-end me-1">Name on checking account: </span>
+                            <div class="col-md-6">
+                                <input type="text" id="txtPayCheckName" class="input-sm txtRequired Font11" min="0" maxlength="20" />
+                            </div>
+                        </div>
+                        <div class="d-flex mt-2">
+                            <span ID="Label558" class="col-md-5 text-md-end me-1">Date we can expect it to arrive: </span>
+                            <div class="col-md-6">
+                                <input id="dpPayCheckExpect" class="input-sm txtRequired Font11" type="date" min="0" maxlength="20" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rwWire" tabindex="-1" aria-labelledby="rwWire" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title">Pay by Wire</h5>
+                    <div>
+                        <button id="cmdWireSave" type="button" class="btn bold">Proceed</button>
+                        <button id="cmdWireCancel" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <label id="lblWireInstruct"> </label>
+                    </div>
+                    <div class="col-md-12 ">
+                        <div class="d-flex mt-2">
+                            <span ID="lblAM" class="col-md-4 text-md-end me-1">Amount: </span>
+                            <div class="col-md-7">
+                                <input id="txtWireAmount" class="input-sm txtRequired Font11" type="text" min="0" maxlength="10" />
+                            </div>
+                        </div>
+                        <div class="d-flex mt-2">
+                            <span ID="Label62" class="col-md-4 text-md-end me-1">Bank: </span>
+                            <div class="col-md-7">
+                                <input id="txtWireBank" class="input-sm txtRequired Font11" type="text" min="0" maxlength="20" />
+                            </div>
+                        </div>
+                        <div class="d-flex mt-2">
+                            <span ID="Label63" class="col-md-4 text-md-end me-1">Reference: </span>
+                            <div class="col-md-7">
+                                <input id="txtWireAccount" class="input-sm txtRequired Font11" type="text" maxlength="50" />
+                            </div>
+                        </div>
+                        <div class="d-flex mt-2">
+                            <span ID="Label63" class="col-md-4 text-md-end me-1">Wire will be sent by: </span>
+                            <div class="col-md-7">
+                                <input id="dpWireDate" class="input-sm txtRequired Font11" type="date" />
+                            </div>
+                        </div>
+                        <div class="d-flex mt-2">
+                            <span ID="Label63" class="col-md-4 text-md-end me-1">Comments: </span>
+                            <div class="col-md-7">
+                                <textarea id="txtWireComment" class="input-sm txtRequired Font11" rows="3" maxlength="250"> </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="payCredit" tabindex="-1" aria-labelledby="payCredit" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width:600px;width: 100%;">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title">Payment for: @ViewBag.FullName</h5>
+                    <div>
+                        <button id="btnProceedPayment" type="button" class="btn">Proceed</button>
+                        <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    @{Html.RenderAction("_PartialPayCredit", "MyMagi");}
+                    <input type="hidden" id="eventAccoubtBalance" value="@ViewBag.DoubleEventAcouuntBalnace" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rwTransferVoucher" tabindex="-1" aria-labelledby="rwTransferVoucher" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title">Transfer Voucher</h5>
+                    <div>
+                        <button id="cmdVoucherTransfer" type="button" class="btn bold">OK</button>
+                        <button id="cmdVoucherClose" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body p-1">
+                    <div class="col-md-12">
+                        <label id="Label77">You may transfer your voucher to someone. </label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 mt-2">
+                            <label id="Label79" class="lblSmall" title="Selection required">Select Voucher: </label>
+                            <select id="ddVoucher" class="txtRequired" title="Selection required">
+                                @if (ViewBag.VoucherDT != null)
+                                {
+                                    System.Data.DataTable dt = (System.Data.DataTable)ViewBag.VoucherDT;
+                                    if (dt != null && dt.Rows.Count > 0)
+                                    {
+                                        foreach (System.Data.DataRow dr in dt.Rows)
+                                        {
+                                            <option value="@dr["pKey"]">@dr["PaddedID"]</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-12 mt-2">
+                            <span ID="Label62" class="lblSmall">Transferee's email address: </span>
+                            <input id="txtVoucherTransferEmail" class="input-sm txtRequired Font11" type="text" min="0" maxlength="150" placeholder="Enter email address" title="Entry required" />
+                        </div>
+                        <div class="col-md-12 mt-2">
+                            <span ID="Label62" class="lblSmall">Reason: </span>
+                            <textarea id="txtVoucherTransferComment" class="Font11" rows="4" type="text" min="0" maxlength="150"></textarea>
+                            <label id="lblVoucherCommentCounter"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rwCCRefund" tabindex="-1" aria-labelledby="rwCCRefund" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title">Issue Credit/Debit Card Refund</h5>
+                    <div>
+                        <button id="cmdCCRefund" type="button" class="btn bold">Proceed</button>
+                        <button id="cmdCCRefundClose" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body p-1">
+                    <input type="hidden" id="hdnCCRefundCardNo" value="" />
+                    <input type="hidden" id="hdnCCMainAmount" value="" />
+
+                    <div class="col-md-12">
+                        <label id="Label77">You may transfer your voucher to someone. </label>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="d-flex mt-2">
+                            <span ID="lblSelectVoucherRef" class="col-md-4 text-md-end me-1" title="Selection required">Voucher: </span>
+                            <div class="col-md-7">
+                                <select id="ddRefundVoucher" title="Selection required" class="txtRequired">
+                                    @if (ViewBag.RefundVouchers != null)
+                                    {
+                                        System.Data.DataTable _Dt = (System.Data.DataTable)ViewBag.RefundVouchers;
+                                        if (_Dt != null && _Dt.Rows.Count > 0)
+                                        {
+                                            foreach (System.Data.DataRow dr in _Dt.Rows)
+                                            {
+                                                <option value="@dr["pKey"]">@dr["PaddedID"]</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mt-2">
+                            <label class="col-md-4 text-md-end me-1"> Receipt Number: </label>
+                            <label id="lblReceiptNumber" class="col-md-7 me-1"> </label>
+                        </div>
+                        <div class="col-md-12 mt-2">
+                            <label class="col-md-4 text-md-end me-1"> Card Transaction ID: </label>
+                            <label id="lblCCRefundCardTran" class="col-md-7 me-1"> </label>
+                        </div>
+                        <div class="col-md-12 mt-2">
+                            <label class="col-md-4 text-md-end me-1"> Refund Amount: </label>
+                            <label id="lblCCRefundAmt" class="col-md-7 me-1"> </label>
+                        </div>
+                        <div class="col-md-12 mt-2">
+                            <div class="d-flex mt-2">
+                                <span ID="lblCommentRef" class="col-md-4 text-md-end me-1" title="Selection required">Comment: </span>
+                                <div class="col-md-7">
+                                    <textarea id="txtCCRefundReason" class="Font11 txtRequired" rows="4" type="text" min="0" maxlength="150"></textarea>
+                                </div>
+                            </div>
+                            <label id="lblCCRefundCounter"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rwVoucherConfirm" tabindex="-1" aria-labelledby="rwVoucherConfirm" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <label class="mt-2" id="lblVoucherConfirm"> </label>
+                        <div class="d-flex mt-4 mb-2 text-center justify-content-end">
+                            <button id="cmdVoucherConfirmCreate" type="button" class="btn">OK</button>
+                            <button id="cmdVoucherConfirmCancel" type="button" class="btn btnOrange ms-2" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="hdnRemainingAmount" value="" />
+                <input type="hidden" id="hdnVoucherCode" value="" />
+                <input type="hidden" id="hdnVoucherPkey" value="" />
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rwVoucher" tabindex="-1" aria-labelledby="rwVoucher" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title">Apply Voucher</h5>
+                    <div>
+                        <button id="cmdCancelVoucher" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label id="lblVoucherInstruction" style="display:none;"> To obtain the PIN, contact the person who holds the voucher and tell them to get the PIN by opening My MAGI > My Charges and Payments > Show Vouchers </label>
+                            <label id="lblErrorVoucher" style="color:red;display:none;"></label>
+                        </div>
+                        <div class="col-md-12 mt-2">
+                            <div id="trVCode">
+                                <div class="d-flex  mt-2">
+                                    <span ID="Label10" class="col-md-3 text-md-end me-1">Voucher code: </span>
+                                    <div class="col-md-6">
+                                        <input id="txtVoucherNo" class="txtRequired Font11" type="text" min="0" maxlength="20" />
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <button id="cmdVoucherValidate" class="btn mt-2">Validate</button>
+                                </div>
+                            </div>
+                            <div id="trVPin" style="display:none;">
+                                <div class="d-flex  mt-2" id="trVPinReq">
+                                    <span ID="Label10" class="col-md-3 text-md-end">Voucher PIN: </span>
+                                    <div class="col-md-6">
+                                        <input id="txtVoucherPin" class="txtRequired Font11" type="text" min="0" maxlength="20" />
+                                    </div>
+                                </div>
+                                <div class="col-md-12  text-center">
+                                    <span ID="lblVoucherAmount" class="text-md-end"></span><br />
+                                    <button id="cmdSaveVoucher" class="btn mt-2">Apply</button>
+                                </div>
+                                <input type="hidden" id="sIssuedForEvent" value="" />
+                                <input type="hidden" id="IssuedForEventpKey" value="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rwSelectOptions" tabindex="-1" aria-labelledby="rwVoucher" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title">Confirm</h5>
+                    <div>
+                        <button id="cmdOptionOK" type="button" class="btn">OK</button>
+                        <button id="cmdOptionCancel" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="PriorChargePKey" value="" />
+                    <input type="hidden" id="ChargeTypePKey" value="" />
+                    <input type="hidden" id="strCertSel" value="" />
+                    <div class="row col-md-12 p-0 m-0 pt-2">
+                        <label id="lblSelectOptions"></label>
+                    </div>
+                    <div class="row col-md-12 p-0 m-0 pt-2">
+                        <div id="rbOptions">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rwConfirm" tabindex="-1" aria-labelledby="rwConfirm" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title"></h5>
+                    <div>
+                        <button id="cmdConfirmSave" type="button" class="btn">Proceed</button>
+                        <button id="cmdConfirmcancel" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row col-md-12 p-0 m-0 pt-2">
+                        <label id="lblConfirm"></label>
+                    </div>
+                    <div class="row col-md-12 p-0 m-0 pt-2" id="pnlConfirmation">
+                        <label id="lblConfirmReplacement">Select any one option.</label>
+                        <div id="rbEdOptions">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rwLunchConfirm" tabindex="-1" aria-labelledby="rwLunchConfirm" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title">Confirm Lunch</h5>
+                    <div>
+                        <button id="cmdLunchSave" type="button" class="btn">Yes, I need this meal</button>
+                        <button id="cmdLunchCancel" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">No, I'll choose a different meal</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row col-md-12 p-0 m-0 pt-2">
+                        <label>Kosher and halal meals cost MAGI $100 more than other meals. (Yes, it's hard to believe.) Nevertheless, if you need one, we will provide it to you at no charge.</label>
+                    </div>
+                    <div class="row col-md-12 p-0 m-0 pt-2" id="pnlConfirmation">
+                        <input type="hidden" id="hdnMealPkey" Value="" />
+                        <input type="hidden" id="hdnEvtSessionPkey" Value="" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rwSpecialMeal" tabindex="-1" aria-labelledby="rwSpecialMeal" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title">I Have a Dietary Restriction</h5>
+                    <div>
+                        <button id="cmdSpecialMealSave" type="button" class="btn">OK</button>
+                        <button id="cmdSpecialMealCancel" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">No, I'll choose a different meal</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row col-md-12 p-0 m-0 pt-2">
+                        <textarea type="text" maxlength="50" class="form-control-sm Font10" rows="3" id="txtSpecialMealRequest"></textarea>
+                    </div>
+                    <div class="row col-md-12 p-0 m-0 pt-2">
+                        <label id="lblnote">We will give you a meal card with your name tag. Give that card to your server.<br />Note: If you are considering a kosher or halal meal, they must be prepared outside the hotel at an extra cost to MAGI of $80, so please consider a different option, e.g., vegetarian.</label>
+                    </div>
+                    <div class="row col-md-12 p-0 m-0 pt-2" id="pnlConfirmation">
+                        <input type="hidden" id="hdnSpecialMealPkey" Value="" />
+                        <input type="hidden" id="hdnSpecialMealSessionPkey" Value="" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rwMysessionchair" tabindex="-1" aria-labelledby="rwMysessionchair" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title">My Session Chair Preferences</h5>
+                    <div>
+                        <button id="cmdSCCancel" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row col-md-12 p-2 m-0" id="MySessionChairDiv">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelHelpMedia" tabindex="-1" aria-labelledby="modelHelpMedia" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header justify-content-end" style=" background-color: #fff !important; padding: 0px !important;">
+                    <label id="closeHelpMedia" class="pull-right  float-end mb-2" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                </div>
+                <div class="modal-body" id="modelHelpMediaBody">
+                    <div class="row p-2">
+                        @{
+                            if (Model.HelpIconInfo != null)
+                            {
+                                if ((Model.HelpIconInfo.PageIconVisible))
+                                {
+                                    <input type="hidden" id="LogIDinfo" value="" />
+                                    <input type="hidden" id="pageVideoLink" value="@Model.HelpIconInfo.PageDocumentLink" data-filename="@Model.HelpIconInfo.PageFileName" data-usetype="@Model.HelpIconInfo.PageValue" data-type="@Model.HelpIconInfo.PageMediaType" data-mime="@Model.HelpIconInfo.PageMime" />
+                                    <video id="pageVideoContent" class="video-js" controls preload="auto" width="300" height="400">
+                                        <p class="vjs-no-js">
+                                            To view this video please enable JavaScript, and consider upgrading to a web browser that
+                                        </p>
+                                    </video>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelVideoPlayer" tabindex="-1" aria-labelledby="modelVideoPlayer" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header justify-content-end" style=" background-color: #fff !important; padding: 0px !important;">
+                    <label id="closeVideoPlayer" class="pull-right  float-end mb-2" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                </div>
+                <div class="modal-body" id="modelHelpMediaBody">
+                    <div class="row p-2">
+                        <video id="VideoPlayer" class="video-js" controls preload="auto" width="300" height="400">
+                            <p class="vjs-no-js">
+                                To view this video please enable JavaScript, and consider upgrading to a web browser that
+                            </p>
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelIframeVideo" tabindex="-1" aria-labelledby="modelIframeVideo" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header justify-content-end" style=" background-color: #fff !important; padding: 0px !important;">
+                    <label id="closeIframeVideo" class="pull-right  float-end mb-2" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                </div>
+                <div class="modal-body" id="modelHelpMediaBody">
+                    <div class="row p-2">
+                        <iframe id="IframeVideo" width="400" height="400"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelNavInstructions" tabindex="-1" aria-labelledby="modelNavInstructions" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="NavigationInstructions">Navigation Instructions</h5>
+                    <div>
+                        <button id="closeNavInstructions" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div class="col-xs-12" id="modalNavBody" style="height:400px; overflow-y:scroll;">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelEvtUpdatesVirtual" tabindex="-1" aria-labelledby="modelEvtUpdatesVirtual" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="EvtUpdatesVirtual">Event Updates</h5>
+                    <div>
+                        <button id="closeEvtUpdatesVirtual" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div class="col-xs-12 mb-1" id="modalEvtUpdatesVirtualBody" style="height:400px; overflow-y:scroll;">
+                        </div>
+                        <div class="text-center">
+                            <button id="closeEvtUpdatesVirtual" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="rwPopText" aria-labelledby="rwPopText" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="col-md-12">
+                    <div class="flex-column flex-md-row modal-header p-1">
+                        <div class="d-flex">
+                            <img id="imgPopText" src="@ViewBag.imgPopTextURL" height="40px" /> <span class="ms-2" style="font-size: 20pt;"> @ViewBag.lblPopTextTitle</span>
+                        </div>
+                        <div class="d-flex">
+                            <button id="cmdPopTextClose" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                        </div>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="row">
+                            <div class="col-md-12 mt-2 mb-3">
+                                @Html.Raw(ViewBag.lblPopTextContent);
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="@ViewBag.cancelPopupField" id="Popup" />
+    <input type="hidden" id="OpenSessionChairPreference" value="@((ViewBag.cmdChrPrfrnc && ViewBag.ScOpenModel)? "true":"false")" />
+
+    if (ViewBag.OpenSurveyRadWindow)
+    {
+        <div class="modal fade" id="rwSurveyQuestion" tabindex="-1" aria-labelledby="rwSurveyQuestion" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header modalBlueHeader">
+                        <h5 class="modal-title" id="rwSurveyQuestionTitle">Registration Questions</h5>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="row p-2">
+                            <div class="col-xs-12 pt-1">
+                                @Html.Raw(ViewBag.lblRegText)
+                            </div>
+                            <div class="text-center">
+                                <button id="cmdSaveQ" type="button" class="btn">Proceed</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#rwSurveyQuestion').modal('show');
+                $('#cmdSaveQ').click(function (e) {
+                    e.preventDefault();
+                    var result = CommonFunctions.AjaxCall('Post', '/Virtual/cmdSaveQClick', '', 'json', 'Error While Updating Schedule');
+                    if (result !== null && result !== "ERROR") {
+                        if (result.msg === "OK") {
+                            parent.location.href = result.URL;
+                        }
+                        else
+                            CommonFunctions.Alert("Error Occurred while updating");
+                    }
+                    else
+                        CommonFunctions.Alert("Error Occurred while updating");
+                });
+            });
+        </script>
+    }
+    <script type="text/javascript">
+        function LoadLunchInfo()
+        {
+            var Ph=$('#phLunchVal').val();
+            if (Ph==="true")
+            {
+                var HtmlData="<tr><td colspan='3'> No results found</td></tr>";
+                var result=CommonFunctions.AjaxCall('GET', '/MyMagi/GetLunchInformation', null, 'Error While Getting Lunch Information.');
+                if (result!==null&&result!=="ERROR")
+                {
+                    if (result.msg==="OK")
+                    {
+                        var ListInfo=JSON.parse(result.List);
+                        if (ListInfo!=null&&ListInfo.length>0)
+                        {
+                            var ahtml='';
+                            $.each(ListInfo,function (val, i)
+                            {
+                                var checked=(i.bAttend? "checked":"");
+                                var mailList=JSON.parse(i.MealList);
+                                var defaultOption = (i.DefaultMeal_Pkey === 0) ?'<option value="0" '+((i.Meal_pKey===0)? "selected":"")+'>Standard Meal</option>':'';
+                                var OptionsHtml=defaultOption;
+                                $.each(mailList, function (j,newVal)
+                                {
+                                    var infoSelect = ((i.Meal_pKey === newVal.pKey || ((i.Meal_pKey===0) && i.DefaultMeal_Pkey === newVal.pKey)) ? "selected" : "");
+                                    OptionsHtml+='<option value="'+newVal.pKey+'" '+infoSelect+'>'+newVal.strText+'</option>';
+                                });
+                                ahtml+='<tr><td>'+i.Lunch+'</td><td> <input id="CheckSelect_'+i.EvtSession_pKey+'" type="checkbox" name="ckSelect" data-meal="'+i.Meal_pKey+'" data-id="'+i.EvtSession_pKey+'" '+checked+'  class="ckSelectValue" /></td>';
+                                ahtml+='<td><select class="optionSelect" id="LunchSelect_'+i.EvtSession_pKey+'" data-request="'+i.MealRequest+'" data-Special="'+i.IsSpecial+'" data-meal="'+i.Meal_pKey+'" data-id="'+i.EvtSession_pKey+'"  '+(i.bAttend? "":"disabled")+'> '+ OptionsHtml +' <select></td>';
+                            });
+                            $('#LunchTableData').html(ahtml);
+                        } else
+                            $('#LunchTableData').html(HtmlData);
+                    }
+                    else
+                        $('#LunchTableData').html(HtmlData);
+                }
+            }
+        }
+
+        $(document).ready(function ()
+        {
+                $("#dpAttStart,#dpAttEnd").datepicker({
+                    "dateFormat": "mm/dd/y"
+                }).val();
+
+                $('#VirtualEventDropDown').multipleSelect({
+                    multiple: false, isopen: false, placeholder: 'Show All', selectAll: false, selectAllText: 'Select all', multiple: false, multipleWidth: 'auto', filter: false, width: 'auto', height: 28, maxHeight: 450, onClick: function () { onChangeVirtual(); },
+                });
+
+                function onChangeVirtual() {
+                    var Data = { DropDownValue: $('#VirtualEventDropDown').val() };
+                    switch ($('#VirtualEventDropDown').val()) {
+                        case "9":
+                            var result = CommonFunctions.AjaxCall('Get', '/Home/GetNavigationInstructions', '', 'json', 'Error accessing text block data.');
+                            if (result.msg === "OK") {
+                                $('#modalNavBody').html(result.Content);
+                                $('#modelNavInstructions').modal('show');
+                            }
+                            else
+                                CommonFunctions.Alert(result.msg);
+                            break;
+                        case "27":
+                            var result = CommonFunctions.AjaxCall('Get', '/Home/GetEventUpdatesContent', '', 'json', 'Error loading Event Updates');
+                            if (result.msg === "OK") {
+                                $('#modalEvtUpdatesVirtualBody').html(result.Content);
+                                $('#modelEvtUpdatesVirtual').modal('show');
+                            }
+                            else
+                                CommonFunctions.Alert(result);
+                            break;
+                        case "21":
+                            OpenChatWindow();
+                            break;
+                        default:
+                            var result = CommonFunctions.AjaxCall('Post', '/Home/VirtualDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+                            if (result.ActionType === "Redirect")
+                                window.location.href = result.RedirectionUrl;
+                            break;
+                    }
+                }
+
+                $('#MySessionChairDiv').load("/MyMAGI/_PartialSessionChair", function () {
+                    $('#btnReturnSPartial').remove();
+                    if ($('#OpenSessionChairPreference').val() === "true")
+                        $('#rwMysessionchair').modal('show');
+                });
+
+                LoadLunchInfo();
+
+                $(document).on('change', '.ckSelectValue', function (e)
+                {
+                    var thisCheck=$(this)[0];
+                    var LaunchSelect="#LunchSelect_"+thisCheck.dataset.id;
+                    var ID=thisCheck.dataset.id, meal=thisCheck.dataset.meal;
+                    var attend=thisCheck.checked;
+                    $(LaunchSelect).prop('disabled', !thisCheck.checked);
+                    var result=CommonFunctions.AjaxCall('GET', '/MyMagi/UpdateAttendLunch', { intMealPKey: meal, intEvtSession_pKey: ID, bAttend: attend}, 'Error While Getting Lunch Information.');
+                    if (result!==null&&result!=="ERROR")
+                    {
+                        if (result.msg==="rwLunchConfirm")
+                        {
+                            $('#hdnMealPkey').val(result.mealKey);
+                            $('#hdnEvtSessionPkey').val(result.esKey);
+                            $('#rwLunchConfirm').modal('show');
+                            return;
+                        }
+                        else if (result.msg==="rwSpecialMeal")
+                        {
+                            $('#hdnMealPkey').val(result.mealKey);
+                            $('#hdnEvtSessionPkey').val(result.esKey);
+                            $('#txtSpecialMealRequest').val("");
+                            $('#rwSpecialMeal').modal('show');
+                            return;
+                        }
+                        else if (result.msg!=="OK")
+                            CommonFunctions.Alert(result.msg);
+                    }
+                    else
+                        CommonFunctions.Alert("Error Occurred While Updating Lunch Information");
+
+                    LoadLunchInfo();
+                });
+
+                $(document).on('change', '.optionSelect', function (e)
+                {
+                    var thisSelect=$(this)[0];
+                    var checkSelect="#CheckSelect_"+thisSelect.dataset.id;
+                    var ID=thisSelect.dataset.id, meal=thisSelect.dataset.meal, IsSpeacial=thisSelect.dataset.Special, MealRequest=thisSelect.dataset.request;
+                    var attend=$(checkSelect).is(":checked");
+                    if (IsSpeacial&&meal===thisSelect.value)
+                    {
+                        $('#hdnMealPkey').val(meal);
+                        $('#hdnEvtSessionPkey').val(ID);
+                        $('#txtSpecialMealRequest').val(MealRequest);
+                        $('#rwSpecialMeal').modal('show');
+                        return;
+                    }
+                    else
+                    {
+                        var result=CommonFunctions.AjaxCall('GET', '/MyMagi/UpdateAttendLunch', { intMealPKey: thisSelect.value, intEvtSession_pKey: ID, bAttend: attend }, 'Error While Getting Lunch Information.');
+                        if (result!==null&&result!=="ERROR")
+                        {
+                            if (result.msg==="rwLunchConfirm")
+                            {
+                                $('#hdnMealPkey').val(result.mealKey);
+                                $('#hdnEvtSessionPkey').val(result.esKey);
+                                $('#rwLunchConfirm').modal('show');
+                                return;
+                            }
+                            else if (result.msg==="rwSpecialMeal")
+                            {
+                                $('#hdnMealPkey').val(result.mealKey);
+                                $('#hdnEvtSessionPkey').val(result.esKey);
+                                $('#txtSpecialMealRequest').val("");
+                                $('#rwSpecialMeal').modal('show');
+                                return;
+                            }
+                            else if (result.msg!=="OK")
+                                CommonFunctions.Alert(result.msg);
+                        }
+                        else
+                            CommonFunctions.Alert("Error Occurred While Updating Lunch Information");
+                    }
+
+                    LoadLunchInfo();
+                });
+
+                $('#cmdLunchSave').click(function (e)
+                {
+                    e.preventDefault();
+                    var result=CommonFunctions.AjaxCall('POST', '/MyMagi/cmdLunchSave', { intMealPKey: $('#hdnMealPkey').val(), intEvtSession_pKey: $('#hdnEvtSessionPkey').val(), specialMealText: ""}, 'Error While Getting Lunch Information.');
+                    if (result!==null&&result!=="ERROR")
+                    {
+                        if (result.msg==="OK")
+                        {
+                            LoadLunchInfo();
+                            $('#rwLunchConfirm').modal('hide');
+                        }
+                        else
+                            CommonFunctions.Alert(result.msg);
+                    }
+                    else
+                        CommonFunctions.Alert("Error Occurred While Updating Lunch Information");
+                });
+                $('#cmdSpecialMealSave').click(function (e)
+                {
+                    e.preventDefault();
+                    var result=CommonFunctions.AjaxCall('GET', '/MyMagi/cmdLunchSave', { intMealPKey: $('#hdnMealPkey').val(), intEvtSession_pKey: $('#hdnEvtSessionPkey').val(), specialMealText: $('#txtSpecialMealRequest').val() }, 'Error While Getting Lunch Information.');
+                    if (result!==null&&result!=="ERROR")
+                    {
+                        if (result.msg==="OK")
+                        {
+                            LoadLunchInfo();
+                            $('#rwSpecialMeal').modal('hide');
+                        }
+                        else
+                            CommonFunctions.Alert(result.msg);
+                    }
+                    else
+                        CommonFunctions.Alert("Error Occurred While Updating Lunch Information");
+                });
+                $('#cmdSpecialMealCancel,#cmdLunchCancel').click(function (e)
+                {
+                    e.preventDefault();
+                    LoadLunchInfo();
+                });
+
+
+                $('#btnArrangSaveEvent').click(function (e) {
+                    e.preventDefault();
+                    var text = $('#txtSpArrangementEvent').val();
+                    var data = { sArrangeText: text };
+                    var result=CommonFunctions.AjaxCall('Post', '/MyMagi/ArrangeSaveEvent', data, 'Error While Saving.');
+                    CommonFunctions.Alert((result!==null? result.msg: "Error occurred while saving"));
+                });
+
+                $('#btnSaveRefer').click(function (e)
+                {
+                    e.preventDefault();
+                    if ($('#txtReferName').val()==="")
+                    {
+                        CommonFunctions.Alert("Enter valid name");
+                        return
+                    }
+
+                    var data={ txtReferPhone: $('#txtReferPhone').val(), txtReferName: $('#txtReferName').val(), txtReferEmail: $('#txtReferEmail').val() };
+                    var result=CommonFunctions.AjaxCall('Get', '/MyMagi/SaveReferralOption', data, 'Error While Saving Refer.');
+                    if (result!=null)
+                    {
+                        if(result.msg !== "OK")
+                            CommonFunctions.Alert(result.msg);
+                        else
+                            CommonFunctions.Alert("Referrer saved");
+                    }
+                    else
+                        CommonFunctions.Alert("Error occurred while saving refer");
+                });
+
+                $("#btnFAPay").on('click', function (e) {
+                    e.preventDefault();
+                    $('#rwFAPopup').modal('hide');
+                    $('#txtCreditAmount,#lblCreditAmount').val($('#eABal').val());
+                    $('.ClearText').val("");
+                    $('#ddMonth').val($('#selMonth').val());
+                    $('#ddYear').val($('#selYear').val());
+                    $('#payCredit').modal('show');
+                });
+
+                function Validate() {
+                    var isError = true;
+                    if (document.getElementById("txtCCNum").value.length < 16) {
+                        isError = false;
+                    }
+                    document.getElementById("txtCCNum").style.setProperty("background-color", (document.getElementById("txtCCNum").value.length < 16) ? "#f08080" : "#fff");
+                    document.getElementById("txtCreditCode").style.setProperty("background-color", (document.getElementById("txtCreditCode").value === "") ? "#f08080" : "#fff");
+                    document.getElementById("txtCreditFirstName").style.setProperty("background-color", (document.getElementById("txtCreditFirstName").value === "") ? "#f08080" : "#fff");
+                    document.getElementById("txtCreditLastname").style.setProperty("background-color", (document.getElementById("txtCreditLastname").value === "") ? "#f08080" : "#fff");
+                    document.getElementById("txtCreditAddress").style.setProperty("background-color", (document.getElementById("txtCreditAddress").value === "") ? "#f08080" : "#fff");
+                    document.getElementById("txtCreditZipcode").style.setProperty("background-color", (document.getElementById("txtCreditZipcode").value === "") ? "#f08080" : "#fff");
+                    document.getElementById("txtCreditName").style.setProperty("background-color", (document.getElementById("txtCreditName").value === "") ? "#f08080" : "#fff");
+                    return isError;
+                }
+
+                $('#btnProceedPayment').on('click', function (e) {
+                    e.preventDefault();
+                    var cardtype = document.getElementById("ddCardType").value;
+                    var ddMonth = document.getElementById("ddMonth").value;
+                    var ddYear = document.getElementById("ddYear").value;
+                    if (!Validate())
+                        return false;
+                    var data =
+                    {
+                        txtCreditAmount: $('#eABal').val(),
+                        lblCreditAmount: document.getElementById("txtCreditAmount").textContent,
+                        dblAccountBalance: $('#eABal').val(),
+                        ddCardType: cardtype,
+                        txtCCNum: document.getElementById("txtCCNum").value,
+                        ddMonth: ddMonth,
+                        ddYear: ddYear,
+                        txtCreditCode: document.getElementById("txtCreditCode").value,
+                        txtCreditName: document.getElementById("txtCreditName").value,
+                        txtCreditFirstName: document.getElementById("txtCreditFirstName").value,
+                        txtCreditLastname: document.getElementById("txtCreditLastname").value,
+                        txtCreditZipcode: document.getElementById("txtCreditZipcode").value,
+                        txtCreditAddress: document.getElementById("txtCreditAddress").value,
+                        eventAccoubtBalance: document.getElementById("eventAccoubtBalance").value
+                    }
+                    var result = CommonFunctions.AjaxCall('POST', '/MyMagi/PayementSubmit', data, 'Error While Updating Payment.');
+                    if (result !== null) {
+                        if (result.msg === "OK") {
+                            $('#payCredit').modal('hide');
+                            if (result.redirect !== "")
+                                window.location.reload();
+                        }
+                        else
+                            CommonFunctions.Alert(result.msg);
+                    }
+                    else
+                        CommonFunctions.Alert("Error Occured While Updating Payment");
+                });
+
+                $(document).on('click', '.btnReceipt', function (e) {
+                    $('#image1').hide();
+                    e.preventDefault();
+                    var DocRef = this.text;
+                    var result = CommonFunctions.AjaxCall('POST', '/MyMagi/ProcessReciptDocument', { docID: DocRef }, 'Error While Processing Reciept.');
+                    if (result !== null) {
+                        if (result.msg === "OK") {
+                            $('#image1').attr('src', result.Logo);
+                            $('#image1').attr('style', "height:" + result.Height + "px;");
+                            $('#image1').show();
+                            $('#rcptClass').attr('class', result.InfoClass);
+                            $('#lblReciiptTitle').html(result.RecipetTitle);
+                            $('#lblReceiptNum').html(result.ReciptNum);
+                            $('#lblReceiptBody').html(result.RecieptBody);
+                            $('#recipetPreview').modal('show');
+                        }
+                        else
+                            CommonFunctions.Alert(result.msg);
+                    }
+                    else
+                        CommonFunctions.Alert("Error While Processing Reciept.");
+                });
+
+                $('#ExportPDFReciept').click(function () {
+                    window.location.href = '/MyMagi/ExportPDF?ReceiptNum=' + $('#lblReceiptNum').text();
+                });
+
+                $('#btnCancelPlan,#CancelReg').on('click', function (e) {
+                    e.preventDefault();
+                    var PopupVal=$("#Popup").val();
+                    switch (PopupVal)
+                    {
+                        case "0":
+                            window.location.href="/CancelReg";
+                            break;
+
+                    }
+                    $('#cancellationReason').val("");
+                    if ($('#hdfPopUPField').val() !== "0")
+                        $('#CancelRegistration').modal('show');
+                });
+
+
+                $("#btnSaveResion").click(function (e) {
+                    var comment = document.getElementById("cancellationReason").value;
+                    var result = CommonFunctions.AjaxCall('GET', '/MyMagi/CancelRegistration', { cancelregion: comment }, 'Error While Canceelling Registration.');
+                    if (result!==null&&result!=="Error")
+                    {
+                            if (result.result === "OK")
+                                $('#CancelRegistration').modal('hide');
+                            else
+                                CommonFunctions.Alert(result.msg);
+                    }
+                    else
+                        CommonFunctions.Alert("Error Occurred while cancelling registration");
+
+                });
+
+                $("#btnRegCancelProvisionalNo, #btnSaveFreePass").on('click', function () {
+                    var result=CommonFunctions.AjaxCall('GET', '/MyMagi/CancelProvisinaolRegister', { dblAccountBalance: $('#eAbal').val()}, 'Error While Processing Reciept.');
+                    if (result!==null&&result!=="Error")
+                    {
+                        if (result.result == "OK")
+                        {
+                            window.location.reload();
+                        }
+                        else
+                            CommonFunctions.Alert("Error Occurred while cancelling registration");
+                    }
+                    else
+                        CommonFunctions.Alert("Error Occurred while cancelling registration");
+                });
+
+                $('#btnTravel , #btnTravelReset').on('click', function (e)
+                {
+                    e.preventDefault();
+                    var dpAttStart = $('#dpAttStart').val();
+                    var dpAttEnd = $('#dpAttEnd').val();
+                    var ddTravel = $('#ddTravel').val();
+                    var txtTravel = $('#txtTravel').val();
+                    var ddLodging = $('#ddLodging').val();
+                    var txtLodging = $('#txtLodging').val();
+                    var RegistrationLevel_pKey = $('#hdnRegistrationLevel_pKey').val();
+                    var bReset = false;
+                    if (e.target.id == 'btnTravelReset')
+                    {
+                        bReset = true;
+
+                        document.getElementById('dpAttStart').value = $('#dtEvStart').val();
+                        document.getElementById('dpAttEnd').value = $('#dtEvEnd').val();
+                        document.getElementById("ddTravel").selectedIndex = 0;
+                        document.getElementById("ddLodging").selectedIndex = 0;
+                        document.getElementById("txtTravel").value = "";
+                        document.getElementById("txtLodging").value = "";
+                    }
+
+                    var data={
+                        intRegistrationLevel_pKey: RegistrationLevel_pKey,
+                        dpAtStart: dpAttStart,
+                        dpAtEnd: dpAttEnd,
+                        ddTravel: ddTravel,
+                        ddLodging: ddLodging,
+                        txtTravel: txtTravel,
+                        txtLodging: txtLodging,
+                        bReset: bReset
+                    };
+
+                    if (!bReset)
+                    {
+                        var startValue = $('#dpAttStart').datepicker().val();
+                        var endValue = $('#dpAttEnd').datepicker().val();
+                        if (startValue == null || startValue == '')
+                        {
+                            CommonFunctions.Alert('Start date cannot be blank');
+                            return;
+                        }
+
+                        if (endValue == null || endValue == '')
+                        {
+                            CommonFunctions.Alert('End date cannot be blank');
+                            return;
+                        }
+
+                        var startDate = new Date(startValue);
+                        var endDate = new Date(endValue);
+
+                        if (startDate > endDate)
+                        {
+                            CommonFunctions.Alert('Start date should be less than End date');
+                            return;
+                        }
+                    }
+
+                    var result = CommonFunctions.AjaxCall('POST', '/MyMagi/SaveTravel', data, 'Error While Saving.');
+                    if (result != null) {
+                        if (result.msg == "OK") {
+                            CommonFunctions.Alert(result.msg);
+                        } else{
+                            CommonFunctions.Alert(result.msg);
+                        }
+                    }
+
+                });
+
+                $('#lnkTransfer').on('click', function (e)
+                {
+
+                    $('#transferRegistration').modal('show');
+                    e.preventDefault();
+                });
+
+                var inp = document.getElementById('txtTRComment');
+                var chars = document.getElementById('lblTRcnt');
+                inp.onkeyup = function () {
+                    chars.innerHTML = inp.value.length + ' of ' +'200  Characters used' ;
+                }
+
+                $('#btnTransferReg ,#btnTRProceed').on('click', function (e) {
+                    var textemail = $('#txtTREmail').val();
+                    var textcomment = $('#txtTRComment').val();
+                    var bTrProceed = false;
+                    if (e.target.id == 'btnTRProceed')
+                    {
+                        bTrProceed = true;
+                    }
+                    var data = { txtTREmail: textemail, txtTRComment:textcomment ,bTrProceed: bTrProceed };
+                    var result = CommonFunctions.AjaxCall('Get', '/MyMagi/TransferRegistration', data, 'Error While Saving.');
+                    if (result != null)
+                    {
+                        if (result.result == "OK") {
+                            $('#lblConfirms').html(result.lblConfirms);
+                            $('#rdTranserConfirm').modal('show');
+
+                        }else if(result.result == "Success")
+                        {
+                            document.getElementById("lblConfirms").innerHTML = "";
+                            document.getElementById("txtLastName").value = "";
+                            document.getElementById("txtTREmail").value = "";
+                            document.getElementById("txtTRComment").value = "";
+                            $('#rdTranserConfirm').modal('hide');
+                            $('#transferRegistration').modal('hide');
+
+                        }
+                        else
+                        {
+                            CommonFunctions.Alert(result.msg);
+                        }
+                    }
+
+                    e.preventDefault();
+                });
+
+                $('.ckEdOptions').click(function (e) {
+                    e.preventDefault();
+                        var options = [];
+                        $("input[name='ckEdOptions']:checkbox").each(function () {
+                            var $this=$(this);
+                            var bstate=$this.is(":checked");
+                            var svalue=$(this).val();
+                            var stext = $this[0].dataset.text;
+                            options.push({ CheckedState: bstate, Text: stext, Values: svalue });
+                        });
+
+                    var data={ EDItems: options, bSpeakerAtEvent: $('#SpeakerAtEvent').val(), bConferenceEnd: $('#ConferenceEnd').val(), Existing: $('#selectedCert').val() };
+                    var result = CommonFunctions.AjaxCall('POST', '/MyMagi/Ed_OptionChanged', data,'json','Error While Saving.');
+                    if (result!==null&&result!== "ERROR")
+                    {
+
+                        if (result.msg==="OK")
+                        {
+                            if (result.AlertMessage!=="")
+                            {
+                                if (typeof alertify!=='undefined')
+                                {
+                                    alertify.alert(result.AlertMessage, function (result)
+                                    {
+                                        setTimeout(function () { window.location.href="/MyMAGI/MyOptions"; }, 1000);
+                                    });
+                                }
+                                else
+                                    if (!alert(result.AlertMessage)) setTimeout(function () { window.location.href="/MyMAGI/MyOptions"; }, 1000);
+                            }
+                            else
+                            {
+                                if (result.alert!=="")
+                                    CommonFunctions.Alert(result.alert);
+
+                                setTimeout(function () { window.location.href="/MyMAGI/MyOptions"; }, 1000);
+                            }
+                        }
+                        else if (result.msg==="PopSelectOptions")
+                        {
+                            if (result.AlertMessage!=="")
+                                CommonFunctions.Alert(result.AlertMessage);
+
+                            var htmlOPtions='<input id="rbSelectOptions_0" name="rbSelectOptions" type="radio" Value="'+result.Options1Val+'" /> <label for="rbSelectOptions_0">'+result.Options1Text+'</label><br>'+
+                                '<input id="rbSelectOptions_1" name="rbSelectOptions" type="radio" Value="'+result.Options2Val+'" /> <label for="rbSelectOptions_1">'+result.Options2Text+'</label><br>';
+
+                            $('#lblSelectOptions').text(result.lblSelectOptions);
+                            $('#rbOptions').html(htmlOPtions);
+                            $('input:radio[name="rbSelectOptions"][value="'+result.SelectedValue+'"]').attr('checked', true);
+                            if (result.rbOptionsVisible)
+                                $('#rbOptions').show();
+                            else
+                                $('#rbOptions').hide();
+                            $('#PriorChargePKey').val(result.PriorChargePKey);
+                            $('#ChargeTypePKey').val(result.ChargeTypePKey);
+                            $('#strCertSel').val(result.strCert);
+                            $('#rwSelectOptions').modal('show');
+                        }
+                        else
+                            CommonFunctions.Alert(result.alert);
+                    }
+                    else
+                        CommonFunctions.Alert("Error Occurred While Saving Certification");
+                });
+
+                $('#btnEditSave').on('click', function (e)
+                {
+                    e.preventDefault();
+                    var txtBName = $('#txtBName').val();
+                    var txtBTitle = $('#txtBTitle').val();
+                    var txtBOrg = $('#txtBOrg').val();
+                    var hdnBName = $('#hdnBName').val();
+                    var hdnBTitle = $('#hdnBTitle').val();
+                    var hdnBOrg = $('#hdnBOrg').val();
+                    var balance = $('#hdndblAccountAmount').val();
+                    var battendee = $('#hdnbCurrentAttendee').val();
+
+                    if ($('#txtBName').val().trim() === "") {
+                        CommonFunctions.Alert("Enter valid name for badge");
+                        return;
+                    }
+                    if ($('#txtBTitle').val().trim() === "") {
+                        CommonFunctions.Alert("Enter valid badge title");
+                        return;
+                    }
+                    if ($('#txtBOrg').val().trim() === "") {
+                        CommonFunctions.Alert("Enter valid badge organization");
+                        return;
+                    }
+                    var data = {
+                        txtBName: txtBName,
+                        txtBTitle: txtBTitle,
+                        txtBOrg: txtBOrg,
+                        hdnBName: hdnBName,
+                        hdnBTitle: hdnBTitle,
+                        hdnBOrg: hdnBOrg,
+                        dblAccountAmount: balance ,
+                        bCurrentAttendee: battendee,
+                        actiontype: "SaveEdits"
+                    };
+                    var result = CommonFunctions.AjaxCall('Get', '/MyMagi/SaveEditBadge', data, 'Error While Saving.');
+                    if (result != null || result != "")
+                    {
+                        if (result.result == "OK") {
+                            var index = txtBName.indexOf(" ");
+                            if (index > -1)
+                                document.getElementById("lblBName").innerHTML = "<b>" + txtBName.substr(0, index) + "</b>" + txtBName.substr(index);
+                            else
+                                document.getElementById("lblBName").innerHTML = "<b>" + txtBName + "</b>"
+                            document.getElementById("lblBTitle").innerHTML = txtBTitle;
+                            document.getElementById("lblBOrganization").innerHTML = txtBOrg;
+                            CommonFunctions.Alert(result.msg);
+                        } else if (result.result == "PendingPayment") {
+                            document.getElementById("lblFAmsg").innerHTML = result.lblFAmsg ;
+                            $('#rwFAPopup').modal('show');
+                        }
+                        else{
+                            CommonFunctions.Alert(result.msg);
+                        }
+                    }
+                });
+                $('#btnEditReset').on('click', function (e) {
+
+                    var balance = $('#hdndblAccountAmount').val();
+                    var battendee = $('#hdnbCurrentAttendee').val();
+
+                    var data = {
+                        dblAccountAmount: balance,
+                        bCurrentAttendee: battendee,
+                        actiontype: "ResetBadge"
+                    };
+                    var result = CommonFunctions.AjaxCall('Get', '/MyMagi/SaveEditBadge', data, 'Error While Saving.');
+                    if (result != null || result != "")
+                    {
+                        if (result.result == "OK")
+                        {
+                            document.getElementById("txtBName").value = result.txtBName;
+                            document.getElementById("txtBTitle").value = result.txtBTitle;
+                            document.getElementById("txtBOrg").value = result.txtBOrg;
+
+                            document.getElementById("hdnBName").value = result.txtBName;
+                            document.getElementById("hdnBTitle").value = result.txtBTitle;
+                            document.getElementById("hdnBOrg").value = result.txtBOrg;
+
+                            var index = result.txtBName.indexOf(" ");
+                            if (index > -1)
+                                document.getElementById("lblBName").innerHTML = "<b>" + result.txtBName.substr(0, index) + "</b>" + result.txtBName.substr(index);
+                            else
+                                document.getElementById("lblBName").innerHTML = "<b>" + result.txtBName + "</b>"
+                            document.getElementById("lblBName").innerHTML = "<b>" + result.txtBName.substr(0, index) + "</b>" + result.txtBName.substr(index);
+                            document.getElementById("lblBTitle").innerHTML = result.txtBTitle;
+                            document.getElementById("lblBOrganization").innerHTML = result.txtBOrg;
+
+                        }else if (result.result == "PendingPayment")
+                        {
+                            document.getElementById("lblFAmsg").innerHTML = result.lblFAmsg;
+                            $('#rwFAPopup').modal('show');
+                        }
+                        else {
+                            CommonFunctions.Alert(result.msg);
+                        }
+
+                    }
+                    e.preventDefault();
+
+                });
+
+                $('#btnEditPreview').on('click', function (e) {
+                    e.preventDefault();
+                    var txtBName = $('#txtBName').val();
+                    var txtBTitle = $('#txtBTitle').val();
+                    var txtBOrg = $('#txtBOrg').val();
+                    if ($('#txtBName').val().trim() === "") {
+                        CommonFunctions.Alert("Enter valid name for badge");
+                        return;
+                    }
+                    if ($('#txtBTitle').val().trim() === "") {
+                        CommonFunctions.Alert("Enter valid badge title");
+                        return;
+                    }
+                    if ($('#txtBOrg').val().trim() === "") {
+                        CommonFunctions.Alert("Enter valid badge organization");
+                        return;
+                    }
+
+                    var index = txtBName.indexOf(" ");
+                    if (index > -1)
+                        document.getElementById("lblBName").innerHTML = "<b>" + txtBName.substr(0, index) + "</b>" + txtBName.substr(index);
+                    else
+                        document.getElementById("lblBName").innerHTML = "<b>" + txtBName + "</b>"
+
+                    document.getElementById("lblBTitle").innerHTML = txtBTitle;
+                    document.getElementById("lblBOrganization").innerHTML = txtBOrg ;
+
+                });
+
+                $('#btnEditCancel').on('click', function (e) {
+                    e.preventDefault();
+                    document.getElementById("txtBName").value = '@ViewBag.txtBName';
+                    document.getElementById("txtBTitle").value ='@ViewBag.txtBTitle' ;
+                    document.getElementById("txtBOrg").value = '@ViewBag.txtBOrg';
+
+                    document.getElementById("hdnBName").value = '@ViewBag.txtBName';
+                    document.getElementById("hdnBTitle").value = '@ViewBag.txtBTitle';
+                    document.getElementById("hdnBOrg").value = '@ViewBag.txtBOrg';
+
+                    document.getElementById("lblBName").innerHTML = '<b>' +'@ViewBag.txtBName'  + '<b>';
+                    document.getElementById("lblBTitle").innerHTML = '@ViewBag.txtBTitle';
+                    document.getElementById("lblBOrganization").innerHTML ='@ViewBag.txtBOrg' ;
+                });
+
+                $('.closeVoucherPopup').on('click', function () {
+                    var t = $(this).attr('id');
+                    var parentDiv = this.htmlFor;
+
+                    var div = document.getElementById(parentDiv);
+                    if (div.style.display !== "none") {
+                        div.style.display = "none";
+                    }
+
+                });
+
+                $("#btnPayNowData").click(function (e)
+                {
+                    e.preventDefault();
+                    console.log("Message");
+                    $('#rwPaymentMethod').modal('show');
+                });
+
+                $('#btnPaymentOpProceed').click(function (e)
+                {
+                    e.preventDefault();
+                    var paymentMethod=$("input[type='radio'][name='rdPaymentMethod']:checked").val();
+                    switch (paymentMethod)
+                    {
+                        case "@ViewBag.METHOD_Credit":
+                            $('#txtCreditAmount,#lblCreditAmount,#eventAccoubtBalance').val($('#eABal').val());
+                            $('.ClearText').val("");
+                            $('#ddMonth').val($('#selMonth').val());
+                            $('#ddYear').val($('#selYear').val());
+                            $('#payCredit').modal('show');
+                            break;
+                        case "@ViewBag.METHOD_Check":
+                            $('#txtCheckAmount,#lblCreditAmount,#eventAccoubtBalance').val($('#eABal').val());
+                            $('#txtPayCheckNum,#txtPayCheckName,#dpPayCheckExpect').val('');
+                            $('#dpPayCheckExpect').val(new Date().toISOString().slice(0, 10));
+                            $('#rwCheck').modal('show');
+                            break;
+                        case "@ViewBag.METHOD_Wire":
+                            $('#txtWireAmount,#lblCreditAmount,#eventAccoubtBalance').val($('#eABal').val());
+                            $('#txtWireBank,#txtWireAccount,#dpWireDate,#txtWireComment').val('');
+                            $('#rwWire').modal('show');
+                            break;
+                    }
+                });
+
+
+                $('#cmdCheckSave').click(function (e)
+                {
+                    e.preventDefault();
+                    if ($('#txtPayCheckNum').val()==="")
+                    {
+                        CommonFunctions.Alert("The entered check number is not valid.");
+                        return false;
+                    }
+                    if ($('#txtCheckAmount').val()==="")
+                    {
+                        CommonFunctions.Alert("The entered amount is not valid.");
+                        return false;
+                    }
+                    if ($('#txtPayCheckName').val()==="")
+                    {
+                        CommonFunctions.Alert("The entered check name is not valid.");
+                        return false;
+                    }
+                    if ($('#dpPayCheckExpect').val()==="")
+                    {
+                        CommonFunctions.Alert("The entered check date is not valid.");
+                        return false;
+                    }
+
+                    var paymentMethod=$("input[type='radio'][name='rdPaymentMethod']:checked").val();
+                    var data={
+                        PayCheckNum: $('#txtPayCheckNum').val(), Amount: $('#txtCheckAmount').val(), paycheckName: $('#txtPayCheckName').val(),
+                        ckPaymentType: ((paymentMethod===undefined)? "":paymentMethod), dpPayCheckExpect: $('#dpPayCheckExpect').val(),
+                        PayAmount: $('#eABal').val()
+                    };
+                    var result=CommonFunctions.AjaxCall('POST', '/MyMAGI/CheckSave', data, 'Error While Processing.');
+                    if (result!=null)
+                    {
+                        var result=result.result;
+                        if (result!==null)
+                        {
+                            if (result.ErrorMsg==="OK")
+                                window.location.href="/MyMAGI/MyOptions";
+                            else
+                                CommonFunctions.Alert(result.ErrorMsg);
+                        }
+                    }
+                    else
+                        CommonFunctions.Alert("Error occurred while processing check submission");
+                });
+
+                $('#cmdWireSave').click(function (e)
+                {
+                    e.preventDefault();
+                    if ($('#txtWireBank').val()==="")
+                    {
+                        CommonFunctions.Alert("The entered wire bank is not valid.");
+                        return false;
+                    }
+                    if ($('#txtWireAmount').val()==="")
+                    {
+                        CommonFunctions.Alert("The entered amount is not valid.");
+                        return false;
+                    }
+                    if ($('#txtWireAccount').val()==="")
+                    {
+                        CommonFunctions.Alert("The entered wire account is not valid.");
+                        return false;
+                    }
+                    if ($('#dpWireDate').val()==="")
+                    {
+                        CommonFunctions.Alert("The entered wire date is not valid.");
+                        return false;
+                    }
+
+                    var paymentMethod=$("input[type='radio'][name='rdPaymentMethod']:checked").val();
+                    var data=
+                    {
+                        WireBank: $('#txtWireBank').val(), Amount: $('#txtWireAmount').val(), WireAccount: $('#txtWireAccount').val(),
+                        ckPaymentType: ((paymentMethod===undefined)? "":paymentMethod), dpWireDate: $('#dpWireDate').val(), Comment: $('#txtWireComment').val(),
+                        PayAmount: $('#eABal').val()
+                    };
+                    var result=CommonFunctions.AjaxCall('POST', '/MyMAGI/WireSave', data, 'Error While Processing.');
+                    if (result!==null)
+                    {
+                        var result=result.result;
+                        if (result!==null)
+                        {
+                            if (result.ErrorMsg==="OK")
+                                window.location.href="/MyMAGI/MyOptions";
+                            else
+                                CommonFunctions.Alert(result.ErrorMsg);
+                        }
+                    }
+                    else
+                        CommonFunctions.Alert("Error occurred while processing check submission");
+                });
+
+                $('#ckRemindMe').change(function (e)
+                {
+                    e.preventDefault();
+                    var result=CommonFunctions.AjaxCall('POST', '/MyMAGI/updateCkReminder', { WantReminder: $('#ckRemindMe').is(":checked") }, 'Error While Processing.');
+                    if (result!==null)
+                        CommonFunctions.Alert(result);
+                    else
+                        CommonFunctions.Alert("Error occurred while processing check submission");
+                });
+                $('#lnkTransferVoucher').click(function (e)
+                {
+                    e.preventDefault();
+                    $('#txtVoucherTransferEmail,#txtVoucherTransferComment').val('');
+                    $('#rwTransferVoucher').modal('show');
+                });
+                $('#lnkRefundVoucher').click(function (e)
+                {
+                    e.preventDefault();
+                    var result=CommonFunctions.AjaxCall('Get', '/MyMAGI/ddRefundVoucherChange', { SelectedValue: $('#ddRefundVoucher').val() }, 'Error While Processing.');
+                    if (result!==null && result!== "Error")
+                    {
+                        if (result.msg==="OK")
+                        {
+                            $('#lblCCRefundCardTran').text(result.lblCCRefundCardTran);
+                            $('#lblReceiptNumber').text(result.lblReceiptNumber);
+                            $('#lblCCRefundAmt').text(result.lblCCRefundAmt);
+                            $('#hdnCCRefundCardNo').val(result.hdnCCRefundCardNo);
+                            $('#hdnCCMainAmount').val(result.hdnCCMainAmount);
+                            $('#rwCCRefund').modal('show');
+                        } else
+                            CommonFunctions.Alert(result.msg);
+                    }
+                    else
+                        CommonFunctions.Alert("Error occurred while processing check submission");
+                });
+
+                $('#cmdVoucherTransfer').click(function (e)
+                {
+                    e.preventDefault();
+
+                    if ($('#ddVoucher').val()==="")
+                    {
+                        CommonFunctions.Alert("Select valid Voucher");
+                        return;
+                    }
+                    if ($('#txtVoucherTransferEmail').val()==="")
+                    {
+                        CommonFunctions.Alert("Enter transferee's email address.");
+                        return;
+                    }
+                    var data={ selectedValue: $('#ddVoucher').val(), VoucherTransferEmail: $('#txtVoucherTransferEmail').val(), comment:$('#txtVoucherTransferComment').val() };
+                    var result=CommonFunctions.AjaxCall('POST', '/MyMAGI/cmdVoucherTransferSave', data, 'Error While Processing.');
+                    if (result!==null)
+                    {
+                        if (result.msg==="OK")
+                        {
+                            CommonFunctions.Alert(result.result);
+                            $("#ddRefundVoucher option[value='"+$('#ddVoucher').val()+"']").remove();
+                            $("#ddVoucher :selected").remove();
+
+                            if ($("#ddVoucher option").length<=0)
+                                $('#lnkTransferVoucher').hide();
+                            if ($("#ddRefundVoucher option").length<=0)
+                                $('#lnkRefundVoucher').hide();
+
+                            $('#rwTransferVoucher').modal('hide');
+                        }
+                        else
+                            CommonFunctions.Alert(result.msg);
+                    }
+                    else
+                        CommonFunctions.Alert("Error occurred While Updating Voucher");
+                });
+                $('#cmdCCRefund').click(function (e)
+                {
+                    e.preventDefault();
+                    if ($('#ddRefundVoucher').val()==="")
+                    {
+                        CommonFunctions.Alert("Select valid Voucher");
+                        return;
+                    }
+                    if ($('#txtCCRefundReason').val()==="")
+                    {
+                        CommonFunctions.Alert("Enter refund reason");
+                        return;
+                    }
+                    var data={
+                        lblReceiptNumber: $('#lblReceiptNumber').text(), VoucherID: $('#ddRefundVoucher').val(), lblCCRefundCardTran: $('#lblCCRefundCardTran').text() , comment: $('#txtCCRefundReason').val(), Amount: $('#lblCCRefundAmt').text(),
+                        hdnCCMainAmount: $('#hdnCCMainAmount').val(), hdnCCRefundCardNo: $('#hdnCCRefundCardNo').val()
+                    };
+                    var result=CommonFunctions.AjaxCall('POST', '/MyMAGI/cmdCCRefundSave', data, 'Error While Processing.');
+                    if (result!==null)
+                    {
+                        if (result.msg==="OK")
+                        {
+                            CommonFunctions.Alert(result.msg);
+                            $('#rwCCRefund').modal('hide');
+                            window.location.href="/MyMAGI/MyOptions";
+                        }
+                        else
+                            CommonFunctions.Alert(result.msg);
+                    }
+                    else
+                        CommonFunctions.Alert("Error occurred While updating Voucher refund");
+                });
+
+                $('#btnRedeemVoucher').click(function (e)
+                {
+                    e.preventDefault();
+                    $('#trVPin,#trVPinReq,#lblVoucherInstruction').hide();
+                    $('#trVCode').show();
+                    $('#txtVoucherNo,#txtVoucherPin,#IssuedForEventpKey,#sIssuedForEvent').val('');
+                    $('#lblVoucherAmount').text('')
+                    $('#rwVoucher').modal('show');
+                });
+
+                function validateVoucher() {
+                       if ($('#txtVoucherNo').val() === "") {
+                               CommonFunctions.Alert("Enter voucher code.");
+                               return false;
+                           }
+                       var data = { VoucherNo: $('#txtVoucherNo').val() };
+                       var result = CommonFunctions.AjaxCall('GET', '/MyMAGI/cmdVoucherValidate', data, 'Error While Processing.');
+                       if (result !== null) {
+                               if (result.sErrorVoucher !== "")
+                                   CommonFunctions.Alert(result.sErrorVoucher);
+                               else {
+                                   if (result.vPinVisible)
+                                       $('#trVPin').show();
+                                   else
+                                       $('#trVPin').hide();
+
+                                   if (result.vCodeVisible)
+                                       $('#trVCode').show();
+                                   else
+                                       $('#trVCode').hide();
+
+                                   if (result.trVpin)
+                                       $('#trVPinReq').show();
+                                   else
+                                       $('#trVPinReq').hide();
+
+                                   if (result.VoucherInstVisible)
+                                       $('#lblVoucherInstruction').show();
+                                   else
+                                       $('#lblVoucherInstruction').hide();
+
+                                   $('#txtVoucherPin').val(result.sVoucherPin);
+                                   $('#lblVoucherAmount').text(result.sVoucherAmount);
+                                   $('#IssuedForEventpKey').val(result.intIssuedForEvent_pKey);
+                                   $('#sIssuedForEvent').val(result.sIssuedForEvent);
+                           }
+                        }
+                }
+
+                $('#cmdVoucherValidate').click(function (e)
+                {
+                    e.preventDefault();
+                    validateVoucher();
+                });
+
+                $('#cmdSaveVoucher').click(function (e)
+                {
+                    e.preventDefault();
+                    if ($('#txtVoucherNo').val()==="")
+                    {
+                        CommonFunctions.Alert("The entered voucher code is not valid.");
+                        return false;
+                    }
+                    if ($('#txtVAmount').val()==="")
+                    {
+                        CommonFunctions.Alert("The entered amount is not valid.");
+                        return false;
+                    }
+                    if ($('#txtVoucherPin').val()==="")
+                    {
+                        CommonFunctions.Alert("The entered voucher pin is not valid.");
+                        return false;
+                    }
+
+                    var data={ VoucherNo: $('#txtVoucherNo').val(), txtVoucherPin: $('#txtVoucherPin').val() };
+                    var result=CommonFunctions.AjaxCall('POST', '/MyMAGI/cmdSaveVoucher', data, 'Error While Processing.');
+                    if (result!=null)
+                    {
+                         if (result.msg === "OK") {
+                            if (result.popuprwVoucherConfirm) {
+                                $('#lblVoucherConfirm').text(result.sVoucherConfirm);
+                                $('#hdnRemainingAmount').val(result.RemainingAmount);
+                                $('#hdnVoucherPkey').val(result.VoucherPkey);
+                                $('#hdnVoucherCode').val(result.VoucherCode);
+                                $('#rwVoucher').modal('hide');
+                                $('#rwVoucherConfirm').modal('show');
+                           }
+                            else
+                                window.location.href = "/MyMAGI/MyOptions";
+                        } else
+                            CommonFunctions.Alert(result.msg);
+                    }
+                    else
+                        CommonFunctions.Alert("Error occurred while processing Voucher");
+                });
+
+                 $('#cmdVoucherConfirmCreate').click(function (e)
+                {
+                    e.preventDefault();
+                    var data = { VoucherNo: $('#hdnVoucherCode').val(), hdnRemainingAmount: $('#hdnRemainingAmount').val(), hdnVoucherPkey: $('#hdnVoucherPkey').val() };
+                    var result = CommonFunctions.AjaxCall('POST', '/MyMAGI/cmdVoucherConfirm', data, 'Error While Processing.');
+                    if (result!==null&&result!=="ERROR")
+                    {
+                        if (result.msg === "OK")
+                        {
+                            $('#rwVoucherConfirm').modal('hide');
+                            window.location.href = "/MyMAGI/MyOptions";
+                        }
+                        else if (result.msg === "The voucher has been created and a confirmation email has been sent.") {
+                            $('#rwVoucherConfirm').modal('hide');
+                            CommonFunctions.Alert(result.msg);
+                            window.location.href = "/MyMAGI/MyOptions";
+                        }
+                        else if (result.msg === "The voucher has been created and error while sending confirmation email") {
+                            $('#rwVoucherConfirm').modal('hide');
+                            CommonFunctions.Alert(result.msg);
+                            window.location.href = "/MyMAGI/MyOptions";
+                        }
+                        else
+                            CommonFunctions.Alert(result.msg);
+                    }
+                    else
+                        CommonFunctions.Alert("Error occurred while processing Voucher");
+                });
+
+                $('#cmdOptionOK').click(function ()
+                {
+                    var options=[];
+                    $("input[name='ckEdOptions']:checkbox").each(function ()
+                    {
+                        var $this=$(this);
+                        var bstate=$this.is(":checked");
+                        var svalue=$(this).val();
+                        var stext = $this[0].dataset.text;
+                        options.push({ CheckedState: bstate, Text: stext, Values: svalue });
+                    });
+                    var data=  {
+                        EDItems: options,
+                        bSpeakerAtEvent: $('#SpeakerAtEvent').val(),
+                        bConferenceEnd: $('#ConferenceEnd').val(),
+                        Existing: $('#selectedCert').val(),
+                        PriorChargePKey: $('#PriorChargePKey').val(),
+                        rbOptionsSelected: $('input:radio[name="rbSelectOptions"]:checked').val(),
+                        intChargeType_pkey: $('#ChargeTypePKey').val(),
+                        strCert: $('#strCertSel').val(),
+                        hdnVoucherPkey: $('#hdnVoucherPkey').val()
+                    };
+
+
+                    var result=CommonFunctions.AjaxCall('POST', '/MyMagi/cmdOptionOKSave', data, 'json', 'Error While Saving.');
+                    if (result!==null&&result!=="ERROR")
+                    {
+                        if (result.msg === "OK")
+                            setTimeout(function () { window.location.href = "/MyMAGI/MyOptions"; }, 1000);
+                        else if (result.msg === "PopUpConfirm") {
+                            $('#pnlConfirmation').hide();
+                            $('#rbEdOptions').hide();
+                            if (result.pnlConfirmation) {
+                                $('#pnlConfirmation').show();
+                                $('#lblConfirmReplacement').text(result.lblConfirmReplacement);
+
+                                var infoData = JSON.parse(result.dtRelatedUpdate);
+                                if (infoData.length > 0) {
+                                    var selected = result.rbEdOptionsSelected;
+                                    var htmlOPtions = '';
+                                    infoData.each(function (val, i) {
+                                        var checkedstring = (selected === val.pKey) ? "checked" : "";
+                                        htmlOPtions += '<input name="rbEdSelectOptions" type="radio" Value="' + val.pkey + '" "+checkedstring+"  text="' + val.ChargeTypeID + '" />';
+                                    });
+
+                                    $('#rbEdOptions').html(htmlOPtions);
+                                    $('#rbEdOptions').show();
+                                }
+                            }
+                            $('#rwConfirm').modal('show');
+                        }
+                        else if (result.msg === "The voucher has been created and a confirmation email has been sent.") {
+                            window.location.href = "/MyMAGI/MyOptions";
+                        }
+                        else if (result.msg ==="The voucher has been created and error while sending confirmation email") {
+                            window.location.href = "/MyMAGI/MyOptions";
+                        }
+                        else
+                            CommonFunctions.Alert(result.msg);
+                    }
+                    else
+                        CommonFunctions.Alert("Error Occurred While Saving Selections");
+                });
+
+                $('#cmdConfirmSave').click(function ()
+                {
+                    var data={
+                        intPriorChargePKey: $('#PriorChargePKey').val(),
+                        intChargeType_pkey: $('#ChargeTypePKey').val(),
+                        SelectedValue: $('input:radio[name="rbEdSelectOptions"] :checked').val()
+                    };
+                    var result=CommonFunctions.AjaxCall('POST', '/MyMagi/OptionsConfirmSave', data, 'json', 'Error While Saving.');
+                    if (result!==null&&result!=="ERROR")
+                    {
+                        if (result.msg==="OK")
+                            window.location.href="/MyMAGI/MyOptions";
+                        else
+                            CommonFunctions.Alert(result.msg);
+                    }
+                    else
+                        CommonFunctions.Alert("Error Occurred While Confirming Selections");
+                });
+
+                $('#btnChrPrfrnc').click(function (e) {
+                    e.preventDefault();
+                     $('#btnReturnSPartial').remove();
+                    $('#rwMysessionchair').modal('show');
+                });
+
+               $('#btnEditInstruct').click(function (e) {
+                   e.preventDefault();
+                   $('#rwPopText').modal('show');
+               });
+            });
+    </script>
+
+    if (Model.HelpIconInfo != null)
+    {
+        if ((Model.HelpIconInfo.PageIconVisible))
+        {
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    var player = videojs("pageVideoContent", { "techOrder": ["html5", "youtube"], "ytcontrols": false, "autoplay": true, "preload": "auto", "loop": false });
+                    player.ready(function () {
+                        var promise = player.play();
+                        if (promise !== undefined) {
+                            promise.then(function () {
+                                // Autoplay started!
+                            }, function (error) {
+                                console.info(error);
+                            });
+                        }
+                    });
+                    player.on("ended", function () {
+                        if (typeof alertify !== 'undefined') {
+                            alertify.confirm('I have watched the entire video', function (e) {
+                                CommonFunctions.AjaxCall('Post', '/Home/UpdateHelpLogTime', { ID: $('#LogIDinfo').val() }, 'json', 'Error Occurred while Updating Log');
+                            });
+                        }
+                        else {
+                            var r = confirm('I have watched the entire video');
+                            if (r)
+                                CommonFunctions.AjaxCall('Post', '/Home/UpdateHelpLogTime', { ID: $('#LogIDinfo').val() }, 'json', 'Error Occurred while Updating Log');
+                            else
+                                CommonFunctions.AjaxCall('Post', '/Home/UpdateHelpLogTime', { ID: $('#LogIDinfo').val() }, 'json', 'Error Occurred while Updating Log');
+                        }
+                    });
+                    function PageVideoPlay(mediatype, sourceType, valueinfo) {
+                        var vimeoResult = valueinfo.match(/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|album\/(?:\d+)\/video\/|video\/|)(\d+)(?:[a-zA-Z0-9_\-]+)?/i);
+                        if (vimeoResult !== null) {
+                            window.open(valueinfo, '_blank');
+                        }
+                        else {
+                            if (mediatype.toLocaleLowerCase() === "video" || mediatype.toLocaleLowerCase() === "audio")
+                                player.src({ type: sourceType, src: valueinfo });
+                            if (mediatype.toLocaleLowerCase() === "video url") {
+                                var youtubeResult = valueinfo.match(/(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/);
+                                if (youtubeResult !== null)
+                                    player.src({ type: 'video/youtube', src: valueinfo });
+                                else
+                                    player.src(valueinfo);
+                            }
+
+
+                            $('#pageVideoContent').show();
+                            $('#modelHelpMedia').modal('show');
+                        }
+                    }
+                    function Logupdate(pvalue, fName, Autoplay) {
+                        $('#LogIDinfo').val(0);
+                        var data = {
+                            type: pvalue,
+                            fileName: fName,
+                            bAutoplay: Autoplay,
+                        }
+                        var result = CommonFunctions.AjaxCall('POST', '/Home/UpdateHelpIconLog', data, 'json', 'Error Occurred while Updating Log');
+                        if (result != null) {
+                            if (result.msg === "OK") {
+                                $('#LogIDinfo').val(result.LogResult);
+                            }
+                        }
+                    }
+                    var AutoplayPageVideo = $('#vidAutoPlayType').val();
+                    if (AutoplayPageVideo !== null) {
+                        var elemDS = $('#pageVideoLink')[0].dataset;
+                        var mType = elemDS["type"];
+                        if (AutoplayPageVideo === "true") {
+                            var fname = elemDS["filename"];
+                            var uType = elemDS["usetype"];
+                            Logupdate(uType, fname, true);
+
+                            var valLink = $('#pageVideoLink').val();
+                            var sType = elemDS["mime"];
+                            if (mType.toLocaleLowerCase() === "document" || mType.toLocaleLowerCase() === "live url")
+                                window.open(valLink, '_blank');
+                            else
+                                PageVideoPlay(mType, sType, valLink);
+                        }
+                    }
+                    $('#PageHelpIcon').click(function (e) {
+                        e.preventDefault();
+                        var valLink1 = $('#pageVideoLink').val();
+                        var elem1DS = $('#pageVideoLink')[0].dataset;
+                        var mT1 = elem1DS["type"];
+                        var sT1 = elem1DS["mime"];
+                        var fname1 = elem1DS["filename"];
+                        var uType1 = elem1DS["usetype"];
+                        Logupdate(uType1, fname1, false);
+                        if (mT1.toLocaleLowerCase() === "document" || mT1.toLocaleLowerCase() === "live url")
+                            window.open(valLink1, '_blank');
+                        else
+                            PageVideoPlay(mT1, sT1, valLink1);
+                    });
+                    $('#closeHelpMedia').click(function () {
+                        player.pause();
+                    });
+                });
+            </script>
+        }
+    }
+
+}

@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Portolo</title>
+    @*<link rel="stylesheet" type="text/css" href="~/Content/bootstrap.css">*@
+    <link rel="stylesheet" type="text/css" href="~/Content/Site.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/Portolostyle.css">
+    <link rel="stylesheet" href="~/css/responsive.css">
+    <script type="text/javascript" src="https://magiweb-qa.azurewebsites.net/Scripts/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://magiweb-qa.azurewebsites.net/Scripts/modernizr-2.8.3.js"></script>
+    <script type="text/javascript">
+
+        var urlRedirect = "../Account/Portolo";
+
+        function callAjax(e) {
+            $("#Logout").click(function (e) {
+                $.ajax({
+                    type: "POST",
+                    url: "../Dashboard/Logout",
+
+
+                    success: function (result) {
+                        debugger;
+                            window.location.href = urlRedirect;
+
+
+                    },
+                    error: function (result) {
+                        alert('error');
+
+                    }
+                });
+            });
+        }
+       
+
+    </script>
+</head>
+<body style="padding:0%;font-size:14px;">
+
+        <header class="header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <nav class="navbar">
+                            <div class="logo"><img src="~/Images/Icons/PortoloLogo.png" /></div>
+                            @*<div style="font-family:'Javanese Text';font-size:11pt">Portolo</div>*@
+
+                            <div class="push-left">
+                                <button id="menu-toggler" data-class="menu-active" class="hamburger">
+                                    <span class="hamburger-line hamburger-line-top"></span>
+                                    <span class="hamburger-line hamburger-line-middle"></span>
+                                    <span class="hamburger-line hamburger-line-bottom"></span>
+                                </button>
+
+                                <!--  Menu compatible with wp_nav_menu  -->
+                                <ul id="primary-menu" class="menu nav-menu">
+                                    <li class="menu-item current-menu-item"><a class="nav__link" href="#">Home</a></li>
+                                    <li class="menu-item current-menu-item" @*class="menu-item dropdown"*@>
+                                        <a class="nav__link" href="#">About</a>
+                                        <ul class="sub-nav">
+                                            <li><a class="sub-nav__link" href="#">link 1</a></li>
+                                            <li><a class="sub-nav__link" href="#">link 2</a></li>
+                                            <li><a class="sub-nav__link" href="#">link 3 - long link - long link - long link</a></li>
+                                        </ul>
+
+                                    </li>
+                                    <li class="menu-item current-menu-item" @*class="menu-item dropdown"*@>
+                                        <a class="nav__link mr-0" href="#">Contact</a>
+                                        <ul class="sub-nav">
+                                            <li><a class="sub-nav__link" href="#">link 1</a></li>
+                                            <li><a class="sub-nav__link" href="#">link 2</a></li>
+                                            <li><a class="sub-nav__link" href="#">link 3 - long link - long link - long link</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="menu-item current-menu-item">
+                                    <a class="nav__link mr-0" href="#">Pages</a>
+                                    <ul class="sub-nav">
+
+                                        <li><a class="sub-nav__link" href="~/Portolo/Topics">Topics</a></li>
+																																 
+																													   
+																												 
+																									
+																								   
+																										 
+																											 
+																										  
+																									  
+																														
+																													
+																												
+																														  
+
+                                    </ul>
+                                    </li>
+									<li class="menu-item current-menu-item">
+                                    <a class="nav__link mr-0">Configuration</a>
+                                    <ul class="sub-nav">
+                                        <li><a class="sub-nav__link" href="#">Topics/Discussion groups</a></li>
+                                        <li><a class="sub-nav__link" href="#">Process library</a></li>
+                                        <li><a class="sub-nav__link" href="#">Performance </a></li>
+                                        <li><a class="sub-nav__link" href="#">Optional Features</a></li>
+                                        <li><a class="sub-nav__link" href="#">System Configuration</a></li>
+                                        <li><a class="sub-nav__link" href="#">Security Groups</a></li>
+                                        <li><a class="sub-nav__link" href="#">System support/help </a></li>
+                                    </ul>
+                                </li>			
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!--  -->
+        <!--  -->
+        <div class="strip-info">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+             <div class="d-flex justify-content-between">
+                            <div class="botm-links">
+                                <a href="~/Portolo/Tasklist" target="_blank">Task List</a>
+                                <a href="~/Dashboard/Scorecard">Score Card</a>
+                                <a href="#">Process Mapping Tools</a>
+                                        <a class="nav__link mr-0" href="#"style="padding:5px">My Pages</a>
+                                        <ul class="sub-nav" style="left:380px;top:110px" >
+                                            <li><a class="sub-nav__link" href="~/Account/ProfilePage">My Profile</a></li>
+                                            <li><a class="sub-nav__link" href="~/Account/MyOrganization">My organization</a></li>
+                                            <li><a class="sub-nav__link" href="~/Portolo/UserTopics">My topics</a></li>
+                                            <li><a class="sub-nav__link" href="~/Study/Study">My studies</a></li>
+                                            <li><a class="sub-nav__link" href="#">My roles </a></li>
+                                            <li><a class="sub-nav__link" href="#">My FAQs </a></li>
+                                            <li><a class="sub-nav__link" href="#">My checklists </a></li>
+                                            <li><a class="sub-nav__link" href="#"> My checklist item</a></li>
+                                            <li><a class="sub-nav__link" href="#">My performance </a></li>
+                                            <li><a class="sub-nav__link" href="#">My reports </a></li>
+                                            <li><a class="sub-nav__link" href="#"> My analytics & visualization</a></li>
+                                            <li><a class="sub-nav__link" href="~/Portolo/MyFiles"> My files</a></li>
+                                            <li><a class="sub-nav__link" href="#">My discussion groups </a></li>
+                                            <li><a class="sub-nav__link" href="#"> My organization's subscription</a></li>
+                                        </ul>
+                            </div>
+                            <div class="log-in-out">
+                                @if (Session["User"] != null)
+                                {
+
+                                    <a href="~/Account/ProfilePage">@Session["FirstName"] @Session["LastName"]</a>
+                                    <button id="Logout" class="brdr-1" @*style="background: #ffa500; color: white; margin: -3px; "*@ onclick="callAjax(this)">Logout</button>
+ 
+                                }
+                                @*<a href="" class="brdr-1">Logout</a>*@
+																																										 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="">
+            @*--------------------------------------------------------------------------------------------------------------------------------------*@
+            @*class="container body-content"*@
+            @RenderBody()
+                        
+        </div>
+        <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+        @RenderSection("scripts", required: false)
+
+
+    </body>
+</html>

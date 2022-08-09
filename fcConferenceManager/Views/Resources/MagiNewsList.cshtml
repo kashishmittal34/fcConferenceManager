@@ -1,0 +1,243 @@
+
+@{
+    ViewBag.Title = "MagiNewsList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{ DateTime parentDate = Convert.ToDateTime("1/1/2000");
+    DateTime current = DateTime.Now;
+    ViewBag.SelectedMonth = 0;
+    ViewBag.SelectedYear = 0; }
+
+<link href="~/Css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<style>
+    .lblTitleTop
+    {
+        color: #00008b;
+        font-weight: bold;
+        background-color: transparent;
+        font-weight: 700;
+    }
+
+    .SectionTitle
+    {
+        color: #00008b;
+        font-weight: bold;
+    }
+
+    .lblTitle
+    {
+        font-size: 18pt;
+        color: Navy;
+        background-color: transparent;
+    }
+
+    .filter
+    {
+        padding: 0 5px 5px 5px;
+        background-color: #d7f6f9;
+    }
+
+    #tblMagiNews
+    {
+        font-size: 10pt;
+        width: 100%;
+        background-color: white;
+    }
+
+    #tblMagiNews td
+    {
+        border: none;
+        padding: 3px;
+        text-align: left;
+    }
+
+    #tblMagiNews thead th
+    {
+        height: 10px;
+        background-color: #0e8cf2;
+        color: white;
+        font-size: 12pt;
+        padding: 3px;
+        font-weight: 400;
+    }
+
+    #tblMagiNews thead tr
+    {
+        height: 12px;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-md-12 pt-2">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="d-flex">
+                        <label class="lblTitle ms-1">MAGI News</label>
+                        <input type="image" id="imgReset" title="Reset the filter" src="~/images/icons/undo.png" style="height: 32px; margin-left: 20px; display: inline; " />
+                        <input type="image" id="imgSearch" title="Refresh the list" src="~/images/icons/redo.png" style="height: 32px; display: inline; " />
+                    </div>
+                </div>
+                <div class="col-md-4 text-end">
+
+                    <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn">Return</a>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12  mt-2">
+            <label id="lblMsg" style="width:100%;height:40px;border:1px solid black; padding-top:5px; display:none"></label>
+        </div>
+        <div class="d-md-flex" style="background-color: #D7F6F9;padding-bottom:5px">
+            <div>
+                <label class="lblSmall">Title:</label><br />
+                <input id="txtGenSearch" />
+            </div>
+            <div class="ms-md-1">
+                <label class="lblSmall">Authors:</label><br />
+                <input id="txtAuthors" />
+            </div>
+            <div class="ms-md-1">
+                <label class="lblSmall">Publication:</label><br />
+                <input id="txtPublication" />
+            </div>
+            <div class="ms-md-1">
+                <label class="lblSmall">Publication:</label><br />
+                <input id="txtPublication" />
+            </div>
+            <div class="ms-md-1">
+                <label class="lblSmall">Years:</label><br />
+                <select id="ddYear">
+                    <option value="0">All</option>
+                    @for (int j = DateTime.Now.Year; j >= DateTime.Now.Year - 20; j--)
+                    {
+                        if (j == current.Year)
+                        {
+                            ViewBag.SelectedYear = j;
+                        }
+                        @Html.Raw("<option value='" + @j + "'>" + @j + "</option>")}
+                </select>
+
+            </div>
+            <div class="ms-md-1">
+                <label class="lblSmall">Topic:</label><br />
+                <select id="ddTopic">
+                    <option value="0">All</option>
+                    @{
+                        if (ViewBag.Topics != null)
+                        {
+                            List<SelectListItem> list = (List<SelectListItem>)ViewBag.Topics;
+                            foreach (SelectListItem item in list)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        }
+                    }
+                </select>
+
+            </div>
+        </div>
+        <div class="col-md-12 mt-2">
+            <div class="responsive-table">
+                <table id="tblMagiNews" data-page-length="25" cellspacing="0" style=" border: solid 1px lightgray;" width="100%"></table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<script>
+    $(document).ready(function () {
+
+        RefreshMagiNewsTable();
+        function RefreshMagiNewsTable() {
+
+            document.getElementById("lblMsg").innerHTML = "";
+            document.getElementById("lblMsg").style.backgroundColor = "white";
+            document.getElementById("lblMsg").style.display = "none";
+
+            var DataSet = null;
+            var txtGen = $('#txtGenSearch').val();
+            var txtAuth = $('#txtAuthors').val();
+            var txtPubl = $('#txtPublication').val();
+            var ddYear = $('#ddYear :selected').val()
+            var ddTopic = $('#ddTopic :selected').val()
+
+            var data = {
+                txtGenSearch: txtGen,
+                txtAuthors: txtAuth,
+                txtPublication: txtPubl,
+                ddTopic: ddTopic,
+                ddYear: ddYear,
+                strAccountPkey: '@ViewBag.ID'
+            }
+            var result = CommonFunctions.AjaxCall('Get', '/Resources/RefreshMagiNews', data, '', 'Error While Fetching Data.');
+            if (result !== null || result !== "ERROR") {
+                if (result.msg === "OK")
+                    DataSet = JSON.parse(result.Source);
+            }
+
+            $('#tblMagiNews').dataTable({
+                paging: true, bPaginate: false, bInfo: false, bLengthChange: false, bFilter: false, rowsPerPageOptions: false, ordering: false, sorting: false, searching: false, "order": [[0, "desc"]],
+                bDestroy: true,
+                fixedHeader: true,
+                data: DataSet,
+                columns: [
+
+                    {
+                        title: "Title",
+                        data: "Title",
+                        width: "20%"
+                    },
+                    {
+                        title: "Topic",
+                        data: "Topic",
+                        width: "20%"
+                    },
+                    {
+                        title: "Authors",
+                        data: "SourceName",
+                        width: "20%"
+                    },
+                    {
+                        title: "Publication",
+                        data: "Publication",
+                        width: "20%"
+                    },
+                    {
+                        title: "URL",
+                        data: "Url",
+                        width: "10%",
+                        render: function (data) {
+                            var hreftext = "";
+                            hreftext = ((data == "") ? "javascript:void(0)" : data);
+                            var target = ((data == "") ? "_self" : "_blank");
+                            return `<a href="${hreftext}" taget="${target}">Link</a>`
+                        }
+                    }
+                ],
+            });
+        }
+        $('#ddYear ,#ddTopic').change(function () {
+            RefreshMagiNewsTable();
+        });
+
+        $('#imgReset').on('click', function () {
+            $('#txtGenSearch').val("");
+            $('#txtAuthors').val("");
+            $('#txtPublication').val("");
+            document.getElementById("ddYear").selectedIndex = "0";
+            document.getElementById("ddTopic").selectedIndex = "0";
+            RefreshMagiNewsTable();
+        });
+
+        $('#imgSearch').on('click', function () {
+            RefreshMagiNewsTable();
+        });
+    });
+</script>

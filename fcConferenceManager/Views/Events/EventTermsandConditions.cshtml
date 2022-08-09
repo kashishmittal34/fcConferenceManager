@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewBag.Title = "EventTermsandConditions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+    .lblTitle {
+        padding-bottom: 8px;
+        padding-top: 8px;
+        display: inline-block;
+        color: Navy;
+        background-color: transparent;
+        padding-left: 10px;
+        font-size:18pt;
+    }
+    /* #mainbody > table > tbody > tr
+             {
+                display: flex;
+                flex-direction: column;
+             }*/
+    .mainbody {
+        border: solid;
+        border-radius: 12px;
+        padding-left: 2px;
+        border-width: 1px;
+        border-color: lightgray;
+    }
+
+   
+</style>
+
+
+
+<div class="magiMySessionMainWrapper mt-3">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+            <div class="col-md-8 col-lg-9 flex-grow-1">
+                <div class="col-md-12">
+                    <div class="mainbody mb-3 p-3">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h2 id="lblTitle">@ViewBag.PageTitle</h2>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="justify-content-end d-flex flex-wrap  me-2 mt-1">
+                                    
+                                        <span class=" mb-1 me-1 flex-md-grow-0 flex-grow-1">@Html.DropDownList("OverViewDropDown", null, new { @class = "bg-light", id = "OverViewDropDown" })</span>
+                                        <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 ">Return</a>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="lblTitle"><h2>@ViewBag.PageTitle</h2></div>*@
+                        <div class="divbody mb-2">@Html.Raw(@ViewBag.FormText)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="@ViewBag.OverViewDropDownSelected" id="DropdownSelected" />
+<script>
+    $(document).ready(function () {
+        document.getElementById("OverViewDropDown").selectedIndex = -1;
+
+        $('#OverViewDropDown').change(function () {
+            var Data = { DropDownValue: $('#OverViewDropDown').val() };
+            var result = CommonFunctions.AjaxCall('Post', '/MAGI/OverViewDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+            if (result.ActionType === "Redirect")
+                window.location.href = result.RedirectionUrl;
+        });
+        $('#OverViewDropDown').val($('#DropdownSelected').val());
+    });
+</script>

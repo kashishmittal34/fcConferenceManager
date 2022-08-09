@@ -1,0 +1,20 @@
+﻿@using System.Data
+@model  DataTable
+@{
+    WebGrid webGrid = new WebGrid(source: (Model.AsEnumerable().Select(p => new
+    {
+        ContactName = p.Field<string>("ContactName"),
+        Title = p.Field<string>("Title"),
+        Organization = p.Field<string>("OrganizationID"),
+    })), canPage: true, rowsPerPage: 10, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent", canSort: false);
+    webGrid.Pager(WebGridPagerModes.All);
+}
+<div class="col-md-12">
+    @webGrid.GetHtml(tableStyle: "table table-hover", headerStyle: "table-default", mode: WebGridPagerModes.All,
+    htmlAttributes: new { @id = "questionsGrid", @class = "Grid" },
+    columns: webGrid.Columns(
+        webGrid.Column("ContactName", "Name"),
+        webGrid.Column("Title", "Title"),
+        webGrid.Column("Organization", "Organization")
+))
+</div>

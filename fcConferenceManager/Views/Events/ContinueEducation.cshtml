@@ -1,0 +1,97 @@
+
+@{
+    ViewBag.Title = "ContinueEducation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .lblTitle {
+        padding-bottom: 8px;
+        padding-top: 8px;
+        display: inline-block;
+        color: Navy;
+        background-color: transparent;
+        font-size: 18pt;
+    }
+
+    .mainbody {
+        border: solid;
+        border-radius: 12px;
+        padding-left: 3px;
+        border-width: 1px;
+        border-color: lightgray;
+    }
+    table[style="margin-left: 1.5em;"] a
+    {
+        display: block;
+        min-width: 80px;
+    }
+@@media(max-width:767px)
+   {
+    table[style="margin-left: 1.5em;"]
+    {
+        font-size: 2.6vw
+    }
+    table[style="margin-left: 1.5em;"] a
+    {
+        min-width: unset;
+    }
+   }
+    @@media(max-width:400px)
+    {
+        table[style="margin-left: 1.5em;"]
+        {
+            font-size: 9px;
+            margin-left: 0 !important;
+        }
+
+
+    }    
+</style>
+
+<div class="magiMySessionMainWrapper mt-3">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+            <div class="col-md-8 col-lg-9 flex-grow-1 ">
+                <div class="col-md-12 mb-3 p-2 mainbody">
+                   <div class="row  pt-2">
+                        <div class="col-md-8">
+                            <h2 id="lblTitle">@ViewBag.PageTitle</h2>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="justify-content-end justify-content-lg-end flex-wrap d-flex me-2 mt-1">
+                               
+                                    <span class="mb-1 me-1 flex-grow-1 flex-md-grow-0">@Html.DropDownList("OverViewDropDown", null, new { @class = "bg-light", id = "OverViewDropDown" })</span>
+                                    <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 ">Return</a>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-2 content-wrapper">
+                        @Html.Raw(ViewBag.EventInfo)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="@ViewBag.OverViewDropDownSelected" id="DropdownSelected" />
+<script>
+    $(document).ready(function () {
+        document.getElementById("OverViewDropDown").selectedIndex = -1;
+
+        $('#OverViewDropDown').change(function () {
+            var Data = { DropDownValue: $('#OverViewDropDown').val() };
+            var result = CommonFunctions.AjaxCall('Post', '/MAGI/OverViewDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+            if (result.ActionType === "Redirect")
+                window.location.href = result.RedirectionUrl;
+        });
+        $('#OverViewDropDown').val($('#DropdownSelected').val());
+    });
+</script>
+
+
+

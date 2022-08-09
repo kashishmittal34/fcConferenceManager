@@ -1,0 +1,345 @@
+﻿@using fcConferenceManager.Models;
+@model fcConferenceManager.Models.Portolo.ApplicationSettingViewModel
+@{
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+    ViewBag.Title = "ApplicationSettings";
+}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+    <script>
+        function GetDetails(id) {
+            $.ajax({
+                url: "/Global/EditSetting/" + id,
+                type: "GET",
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                success: function (response) {
+                    $('#hfId').val(response.pkey);
+                    $('#txtUpdateName').val(response.SettingValue);
+                    $('#modal-Update').modal('show');
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+            return false;
+        }
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#SubmitButton').click(function () {
+                if ($('#txtUpdateName').val().trim() == "") {
+                    alert("There is no value in textbox");
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#Apply').prop('disabled', true);
+            $('#ActImg').change(function () {
+                var extension = $(this).val().split('.').pop().toLowerCase();
+                var validFileExtensions = ['jpg', 'png', 'jpeg'];
+                if ($.inArray(extension, validFileExtensions) == -1) {
+                    alert("Sorry!! Upload only 'jpg', 'png', 'jpeg' Images")
+                    $(this).replaceWith($(this).val('').clone(true));
+                    //Disable Submit Button  
+                    $('#Apply').prop('disabled', true);
+                } else {
+                    //Enable Submit Button  
+                    $('#Apply').prop('disabled', false);
+                }
+            });
+            $('#Insert').prop('disabled', true);
+            $('#OrgImg').change(function () {
+                var extension = $(this).val().split('.').pop().toLowerCase();
+                var validFileExtensions = ['jpg', 'png', 'jpeg'];
+                if ($.inArray(extension, validFileExtensions) == -1) {
+                    alert("Sorry!! Upload only 'jpg', 'png', 'jpeg' Images")
+                    $(this).replaceWith($(this).val('').clone(true));
+                    //Disable Submit Button  
+                    $('#Insert').prop('disabled', true);
+                } else {
+                    //Enable Submit Button  
+                    $('#Insert').prop('disabled', false);
+                }
+            });
+            $('#Apply').click(function () {
+                if ($('#ActImg').val() == null) {
+                    alert("First Upload Image!");
+                    return false;
+                }
+                return true;
+            });
+            $('#Insert').click(function () {
+                if ($('#OrgImg').val()==null) {
+                    alert("First Upload Image!");
+                    return false;
+                }
+                return true;
+            });
+            $('input').css('width', ((
+                input.getAttribute('placeholder').length + 1) * 8) + 'px');
+            $("input").focusout(function () {
+                if (this.value.length > 0) {
+                    this.style.width =
+                        ((this.value.length + 1) * 8) + 'px';
+                } else {
+                    this.style.width =
+                        ((this.getAttribute('placeholder').length + 1) * 8)
+                        + 'px';
+                }
+            });
+        });
+
+        function ResetAccountImage() {
+            $('#profilephoto').show();
+        }
+        function ResetOrganizationImage() {
+            $('#organizationphoto').show();
+        }
+
+    </script>
+    <style>
+        div .modal-dialog-centered {
+            max-width: 80%;
+        }
+
+        .pdl-1 {
+            padding-left: 15px;
+        }
+
+        thead {
+            background-color: darkblue;
+        }
+
+        th a {
+            color: lightyellow;
+        }
+
+        a:hover {
+            color: powderblue;
+        }
+
+        th {
+            color: lightyellow;
+        }
+
+        #DataTable{
+            border: solid black 2px;
+            border-color: blue;
+            border-radius: 10px 40px 40px 10px;
+            border-collapse: collapse;
+        }
+        #uploadtable {
+            border: solid black 2px;
+            border-color: blue;
+            border-radius: 10px 40px 40px 10px;
+            border-collapse: collapse;
+        }
+        .unique {
+            float: inline-start;
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-color: aqua;
+            border-image: space
+        }
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        #ActImg,#OrgImg{
+            align-content:center;
+        }
+    </style>
+</head>
+<body>
+    <section class="task-list-form center">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-primary">
+                       
+                        <br />
+                        @using (@Html.BeginForm("AppSettings", "Global", FormMethod.Get))
+                        {
+                            <div class="strip-info">
+                                <div class="d-flex justify-content-between  align-items-center">
+                                    <div class="card-body">
+                                       
+                                        <label class="dt-head-left" style="font-size:large;"><b>Global Settings</b></label> &nbsp;
+                                        <button type="submit" name="search" onclick="location.href='@Url.Action("Download", "Global",  FormMethod.Post)';return false;" title="ExportExcel"><i class="fa-solid fa-download"></i></button>
+                                  
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <br />
+
+
+                        <br />
+
+
+                        <div class="box-body">
+
+                            <div class="column">
+
+                                @if (Model.SettingList.Count > 0)
+                                {
+                                    var grid = new WebGrid(source: Model.SettingList , canPage: true, rowsPerPage: 50) ;
+                                    @grid.GetHtml(tableStyle: "table table-striped table-bordered table-hover", headerStyle: "webgrid-header",
+                                    alternatingRowStyle: "webgrid-alternating-row", selectedRowStyle: "webgrid-selected-row",
+                                    footerStyle: "webgrid-footer", rowStyle: "webgrid-row-style", mode: WebGridPagerModes.All,
+                                    firstText: "<< First", previousText: "< Prev", nextText: "Next >", lastText: "Last >>",
+                                    htmlAttributes: new { id = "DataTable" },
+                                    columns: grid.Columns(
+
+                                      grid.Column("pkey", header: "Id", canSort: true),
+
+                                      grid.Column("SettingID", header: "Setting Id", canSort: true),
+
+                                    grid.Column("SettingValue", header: "Value", canSort: true),
+                                     grid.Column(header: "Actions", format:
+                                                                            @<text>
+                                                                                <a class="btn-outline-primary" onclick="GetDetails(@item.pkey)">
+
+                                                                                    <i class="fa fa-edit"></i>
+                                                                                </a>
+                                                                            </text>)));
+
+                                    @Html.Hidden("dir", grid.SortDirection)
+                                    @Html.Hidden("col", grid.SortColumn)
+
+                                }
+                                else
+                                {
+                                    <b>No Details Found.</b>
+                                }
+                            </div>
+                        </div>
+                        <br/>
+
+                        <div class="box-body">
+                            <div class="column">
+
+                                <h5>Image Upload</h5>
+                                <br />
+                                <br/>
+                               
+
+
+<table id="uploadtable" class="table table-bordered ">
+                                     <thead>
+                                         <tr>
+                                             <th style="text-align:center">  Personal Image </th>
+                                             <th  style="text-align:center">  Organisation Image</th>
+                                         </tr>
+                                     </thead>
+                                     <tbody>
+
+                                         <tr>
+                                             @using (Html.BeginForm("AccountSettings", "Global", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                             {
+                                                 <td style="text-align: center; padding: revert">
+                                                     <label for="AccountImg"><b>Upload Profile Image</b></label>
+                                                     <br />
+                                                     @if (Model.AccountImg == "" || Model.AccountImg == null)
+                                                     {
+                                                         <img class="unique" id="profilephoto" src="~/Images/Icons/blankphoto.png" alt="your image" />
+                                                     }
+                                                     else
+                                                     {
+                                                         <img class="unique" id="profile" src="@Url.Content(Model.AccountImg)" alt="your image" />
+                                                     }
+
+
+                                                     <br />
+                                                     <div class="justify-content-end">
+                                                         <input class="btn btn-block btn-default pull-left" type="file" name="AccountImg" accept=".png,.jpg,.jpeg,.gif,.tif" id="ActImg" />
+                                                         <button type="submit" class="btn  btn-primary " id="Apply">Save</button>
+                                                         <button type="submit" class="btn btn-block btn-default pull-right">Reset</button>
+                                                     </div>
+                                                 </td>
+                                             }
+                                             @using (Html.BeginForm("OrgnaizationSettings", "Global", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                             {
+                                                 <td style="text-align: center; ">
+                                                     <label for="OrganizationImg"><b>Upload Organization Image</b></label>
+                                                     <br />
+                                                     @if (Model.OrganizationImg == "" || Model.OrganizationImg == null)
+                                                     {
+                                                         <img class="unique" id="organizationphoto" src="~/Images/Icons/Organizationlogo.png" alt="your image" />
+                                                     }
+                                                     else
+                                                     {
+                                                         <img class="unique" id="organization" src="@Url.Content(Model.OrganizationImg)" alt="your image" />
+                                                     }
+                                                     <br />
+                                                     <div class="justify-content-end">
+                                                         <input class="btn btn-block btn-default pull-left" type="file" name="OrganizationImg" accept=".png,.jpg,.jpeg,.gif,.tif" id="OrgImg" />
+                                                         <button type="submit" class="btn  btn-primary pull-right" id="Insert">Save</button>
+                                                         <button type="submit" class="btn btn-block btn-default pull-right">Reset</button>
+                                                     </div>
+                                                 </td>
+                                             }
+                                             </tr>
+                                     </tbody>
+                                 </table>
+                                
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modal-Update" tabindex="-1" aria-labelledby="modalOne" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header with-border">
+
+                            <h3 class="box-title k-dialog-centered"> Update Settings</h3>
+                        </div>
+                        <div class="modal-body" style="height:250px">
+                            <div class="box box-primary">
+                                @using (Html.BeginForm("UpdateSetting", "Global", FormMethod.Post))
+                                {
+                                    <form id="myForm">
+                                        <div class="modal-body">
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <input type="hidden" id="hfId" name="pkey">
+                                                    <label for="SettingValue" style="text-size-adjust:auto; font-size:larger"><b>New Value:</b></label>
+                                                    <br />
+                                                    <br />
+                                                    <input type="text" class="form-control" id="txtUpdateName" name="SettingValue" placeholder="Enter Value" required="">
+                                                    <span class="error"></span>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary" id="SubmitButton">Update</button>
+                                            <button id="closeModal" type="button" class="btn btn-default pull-right" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                                        </div>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        
+    </section>
+</body>
+</html>

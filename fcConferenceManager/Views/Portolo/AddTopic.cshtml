@@ -1,0 +1,95 @@
+﻿@model fcConferenceManager.Models.Portolo.Topic
+
+@{
+    ViewBag.Title = "Portolo";
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+}
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+
+</head>
+
+<style>
+    .form-control:disabled, .form-control[readonly] {
+        background-color: #e9ecef0f;
+        opacity: 1;
+    }
+</style>
+<body>
+
+    <section class="task-list-form">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <form action="/Portolo/AddTopic" method="post" enctype="multipart/form-data" onsubmit="validateInputs(e);">
+                        @Html.HiddenFor(model => model.id)
+                        <div class="control-icons">
+                            <h2> Add Topic </h2>
+
+                            <div class="controls">
+                                <input type="submit" name="Save" value="Save" id="idSave" class="brdr-1 btn-sm" onclick="return validateInputs(event);">
+                                <a href="~/Portolo/Topics" class="brdr-1 btn-sm" style="padding:7px 5px"> Cancel </a>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-box">
+                                    <div class="form-group">
+                                        <label>Topic Name</label>
+                                        @Html.TextBoxFor(model => model.title, new { @class = "form-control form-control-sm", @id = "title" })
+                                    </div>
+                                    <div class="form-group"><br />
+                                        <label>Description</label>
+                                        @Html.TextAreaFor(model => model.description, new { @class = "form-control", cols = "100", rows = "5" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Active</label><br />
+                                        @Html.CheckBoxFor(model => model.isActive)
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <p>	© 2022 by Elimar Systems. All Rights Reserved <a href="#" class="ml-5">Website Terms of Use</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+<script type="text/javascript" language="javascript">
+
+    function validateInputs(e) {
+
+        var title = $.trim($('#title').val());
+        var description = $.trim($('#description').val());
+        if (title == "") {
+            $("#title").focus();
+
+            alert("Please enter the title of the topic");
+            return false;
+        }
+        if (description == "") {
+            $("#description").focus();
+            alert("Please enter the description of the topic");
+            return false;
+        }
+    }
+</script>

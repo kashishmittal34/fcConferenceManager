@@ -1,0 +1,745 @@
+﻿@using fcConferenceManager.Models
+@model MyPaymentPage
+@{
+    ViewBag.Title = "MyPayments";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="/Css/multiple-select.css" rel="stylesheet" />
+<script src="/Scripts/multiple-select.js" type="text/javascript"></script>
+<style>
+    .group
+    {
+        display: inline-block;
+        font-size: 10pt;
+    }
+
+    #_PaymentpageBody
+    {
+        font-size: 9pt;
+    }
+
+    /*#table
+    {
+        font-size: 9pt;
+        width: 100%;
+        display: table;
+        background-color: white;
+    }*/
+
+    /* #table th, #voucherstable th
+    {
+        font-size: 10pt;
+        background-color: #0caafe;
+        color: white;
+        text-align: left;
+    }
+
+    #table tr:nth-child(odd), #voucherstable tr:nth-child(odd)
+    {
+        background-color: #f2f2f2;
+    }*/
+
+    .btn-link
+    {
+        color: rgb(0, 0, 238);
+    }
+
+    .btn-link:hover
+    {
+        text-decoration: none;
+    }
+
+    .rcpt
+    {
+        background-image: url(../images/miscellaneous/paidstamp.png);
+        background-position: 90% 0%;
+        background-repeat: no-repeat !important;
+        background-size: 125px;
+    }
+
+    .inv
+    {
+        background-Image: none;
+        padding-left: 20px;
+    }
+
+    .rwIcon
+    {
+        display: none !important;
+    }
+
+    .rwTitleBar
+    {
+        margin: 0px 0px !important;
+        padding: 0px;
+    }
+
+    table.dataTable tbody td
+    {
+        padding: 10px 18px !important;
+    }
+</style>
+<div class="container-fluid">
+
+    <div class="row align-items-center" style="padding-top:10px;">
+        <div class="col-md-8 d-flex">
+            <h2>@ViewBag.PageTitle</h2>
+            <input type="image" name="btnExport" id="btnExport" value="Export" title="Export list" src="/images/icons/excel.png" class="ps-3 me-1 dt-button buttons-excel buttons-html5" style="height: 32px;" />
+            <input type="image" name="btnRefresh" id="btnRefresh" value="Refresh" title="Refresh Page" src="/images/icons/undo.png" class="me-1" style="height: 32px;" />
+            <input type="image" name="imgSearch" id="imgSearch" value="Search" title="Search" src="/images/icons/redo.png" style="height: 32px;" />
+        </div>
+        <div class="col-md-4">
+            <a id="cmdReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 pull-right">Return</a>
+        </div>
+    </div>
+    <div id="buttons"></div>
+    <div style="background-color: #d7f6f9; width:100%;">
+        <div class="py-1 px-3">
+            <label for="Event" class="lblSmall">Event:</label>
+            @Html.DropDownList("EventList", null, "All", new { id = "EventList" })
+        </div>
+    </div>
+    <div class="d-md-flex p-2 px-3 flex-wrap" style="background-color:beige;">
+        <input type="hidden" id="eABal" value="@ViewBag.labeldblActBalnaceAmount" />
+        <input type="hidden" id="eBal" value="@ViewBag.txtdblActBalnaceAmount" />
+
+        <div class="me-3">
+            <span id="cphMain_Label3">Debits:</span>
+            <span id="_lblTotalDebits"><strong>@ViewBag.Debits</strong></span>
+        </div>
+
+        <div class="me-3">
+            <span id="cphMain_Label3">Credits:</span>
+            <span id="_lblTotalCredits"><strong>@ViewBag.Credits</strong></span>
+        </div>
+
+        <div class="me-3">
+            <span id="cphMain_Label3">Account Balance:</span>
+            <span id="_lblTotalAccountBalance"><strong>@ViewBag.AccountBalance</strong></span>
+        </div>
+
+        <div class="me-3">
+            <span id="_lblFinanceDate">@ViewBag.strFinanceStartDate</span>
+        </div>
+
+        <div class="me-3">
+            <a id="btnShowVochers" class="btn-link" style="cursor:pointer;">Show Vouchers</a>
+        </div>
+
+        <div class="me-3">
+            <a id="btnOtherInvoices" class="btn-link" style="cursor:pointer;">Show Other Receipts/Invoices</a>
+        </div>
+
+        @if (ViewBag.CancelRegistrationVisible)
+        {
+
+            <div>
+                <a id="btnCancelRegistartion" class="btn-link" style="cursor: pointer; display: @((Convert.ToBoolean(ViewData["cmdCancelPlan"].ToString())) ? "initial;" : "none;")">Can't join us?</a>
+            </div>
+        }
+        @if (ViewBag.dblAccountBalance < 0)
+        {
+            <div>
+                <a id="btnPaynow" class="btn-link">Pay Now</a>
+            </div>
+        }
+    </div>
+    <div id="_PaymentpageBody">
+        <div class="table-responsive">
+            <table id="table" data-page-length="50" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th data-field="Item" data-sortable="true">Item</th>
+                        <th data-field="Date" data-sortable="true">Date</th>
+                        <th data-field="Event" data-sortable="true">Event</th>
+                        <th data-field="Transaction" data-sortable="true">Transaction</th>
+                        <th data-field="Memo" data-sortable="true">Memo</th>
+                        <th data-field="GroupCode" data-sortable="true">GroupCode</th>
+                        <th data-field="LoggedBy" data-sortable="true">LoggedBy</th>
+                        <th data-field="Payment" data-sortable="true">Payment</th>
+                        <th data-field="Documnet" data-sortable="false">Document</th>
+                        <th data-field="Status" data-sortable="true">Status</th>
+                        <th data-field="Charge" data-sortable="true">Charge</th>
+                        <th data-field="Balance" data-sortable="true" DataFormatString="{0:c}">Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var i in Model.PaymentsTable)
+                    {
+                        <tr style="font-size:9pt;">
+                            <td style="padding-left:4px;">@i.Item</td>
+                            <td>@i.Date </td>
+                            <td>@i.Event </td>
+                            <td style="text-align:left;">@i.Transaction</td>
+                            <td>@Html.Raw(@i.Memo) </td>
+                            <td>@i.GroupCode </td>
+                            <td>@i.LoggedByName </td>
+                            <td style="text-align:center;">@i.Payment.ToString("C")</td>
+                            <td><a id="idlinkDocument" class="RefLinkDoc" href="" style="color:black;"><strong>@i.Document</strong></a> </td>
+                            <td style="text-align:center;">@i.Status </td>
+                            <td style="text-align:center;">@i.Charge.ToString("C") </td>
+                            @if (@i.Balance >= 0)
+                            {
+                                <td style="text-align:center;color:green;">@i.Balance.ToString("C") </td>
+                            }
+                            else
+                            {
+                                <td style="text-align:center;color:red">@i.Balance.ToString("C") </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="modal fade" id="VoucherPopup" tabindex="-1" aria-labelledby="printScheduleLbl" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                    <div style="height:25px">
+                        <h5 class="modal-title"></h5>
+                        <div style="float: right; height: 5px;">
+                            <label id="closeVoucherPopup" class="pull-right  float-end mb-2" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                        </div>
+                    </div>
+                    <div id="VoucherPreviewBody">
+                        <div class="col-md-12 table-responsive">
+                            <table class="table table-hover table-striped" id="voucherstable"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="OtherReciptPopup" tabindex="-1" aria-labelledby="printScheduleLbl" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl" style="height: 200px; width:8600px;">
+                <div class="modal-content" style="min-height:400px; max-height:600px;">
+                    <div style="height:25px;">
+                        <h5 class="modal-title"></h5>
+                        <div style="float:right; height:5px;">
+                            <label id="closeOtherReciptPopup" class="pull-right  float-end mb-2" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                        </div>
+                    </div>
+                    <div class="row p-2" id="ReciptViewBody">
+                        <div class="col-md-12 table-responsive" style="height:400px; overflow-y:auto;">
+                            <table class="table table-hover table-striped" id="Reciptstable" width="100%">
+                                <tr style="font-size:10pt;color:white ; background-color:#0caafe;">
+                                    <th style="padding-left: 2px; width: 120px;">Date</th>
+                                    <th style="width: 100px;"> Event</th>
+                                    <th style="width: 100px;"> Method</th>
+                                    <th style="width: 300px;"> Attendee</th>
+                                    <th style="width: 100px;"> Amount</th>
+                                    <th style="width: 100px;"> Receipt/Invoice</th>
+                                </tr>
+                                @if (@Model.OtherReciptTable != null && Model.OtherReciptTable.Rows.Count >= 1)
+                                {
+                                    foreach (System.Data.DataRow i in Model.OtherReciptTable.Rows)
+                                    {
+                                        <tr style="font-size:9pt;">
+                                            <td style="padding-left: 2px; width: 120px;">@((i["PaymentDate"] == null) ? "" : Convert.ToDateTime(i["PaymentDate"]).ToString("g"))</td>
+                                            <td style="width: 100px;">@i["EventID"] </td>
+                                            <td style="width: 100px;">@i["PaymentMethodID"]</td>
+                                            <td style="width: 300px;">@i["AttendeeName"]</td>
+                                            <td style="width: 100px;">@(Convert.ToDouble(i["Amount"]).ToString("c"))</td>
+                                            <td style="width: 100px;"><a id="idlinkReceipt" class="OtherRefLinkDoc" href="" style="color:black;"><strong>@i["strReceipt"]</strong></a></td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="6">
+                                            <p> No data Found</p>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" value="@ViewBag.cancelPopupField" id="hdfPopUPField" />
+        <div class="modal fade" id="CancelRegistration" tabindex="-1" aria-labelledby="printScheduleLbl" aria-hidden="true">
+            <!--CancelSpeaker -->
+            @if (ViewBag.cancelPopupField == 1)
+            {
+                <div class="modal-dialog modal-dialog-centered modal-xl" style="height:200px; width:600px;">
+                    <div class="modal-content">
+                        <div class="modal-header modalBlueHeader">
+                            <h5 class="modal-title">Registration Cancellation</h5>
+                            <div>
+                                <button id="btnSaveResion" type="button" class="btn  me-1 mb-1">Save</button>
+                                <button id="closeModal" type="button" class="btn me-1 mb-1" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <span>Reason:</span><br />
+                            <textarea id="cancellationReason" placeholder="" name="cancellationReason" rows="3" cols="180"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+            }
+            @*Cancel provisional*@
+            else if (ViewBag.cancelPopupField == 2)
+            {
+                <div class="modal-dialog modal-dialog-centered modal-xl" style="height:15px; width:400px;">
+                    <div class="modal-content">
+                        <div class="modal-header modalBlueHeader">
+                            <table width="100%">
+                                <tr>
+                                    <td style="padding-top: 5px">
+                                        <div class="alertify-message">
+                                            <label id="Label85">Can you attend?</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center">
+                                        <div class="alertify-buttons">
+                                            <button id="closeModal" type="button" class="btn  me-1 mb-1" data-bs-dismiss="modal">Yes</button>
+                                            <button id="btnRegCancelProvisionalNo" type="button" class="btn me-1 mb-1" aria-label="Close">No</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+            @*Registration cancellation for free pass*@
+            else if (ViewBag.cancelPopupField == 3)
+            {
+                <div class="modal-dialog modal-dialog-centered modal-xl" style="height:200px; width:400px;">
+                    <div class="modal-content">
+                        <div class="modal-header modalBlueHeader">
+                            <table width="100%">
+                                <tr>
+                                    <td style="padding-top: 5px">
+                                        <div class="alertify-message">
+                                            <label id="Label85">Confirm registration cancellation?</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center">
+                                        <div class="alertify-buttons">
+                                            <button id="btnSaveFreePass" type="button" class="btn  me-1 mb-1">Yes</button>
+                                            <button id="closeModal" type="button" class="btn me-1 mb-1" data-bs-dismiss="modal" aria-label="Close">No</button> @*data-bs-dismiss="modal"*@
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="modal-dialog modal-dialog-centered modal-xl" style="height:100px; width:400px;">
+                    <div class="modal-content">
+                        <div class="modal-header modalBlueHeader">
+                            <h5 class="modal-title"></h5>
+                            <div>
+                                <button id="closeModal" type="button" class="btn me-1 mb-1" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+        </div>
+        <div class="modal fade" id="payCredit" tabindex="-1" aria-labelledby="printScheduleLbl" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width:600px;width: 100%;">
+                <div class="modal-content">
+                    <div class="modal-header modalBlueHeader">
+                        <h5 class="modal-title">Payment for: @ViewBag.FullName</h5>
+                        <div>
+                            <button id="btnProceedPayment" type="button" class="btn">Proceed</button>
+                            <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        @{Html.RenderAction("_PartialPayCredit", "MyMagi");}
+                        <input type="hidden" id="eventAccoubtBalance" value="@ViewBag.DoubleEventAcouuntBalnace" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="PaymentType" tabindex="-1" aria-labelledby="paymenttypeLbl" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl" style="height:400px; width:300px;">
+                <div class="modal-content">
+                    <table style="width: 100%">
+                        <tr>
+                            <td>
+                                <table class="popupheader">
+                                    <tr>
+                                        <td style="padding: 3px">
+                                            <label for="selectoptions">Select option(s)</label>
+                                        </td>
+                                        <td style="padding: 3px; text-align: right">
+                                            <button id="btnPaymentTypeSave" type="button" class="btn">Proceed</button>
+                                            <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-top: 10px; padding-left: 5px">
+                                <asp:CheckBoxList ID="ckPaymentType" runat="server" DataTextField="ChargeTypeID" DataValueField="ChargeType_pKey" CssClass="CheckBox Font11" />
+                                @if (ViewBag.PaymentTypeList != null)
+                                {
+                                    <div class="me-md-1 mb-2 mb-md-1">
+                                        <div class="col-xs-12">
+                                            <select id="ckPaymentType" required name="PaymentType">
+                                                @foreach (var item in ViewBag.PaymentTypeList)
+                                                {
+                                                    <option value="@item.Value" name="ntrack"> @item.Text </option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="recipetPreview" tabindex="-1" aria-labelledby="recipetPreview" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header modalBlueHeader">
+                        <h5 class="modal-title">Receipt</h5>
+                        <div>
+                            <button id="ExportPDFReciept" type="button" class="btn">Print to PDF</button>
+                            <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        </div>
+                    </div>
+                    <div class="modal-body p-1">
+                        <div class="row p-2">
+                            <div class="col-md-12">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <img id="image1" src="" style="display:none;margin-bottom:10px;" />
+                                    <label id="lblReceiptNum" class="pull-right justify-content-end" style="font-size:32px; font-family:none;"> Payment Receipt </label>
+                                </div>
+                                <label id="lblReciiptTitle" style="font-size:18px;margin-bottom:10px;"> Payment Receipt </label>
+                                <div id="rcptClass">
+                                    <label id="lblReceiptBody" class="lblReceiptMedium"> Payment Receipt </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="refundwindow" tabindex="-1" aria-labelledby="refundwindow" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl" style="height:360px; width:700px;">
+                <div class="modal-content">
+                    <div class="modal-header modalBlueHeader">
+                        <h5 class="modal-title">Refund Voucher</h5>
+                        <div>
+                            <button id="btnCCRefund" type="button" class="btn  me-1 mb-1">Proceed</button>
+                            <button id="closeModal" type="button" class="btn me-1 mb-1" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <input id="hdnCCRefundCardNo" type="hidden" value="" />
+                        <input id="hdnCCMainAmount" type="hidden" value="" />
+                        <input id="hdnPaymentDay" type="hidden" value="" />
+                        <label for="" id="lblCCRefundError" style="color:red ;display:none"></label>
+                        <div class="col-md-12">
+                            <label id="Label157" for=""> </label>
+                            <div class="row mt-1">
+                                <div class="col-md-3 text-md-end"> <label id="Label86" for="ReceiptNo.">Receipt Number: </label> </div>
+                                <div class="col-md-9"> <label id="lblReceiptNumber" for=""> </label> </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-3 text-md-end"> <label id="Label156">Card Transaction ID: </label> </div>
+                                <div class="col-md-9"> <label id="lblCCRefundCardTran"> </label> </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-3 text-md-end"> <label id="Label158">Refund Amount: </label> </div>
+                                <div class="col-md-9"> <label id="lblCCRefundAmt"> </label> </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-3 text-md-end"> <label id="Label160">Comment: </label></div>
+                                <div class="col-md-9" style="padding-right:50px;"> <textarea id="txtCCRefundReason" class="txtRequired Font11" multiple maxlength="250" rows="4"></textarea> </div>
+                            </div>
+                        </div>
+                        <div style="font-size: small; vertical-align: bottom; color: darkblue; text-align: right;">
+                            <label id="lblCCRefundCounter" class="lblSmall" style="width:100px"> </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="filename" value="@ViewBag.PageFileName" />
+    <input type="hidden" id="hdnintVoucher_pKey" value="" />
+</div>
+<link href="~/Css/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/dataTable.buttons.min.js"></script>
+<script src="~/Scripts/jquery.table2excel.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#table").dataTable({
+            paging: true, bFilter: true, ordering: true, searching: true, dom: 'tp', "order": [[0, "desc"]],
+        });
+        function LoadVouchersTable() {
+            var DataSet = null;
+            var result = CommonFunctions.AjaxCall('Get', '/MyMagi/GetUserVouchers', '', 'Error While Updating Payment.');
+            if (result !== null || result !== "ERROR") {
+                if (result.msg === "OK")
+                    DataSet = JSON.parse(result.Source);
+            }
+
+            $('#voucherstable').dataTable({
+                paging: false, bFilter: true, ordering: false, sorting: false, searching: false, "order": [[0, "desc"]],
+                fixedHeader: true,
+                scrollY: '20vh',
+                data: DataSet,
+                columns: [
+                    {
+                        title: "Voucher", data: "PaddedID", width: 90,
+                        render: function (data, type, row) {
+                            return `${data} <input type="image" class="downloadVoucherData" data-id="${row.pKey}" id="btnDownloadVocuher" value="${data}" src="/images/icons/pdf.gif" Width="14px" Height="13px" styl="margin-left:10px;" />`
+                        }
+                    },
+                    { title: "Pin", data: "VoucherCode" },
+                    { title: "Email", data: "VoucherEmail" },
+                    { title: "Amount", data: "FormatAmount" },
+                    { title: "Issued", data: "IssuedOn" },
+                    { title: "Expiration", data: "ExpirationDate" },
+                    { title: "Status", data: "VoucherStatusID" },
+                    {
+                        title: "",
+                        data: "pKey",
+                        render: function (data) {
+                            return `<a id="idlinkRefund" class="linkRefundBtn" data-id="${data}" href="javascript:void(0)" style="color:black;">Refund</a>`
+                        }
+                    },
+
+                ]
+            });
+          
+        }
+        LoadVouchersTable();
+
+        $("#btnShowVochers").click(function (e) {
+            e.preventDefault();
+            $('#VoucherPopup').modal('show');
+            setTimeout(function () {
+                $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+            }, 200);
+        });
+        $("#btnOtherInvoices").click(function (e) {
+            e.preventDefault();
+            $('#OtherReciptPopup').modal('show');
+        });
+        $("#btnCancelRegistartion").click(function (e) {
+            e.preventDefault();
+            $('#cancellationReason').val("");
+            if ($('#hdfPopUPField').val() === "0")
+                window.location.href = "/CancelReg";
+            else
+                $('#CancelRegistration').modal('show');
+        });
+        $("#btnPaynow").click(function (e) {
+            e.preventDefault();
+            $('#txtCreditAmount,#lblCreditAmount').val($('#eABal').val());
+            $('.ClearText').val("");
+            $('#ddMonth').val($('#selMonth').val());
+            $('#ddYear').val($('#selYear').val());
+            $('#payCredit').modal('show');
+        });
+        $('#EventList').change(function () {
+            var _EvtID = $("#EventList option:selected").text();
+            if (_EvtID == "All") {
+                oTable = $('#table').DataTable();
+                oTable.search("").draw();
+            } else {
+                oTable = $('#table').DataTable();
+                oTable.search(_EvtID).draw();
+            }
+        });
+        $('#btnRefresh').click(function (e) {
+            e.preventDefault();
+            $('#EventList').val("");
+            oTable = $('#table').DataTable();
+            oTable.search("").draw();
+        });
+        $('#imgSearch').click(function (e) {
+            e.preventDefault();
+            var _EvtID = $("#EventList option:selected").text();
+            _EvtID = (_EvtID === "All") ? "" : _EvtID;
+            oTable = $('#table').DataTable();
+            oTable.search(_EvtID).draw();
+        })
+        $('#btnExport').on('click', function () {
+            $("#table").table2excel({ filename: $('#filename').val() + ".xls", preserveColors: true });
+        });
+        $(document).on('click', '.RefLinkDoc,.OtherRefLinkDoc', function (e) {
+            $('#image1').hide();
+            e.preventDefault();
+            var DocRef = this.text;
+            var result = CommonFunctions.AjaxCall('POST', '/MyMagi/ProcessReciptDocument', { docID: DocRef }, 'Error While Processing Reciept.');
+            if (result !== null) {
+                if (result.msg === "OK") {
+                    $('#image1').attr('src', result.Logo);
+                    $('#image1').attr('style', "height:" + result.Height + "px;");
+                    $('#image1').show();
+                    $('#rcptClass').attr('class', result.InfoClass);
+                    $('#lblReciiptTitle').html(result.RecipetTitle);
+                    $('#lblReceiptNum').html(result.ReciptNum);
+                    $('#lblReceiptBody').html(result.RecieptBody);
+                    $('#recipetPreview').modal('show');
+                }
+                else
+                    CommonFunctions.Alert(result.msg);
+            }
+            else
+                CommonFunctions.Alert("Error While Processing Reciept.");
+        });
+        $('#ExportPDFReciept').click(function () {
+            window.location.href = '/MyMagi/ExportPDF?ReceiptNum=' + $('#lblReceiptNum').text();
+        });
+        $(document).on('click', '.downloadVoucherData', function () {
+            var PadID = this.dataset["id"];
+            window.location.href = "/MyMagi/DownloadVoucher?ID=" + PadID;
+        });
+        $("#btnSaveResion").click(function (e) {
+            var comment = document.getElementById("cancellationReason").value;
+            var result = CommonFunctions.AjaxCall('GET', '/MyMagi/CancelRegistration', { cancelregion: comment }, 'Error While Canceelling Registration.');
+            if (result !== null) {
+                if (result !== "Error") {
+                    if (result.result === "OK") {
+                        $('#CancelRegistration').modal('hide');
+                    }
+                    else
+                        CommonFunctions.Alert(result.msg);
+                }
+                else
+                    CommonFunctions.Alert("Error Occurred while cancelling registration");
+            }
+            else
+                CommonFunctions.Alert("Error Occurred while cancelling registration");
+
+        });
+        $("#btnRegCancelProvisionalNo,#btnSaveFreePass").on('click', function () {
+            var comment = document.getElementById("cancellationReason").value;
+            var result = CommonFunctions.AjaxCall('GET', '/MyMagi/CancelProvisinaolRegister', { cancelregion: comment }, 'Error While Processing Reciept.');
+            if (result !== null) {
+                if (result == "OK") {
+                    window.location.reload();
+                    $('#CancelRegistration').modal('hide');
+                }
+                else
+                    CommonFunctions.Alert("Error Occurred while cancelling registration");
+            }
+            else
+                CommonFunctions.Alert("Error Occurred while cancelling registration");
+        });
+        function Validate() {
+            var isError = true;
+            if (document.getElementById("txtCCNum").value.length < 16) {
+                isError = false;
+            }
+            document.getElementById("txtCCNum").style.setProperty("background-color", (document.getElementById("txtCCNum").value.length < 16) ? "#f08080" : "#fff");
+            document.getElementById("txtCreditCode").style.setProperty("background-color", (document.getElementById("txtCreditCode").value === "") ? "#f08080" : "#fff");
+            document.getElementById("txtCreditFirstName").style.setProperty("background-color", (document.getElementById("txtCreditFirstName").value === "") ? "#f08080" : "#fff");
+            document.getElementById("txtCreditLastname").style.setProperty("background-color", (document.getElementById("txtCreditLastname").value === "") ? "#f08080" : "#fff");
+            document.getElementById("txtCreditAddress").style.setProperty("background-color", (document.getElementById("txtCreditAddress").value === "") ? "#f08080" : "#fff");
+            document.getElementById("txtCreditZipcode").style.setProperty("background-color", (document.getElementById("txtCreditZipcode").value === "") ? "#f08080" : "#fff");
+            document.getElementById("txtCreditName").style.setProperty("background-color", (document.getElementById("txtCreditName").value === "") ? "#f08080" : "#fff");
+            return isError;
+        }
+        $('#btnProceedPayment').on('click', function (e) {
+            e.preventDefault();
+            var cardtype = document.getElementById("ddCardType").value;
+            var ddMonth = document.getElementById("ddMonth").value;
+            var ddYear = document.getElementById("ddYear").value;
+            if (!Validate())
+                return false;
+            var data =
+            {
+                txtCreditAmount: $('#eBal').val(),
+                lblCreditAmount: document.getElementById("txtCreditAmount").textContent,
+                dblAccountBalance: $('#eBal').val(),
+                ddCardType: cardtype,
+                txtCCNum: document.getElementById("txtCCNum").value,
+                ddMonth: ddMonth,
+                ddYear: ddYear,
+                txtCreditCode: document.getElementById("txtCreditCode").value,
+                txtCreditName: document.getElementById("txtCreditName").value,
+                txtCreditFirstName: document.getElementById("txtCreditFirstName").value,
+                txtCreditLastname: document.getElementById("txtCreditLastname").value,
+                txtCreditZipcode: document.getElementById("txtCreditZipcode").value,
+                txtCreditAddress: document.getElementById("txtCreditAddress").value,
+                eventAccoubtBalance: document.getElementById("eventAccoubtBalance").value
+            }
+            var result = CommonFunctions.AjaxCall('POST', '/MyMagi/PayementSubmit', data, 'Error While Updating Payment.');
+            if (result !== null) {
+                if (result.msg === "OK") {
+                    $('#payCredit').modal('hide');
+                    if (result.redirect !== "")
+                        window.location.reload();
+                }
+                else
+                    CommonFunctions.Alert(result.msg);
+            }
+            else
+                CommonFunctions.Alert("Error Occured While Updating Payment");
+        });
+
+        $(document).on('click', '.linkRefundBtn', function () {
+            var Id = $(this)[0].dataset.id;
+            var result = CommonFunctions.AjaxCall('POST', '/MyMagi/ProcessRefund', { vouchercode: Id }, 'Error While Updating Payment.');
+            if (result !== null && result !== "Error") {
+                if (result.msg === "OK") {
+                    $('#hdnintVoucher_pKey').val(Id);
+                    $('#hdnCCRefundCardNo').text(result.hdnCCRefundCardNo);
+                    $('#hdnCCMainAmount').text(result.hdnCCMainAmount);
+                    $('#hdnPaymentDay').text(result.hdnPaymentDay);
+                    $('#lblCCRefundError').text(result.lblCCRefundError);
+                    $('#lblReceiptNumber').text(result.lblReceiptNumber);
+                    $('#lblCCRefundCardTran').text(result.lblCCRefundCardTran);
+                    $('#lblCCRefundAmt').text(result.lblCCRefundAmt);
+                    $('#lblCCRefundCounter').text(result.lblCCRefundCounter);
+                    $("#txtCCRefundReason").val("");
+                    $('#refundwindow').modal('show');
+                } else
+                    CommonFunctions.Alert(result.msg);
+            }
+            else
+                CommonFunctions.Alert("Error While Fetching Refund Information");
+        });
+
+        $('#btnCCRefund').on('click', function () {
+            var data = {
+                intVoucher_pKey: $('#hdnintVoucher_pKey').val(),
+                txtCCRefundReason: $('#txtCCRefundReason').val()
+            };
+            var result = CommonFunctions.AjaxCall('POST', '/MyMagi/SubmitRefundProcess', data, 'Error While Updating Payment.');
+            if (result !== null && result !== "ERROR") {
+                if (result.msg === "OK") {
+                    $('#voucherstable').DataTable().clear().destroy();
+                    LoadVouchersTable();
+                    $('#refundwindow').modal('hide');
+                }
+                else
+                    CommonFunctions.Alert(result.msg);
+            }
+            else
+                CommonFunctions.Alert("Error in processing refund");
+        });
+
+    });
+</script>
+
+

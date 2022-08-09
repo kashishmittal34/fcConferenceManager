@@ -1,0 +1,145 @@
+<?xml version="1.0" standalone="yes"?>
+<NewDataSet>
+  <Table1>
+    <pKey>1</pKey>
+    <PageTitle>MAGI Webinar Calendar</PageTitle>
+    <OldUrl>/TestWebinars</OldUrl>
+    <RedirectUrl>https://www.firstclinical.com/webinars/</RedirectUrl>
+    <IsRedirect>true</IsRedirect>
+    <IsActive>true</IsActive>
+    <Page_Pkey>0</Page_Pkey>
+    <PaddedID>00001</PaddedID>
+  </Table1>
+  <Table1>
+    <pKey>2</pKey>
+    <PageTitle>Event Info</PageTitle>
+    <Description />
+    <OldUrl>/forms/frmEventInfo.aspx</OldUrl>
+    <RedirectUrl>/EventInfo</RedirectUrl>
+    <IsRedirect>false</IsRedirect>
+    <IsActive>true</IsActive>
+    <Page_Pkey>0</Page_Pkey>
+    <PaddedID>00002</PaddedID>
+  </Table1>
+  <Table1>
+    <pKey>3</pKey>
+    <PageTitle>Home Page</PageTitle>
+    <Description />
+    <OldUrl>/forms/frmHome.aspx</OldUrl>
+    <RedirectUrl>/Home</RedirectUrl>
+    <IsRedirect>false</IsRedirect>
+    <IsActive>true</IsActive>
+    <Page_Pkey>0</Page_Pkey>
+    <PaddedID>00003</PaddedID>
+  </Table1>
+  <Table1>
+    <pKey>4</pKey>
+    <PageTitle>View My Schedule</PageTitle>
+    <Description />
+    <OldUrl>/forms/frmMySchedule.aspx</OldUrl>
+    <RedirectUrl>/ViewMySchedule</RedirectUrl>
+    <IsRedirect>false</IsRedirect>
+    <IsActive>true</IsActive>
+    <Page_Pkey>0</Page_Pkey>
+    <PaddedID>00004</PaddedID>
+  </Table1>
+  <Table1>
+    <pKey>5</pKey>
+    <PageTitle>Create My Schedule</PageTitle>
+    <Description />
+    <OldUrl>/forms/frmMySessions.aspx</OldUrl>
+    <RedirectUrl>/CreateMySchedule</RedirectUrl>
+    <IsRedirect>false</IsRedirect>
+    <IsActive>true</IsActive>
+    <Page_Pkey>0</Page_Pkey>
+    <PaddedID>00005</PaddedID>
+  </Table1>
+  <Table1>
+    <pKey>6</pKey>
+    <PageTitle>MAGI Menu</PageTitle>
+    <Description />
+    <OldUrl>/forms/frmHome.aspx</OldUrl>
+    <RedirectUrl>/MAGI</RedirectUrl>
+    <IsRedirect>false</IsRedirect>
+    <IsActive>true</IsActive>
+    <Page_Pkey>0</Page_Pkey>
+    <PaddedID>00006</PaddedID>
+  </Table1>
+  <Table1>
+    <pKey>7</pKey>
+    <PageTitle>Conferences Menu</PageTitle>
+    <Description />
+    <OldUrl>/forms/frmHome.aspx</OldUrl>
+    <RedirectUrl>/Conferences</RedirectUrl>
+    <IsRedirect>false</IsRedirect>
+    <IsActive>true</IsActive>
+    <Page_Pkey>0</Page_Pkey>
+    <PaddedID>00007</PaddedID>
+  </Table1>
+  <Table1>
+    <pKey>8</pKey>
+    <PageTitle>Events Menu</PageTitle>
+    <Description />
+    <OldUrl>/forms/frmHome.aspx</OldUrl>
+    <RedirectUrl>/Events</RedirectUrl>
+    <IsRedirect>false</IsRedirect>
+    <IsActive>true</IsActive>
+    <Page_Pkey>0</Page_Pkey>
+    <PaddedID>00008</PaddedID>
+  </Table1>
+  <Table1>
+    <pKey>9</pKey>
+    <PageTitle>Blue Ribbon Menu</PageTitle>
+    <Description />
+    <OldUrl>/forms/frmHome.aspx</OldUrl>
+    <RedirectUrl>/BlueRibbonSites</RedirectUrl>
+    <IsRedirect>false</IsRedirect>
+    <IsActive>true</IsActive>
+    <Page_Pkey>0</Page_Pkey>
+    <PaddedID>00009</PaddedID>
+  </Table1>
+  <Table1>
+    <pKey>10</pKey>
+    <PageTitle>Resources Menu</PageTitle>
+    <Description />
+    <OldUrl>/forms/frmHome.aspx</OldUrl>
+    <RedirectUrl>/Resources</RedirectUrl>
+    <IsRedirect>false</IsRedirect>
+    <IsActive>true</IsActive>
+    <Page_Pkey>0</Page_Pkey>
+    <PaddedID>00010</PaddedID>
+  </Table1>
+  <Table1>
+    <pKey>11</pKey>
+    <PageTitle>MyMAGI Menu</PageTitle>
+    <Description />
+    <OldUrl>/forms/frmHome.aspx</OldUrl>
+    <RedirectUrl>/MyMAGI</RedirectUrl>
+    <IsRedirect>false</IsRedirect>
+    <IsActive>true</IsActive>
+    <Page_Pkey>0</Page_Pkey>
+    <PaddedID>00011</PaddedID>
+  </Table1> 
+  <Table1>
+    <pKey>12</pKey>
+    <PageTitle>Event Sponsors</PageTitle>
+    <Description />
+    <OldUrl>/forms/frmPartners.aspx</OldUrl>
+    <RedirectUrl>/EventSponsors</RedirectUrl>
+    <IsRedirect>false</IsRedirect>
+    <IsActive>true</IsActive>
+    <Page_Pkey>0</Page_Pkey>
+    <PaddedID>00012</PaddedID>
+  </Table1>
+  <Table1>
+    <pKey>13</pKey>
+    <PageTitle>Event Sponsors Directory</PageTitle>
+    <Description />
+    <OldUrl>/forms/frmExhibitorDirectory.aspx</OldUrl>
+    <RedirectUrl>/EventSponsorsDirectory</RedirectUrl>
+    <IsRedirect>false</IsRedirect>
+    <IsActive>true</IsActive>
+    <Page_Pkey>0</Page_Pkey>
+    <PaddedID>00013</PaddedID>
+  </Table1>
+</NewDataSet>

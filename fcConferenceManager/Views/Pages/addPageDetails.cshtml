@@ -1,0 +1,156 @@
+﻿@model fcConferenceManager.Models.page
+
+@{
+    ViewBag.Title = "Add Page";
+}
+<style>
+    .lblTitle
+    {
+        display: inline-block;
+        color: Navy;
+        background-color: transparent;
+        font-size: 18pt;
+    }
+
+    .group label
+    {
+        font-size: 8pt;
+    }
+    .labelbold
+    {
+        font-weight:bold;
+    }
+</style>
+<div style="margin:20px 20px 20px 20px">
+    <div style="float:left">
+        <h2 style="margin-bottom:0 !important">Add Page</h2>
+    </div>
+
+    @using (Html.BeginForm("AddPageDetails", "Pages", FormMethod.Post, new { id = "myGreatForm", onsubmit = "alert('Page Added')" }))
+    {
+        <div style="text-align:right">
+            <div>
+                <input type="submit" style="width:100px" value="Create" class="btn btn-blue" />
+                <a href="/pages/getAllPageDetails" class="btn" style="width:100px">Cancel</a>
+            </div>
+        </div>
+        @Html.AntiForgeryToken()
+        <div class="row mb-3">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "col-md-5 labelbold" })
+
+                @Html.TextBoxFor(model => model.Title, new { @class = "form-control", @id = "trim_input", @onchange = "myFunction();", required = "required" })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.newTitle, htmlAttributes: new { @class = "control-label col-md-5 labelbold" })
+
+                @Html.TextBoxFor(model => model.newTitle, new { @class = "form-control", @id = "trim_input2", @onchange = "myFunction();"})
+            </div>
+            <div class="col-md-3">
+
+                @Html.LabelFor(model => model.Section, htmlAttributes: new { @class = "control-label col-md-3 labelbold" })
+
+                @Html.DropDownListFor(model => model.Section, new SelectList(ViewBag.getDropDownSection, "Value", "Text"), new { @class = "form-control", style = "height:37px;border-radius: 5px !important;" })
+                @Html.ValidationMessageFor(model => model.Section, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+
+        <div class="row mb-3">
+
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.URL, htmlAttributes: new { @class = "control-label col-md-3 labelbold" })
+
+
+                @Html.TextBoxFor(model => model.URL, new { @class = "form-control", @id = "trim_input4", @onchange = "myFunction();", required = "required" })
+                @Html.ValidationMessageFor(model => model.URL, "", new { @class = "text-danger" })
+
+            </div>
+
+            <div class="col-md-3">
+
+                @Html.LabelFor(model => model.newURL, htmlAttributes: new { @class = "control-label col-md-4 labelbold" })
+
+                @Html.TextBoxFor(model => model.newURL, new { @class = "form-control", @id = "trim_input5", @onchange = "myFunction();" })
+            </div>
+
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.EventName, htmlAttributes: new { @class = "control-label col-md-8 labelbold" })
+
+                @Html.TextBoxFor(model => model.EventName, new { @class = "form-control", @id = "trim_input6", @onchange = "myFunction();", required = "required" })
+
+            </div>
+        </div>
+        <div class="row mb-3 gx-1">
+
+            <div class="col-md-2" style="margin-right:18px">
+                @Html.LabelFor(model => model.EventType, htmlAttributes: new { @class = "control-label labelbold" })
+                @Html.DropDownListFor(model => model.EventType, new SelectList(ViewBag.getDropDownEventType, "Value", "Text"),
+               new { @class = "form-control", required = "required", style = "height:37px;border-radius: 5px !important;" })
+                @Html.ValidationMessageFor(model => model.EventType, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-2" style="margin:0 18px 0 18px">
+                @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2 labelbold" })
+
+                @Html.DropDownListFor(model => model.Status, new SelectList(ViewBag.getDropDownStatus, "Value", "Text"), new { @class = "form-control", required = "required", style = "height:37px;border-radius: 5px !important;" })
+                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-2" style="margin:0 18px 0 18px">
+                @Html.LabelFor(model => model.AccessFrom, htmlAttributes: new { @class = "control-label labelbold" })
+
+                @Html.DropDownListFor(model => model.AccessFrom, new SelectList(ViewBag.getDropDown, "Value", "Text"), new { @class = "form-control", @id = "AcessFromChoose", required = "required", style = "height:37px;border-radius: 5px !important;" })
+                @Html.ValidationMessageFor(model => model.AccessFrom, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-2" style="margin-left:18px">
+                @Html.LabelFor(model => model.AccessTo, htmlAttributes: new { @class = "control-label labelbold" })
+
+                @Html.DropDownListFor(model => model.AccessTo, new SelectList(ViewBag.getDropDown, "Value", "Text"), new { @class = "form-control", @id = "AcessInChoose", required = "required", style = "height:37px;border-radius: 5px !important;" })
+                @Html.ValidationMessageFor(model => model.AccessTo, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+        <div class="row mb-2">
+            @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-9 labelbold" })
+            <div class="col-md-9">
+                @Html.TextAreaFor(model => model.Notes, new { @class = "form-control", @id = "trim_input7", @onchange = "myFunction();"})
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            @Html.LabelFor(model => model.LinkDocumentation, htmlAttributes: new { @class = "col-md-9 labelbold" })
+            <div class="col-md-9">
+                @Html.TextBoxFor(model => model.LinkDocumentation, new { @class = "form-control", @id = "trim_input8", @onchange = "myFunction();" })
+            </div>
+        </div>
+    }
+
+</div>
+
+@section Scripts {
+    <script>
+        function myFunction() {
+
+            document.getElementById("trim_input").value = document.getElementById("trim_input").value.trim();
+            document.getElementById("trim_input2").value = document.getElementById("trim_input2").value.trim();
+            document.getElementById("trim_input3").value = document.getElementById("trim_input3").value.trim();
+            document.getElementById("trim_input4").value = document.getElementById("trim_input4").value.trim();
+            document.getElementById("trim_input5").value = document.getElementById("trim_input5").value.trim();
+            document.getElementById("trim_input6").value = document.getElementById("trim_input6").value.trim();
+            document.getElementById("trim_input7").value = document.getElementById("trim_input7").value.trim();
+            document.getElementById("trim_input8").value = document.getElementById("trim_input8").value.trim();
+
+        }
+
+        $(function () {
+            $("#AcessFromChoose").chosen();
+            $("#AcessInChoose").chosen();
+        })
+
+
+    </script>
+
+}

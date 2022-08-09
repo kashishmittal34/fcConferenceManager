@@ -1,0 +1,146 @@
+﻿@model Elimar.Models.Login
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/Portolostyle.css">
+    <link rel="stylesheet" href="~/css/responsive.css">
+
+    <title>Portolo</title>
+    <meta name="description"
+          content="Portolo" />
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="navbar">
+                        <div class="logo"><img src="~/Images/Icons/PortoloLogo.png" /></div>
+
+                        <div class="push-left">
+                            <button id="menu-toggler" data-class="menu-active" class="hamburger">
+                                <span class="hamburger-line hamburger-line-top"></span>
+                                <span class="hamburger-line hamburger-line-middle"></span>
+                                <span class="hamburger-line hamburger-line-bottom"></span>
+                            </button>
+
+                            <!--  Menu compatible with wp_nav_menu  -->
+                            <ul id="primary-menu" class="menu nav-menu">
+                                <li class="menu-item current-menu-item"><a class="nav__link" href="#">Home</a></li>
+                                <li class="menu-item dropdown">
+                                    <a class="nav__link" href="#">About</a>
+                                    <ul class="sub-nav">
+                                        <li><a class="sub-nav__link" href="#">link 1</a></li>
+                                        <li><a class="sub-nav__link" href="#">link 2</a></li>
+                                        <li><a class="sub-nav__link" href="#">link 3 - long link - long link - long link</a></li>
+                                    </ul>
+
+                                </li>
+                                <li class="menu-item dropdown">
+                                    <a class="nav__link" href="#">Contact</a>
+                                    <ul class="sub-nav">
+                                        <li><a class="sub-nav__link" href="#">link 1</a></li>
+                                        <li><a class="sub-nav__link" href="#">link 2</a></li>
+                                        <li><a class="sub-nav__link" href="#">link 3 - long link - long link - long link</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="" class="btn btn-primary btn-sm nav__link mr-0">Login</a></li>
+
+                            </ul>
+
+
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+
+    </header>
+
+    <section class="login">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-wrap card">
+                        <H2>PORTOLO <span>LOGIN</span></H2>
+                        @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+                        {
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Username</label>
+                                @*@Html.EditorFor(model => model.UserName, new { @class = "form-control" })*@
+                                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+
+                                @Html.ValidationMessageFor(model => model.UserName)
+                            </div>
+                            <div class="form-group mb-4">
+                                <label for="exampleInputPassword1">Password</label>
+                                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { type = "password", @class = "form-control" } })
+
+                                @Html.ValidationMessageFor(model => model.Password)
+                            </div>
+                            <div class="form-group error">
+                                @if (@ViewBag.Failedcount != null)
+                                {
+
+                                    <label> Failed Attempt count is: @ViewBag.Failedcount</label>
+                                }
+
+                                @if (ViewBag.NotValidUser != null)
+                                {
+
+                                    <label> @ViewBag.NotValidUser</label>
+                                }
+                            </div>
+
+                            <input type="submit" value="Login" class="btn btn-primary" />
+                        }                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <p>	© 2022 by Elimar Systems. All Rights Reserved <a href="#" class="ml-5">Website Terms of Use</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Toggle menu on click
+            $("#menu-toggler").click(function () {
+                toggleBodyClass("menu-active");
+            });
+
+            function toggleBodyClass(className) {
+                document.body.classList.toggle(className);
+            }
+
+        });
+    </script>
+</body>
+</html>

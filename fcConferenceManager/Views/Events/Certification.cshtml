@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "Certification";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .lblTitle {
+        padding-bottom: 8px;       
+        display: inline-block;
+        color: Navy;
+        background-color: transparent;
+        font-size:18pt;
+    }
+    .SectionTitle
+    {
+        color: #00008b;
+    }
+</style>
+<div class="magiMySessionMainWrapper mt-3">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+            <div class="col-md-8 col-lg-9 flex-grow-1">
+                <div class="col-md-12">
+                    <div class="col-md-12 d-flex  pt-2">
+                        <div class="col-md-8">
+                            <label id="lblTitle" class="lblTitle magi-inline-block">@ViewBag.PageTitle</label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="justify-content-end justify-content-lg-end flex-wrap pull-right me-2 mt-1">
+                                <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 ">Return</a>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="lblTitle"><h2>@ViewBag.PageTitle</h2></div>*@
+                    <div>@Html.Raw(@ViewBag.FormText)</div>
+                </div>
+
+                @if (@ViewBag.AccountPkey > 0)
+                {
+                    <div>
+                        <div style="padding-top: 10px">
+                            <span id="Label1" class="SectionTitle"><strong>Your CRCP Certification Status</strong></span>
+                        </div>
+                        <div style="padding-top: 10px">
+                            <span>@ViewBag.lblCertStatus</span>
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>

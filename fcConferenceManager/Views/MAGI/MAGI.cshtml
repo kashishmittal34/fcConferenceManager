@@ -1,0 +1,72 @@
+﻿
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //Layout = "~/Views/Shared/_PartialLeftPanel.cshtml";
+}
+
+
+    <style>
+        .lblTitle {
+            display: inline-block;
+            color: Navy;
+            background-color: transparent;
+            padding-left:10px;
+            font-size :18pt;
+        }
+        
+        .mainbody {
+            border: solid;          
+            border-radius: 12px;
+            padding-left: 2px;
+            border-width: 1px;           
+            border-color: lightgray;
+        }   
+        .divbody{
+            padding-left:10px;
+        }
+                
+    </style>
+
+
+    <div class="magiMySessionMainWrapper mt-3">
+        <div class="container-fluid">
+            <div class="row">
+                @{
+                    Html.RenderAction("_PartialEventInfo", "Home");
+                }
+                <div class="col-md-8 col-lg-9 flex-grow-1 mb-3 mb-md-0">
+                    <div class="col-md-12 mainbody">
+                        <div class="justify-content-between align-items-center d-flex pt-2 mb-3">
+                            <div>
+                                <label id="lblTitle" class="lblTitle magi-inline-block">@ViewBag.PageTitle</label>
+                            </div>
+                            <div>
+                                <div class="justify-content-end justify-content-lg-end flex-wrap pull-right me-2 mt-1">
+                                    <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 ">Return</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="divbody">@Html.Raw(@ViewBag.FormText)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*<div class="magiMySessionMainWrapper mt-3">
+        <div class="container-fluid">
+            <div class="row">
+                @{Html.RenderPartial("_PartialEventInfo");}
+               
+                    <div class="col-md-8 col-lg-9 flex-grow-1">
+                        <div class="col-md-12">
+                            <div class="mainbody">
+                                <div class="lblTitle"><h2>@ViewBag.PageTitle</h2></div>
+                                <div class="divbody">@Html.Raw(@ViewBag.FormText)</div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>*@

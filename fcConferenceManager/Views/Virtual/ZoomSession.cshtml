@@ -1,0 +1,1227 @@
+﻿@using System.Data
+@model DataSet
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@* Video *@
+<link href="/Css/video-js.css" rel="stylesheet" />
+<script src="/Scripts/video.min.js" type="text/javascript"></script>
+<script src="/Scripts/Youtube.js" type="text/javascript"></script>
+<script src="/Scripts/jquery-ui.min.js" type="text/javascript"></script>
+<style>
+    .magi-upload-file-wrapper form
+    {
+        position: relative;
+    }
+
+    .magi-upload-file-wrapper form span.mai-upoad-fake-input
+    {
+        width: 100px;
+        border-color: #d3d3d3;
+        border-width: 1px;
+        border-style: solid;
+        min-height: 27px;
+        display: block;
+    }
+
+    .magi-upload-file-wrapper form input[type="file"]
+    {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        opacity: 0;
+        z-index: 1;
+        cursor: pointer;
+    }
+
+    .Rounded
+    {
+        border-radius: 5px;
+    }
+
+    .Shadow
+    {
+        box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+    }
+
+    .underline-on-hover:hover
+    {
+        text-decoration: underline !important
+    }
+
+    .modal-backdrop
+    {
+        display: none;
+    }
+
+    .bgheight
+    {
+        width: 100% !important;
+        object-fit: cover !important;
+        height: 100% !important;
+        margin: auto !important;
+        display: block !important;
+    }
+</style>
+@if (ViewBag.ZoomLoginPopUp  == true)
+{
+    Html.RenderAction("_PartialLogin", "Home");
+}
+else
+{
+
+    bool Available = false, bEventSesssionData = false;
+    DataTable EventSessionData = new DataTable();
+
+    if (Model != null)
+    {
+        Available = (Model.Tables.Count > 0);
+    }
+    if (Available)
+    {
+        EventSessionData = Model.Tables[3];
+        bEventSesssionData = Convert.ToBoolean(ViewData["EventSessionData"].ToString());
+    }
+
+    fcConferenceManager.Models.HelpIconData HelpIconInfo = new fcConferenceManager.Models.HelpIconData();
+    bool HelpIconAvailable = false;
+    string IntroType = "";
+    IntroType = ((ViewData["Type"] == null) ? "" : ViewData["Type"].ToString());
+    if (ViewData["HelpIconData"] != null)
+    {
+        HelpIconAvailable = true;
+        HelpIconInfo = (fcConferenceManager.Models.HelpIconData)ViewData["HelpIconData"];
+    }
+    DataTable ReminderList = new DataTable();
+    bool VisibleTips = false, ListVisible = false;
+    if (ViewBag.Reminder_Visible == true)
+    {
+
+        if (ViewData["Reminders"] != null)
+        {
+            ReminderList = (DataTable)ViewData["Reminders"];
+            if (ReminderList != null && ReminderList.Rows.Count > 0)
+            {
+                ListVisible = true;
+            }
+        }
+        if (ViewData["VisibleTips"] != null)
+        {
+            VisibleTips = true;
+        }
+    }
+    if (bEventSesssionData)
+    {
+        <input type="hidden" value="@ViewData["PageMeetingSwitch"]" />
+        bool bWebinarStarted = ((EventSessionData.Rows[0]["WebinarStarted"] != System.DBNull.Value) ? Convert.ToBoolean(EventSessionData.Rows[0]["WebinarStarted"]) : false);
+        bool bMeetingStarted = ((EventSessionData.Rows[0]["MeetingStarted"] != System.DBNull.Value) ? Convert.ToBoolean(EventSessionData.Rows[0]["MeetingStarted"]) : false);
+        bool bSessionTitleText = bMeetingStarted;
+        bool bSessionTitleHeader = (!bMeetingStarted);
+        string TitleText = "(" + EventSessionData.Rows[0]["SessionID"] + ") " + EventSessionData.Rows[0]["SessionTitle"];
+
+        <div class="magiViewMyScheduleWrapper mt-3">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2>@TitleText</h2>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-end align-items-center">
+                            @if (HelpIconInfo != null)
+                            {
+                                if ((HelpIconInfo.PageIconVisible))
+                                {
+                                    string bAutoplay = (HelpIconInfo.bAutoPlay) ? "true" : "false";
+                                    <input type="hidden" id="vidAutoPlayType" value="@bAutoplay" />
+                                    @Html.Raw("<input id='PageHelpIcon' type='image' src='/images/icons/videoPlay2.png' value='' width='32' class='me-1 mb-1' />")
+                                }
+                            }
+                            @if (ViewBag.VirtualDropdown_Visible && Available)
+                            {
+                                DataTable ddEventVirtualData = Model.Tables[0];
+                                <select id="VirtualEventDropDown" class="me-1 mb-1">
+                                    @if (ddEventVirtualData != null)
+                                    {
+                                        foreach (System.Data.DataRow dr in ddEventVirtualData.Rows)
+                                        {
+                                            @Html.Raw("<option value='" + dr["pKey"] + "' " + ((ViewBag.SelectedDropDown == dr["pKey"].ToString()) ? "selected>" : ">") + dr["strText"] + "</option>")
+                                        }
+                                    }
+                                </select>
+                            }
+                            <a id="cmdReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1">Return</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="modelZoomSessionLP" tabindex="-1" aria-labelledby="modelZoomSessionLP" aria-hidden="true" style="pointer-events: none;" data-backdrop="false">
+            <div class="modal-dialog" style=" margin: unset !important;">
+                <div class="modal-content" style="overflow-y: auto; height: calc(100vh - 20px) !important; width: 388px !important;">
+                    <div class="p-0 justify-content-end modal-heading">
+                        <label id="closeHelpMedia" class="pull-right float-end mb-1" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                    </div>
+                    <div class="modal-body p-1" id="DataValueContent">
+                        <div id="LoadModalLeftPanel">
+                            @{
+                                Html.RenderPartial("_PartialZoomSession", Model);
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="esString" value="@ViewBag.ESPKString" />
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#modelZoomSessionLP').modal('show');
+                $('#modelZoomSessionLP .modal-dialog').draggable({ handle: ".modal-heading", cursor: "move" });
+                $('#btnRefresh').click(function (e) {
+                    e.preventDefault();
+                    $('#LoadModalLeftPanel').load('/Virtual/_PartialZoomSession?ESPK=' + $('#esString').val());
+                });
+            });
+        </script>
+    }
+
+    <div class="magiViewMyScheduleWrapper mt-3">
+        <div class="container-fluid">
+            <div class="row">
+                @*<div class="col-md-2 magi-virtual-event-left">
+                        @if (ViewBag.Reminder_Visible == true)
+                        {
+                            <div class="magiReminderWrapper mb-2">
+                                <div class="magiReminderTitle">
+                                    My Reminders
+                                </div>
+                                <div class="magiReminderItemsWrapper">
+                                    @if (VisibleTips)
+                                    {
+                                        @Html.Raw("<label class='fw-bold' style='color:blue;font-size:11pt;'>" + @ViewData["ReminderTip"] + "</label>")
+                                    }
+                                    @if (ListVisible)
+                                    {
+                                        <ul class="p-0 list-inline">
+                                            @foreach (DataRow dr in ReminderList.Rows)
+                                            {
+                                                @Html.Raw("<li class='form-check mb-1'>");
+                                                @Html.Raw("<input type='checkbox' id='ckDisableReminderAll' data-key='" + dr["pKey"] + "' data-type='" + dr["PageType"] + "'  checked='true' class='form-check-input ckDisableReminderAll' /> <label>" + dr["AlertMessage"] + "</label></li>");
+                                            }
+                                        </ul>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>*@
+                <div class="col-md-12">
+                    <div class="instruction text-center">
+                        <label id="Label18" style="font-size: 20px;">Click Pop Out in the panel and then close this browser window</label>
+                    </div>
+                    <br />
+                    <div class="LiveStreamFrame" style="display:@((Convert.ToBoolean(ViewData["IsLiveStream"]))? "initial" : "none")">
+                        <iframe width="100%" id="ifLiveStream" runat="server" height="500" src="@ViewData["IsLiveStreamSrc"]" frameborder="0" allow="autoplay" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="speakerzoomSession" value="@ViewBag.HdfMeetingURL" />
+    </div>
+    <div class="modal fade" id="modelNavInstructions" tabindex="-1" aria-labelledby="modalNavigationInstructions" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="NavigationInstructions">Navigation Instructions</h5>
+                    <div>
+                        <button id="closeNavInstructions" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div class="col-xs-12" id="modalNavBody" style="height:400px; overflow-y:scroll;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelBoothSponsors" tabindex="-1" aria-labelledby="modelBoothSponsors" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="BoothSponsors">Applicable Event Sponsors</h5>
+                    <div>
+                        <button id="closeNavInstructions" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        @if (Available)
+                        {
+                            DataTable dlSponsor = Model.Tables[4];
+                            if (dlSponsor != null)
+                            {
+                                foreach (System.Data.DataRow dr in dlSponsor.Rows)
+                                {
+                                    <div class="col-md-12" id="modalBoothSponsors">
+                                        <img src="/images/icons/IGreen.jpg" class="boothSponosrsBtn" alt="Sponsor Information" height='16px' title='Sponsor Information' data-id="@dr["pKey"]" style="cursor:pointer;" />
+                                        <label id="SponsorLbl" title="Sponsor Information" style="cursor:pointer;">@dr["OrganizationID"]</label>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalZoomProblems" tabindex="-1" aria-labelledby="modalZoomProblems" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="ZoomProblems" title="Zoom Problems">Zoom Problems</h5>
+                    <div>
+                        <button id="closeZoomProblems" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div class="col-md-12">
+                            <label id="zoomProblemTextLbl" class="" style="padding-bottom:10px;">@Html.Raw(ViewData["ZoomProblem"])</label>
+                            @*<a id="aAttWebinarURL" href="@ViewData["aWebinarURL"]" title="Open Session in Zoom app (not in browser)" class="btnSmall" style="text-decoration: none; width: 250px;display:@((Convert.ToBoolean(ViewData["AttWebinarURLVisible"]))? "initial" : "none")"><span class="@((Convert.ToBoolean(ViewData["WebinarStarted"]))? "blink_me" : "noblink")" id="aspanWebinar">Open Session in Zoom App</span></a>*@
+                            <a id="aAttBreakOutURL" href="@ViewData["aMeetingURL"]" title="Open Breakout Session in Zoom app (not in browser)" class="btnSmall" style="text-decoration: none; width: 250px; display: none;">Open Breakout Session in Zoom App</a>
+                            @*<a id="aAttHallwayURL" href="@ViewData["aMeetingURL"]" title="Open Hallway Discussion in Zoom app (not in browser)" class="btnSmall" style="text-decoration: none; width: 250px; display:@((Convert.ToBoolean(ViewData["AttHallwayURLVisible"]))? "initial" : "none")"><span class="@((Convert.ToBoolean(ViewData["bMeetingStarted"]))? "blink_me" : "noblink")" id="aspanMeeting">Open Hallway Discussion in Zoom App</span></a>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalSessionInstructions" tabindex="-1" aria-labelledby="modalSessionInstructions" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="SessionInstructions" title="Changing Sessions">Changing Sessions</h5>
+                    <div>
+                        <button id="closeSessionInstructions" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div class="col-md-12">
+                            <label id="SessionInstructionsTextLbl" class="" style="padding-bottom:10px;">@ViewData["SessionInstruction"]</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalSpeakerProfile" tabindex="-1" aria-labelledby="modalSpeakerProfiles" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="NavigationInstructions">Speaker Information</h5>
+                    <div>
+                        <button id="closeModalSpeakerProfile" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body p-2">
+                    <div class="row " style="height:400px; min-height:350px; overflow-y:auto;">
+                        @if (Available)
+                        {
+                            DataTable dlSpeakerProfile = Model.Tables[1];
+                            if (dlSpeakerProfile != null)
+                            {
+                                foreach (System.Data.DataRow dr in dlSpeakerProfile.Rows)
+                                {
+                                    <div class="row p-2">
+                                        @{
+                                            int AccountID = (dr["Account_pKey"] == System.DBNull.Value) ? 0 : Convert.ToInt32(dr["Account_pKey"].ToString());
+                                            int intChair = (dr["OrdSequence"] == System.DBNull.Value) ? 0 : Convert.ToInt32(dr["OrdSequence"].ToString());
+                                            int intChairCount = 0; bool ChairVisible = false;
+                                            if (intChair == 1 && intChairCount == 0)
+                                            {
+                                                intChairCount = 1;
+                                                ChairVisible = true;
+                                            }
+                                            else
+                                            {
+                                                ChairVisible = false;
+                                            }
+                                            string imageURL = "/accountimages/" + AccountID.ToString() + "_img.jpg" + "?time=" + DateTime.Now.ToString();
+                                            <div class="col-md-3">
+                                                <img src="@imageURL" id="imageSpeakerProfile" onerror="this.onerror=null;this.src='/images/userIcon.png';" width="150px" class="Rounded Shadow" />
+                                            </div>
+                                            <div class="col-md-9">
+                                                <label style="font: bold; display: @((ChairVisible)?"block;":"none;")">Session Chair:</label>
+                                                <span id="lblSpeakerName" style="font-weight: 700">@dr["Name"]</span><br />
+                                                <span id="lblSpeakerBio" class="">@dr["PersonalBio"]</span><br /><br />
+
+                                                <span id="lblJobTitle" class="">Job Title:</span>
+                                                <span id="lblSpeakerJobTitle" class="" Style="text-align: left; text-justify: auto">@dr["Title"]</span><br />
+                                                <span id="lblJobTitle" class="">Organization:</span>
+                                                <span id="lblJobTitle" class="" Style="text-align: left; text-justify: auto">@dr["OrganizationID"]</span>
+                                            </div>
+
+                                        }
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelExihibitorPartnerInformation" tabindex="-1" aria-labelledby="modelExihibitorPartnerInformation" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="ExihibitorPartnerInformation">Applicable Sponsor Information</h5>
+                    <div>
+                        <button id="closeExihibitorPartnerInformation" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <p>
+                            <a href="javascript:void(0);" target="self" id="link_exhibitorsInfo">
+                                <img ID="imglogoInfo" runat="server" onerror="this.style.display='none'" Style='max-width: 150px; max-height: 100px; float: left; margin-right: 10px;' />
+                            </a>
+                            <label ID="lblProfile"></label>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelRelatedSession" tabindex="-1" aria-labelledby="modelRelatedSession" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="RelatedSession">Related Sessions That Do Not Conflict With My Schedule</h5>
+                    <div>
+                        <button id="closeRelatedSession" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2" id="RelatedSessionPlaceHolder">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelAttendeesLog" tabindex="-1" aria-labelledby="modelAttendeesLog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="AttendeesLog" title="Attendees Online">Attendees Online</h5>
+                    <div>
+                        <button id="closeAttendeesLog" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2" id="AttendeesLogPlaceHolder">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelSpeakerBreakout" tabindex="-1" aria-labelledby="modelSpeakerBreakout" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="SpeakerBreakoutTitle">Breakout Group Management </h5><span id="lblTotalBreakout" class="modal-title"></span>
+                    <div>
+                        <button id="btnSpeakerBreakout" type="button" class="btn">Create Breakout Groups</button>
+                        <button id="closeSpeakerBreakout" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div style="text-align:center">
+                            <input type="hidden" id="TotalAttendeeBreakout" value="" />
+                            <p><label ID="lblTotalAttendee"></label>&nbsp;attendees excluding speakers&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span ID="lblHostKey"></span></p>
+                            <p class="d-flex justify-content-center align-items-center">
+                                <span style="margin-right:5px;">Number of breakout groups:</span> <select id="ddBreakOut"></select>
+                                <input type="number" class="Font11" value="@ViewData["intMaxMemberInBreakout"]" id="txtMaxMemberBreakout" maxlength="10" style="width: 50px;margin-left:5px; margin-right: 5px;" />
+                                <select id="ddSpeakerGroup" style="margin-right:5px;"></select>
+                                <button type="button" id="cmdSpeakerGroupChat" style="margin-right:5px;">Join Group</button>
+                                <a href="#" id="lnkSpkrGroupChat" target="_blank" class="btnSmall" title="Exit current breakout group, if any, before joining a new one" style="text-decoration: none;margin-right:5px;">Join Group</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row col-md-12 p-2" id="SpeakerBreakoutPlaceHolder">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th> Name </th>
+                                        <th> Title </th>
+                                        <th> Organization </th>
+                                        <th> GroupName </th>
+                                        <th> Leader </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="speakerBreakoutTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelDocuments" tabindex="-1" aria-labelledby="modelDocuments" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="Documents" title="Documents">Document Management</h5>
+                    <div>
+                        <button id="closeDocuments" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2" id="DocumentsPlaceHolder">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="SpeakerDocTab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Speaker Documents</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="AttendeeDocTab" data-bs-toggle="tab" data-bs-target="#AttendeeDocuments" type="button" role="tab" aria-controls="AttendeeDocuments" aria-selected="false">Attendee Documents</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div id="UploadDocDiv" class="col-md-12">
+                                <div class="d-flex align-items-center justify-content-between flex-wrap p-2">
+                                    <div class="magi-upload-file-wrapper">
+                                        <form action="" class="d-flex align-items-center">
+                                            <input type="file" id="UploadImagesUpdate" max="1" accept=".pdf,.doc,.docx,.txt,.xls,.xlsx" />
+                                            <span class="magi-upoad-fake-input me-1"></span>
+                                            <span class="mafi-upoad-fake-button btn">Upload</span>
+                                        </form>
+                                    </div>
+                                    <div style="display:none;"><button class="btn">Upload</button> </div>
+                                    <div class="d-inline smallFont w-100">
+                                        Allowed extensions:.pdf,.doc,.docx,.txt,.xls,.xlsx
+                                        <span class="ms-1"> Size LimitL 1GB </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 justify-content-center" id="SpeakerDocumentsData">
+                            </div>
+                            <div class="col-md-12 mb-2" id="AttendeeDocumentsData">
+                                <div id="AttendeeDocList"></div>
+                                <div class="table-responsive" id="tableAttendeeDoc">
+                                    <table class="table table-hover table-bordered  mt-2">
+                                        <thead>
+                                            <tr><th></th><th>File</th> <th>Uploaded By</th></tr>
+                                        </thead>
+                                        <tbody id="documentsTableData">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelZoomProblemSpeaker" tabindex="-1" aria-labelledby="modelZoomProblemSpeaker" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="ZoomProblemSpeaker" title="Instructions">Instructions</h5>
+                    <div>
+                        <button id="closeZoomProblemSpeaker" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2" id="ZoomProblemSpeakerPlaceHolder">
+                        <label id="lblZoomProblemSpeaker"> @ViewData["ZoomProblemSpeaker"] </label><br />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelEvtUpdatesVirtual" tabindex="-1" aria-labelledby="modelEvtUpdatesVirtual" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="EvtUpdatesVirtual">Event Updates</h5>
+                    <div>
+                        <button id="closeEvtUpdatesVirtual" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div class="col-xs-12 mb-1" id="modalEvtUpdatesVirtualBody" style="height:400px; overflow-y:scroll;">
+                        </div>
+                        <div class="text-center">
+                            <button id="closeEvtUpdatesVirtual" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    if (IntroType != "")
+    {
+        <div class="modal fade" id="modelIntro" tabindex="-1" aria-labelledby="modelIntro" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered @((IntroType == "iframe")? "modal-xl":"")">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-end" style=" background-color: #fff !important; padding: 0px !important;">
+                        <label id="closeIntroMedia" class="pull-right  float-end" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                    </div>
+                    <div class="modal-body d-flex justify-content-center align-items-center" id="modelIntroBody">
+                        <div class="row col-md-12">
+                            <input type="hidden" id="introVideoType" value="@IntroType" />
+                            <input type="hidden" id="introURL" value="@ViewData["introURL"]" />
+                            @if (IntroType == "gif")
+                            {
+                                <div style="text-align:center;">
+                                    <img ID="imgGifPhotoIntro" src="@ViewData["introURL"]" Width="100%" Style="object-fit: cover;" />
+                                </div>
+                            }
+                            @if (IntroType == "iframe")
+                            {
+                                <iframe id="IframeVideo" src="@ViewData["introURL"]" width="100%" style="height:500px;"></iframe>
+                            }
+                            @if (IntroType == "video")
+                            {
+                                <video id="introVideoContent" class="video-js" controls preload="auto" width="@ViewData["Width"]" height="@ViewData["Height"]">
+                                    <p class="vjs-no-js">
+                                        To view this video please enable JavaScript, and consider upgrading to a web browser that
+                                    </p>
+                                </video>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    if (HelpIconAvailable  == true)
+    {
+        <div class="modal fade" id="modelHelpMedia" tabindex="-1" aria-labelledby="modelHelpMedia" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-end" style=" background-color: #fff !important; padding: 0px !important;">
+                        <label id="closeHelpMedia" class="pull-right  float-end mb-2" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                    </div>
+                    <div class="modal-body" id="modelHelpMediaBody">
+                        <div class="row p-2">
+                            @{
+                                if (HelpIconInfo != null)
+                                {
+                                    if ((HelpIconInfo.PageIconVisible))
+                                    {
+                                        <input type="hidden" id="LogIDinfo" value="" />
+                                        <input type="hidden" id="pageVideoLink" value="@HelpIconInfo.PageDocumentLink" data-filename="@HelpIconInfo.PageFileName" data-usetype="@HelpIconInfo.PageValue" data-type="@HelpIconInfo.PageMediaType" data-mime="@HelpIconInfo.PageMime" />
+                                        <video id="pageVideoContent" class="video-js" controls preload="auto" width="300" height="400">
+                                            <p class="vjs-no-js">
+                                                To view this video please enable JavaScript, and consider upgrading to a web browser that
+                                            </p>
+                                        </video>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    if (ViewBag.Reminder_Visible == true)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $(document).on('click', '.ckDisableReminderAll', function () {
+                    var thisCheck = $(this)[0];
+                    var IDKey = (thisCheck.dataset.key === "" ? "0" : thisCheck.dataset.key);
+                    var type = thisCheck.dataset.type;
+                    var checked = thisCheck.checked;
+                    if (!checked) {
+                        var data = { ValuePKey: IDKey, ValueOne: type, itemState: checked };
+                        var result = CommonFunctions.AjaxCall('Post', '/Virtual/NotificationCheck', data, 'json', 'Error While Updating Schedule');
+                        if (result === "OK")
+                            $(this).parent('li').remove();
+                        else
+                            CommonFunctions.Alert(result);
+                    }
+
+                });
+            });
+        </script>
+    }
+
+    if (ViewBag.OpenSurveyRadWindow)
+    {
+        <div class="modal fade" id="rwSurveyQuestion" tabindex="-1" aria-labelledby="rwSurveyQuestion" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header modalBlueHeader">
+                        <h5 class="modal-title" id="rwSurveyQuestionTitle">Registration Questions</h5>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="row p-2">
+                            <div class="col-xs-12 pt-1">
+                                @Html.Raw(ViewBag.lblRegText)
+                            </div>
+                            <div class="text-center">
+                                <button id="cmdSaveQ" type="button" class="btn">Proceed</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#rwSurveyQuestion').modal('show');
+                $('#cmdSaveQ').click(function (e) {
+                    e.preventDefault();
+                    var result = CommonFunctions.AjaxCall('Post', '/Virtual/cmdSaveQClick', '', 'json', 'Error While Updating Schedule');
+                    if (result !== null && result !== "ERROR") {
+                        if (result.msg === "OK") {
+                            parent.location.href = result.URL;
+                        }
+                        else
+                            CommonFunctions.Alert("Error Occurred while updating");
+                    }
+                    else
+                        CommonFunctions.Alert("Error Occurred while updating");
+                });
+            });
+        </script>
+    }
+
+    <script type="text/javascript">
+
+        function DigitalClockNotification() {
+            var tFormat = $("input[type='radio'].timeformatAMPM:checked").val() == "AM/PM" ? true : false;
+            let time = new Date();
+            let timeFormat = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: tFormat });
+            $('.time').text(timeFormat);
+            convertToServerTimeZone_Notification(tFormat);
+        }
+        function convertToServerTimeZone_Notification(tFormat) {
+            //EST
+            offset = -4.0
+            clientDate = new Date();
+            utc = clientDate.getTime() + (clientDate.getTimezoneOffset() * 60000);
+            serverDate = new Date(utc + (3600000 * offset));
+            $('.mytime').text(serverDate.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: tFormat }));
+        }
+        setInterval(() => { DigitalClockNotification(); }, 1000);
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            function onChangeVirtual() {
+                var Data = { DropDownValue: $('#VirtualEventDropDown').val() };
+                switch ($('#VirtualEventDropDown').val()) {
+                    case "9":
+                        var result = CommonFunctions.AjaxCall('Get', '/Home/GetNavigationInstructions', '', 'json', 'Error accessing text block data.');
+                        if (result.msg === "OK") {
+                            $('#modalNavBody').html(result.Content);
+                            $('#modelNavInstructions').modal('show');
+                        }
+                        else
+                            CommonFunctions.Alert(result.msg);
+                        break;
+                    case "27":
+                        var result = CommonFunctions.AjaxCall('Get', '/Home/GetEventUpdatesContent', '', 'json', 'Error loading Event Updates');
+                        if (result.msg === "OK") {
+                            $('#modalEvtUpdatesVirtualBody').html(result.Content);
+                            $('#modelEvtUpdatesVirtual').modal('show');
+                        }
+                        else
+                            CommonFunctions.Alert(result);
+                        break;
+                    case "21":
+                        OpenChatWindow();
+                        break;
+                    default:
+                        var result = CommonFunctions.AjaxCall('Post', '/Home/VirtualDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+                        if (result.ActionType === "Redirect")
+                            window.location.href = result.RedirectionUrl;
+                        break;
+                }
+            }
+            $('#VirtualEventDropDown').change(onChangeVirtual);
+            $('#SpeakerProfilesLink').click(function () {
+                $('#modalSpeakerProfile').modal("show");
+            });
+            $('#lnkZoomProblem').click(function () {
+                var result = CommonFunctions.AjaxCall('Post', '/Virtual/ZoomLinkProblemClick', { ESPK: $('#EsID').val() }, 'json', 'Error Updating Access Block.');
+                $("#modalZoomProblems").modal('show');
+            });
+            $('#lnkZoomProblemSpekaer').click(function () {
+                var result = CommonFunctions.AjaxCall('Post', '/Virtual/ZoomLinkProblemClick', { ESPK: $('#EsID').val() }, 'json', 'Error Updating Access Block.');
+                $("#modalZoomProblems").modal('show');
+            });
+
+            $('#lnkChangingSession,#lnkSpkrChangeSession').click(function () {
+                $('#modalSessionInstructions').modal('show');
+            });
+            $('#lnkExhibitors').click(function () {
+                $('#modelBoothSponsors').modal('show');
+            });
+            $(document).on('click', '.boothSponosrsBtn', function () {
+                var result = CommonFunctions.AjaxCall('Post', '/Virtual/GetApplicableSponsorInfo', { EventOrgPkey: this.dataset["id"], ESPK: $('#EsID').val() }, 'json', 'Error Occurred While Fetching Sponsor Information');
+                if (result !== null) {
+                    if (result.msg === "OK") {
+                        $('#imglogoInfo').attr("src", result.ImgLogo.replace("~", ""));
+                        if (result.URL !== "" && result.URL !== "//") {
+                            $('#link_exhibitorsInfo').attr("href", result.URL);
+                            $('#link_exhibitorsInfo').attr("target", "_blank");
+                        }
+                        else {
+                            $('#link_exhibitorsInfo').attr("href", "javascript:void(0);");
+                            $('#link_exhibitorsInfo').attr("target", "self");
+                        }
+                        $('#lblProfile').text(result.profile);
+                        $('#modelExihibitorPartnerInformation').modal('show');
+                    }
+                    else
+                        CommonFunctions.Alert(result.msg);
+                } else
+                    CommonFunctions.Alert("Error occurred while fetching sponsor information");
+            });
+            $('#lnkRelatedSessionLink').click(function () {
+                $('#RelatedSessionPlaceHolder').load('_PartialRelatedSessions', { S_ID: $('#SID').val() });
+                $('#modelRelatedSession').modal('show');
+            });
+            $(document).on('click', '.relSessionCheck', function () {
+                var id = this.dataset["id"];
+                var sessionTitle = this.dataset["info"];
+                var _AttendElem = '#Attend_' + id, _SlideElem = '#Slide_' + id, _watchElem = '#Watch_' + id;
+                var bAttendData = $(_AttendElem)[0].checked, bSlideData = $(_SlideElem)[0].checked, bWatchData = $(_watchElem)[0].checked;
+                var data = { ESpKey: id, SessionID: sessionTitle, bAttend: bAttendData, bSlides: bSlideData, bWatch: bWatchData };
+                var result = CommonFunctions.AjaxCall('Post', '/Virtual/UpdateRelatedSessionData', data, 'json', 'Error Occurred while updating related session');
+                if (result !== "OK")
+                    CommonFunctions.Alert("Error occurred while updating related session");
+                else
+                    $('#RelatedSessionPlaceHolder').load('_PartialRelatedSessions', { S_ID: $('#SID').val() });
+            });
+            $('#lnkAttendanceLog').click(function () {
+                $('#AttendeesLogPlaceHolder').load('_PartialAttendeesLog', { ESPK: $('#EsID').val() });
+                $('#modelAttendeesLog').modal('show');
+            });
+            function RebindSpeakerGrid() {
+                $('#speakerBreakoutTableBody').html('');
+                if ($('#ddSpeakerGroup option:selected').text() !== "") {
+                    var GridResult = CommonFunctions.AjaxCall('POST', '/Virtual/GetGridSpeakerBreakout', { ESPK: $('#EsID').val(), GroupChatID: $('#ddSpeakerGroup option:selected').text(), S_ID: $('#SessionID').val() }, 'Error Fetching Speaker Group Out.');
+                    if (GridResult != null) {
+                        if (GridResult.msg == "OK") {
+
+                            var GridSource = JSON.parse(GridResult.Source).map(function (val, i) {
+                                var checkboxstr = `<input type='checkbox' id='chkIsLeader_${i}' class='checkIsLeader' data-id='${val.Pkey}' ${((val.IsLeader) ? "checked" : "")}  />`;
+                                return `<tr><td>${val.NetworkingName}</td><td>${val.Title}</td><td>${val.OrganizationID}</td><td>${val.GroupId}</td><td>${checkboxstr}</td></tr>`;
+                            }).join('');
+                            $('#speakerBreakoutTableBody').html(GridSource);
+                            $('#SpeakerBreakoutPlaceHolder').show();
+                        }
+                    }
+                }
+            }
+            function LoadSpeakerBreakOutGroup() {
+                $('#ddBreakOut').html('');
+                $('#ddBreakOut').append("<option value=''>--Select--</option>");
+                var result = CommonFunctions.AjaxCall('Post', '/Virtual/GetSpeakerBreakOutGroup', { ESPK: $('#EsID').val(), S_ID: $('#SessionID').val() }, 'json', 'Error Fetching Speaker Break out Group.');
+                if (result !== null) {
+                    if (result.msg === "OK") {
+                        var btnText = "Create Breakout Groups";
+                        var totalAtt = ((result.TotalAttendeeInfo > 10), 10, result.TotalAttendeeInfo);
+
+                        $('#ddSpeakerGroup,#cmdSpeakerGroupChat,#lblTotalBreakout,#SpeakerBreakoutPlaceHolder,#lblHostKey,#lnkSpkrGroupChat').hide();
+                        $('#TotalAttendeeBreakout').val(result.TotalAttendeeInfo);
+                        $('#lblTotalAttendee').text(result.TotalAttendeeInfo);
+                        $('#SpeakerBreakoutTitle').text(result.Title);
+                        if (totalAtt !== 0) {
+                            for (var i = 0; i <= totalAtt; i++)
+                                $('#ddBreakOut').append(`<option value='${i}'>${i}</option>`);
+                        }
+                        else
+                            $('#ddBreakOut').append(`<option value='0'>0</option>`);
+
+
+                        var LinksResult = CommonFunctions.AjaxCall('Post', '/Virtual/RefreshLinks', { ESPK: $('#EsID').val(), GroupChatID: "NA", S_ID: $('#SessionID').val() }, 'json', 'Error Fetching Refresh Links.');
+                        if (LinksResult !== null) {
+                            if (LinksResult.msg === "OK") {
+                                $('#lnkSpkrGroupChat').hide();
+                                if (LinksResult.SpkrGroupChatVisible) {
+                                    $('#lblHostKey').text(HostKey);
+                                    $('#lnkSpkrGroupChat').show();
+                                    $('#lnkSpkrGroupChat').attr("href", SpkrGroupChatLink);
+                                }
+                            }
+                        }
+                        var ListBreakOut = JSON.parse(result.SpeakerBreakout);
+
+                        if (ListBreakOut.length > 0) {
+                            btnText = "Recreate Breakouts Groups";
+                            $('#lblTotalBreakout').text(ListBreakOut.length + " breakout groups");
+                            $('#lblTotalBreakout').show();
+                            $('#ddBreakOut').val(ListBreakOut.length);
+                            var SelectSource = ListBreakOut.map(function (val, i) { return `<option value=${val.pKey}>${val.strText}</option>`; }).join('');
+                            $('#ddSpeakerGroup').html(SelectSource);
+                            $('#ddSpeakerGroup').show();
+                            RebindSpeakerGrid();
+                        }
+                        $('#btnSpeakerBreakout').text(btnText);
+                        $('#lblHostKey').text("");
+                        $('#modelSpeakerBreakout').modal('show');
+                    }
+                    else
+                        CommonFunctions.Alert("Error Fetching Speaker Break Out Group.");
+                }
+                else
+                    CommonFunctions.Alert("Error Fetching Speaker Break Out Group.");
+            }
+            $('#lnkSpeakerBreakoutGroup').click(function () {
+                LoadSpeakerBreakOutGroup();
+            });
+            $('input[type="radio"][name="userTypeRadio"]').change(function () {
+                $('#speakerLinks,#attendeeeLinks').hide();
+                if (this.value === "1")
+                    $('#attendeeeLinks').show();
+                else
+                    $('#speakerLinks').show();
+            });
+            $(document).on('change', '.checkIsLeader', function () {
+                var result = CommonFunctions.AjaxCall('Post', '/Virtual/UpdateSpeakerBreakoutLeader', { ID: this.dataset["id"], CKValue: this.checked }, 'json', 'Error Occurred while updating is leader');
+                if (result !== "OK")
+                    CommonFunctions.Alert("Error occurred while updating leader");
+            });
+            function LoadDocuments() {
+                $('#AttendeeDocumentsData,#SpeakerDocumentsData,#tableAttendeeDoc,#AttendeeDocList').hide();
+                var TabVal = $('input[type="radio"][name="userTypeRadio"]:checked').val();
+                $('#documentsTableData,#SpeakerDocumentsData,#AttendeeDocList').html('');
+                var DocumentResult = CommonFunctions.AjaxCall('POST', '/Virtual/GetDocumentsVirtualSession', { ESPK: $('#EsID').val() }, 'Error Fetching Speaker Documents.');
+                if (DocumentResult != null) {
+                    if (DocumentResult.msg == "OK") {
+                        var jsonListAttendee = JSON.parse(DocumentResult.AttendeeSource);
+                        var jsonListSpeaker = JSON.parse(DocumentResult.SpeakerSource);
+                        if (jsonListAttendee !== "") {
+                            var resultAttendee = jsonListAttendee.map(function (val, i) {
+                                var imageBtn = `<input type="image" class="downloadDocBtn"  data-name="${encodeURI(val.DisplayName)}" data-link="${encodeURI(val.DocumentLink)}" src="/images/icons/Download.png" style="border-width:0px;width:16px;">`;
+                                return `<tr><td>${imageBtn}</td><td>${val.DisplayName}</td><td>${val.ContactName}</td></tr>`;
+                            }).join('');
+                            var resultListAttendee = jsonListAttendee.map(function (val, i) {
+                                var imageBtn = `<input type="image" class="downloadDocBtn"   data-name="${encodeURI(val.DisplayName)}" data-link="${encodeURI(val.DocumentLink)}" src="/images/icons/Download.png" style="border-width:0px;width:16px;">`;
+                                var removeBtn = "";
+                                if (TabVal === "1")
+                                    removeBtn = `<input type="image" data-id='${val.pKey}' data-link="${encodeURI(val.DocumentLink)}" class="removeDocBtn" src="/images/icons/remove-icon.png" style="border-width:0px;width:16px;">`;
+
+                                return ` <p class='align-items-center m-0 p-0 d-flex'> ${imageBtn} ${removeBtn} <span class='lblsmall' style='margin-left:5px;'>${val.DisplayName}<span> </p>`;
+                            }).join('');
+                            $('#documentsTableData').html(resultAttendee);
+                            $('#AttendeeDocList').html(resultListAttendee);
+                        }
+                        if (jsonListSpeaker !== "") {
+                            var resultListSpeaker = jsonListSpeaker.map(function (val, i) {
+                                var imageBtn = `<input type="image" class="downloadDocBtn"  data-name="${encodeURI(val.DisplayName)}" data-link="${encodeURI(val.DocumentLink)}" src="/images/icons/Download.png" style="border-width:0px;width:16px;">`;
+                                var removeBtn = "";
+                                if (TabVal === "0")
+                                    removeBtn = `<input type="image" data-id='${val.pKey}' data-link="${encodeURI(val.DocumentLink)}" class="removeDocBtn" src="/images/icons/remove-icon.png" style="border-width:0px;width:16px;">`;
+                                return ` <p class='align-items-center m-0 p-0  d-flex'> ${imageBtn} ${removeBtn} <span class='lblsmall' style='margin-left:5px;'>${val.DisplayName}<span> </p>`;
+                            }).join('');
+                            $('#SpeakerDocumentsData').html(resultListSpeaker);
+                        }
+                    }
+                }
+            }
+            $('#lnkSpeakerDocument').click(function () {
+                LoadDocuments();
+                $('#SpeakerDocumentsData').show();
+                $('#SpeakerDocTab').attr('class', 'nav-link active');
+                $('#AttendeeDocTab').attr('class', 'nav-link');
+                $('#modelDocuments').modal('show');
+            });
+            $('#lnkDocument').click(function () {
+                LoadDocuments();
+                $('#tableAttendeeDoc').hide();
+                $('#AttendeeDocumentsData,#AttendeeDocList').show();
+                $('#SpeakerDocTab').attr('class', 'nav-link');
+                $('#AttendeeDocTab').attr('class', 'nav-link active');
+                $('#modelDocuments').modal('show');
+            });
+            $('#SpeakerDocTab').click(function () {
+                $('#AttendeeDocumentsData,#SpeakerDocumentsData,#tableAttendeeDoc,#AttendeeDocList,#UploadDocDiv').hide();
+                var TabVal = $('input[type="radio"][name="userTypeRadio"]:checked').val();
+                if (TabVal === "0")
+                    $('#UploadDocDiv').show();
+                $('#SpeakerDocumentsData').show();
+            });
+            $('#AttendeeDocTab').click(function () {
+                $('#AttendeeDocumentsData,#SpeakerDocumentsData,#tableAttendeeDoc,#AttendeeDocList,#UploadDocDiv').hide();
+                $('#AttendeeDocumentsData').show();
+                var TabVal = $('input[type="radio"][name="userTypeRadio"]:checked').val();
+                if (TabVal === "0")
+                    $('#tableAttendeeDoc').show();
+                else
+                    $('#AttendeeDocList,#UploadDocDiv').show();
+            });
+            function DeleteFile(Sender) {
+                var TabVal = $('input[type="radio"][name="userTypeRadio"]:checked').val();
+                var dataID = Sender.dataset["id"];
+                var dockLink = Sender.dataset["link"];
+                var result = CommonFunctions.AjaxCall('POST', '/Virtual/RemoveDocumentVirtualSession', { ESPK: $('#EsID').val(), ID: dataID, Tab: TabVal, DocLink: dockLink }, 'Error Removing Document.');
+                if (result !== "OK")
+                    CommonFunctions.Alert(result);
+                else
+                    Sender.parentElement.remove();
+            }
+            $(document).on('click', '.removeDocBtn', function () {
+                var sender = this;
+                if (typeof alertify !== 'undefined') {
+                    alertify.confirm("Confirm deletion of the selected document.", function (e) {
+                        if (e)
+                            DeleteFile(sender);
+                    });
+                }
+                else {
+                    var r = confirm("Confirm deletion of the selected document.");
+                    if (r == true)
+                        DeleteFile(sender);
+                }
+            });
+            $(document).on('click', '.downloadDocBtn', function () {
+                var selectedTab = $('.nav-link.active')[0].id;
+                var dataID = this.dataset["name"];
+                var TabVal = TabVal = (selectedTab === "SpeakerDocTab") ? "0" : "1";
+                var dockLink = this.dataset["link"];
+                window.location.href = "/Virtual/DownloadVSDoc?ESPK=" + $('#EsID').val() + "&Tab=" + TabVal + "&DocLink=" + dockLink + "&DisplayFilename=" + dataID;
+            });
+            $('#ddSpeakerGroup').change(RebindSpeakerGrid);
+            $('#btnSpeakerBreakout').click(function () {
+                var data = { intBreakOut: (($('#ddBreakOut').val() === "") ? 0 : $('#ddBreakOut').val()), ESPK: $('#EsID').val(), SessionID: $('#SessionID').val(), TotalAttendee: $('#TotalAttendeeBreakout').val() };
+                var result = CommonFunctions.AjaxCall('POST', '/Virtual/SaveMemberVirtualSession', data, 'Error Removing Document.');
+                if (result != null) {
+                    if (result === "ERROR")
+                        CommonFunctions.Alert("Error While Updating Breakout Group");
+                    else {
+                        if (result.msg === "OK") {
+                            switch (result.UpdatedMessage) {
+                                case "Breakout Group Deleted":
+                                    $('#ddSpeakerGroup,#cmdSpeakerGroupChat,#lblTotalBreakout,#SpeakerBreakoutPlaceHolder,#lblHostKey,#lnkSpkrGroupChat').hide();
+                                    break;
+                                case "Updated":
+                                    LoadSpeakerBreakOutGroup();
+                                    CommonFunctions.Alert(result.GroupCount + " breakout " + ((result.GroupCount > 1) ? "groups" : "group") + " created.");
+                                    break;
+                            }
+                        }
+                        else
+                            CommonFunctions.Alert(result.UpdatedMessage);
+                    }
+                } else
+                    CommonFunctions.Alert("Error While Updating Breakout Group");
+            });
+            $('#aWebinarURL').click(function () {
+                document.getElementById('imgplaceholder').src = '/Images/Icons/SpeakerZoom.png';
+                $('#modelZoomProblemSpeaker').modal('show');
+            });
+            $('#aMeetingURL').click(function () {
+                $('#modelZoomProblemSpeaker').modal('show');
+            });
+            $('#UploadImagesUpdate').change(function () {
+                var UploadProductImage = new FormData();
+                var files = $(this)[0].files;
+                var Tabval = $('input[type="radio"][name="userTypeRadio"]:checked').val();
+                UploadProductImage.append(files[0].name, files[0]);
+                UploadProductImage.append("ESPK", $('#EsID').val());
+                UploadProductImage.append("Type", Tabval);
+                var Endpoint = ((Tabval === "0") ? "UpdateFilesSpeaker" : "UpdateFilesAttendee");
+                var result = CommonFunctions.FileUploadAjaxCall('Post', '/Virtual/' + Endpoint, UploadProductImage, '', false, false, 'Error while Uploading Attachments!')
+                if (result === "OK") {
+                    UploadProductImage = new FormData();
+                    LoadDocuments();
+                    var selectedTab = $('.nav-link.active')[0].id;
+                    if (selectedTab === "SpeakerDocTab") {
+                        $('#SpeakerDocumentsData').show();
+                        if (TabVal === "0")
+                            $('#UploadDocDiv').show();
+                    }
+                    else {
+                        $('#AttendeeDocumentsData').show();
+                        var TabVal = $('input[type="radio"][name="userTypeRadio"]:checked').val();
+                        if (TabVal === "0")
+                            $('#tableAttendeeDoc').show();
+                        else
+                            $('#AttendeeDocList,#UploadDocDiv').show();
+                    }
+                }
+                else
+                    CommonFunctions.Notify('error', 'Error!', result, 'fa fa-exclamation', 2000, '', true, false);
+            });
+
+            function SpkrZoomPopupClick() {
+                try {
+                    /*
+                     *   CloseConfirmBlock();
+                     *   var strCPanelOpen = document.getElementById('<%=hdnChatPanelOpen.ClientID %>').value
+                     *   if (strCPanelOpen != '1') {
+                     *       setTimeout(function () {
+                     *           document.getElementById("<%=aWebinarURL1.ClientID%>").click();
+                     *       }, 1500);
+                     *   }
+                     */
+                    var strIframeUrl = $('#speakerzoomSession').val(); // document.getElementById('<%=hdfMeetingURL.ClientID %>').value;
+                    if (strIframeUrl != '') {
+                        $('#modelZoomSessionLP').modal('hide');
+                        var windowFeatures = "toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,left=0,height=1200";
+                        var newWin = window.open(strIframeUrl, 'targetWindow', windowFeatures);
+                        if ((!newWin) || (newWin.closed) || (typeof newWin.closed == 'undefined')) {
+                            CommonFunctions.Alert("Your MAGI virtual session page cannot open. Disable your popup blocker or click 'OK' to allow.");
+                        }
+                    }
+                }
+                catch (ex) {
+                    console.log(ex);
+                }
+            }
+            function RefreshClick() {
+                window.location.reload();
+            }
+
+            $('#btnPopOut').click(function (e) {
+                e.preventDefault();
+                SpkrZoomPopupClick();
+            });
+            $('#btnRefresh').click(function (e) {
+                e.preventDefault();
+                RefreshClick();
+            });
+        });
+    </script>
+    if (IntroType != "")
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                if ($('#introVideoType').val() === "video") {
+                    var introplayer = videojs("introVideoContent", { "techOrder": ["html5", "youtube"], "ytcontrols": false, "autoplay": true, "preload": "auto", "loop": false });
+                    var LinkIntro = $('#introURL').val();
+                    var ytResultIntro = LinkIntro.match(/(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/);
+                    if (ytResultIntro !== null)
+                        introplayer.src({ type: 'video/youtube', src: LinkIntro });
+                    else
+                        introplayer.src(LinkIntro);
+                }
+                $('#modelIntro').modal('show');
+            });
+        </script>
+    }
+
+    if (HelpIconInfo != null)
+    {
+        if ((HelpIconInfo.PageIconVisible))
+        {
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    var player = videojs("pageVideoContent", { "techOrder": ["html5", "youtube"], "ytcontrols": false, "autoplay": true, "preload": "auto", "loop": false });
+                    player.ready(function () {
+                        var promise = player.play();
+                        if (promise !== undefined) {
+                            promise.then(function () {
+
+                            }, function (error) {
+                                console.info(error);
+                            });
+                        }
+                    });
+                    player.on("ended", function () {
+                        if (typeof alertify !== 'undefined') {
+                            alertify.confirm('I have watched the entire video', function (e) {
+                                CommonFunctions.AjaxCall('Post', '/Home/UpdateHelpLogTime', { ID: $('#LogIDinfo').val() }, 'json', 'Error Occurred while Updating Log');
+                            });
+                        }
+                        else {
+                            var r = confirm('I have watched the entire video');
+                            if (r)
+                                CommonFunctions.AjaxCall('Post', '/Home/UpdateHelpLogTime', { ID: $('#LogIDinfo').val() }, 'json', 'Error Occurred while Updating Log');
+                            else
+                                CommonFunctions.AjaxCall('Post', '/Home/UpdateHelpLogTime', { ID: $('#LogIDinfo').val() }, 'json', 'Error Occurred while Updating Log');
+                        }
+                    });
+                    function PageVideoPlay(mediatype, sourceType, valueinfo) {
+                        var vimeoResult = valueinfo.match(/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|album\/(?:\d+)\/video\/|video\/|)(\d+)(?:[a-zA-Z0-9_\-]+)?/i);
+                        if (vimeoResult !== null) {
+                            window.open(valueinfo, '_blank');
+                        }
+                        else {
+                            if (mediatype.toLocaleLowerCase() === "video" || mediatype.toLocaleLowerCase() === "audio")
+                                player.src({ type: sourceType, src: valueinfo });
+                            if (mediatype.toLocaleLowerCase() === "video url") {
+                                var youtubeResult = valueinfo.match(/(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/);
+                                if (youtubeResult !== null)
+                                    player.src({ type: 'video/youtube', src: valueinfo });
+                                else
+                                    player.src(valueinfo);
+                            }
+
+
+                            $('#pageVideoContent').show();
+                            $('#modelHelpMedia').modal('show');
+                        }
+                    }
+                    function Logupdate(pvalue, fName, Autoplay) {
+                        $('#LogIDinfo').val(0);
+                        var data = {
+                            type: pvalue,
+                            fileName: fName,
+                            bAutoplay: Autoplay,
+                        }
+                        var result = CommonFunctions.AjaxCall('POST', '/Home/UpdateHelpIconLog', data, 'json', 'Error Occurred while Updating Log');
+                        if (result != null) {
+                            if (result.msg === "OK") {
+                                $('#LogIDinfo').val(result.LogResult);
+                            }
+                        }
+                    }
+                    var AutoplayPageVideo = $('#vidAutoPlayType').val();
+                    if (AutoplayPageVideo !== null) {
+                        var elemDS = $('#pageVideoLink')[0].dataset;
+                        var mType = elemDS["type"];
+                        if (AutoplayPageVideo === "true") {
+                            var fname = elemDS["filename"];
+                            var uType = elemDS["usetype"];
+                            Logupdate(uType, fname, true);
+
+                            var valLink = $('#pageVideoLink').val();
+                            var sType = elemDS["mime"];
+                            if (mType.toLocaleLowerCase() === "document" || mType.toLocaleLowerCase() === "live url")
+                                window.open(valLink, '_blank');
+                            else
+                                PageVideoPlay(mType, sType, valLink);
+                        }
+                    }
+                    $('#PageHelpIcon').click(function (e) {
+                        e.preventDefault();
+                        var valLink1 = $('#pageVideoLink').val();
+                        var elem1DS = $('#pageVideoLink')[0].dataset;
+                        var mT1 = elem1DS["type"];
+                        var sT1 = elem1DS["mime"];
+                        var fname1 = elem1DS["filename"];
+                        var uType1 = elem1DS["usetype"];
+                        Logupdate(uType1, fname1, false);
+                        if (mT1.toLocaleLowerCase() === "document" || mT1.toLocaleLowerCase() === "live url")
+                            window.open(valLink1, '_blank');
+                        else
+                            PageVideoPlay(mT1, sT1, valLink1);
+                    });
+                    $('#closeHelpMedia').click(function () {
+                        player.pause();
+                    });
+                });
+            </script>
+        }
+    }
+}

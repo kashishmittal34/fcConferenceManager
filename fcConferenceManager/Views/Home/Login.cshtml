@@ -1,0 +1,390 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .rdMargintop
+    {
+        vertical-align: middle;
+        margin-top: 5px;
+    }
+</style>
+<div>
+    <div class="MiddleCon clearfix">
+        <div class="container-fluid clearfix">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="magiLoginWrapper">
+                        <div class="row justify-content-center">
+                            <form id="login_form" name="login_form" class="col-lg-6 col-xxl-5 col-md-7 col-11 bg-white mx-md-0 mx-1 px-3 p-5 magiLoginFormWrapper shadow">
+                                <img src="~/Images/HomePage/magiLogo.png" alt="magi" class="m-auto mb-4 d-block" style="height: 85px;object-fit: cover;" />
+
+                                <div class="row mb-2">
+                                    <div class="col-lg-4 text-lg-end align-self-center p-lg-0">
+                                        <label class="mb-2 mb-lg-0">Account or Email address:	</label>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <input type="text" id="txtUserName" name="txtUserName" class="txtRequired Font11" value="@ViewBag.UserName" tabindex="0" />
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <label id="requiredUser1" class="validate" title="Account or Email address is required" style="color: red;font-style: italic;display:none;">Required </label>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-lg-4 text-lg-end align-self-center p-lg-0">
+                                        <label class="mb-2 mb-lg-0">Password:	</label>
+                                    </div>
+                                    <div class="col-lg-7 position-relative d-flex">
+                                        <input type="password" class="txtRequired Font11" id="txtPassword" name="txtPassword" value="" tabindex="1" />
+                                        <img src="~/images/icons/eye.gif" id="iconBtnEye" class="showPassword me-1" onclick="ShowPassword(this);" alt="eye" />
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <label id="requiredPass" class="validate" title="Password is required" style="color: red; font-style: italic; display: none;">Required </label>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-lg-4">
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="dflex">
+                                            <button type="submit" id="btnLoginSave" name="btnLoginSave" class="btn btnOrange" style="min-width:100px;">Sign In</button>
+                                            <button type="button" id="btnCancel" name="btnCancel" class="btn btnOrange" style="min-width:100px;">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="justify-content-center d-flex mb-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" id="ckRemember" name="ckRemember" checked value="" class="form-check-input" />
+                                        <label for="ckRemember" class="form-check-label">Remember me next time</label>
+                                    </div>
+                                </div>
+                                <div class="justify-content-center d-flex flex-wrap">
+                                    <a href="/WizardJoin?BA=1" class="m-2 mt-0 mb-0">Create account?</a>
+                                    <a id="cmdGetHelp" href="#" class="m-2 mt-0 mb-0">Need help signing in?</a>
+                                    <a href="javascript:void(0)" id="ForgetPass" class="m-2 mt-0 mb-0" style="display:none;">Forgot your password?</a>
+                                    <a href="javascript:void(0)" id="cmdSignInWithPasscode" class="m-2 mt-0 mb-0">Sign in with passcode</a>
+                                </div>
+                            </form>
+
+                            <form id="passcode_form" name="passcode_form" class="col-lg-6 col-xxl-5 col-md-7 col-11 bg-white mt-md-5 mb-md-0 mx-1 px-3 p-5 magiLoginFormWrapper shadow" style="display:none;">
+                                <img src="~/Images/HomePage/magiLogo.png" alt="magi" class="m-auto mb-4 d-block" style="width: 425px;object-fit: cover;" />
+                                <div class="row mb-2">
+                                    <div class="col-lg-4 text-lg-end align-self-center p-lg-0">
+                                        <label class="mb-2 mb-lg-0">Account or Email address:	</label>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <input type="text" id="txtUserPasscode" name="txtUserPasscode" class="txtRequired Font11" value="@ViewBag.UserName" tabindex="0" />
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <label id="requiredUser2" class="validate" title="Account or Email address is required" style="color: red; font-style: italic; display: none;">Required </label>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-lg-4 text-lg-end align-self-center p-lg-0">
+                                        <label class="mb-2 mb-lg-0">Passcode:	</label>
+                                    </div>
+                                    <div class="col-lg-7 position-relative">
+                                        <input type="password" class="txtRequired Font11" id="txtPCodePassword" name="txtPCodePassword" value="" tabindex="1" />
+                                        <img src="~/images/icons/eye.gif" id="iconBtnEye2" class="showPassword" onclick="ShowPassword(this);" alt="eye" />
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <label id="requiredPass2" class="validate" title="Account or Email address is required" style="color: red; font-style: italic; display: none;">Required </label>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-lg-4">
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="dflex">
+                                            <button type="submit" id="cmdPCodeLoginSave" name="btnLoginSave" class="btn btnOrange" style="min-width:100px;" title="Enter an account ID and passcode then click here to sign in">Sign In</button>
+                                            <button type="button" id="cmdPCodeLoginCancel" name="btnCancel" class="btn btnOrange" style="min-width:100px;">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="justify-content-center d-flex flex-wrap">
+                                    <a href="/WizardJoin?BA=1" class="m-2 mt-0 mb-0">Create account?</a>
+                                    <a id="cmdGetHelpPCode" href="#" class="m-2 mt-0 mb-0">Need help signing in?</a>
+                                    <a href="javascript:void(0)" id="cmdSignInWithPassword" class="m-2 mt-0 mb-0">Sign in with password</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelRWPass" tabindex="-1" aria-labelledby="modelRWPass" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="EvtUpdatesVirtual">Event Updates</h5>
+                    <div>
+                        <button id="PWSave" type="button" class="btn">Send Password</button>
+                        <button id="PWCancel" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div class="col-xs-12 mb-1">
+                            <span>@Html.Raw(ViewData["Instruct"])</span>
+                        </div>
+                        <div class="col-xs-12 mb-1">
+                            <label class="mb-2 mb-lg-0">Enter your email address:	</label>
+                            <input type="text" id="txtEmailAddress" name="txtEmailAddress" class="txtRequired Font11" value="" tabindex="0" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelRwNeedHelp" tabindex="-1" aria-labelledby="modelRwNeedHelp" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title">Need help signing in?</h5>
+                    <div>
+                        <button id="NeedHelpProceed" type="button" class="btn btnYellow">Proceed</button>
+                        <button id="NeedHelpCancel" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div class="col-xs-12 mb-1">
+                            <div class="form-check">
+                                <input class="form-check-input rdMargintop" type="radio" value="0" name="rblNeedHelp" id="rblNeedHelp1" checked>
+                                <label class="form-check-label" for="rblNeedHelp1"> Send email to reset password </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input rdMargintop" type="radio" value="1" name="rblNeedHelp" id="rblNeedHelp2">
+                                <label class="form-check-label" for="rblNeedHelp2"> Send passcode by email message </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input rdMargintop" type="radio" value="3" name="rblNeedHelp" id="rblNeedHelp4">
+                                <label class="form-check-label" for="rblNeedHelp4"> Send passcode by text message </label>
+                            </div>
+                            @*<div class="form-check">
+                                <input class="form-check-input rdMargintop" type="radio" value="2" name="rblNeedHelp" id="rblNeedHelp3">
+                                <label class="form-check-label" for="rblNeedHelp3"> Send email to MAGI Support </label>
+                            </div>*@
+                        </div>
+                        <div class="col-xs-12 mt-1 mb-2">
+                            <label class="mb-2 mb-lg-0">Enter your email address or user ID:	</label>
+                            <input type="text" id="txtEmailAddressNeedHelp" name="txtEmailAddressNeedHelp" class="txtRequired Font11" value="" tabindex="0" />
+                        </div>
+                        <div class="col-md-12 mt-1">
+                            <p>For assistance from MAGI Support, <a href="/Home/SignInHelp" class="">click here</a>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var Pcode = CommonFunctions.GetQueryStringValue("bPasscode");
+            if (Pcode === 1 || Pcode === "1") {
+                $('#passcode_form').show();
+                $('#login_form').hide();
+                $('#txtPCodePassword').val('');
+            }
+            $('#btnCancel').click(function (e) {
+                e.preventDefault();
+                window.location.href = "/Home/Index";
+            });
+
+            function set_cookie(cookieName, cookieValue, nDays) {
+                var today = new Date();
+                var expire = new Date();
+                if (nDays == null || nDays == 0) nDays = 1;
+                expire.setTime(today.getTime() + nDays * 24 * 60 * 60 * 1000);
+                document.cookie = cookieName + "=" + escape(cookieValue) + ";expires=" + expire.toGMTString() + "; path=/";
+            }
+
+            $('#btnLoginSave').click(function (e) {
+                e.preventDefault();
+                $('#btnLoginSave').attr('disabled', 'disabled');
+                var EmailID = $('#txtUserName').val();
+                var Password = $('#txtPassword').val();
+                var RememberMe = document.getElementById("ckRemember");
+                let ErrorMsg = "";
+                if (EmailID.trim() === "") { ErrorMsg = "Username Required"; $('#requiredUser1').show(); }
+                if (Password.trim() === "") { ErrorMsg = "Password Required"; $('#requiredPass').show(); }
+
+                if (ErrorMsg !== "") {
+                    CommonFunctions.Alert(ErrorMsg);
+                    return false;
+                }
+                $('#requiredUser1,#requiredPass').hide();
+                var data = { EmailID: EmailID, Password: Password, RememberMe: RememberMe.checked };
+                var result = CommonFunctions.AjaxCall('Post', '/Home/VefifyLogin', data, 'json', 'Error While Logging');
+                if (result === "OK") {
+                    set_cookie("UserName", EmailID, ((RememberMe.checked) ? 30 : -1));
+                    var value = CommonFunctions.GetQueryStringValue("LastPage_URL");
+                    if (value !== null && value !== "" && value.trim() !== "")
+                        window.location.href = value;
+                    else
+                        window.location.href = "/Home/Index";
+                }
+                else if (result !== "")
+                {
+                    CommonFunctions.Alert(result);
+                    $('#btnLoginSave').removeAttr('disabled');
+                }
+                else {
+                    CommonFunctions.Alert("Error occurred while login");
+                    $('#btnLoginSave').removeAttr('disabled');
+                }
+            });
+
+            $('#ForgetPass').click(function () {
+                if ($('#txtUserName').val().trim().indexOf("@@") !== -1)
+                    $('#txtEmailAddress').val($('#txtUserName').val());
+                else
+                    $('#txtEmailAddress').val("")
+                $('#modelRWPass').modal('show');
+            });
+
+            $("#PWSave").click(function () {
+                if ($('#txtUserName').val() !== "") {
+                    var result = CommonFunctions.AjaxCall('Post', '/Home/SendNewPassword', { Email: $('#txtUserName').val() }, 'json', 'Error While Logging');
+                    if (result === "OK") {
+                        CommonFunctions.Alert("Password email has been sent");
+                        $('#modelRWPass').modal('hide');
+                    }
+                    else
+                        CommonFunctions.Alert(result);
+                }
+            });
+
+            $('#cmdGetHelp,#cmdGetHelpPCode').click(function (e) {
+                e.preventDefault();
+                $('input[name="rblNeedHelp"][value="0"]').prop("checked", "checked");
+                var id = $('#txtUserName').val();
+                if (id.indexOf('@@') > -1)
+                    $('#txtEmailAddressNeedHelp').val(id);
+                else
+                    $('#txtEmailAddressNeedHelp').val("");
+                $('#modelRwNeedHelp').modal('show');
+            });
+
+            function processMesssageData() {
+                var result = CommonFunctions.AjaxCall('Post', '/Home/SendPasscodeToBoth', { strEMail: $('#txtEmailAddressNeedHelp').val() }, 'json', 'Error While Updating Help');
+                if (result !== null && result !== "ERROR") {
+                    if (result.msg === "OK") {
+                        if (result.redirect !== "")
+                            window.location.href = result.redirect;
+
+                        $('#modelRwNeedHelp').modal('hide');
+                    }
+                    else
+                        CommonFunctions.Alert(result.msg);
+                }
+                else
+                    CommonFunctions.Alert("Error Occurred While Processing Help Option");
+            }
+
+            $('#NeedHelpProceed').click(function (e) {
+                e.preventDefault();
+                var result = CommonFunctions.AjaxCall('Post', '/Home/NeedHelpSignIn', { strEMail: $('#txtEmailAddressNeedHelp').val(), SelectedValue: $('input[name="rblNeedHelp"]:checked').val() }, 'json', 'Error While Updating Help');
+                if (result !== null && result !== "ERROR") {
+                    if (result.msg === "OK") {
+                        if (result.redirect !== "")
+                            window.location.href = result.redirect;
+                        $('#modelRwNeedHelp').modal('hide');
+                    }
+                    else if (result.msg === "Both") {
+                        if (typeof alertify !== 'undefined')
+                            alertify.alert('No mobile number in your profile. Sent anyway in case your phone number is misclassified.', function (e) { if (e) { processMesssageData(); } });
+                        else
+                            if (confirm('No mobile number in your profile. Sent anyway in case your phone number is misclassified.')) { processMesssageData(); }
+                    }
+                    else
+                        CommonFunctions.Alert(result.msg);
+
+                    switch (result.msg) {
+                        case "There is no mobile number in your profile so passcode has been sent to your email address(es).":
+                        case "Passcode email has been sent":
+                        case "Text message with passcode sent to the mobile number in your profile":
+                        case "Sign-in unsuccessful. We have sent a passcode to the email address(es) in your profile.":
+                            $('#passcode_form').show();
+                            $('#login_form').hide();
+                            $('#txtPCodePassword').val('');
+                            $('#modelRwNeedHelp').modal('hide');
+                            break;
+                        case "Password email has been sent":
+                            $('#modelRwNeedHelp').modal('hide');
+                            break;
+                    }
+                }
+                else
+                    CommonFunctions.Alert("Error Occurred While Processing Help Option");
+            });
+
+            $('#cmdSignInWithPasscode').click(function () {
+                $('#passcode_form').show();
+                $('#login_form').hide();
+                $('#txtPCodePassword').val('');
+            });
+
+            $('#cmdSignInWithPassword').click(function () {
+                $('#passcode_form').hide();
+                $('#login_form').show();
+                $('#txtPassword').val('');
+            });
+
+            $('#passcode_form').submit(function (e) {
+                e.preventDefault();
+                var EmailID = $('#txtUserPasscode').val();
+                var Passwordcode = $('#txtPCodePassword').val();
+                let ErrorMsg = "";
+                if (EmailID.trim() === "") { ErrorMsg = "Username Required"; $('#requiredUser2').show(); }
+                if (Passwordcode.trim() === "") { ErrorMsg = "Passcode Required"; $('#requiredPass2').show(); }
+
+
+                if (ErrorMsg !== "") {
+                    CommonFunctions.Alert(ErrorMsg);
+                    return false;
+                }
+                $('#requiredUser2,#requiredPass2').hide();
+                var data = { EmailID: EmailID, Passcode: Passwordcode };
+                var result = CommonFunctions.AjaxCall('Post', '/Home/VefifyLoginPasscode', data, 'json', 'Error While Logging');
+                if (result === "OK") {
+                    set_cookie("UserName", EmailID, 30);
+                    window.location.href = "/Home/Index";
+                }
+                else
+                    CommonFunctions.Alert(result);
+            });
+
+
+            $('#txtUserName').on('keyup', function () {
+                var EmailID = $('#txtUserName').val();
+                if (EmailID.trim() === "") { $('#requiredUser1').show(); } else { $('#requiredUser1').hide(); }
+            });
+            $('#txtPassword').on('keyup', function () {
+                var Password = $('#txtPassword').val();
+                if (Password.trim() === "") { $('#requiredPass').show(); } else { $('#requiredPass').hide(); }
+            });
+            $('#txtUserPasscode').on('keyup', function () {
+                var EmailID = $('#txtUserPasscode').val();
+                if (EmailID.trim() === "") { $('#requiredUser2').show(); } else { $('#requiredUser2').hide(); }
+            });
+            $('#txtPCodePassword').on('keyup', function () {
+                var Password = $('#txtPCodePassword').val();
+                if (Password.trim() === "") { $('#requiredPass2').show(); } else { $('#requiredPass2').hide(); }
+            });
+        });
+
+        function ShowPassword(sender) {
+            var x = (sender.id === "iconBtnEye2") ? document.getElementById("txtPCodePassword") : document.getElementById("txtPassword");
+            var eyeicon = sender;
+            if (x.type == "password") {
+                x.type = "text";
+                eyeicon.src = "/images/icons/hideeye.PNG";
+            } else {
+                x.type = "password";
+                eyeicon.src = "/images/icons/eye.gif";
+            }
+        }
+
+    </script>
+</div>

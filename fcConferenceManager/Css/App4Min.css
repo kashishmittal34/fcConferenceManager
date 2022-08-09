@@ -1,0 +1,7448 @@
+
+:root
+{
+    --navyColor: #00008b;
+    --fontFamily: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.baseColor
+{
+    color: var(--navyColor)
+}
+
+.htmlLink,
+.htmlLinkSmall
+{
+    border: none;
+    background-color: transparent;
+    font-family: var(--fontFamily);
+    text-decoration: underline;
+}
+
+.EditScreenStyle,
+.pnlContain,
+body
+{
+    width: 100%;
+    height: 100%
+}
+
+.HomePageAd1,
+.SectionTitle,
+.bold,
+.lblTitlePop
+{
+    font-weight: 700
+}
+
+.lblFormatting
+{
+    font-size: 10pt;
+    color: #00008b;
+    text-transform: capitalize
+}
+
+.italic,
+.validate,
+em
+{
+    font-style: italic
+}
+
+body
+{
+    margin: 0;
+    padding: 0
+}
+
+html *
+{
+    font-family: var(--fontFamily);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+hr
+{
+    width: 100%;
+}
+
+
+.def,
+a,
+input[type=button],
+input[type=file],
+input[type=image],
+input[type=password],
+input[type=radio],
+input[type=submit],
+input[type=text],
+select,
+span,
+textarea,
+.rgHeader
+{
+    font-family: var(--fontFamily);
+    font-size: 11pt;
+    line-height: normal;
+    margin: 0;
+    padding: 0
+}
+
+button,
+input[type=buttoni],
+input[type=filei]::-webkit-file-upload-button,
+input[type=reseti],
+input[type=submiti]
+{
+    cursor: pointer
+}
+
+a:hover
+{
+    text-decoration: none;
+}
+
+:focus
+{
+    outline: none
+}
+
+em
+{
+    color: currentColor !important
+}
+
+.stdFont
+{
+    font-family: var(--fontFamily);
+}
+
+.htmlLinkSmall
+{
+    font-size: 9pt
+}
+
+.btnLink,
+.btnOrange
+{
+    text-decoration: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.centered
+{
+    margin: 0 auto
+}
+
+.rightaligned
+{
+    margin-right: 0;
+    margin-left: auto
+}
+
+.leftaligned
+{
+    margin-left: 0;
+    margin-right: auto
+}
+
+.filter
+{
+    padding: 0 5px 5px 5px !important;
+    background-color: #d7f6f9
+}
+
+.SectionTitle
+{
+    color: #00008b
+}
+
+.imgRefresh
+{
+    padding-left: 8px;
+    padding-top: 10px
+}
+
+.popupheader
+{
+    background-color: #87cefa;
+    width: 100%;
+    padding: 3px;
+    box-sizing:border-box;
+}
+
+.RoundedPanel,
+.SquarePanel
+{
+    background-color: #fff
+}
+
+.RoundedPanel
+{
+    border-radius: 5px;
+    border: 2px solid #add8e6;
+    padding: 5px;
+    margin: 0
+}
+
+.HomePagePanel,
+.Rounded
+{
+    border-radius: 5px
+}
+
+.pnlContain
+{
+    background-image: none;
+    background-color: #f1f1f1;
+    min-height: 600px
+}
+
+.Shadow
+{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19)
+}
+
+.borderLessDialog.RadWindow .rwContent,
+.pnlLogin
+{
+    -moz-box-shadow: 0 0 8px #666;
+    -webkit-box-shadow: 0 0 8px #666
+}
+
+.circle10
+{
+    height: 10px;
+    width: 10px;
+    display: block;
+    border: 1px solid #000;
+    border-radius: 10px
+}
+
+.circle3
+{
+    height: 3px;
+    width: 3px;
+    display: block;
+    background-color: #000;
+    border: 1px solid #000;
+    border-radius: 100%
+}
+
+.BadgeBingo
+{
+    line-height: 20pt;
+    font-size: 20pt;
+    font-family: "Times New Roman", Times, serif
+}
+
+.btnNarrow,
+.btnOrange,
+.btnSmall
+{
+    text-align: center;
+    font-size: 10pt !important;
+    display: inline-block
+}
+
+.CheckBox,
+.CheckBoxSmall label,
+.ckBoxList td
+{
+    font-family: var(--fontFamily);
+}
+
+.btnSmall
+{
+    background-color: #fff;
+    border-radius: 2px;
+    border: 1px solid gray;
+    color: #000;
+    padding: .2rem .5rem !important;
+}
+
+.btnSmall:hover
+{
+    color: #000;
+    background-color: #a9a9a9 !important
+}
+
+.btnSmall[value=Save]
+{
+    background-color: #ff0
+}
+
+.btnSmall[value=Save]:hover
+{
+    background-color: gray
+}
+
+.btnNarrow
+{
+    background-color: #fff;
+    border-radius: 2px;
+    border: 1px solid gray;
+    color: #000;
+    padding: 0 8px 2px !important;
+    height: 20px
+}
+
+.btnOrange
+{
+    background-color: orange;
+    border-radius: 2px;
+    border: 2px solid orange;
+    color: #fff;
+    padding: 3px 8px !important
+}
+
+.btnOrange:hover
+{
+    color: #000;
+    background-color: #ff8c00
+}
+
+.btnLink:hover
+{
+    text-decoration: underline !important
+}
+
+table
+{
+    border-spacing: 0;
+    padding: 0 !important;
+    border-collapse: collapse
+}
+
+.tblSubtitle
+{
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: #d3d3d3;
+    height: 20px
+}
+
+.lblTitle
+{
+    font-size: 18pt;
+    color: Navy;
+    background-color: transparent
+}
+
+.lblTitle1
+{
+    font-size: 15pt;
+    color: Navy;
+    background-color: transparent;
+    font-weight: 700
+}
+
+.font_size
+{
+    font-size: 14px
+}
+
+.lblSubtitle
+{
+    font-size: 12pt
+}
+
+.lblSmall
+{
+    font-size: 8pt
+}
+
+.pnlLogin
+{
+    border-radius: 10px;
+    background-color: #fff;
+    padding: 35px 10px 35px 20px;
+    display: inline-block;
+    border: 2px solid #add8e6;
+    box-shadow: 0 0 8px #666
+}
+
+.verticalLine
+{
+    border-left: 3px solid #a9a9a9
+}
+
+#tblMargin
+{
+    margin-top: 10px;
+}
+
+#mainbody
+{
+    width: 100%;
+    min-height: 600px;
+    margin-bottom: 40px;
+}
+
+
+
+.HomePageAd1
+{
+    color: #fff;
+    font-size: 20pt;
+    text-decoration: none
+}
+
+.HomePageAd2
+{
+    font-size: 14pt;
+    text-decoration: none
+}
+
+.HomePagePanel
+{
+    width: 100%;
+    min-height: 560px;
+    border: 0
+}
+
+.RoundedAdPanel
+{
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 5px
+}
+
+.validate
+{
+    color: red
+}
+
+#lblMsg
+{
+    text-align: left;
+    border: 1px solid #000;
+    display: block;
+    margin-bottom: 5px;
+    width: 100%;
+    padding: 0.5rem;
+    box-sizing: border-box;
+}
+
+@media print
+{
+    .hide_print
+    {
+        display: none
+    }
+}
+
+.CheckBoxSmall
+{
+    display: flex;
+    align-items: center;
+}
+
+.CheckBoxSmall label
+{
+    font-size: 8pt !important;
+    line-height: normal;
+    vertical-align: top
+}
+
+.radio td
+{
+    padding-left: 3px;
+    font-family: var(--fontFamily);
+}
+
+.RadioButton label,
+.RadioButtonSmall label
+{
+    padding-left: 2px;
+    padding-right: 8px;
+    vertical-align: middle;
+    font-family: var(--fontFamily);
+}
+
+.RadioButton input
+{
+    margin-top: 4px;
+    border: thin solid #fff;
+    float: left
+}
+
+.RadioButton label
+{
+    color: #000
+}
+
+.RadioButtonSmall input
+{
+    margin-top: 7px;
+    border: thin solid #fff;
+    float: left
+}
+
+.RadioButtonSmall label
+{
+    font-size: 10pt
+}
+
+.RadButton .rbText,
+.RadButton.rbRadioButton .rbText
+{
+    vertical-align: middle !important
+}
+
+.cmdAlert
+{
+    background-image: url(../Images/Icons/attention.png);
+    background-size: 24px 24px;
+    background-color: Transparent;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: left;
+    padding: 0 0 12px 12px !important
+}
+
+.Loadingmodal
+{
+    position: fixed;
+    z-index: 999;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-color: Gray;
+    opacity: .5
+}
+
+.Loadingcenter
+{
+    z-index: 1000;
+    margin: 300px auto;
+    padding: 10px;
+    width: 82px;
+    background-color: #fff;
+    border-radius: 10px;
+    opacity: 1;
+    box-sizing: border-box !important;
+}
+
+.Loadingcenter img
+{
+    height: 60px;
+    width: 60px
+}
+
+.RadToolTip .rtContent
+{
+    font-size: 10pt;
+    font-family: var(--fontFamily);
+}
+
+.RadTabStrip
+{
+    margin: 0;
+    overflow: inherit
+}
+
+.RadTabStrip .rtText
+{
+    line-height: 12px;
+    font-size: 10pt
+}
+
+.RadTabStrip .rtsLink
+{
+    padding: 3px 5px !important
+}
+
+.MultiPageBorder
+{
+    border: 3px solid #25a0da;
+    margin-left: -5px
+}
+
+.MyRadSpell
+{
+    font-family: var(--fontFamily) !important;
+    font-size: 10pt !important;
+    color: red !important
+}
+
+.RadGrid,
+.RadInput .riTextBox,
+.RadRowText,
+.RadWindow .rwTitleWrapper .rwTitle,
+div.RadWindow .rwTitleRow em
+{
+    font-family: var(--fontFamily);
+}
+
+.RadWindow .rwTitleWrapper .rwTitle
+{
+    font-size: 10pt
+}
+
+.RadMap .k-marker.k-marker-my-custom-shape:before
+{
+    color: green;
+    font-size: 25px;
+    margin-top: 2px
+}
+
+.RadListBox .rlbCheckAllItems > label,
+.RadListBox .rlbDisabled,
+.RadListBox .rlbItem > label
+{
+    font-size: 10pt;
+    font-family: var(--fontFamily);
+    line-height: 12px
+}
+
+.RadListBox .rlbCheckAllItem,
+.RadListBox .rlbItem
+{
+    padding: 2px 8px 2px 10px !important
+}
+
+.RadScheduler .rsVerticalHeaderTable
+{
+    font-weight: 300 !important;
+    font-size: 10pt
+}
+
+.borderLessDialog.RadWindow
+{
+    border: none;
+    padding: 0
+}
+
+.borderLessDialog.RadWindow .rwContent
+{
+    border: none;
+    background-color: #fff;
+    box-shadow: 0 0 12px #666
+}
+
+.borderDialog.RadWindow .rwContent
+{
+    background-color: #fff;
+    -moz-box-shadow: 0 0 8px #666;
+    -webkit-box-shadow: 0 0 8px #666;
+    box-shadow: 0 0 12px #666
+}
+
+div.RadWindow .rwTitleRow em
+{
+    line-height: 12px;
+    font-size: 12px;
+    height: 16px
+}
+
+.RadGrid .rgPagerCell .rgActionButton,
+.RadGrid .rgPagerCell .rgPagerButton
+{
+    padding: 0 !important
+}
+
+.RadGrid .rgPagerCell .rgNumPart a
+{
+    font-size: 10pt !important;
+    padding: 2px !important
+}
+
+.RadGrid .rgAltRow a,
+.RadGrid .rgEditRow a,
+.RadGrid .rgRow a,
+.RadRowText
+{
+    font-size: 10pt;
+    text-decoration:none;
+}
+
+.RadRowButton24
+{
+    height: 24px;
+    width: 24px
+}
+
+.RadRowButton20
+{
+    height: 20px;
+    width: 20px
+}
+
+.RadRowButton16
+{
+    height: 16px;
+    width: 16px
+}
+
+.RadRowButton10
+{
+    height: 10px;
+    width: 10px
+}
+
+.RadGrid .rgAltRow,
+.RadGrid .rgEditRow,
+.RadGrid .rgFooter,
+.RadGrid .rgGroupHeader,
+.RadGrid .rgRow
+{
+    height: 24px !important;
+    font-size: 10pt;
+    line-height: normal
+}
+
+.RadGrid_Metro .rgAltRow > td,
+.RadGrid_Metro .rgEditRow > td,
+.RadGrid_Metro .rgRow > td
+{
+    border: none !important
+}
+
+.RadGrid .rgAltRow td,
+.RadGrid .rgEditRow td,
+.RadGrid .rgRow td
+{
+    padding: 1px 2px !important;
+    height: 22px !important
+}
+
+.RadGrid .rgAltRow.riFocused
+{
+    border-color: #00008B;
+    border: 0.5px;
+    border-style: groove;
+}
+
+.RadGrid .rgAltRow.hovered
+{
+    border-color: #00008B;
+    border: 0.5px;
+    border-style: groove;
+}
+
+.RadGrid .rgHeader a
+{
+    color: #fff !important
+}
+
+.RadGrid th.rgSorted a
+{
+    color: #000 !important
+}
+
+.RadGrid .rgHeader
+{
+    padding: 2px !important;
+    background-color: #1e90ff;
+    color: #fff !important;
+    height: 18px !important;
+    border-left-color: #1e90ff !important
+}
+
+.RadButton .rbCheckBox
+{
+    border-color: red !important
+}
+
+.RadButton .rbText
+{
+    font-size: 11pt
+}
+
+.RadRadio
+{
+    padding-bottom: 10px !important
+}
+
+.Font8
+{
+    font-size: 8pt
+}
+
+.Font9
+{
+    font-size: 9pt
+}
+
+.Font11
+{
+    font-size: 11pt !important
+}
+
+.Font10
+{
+    font-size: 10pt !important
+}
+
+.Font18
+{
+    font-size: 18pt
+}
+
+.Font24
+{
+    font-size: 24pt
+}
+
+.Font9 a
+{
+    font-size: 9pt !important
+}
+
+.Font10 a
+{
+    font-size: 10pt !important
+}
+
+.Font11 a
+{
+    font-size: 11pt !important
+}
+
+.Font18 a
+{
+    font-size: 18pt !important
+}
+
+.Font24 a
+{
+    font-size: 24pt !important
+}
+
+.RadInput .riTextBox
+{
+    font-size: 11pt;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important
+}
+
+.RadInput .riTextBox.riFocused
+{
+    border-color: #00008b
+}
+
+.RadInput .riTextBox.riHover
+{
+    border-color: gray
+}
+
+.RadInput .riTextBox.riEnabled
+{
+    background-color: #fff;
+    border-color: #d3d3d3
+}
+
+.RadInput .riTextBox.riDisabled
+{
+    background-color: #dcdcdc
+}
+
+.txtRequired
+{
+    border-left: 6px solid #1e90ff !important
+}
+
+.txtStd
+{
+    height: 27px !important
+}
+
+div#MegaDropDown
+{
+    margin: 0 auto;
+    font-size: 12pt;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    width: 100%;
+}
+
+div#MegaDropDown h3
+{
+    font-size: 12pt;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: #fff;
+    text-transform: uppercase
+}
+.rsmTemplate
+{
+    margin-top: -1px;
+}
+div.RadSiteMap .rsmLink,
+div.RadSiteMap .rsmTemplate
+{
+    padding: 0
+}
+
+.RadSiteMap .rsmItem
+{
+    margin-bottom: 2px
+}
+
+.RadSiteMap .rsmItem a.rsmLink
+{
+  color:#000 !important;
+}
+
+.RadSiteMap .rsmTwoLevels .rsmLevel1
+{
+    padding-bottom: 10px
+}
+
+.RadSiteMap .rsmTwoLevels .rsmLevel1 .rsmItem
+{
+    list-style: disc inside
+}
+
+div.RadSiteMap .rsmTwoLevels .rsmLevel1 .rsmLink,
+div.RadSiteMap .rsmTwoLevels .rsmLevel1 .rsmTemplate
+{
+    padding-left: 0;
+    font-size: 11pt
+}
+
+.mnuSubtitle,
+.mnuTitle,
+html .RadMenu_Default .rmRootLink
+{
+    font-size: 12pt
+}
+
+div.RadMenu_Default div.rmRootGroup,
+div.RadMenu_Default ul.rmRootGroup
+{
+    background: 0 0;
+    border: 0;
+    height: 100%
+}
+
+
+div.RadMenu_Default .rmRootGroup .rmRootLink
+{
+    padding-bottom: 0 !important;
+    padding-left: 10px !important;
+    padding-top: 0 !important
+}
+
+div.RadMenu .rmItem
+{
+    position: static;
+    border:none !important;
+}
+
+div.RadMenu_Default .rmLink,
+html div.RadMenu_Default li.rmItem.rmExpanded .rmLink,
+html div.RadMenu_Default li.rmItem.rmSelected .rmLink
+{
+    color: #fff
+}
+
+div.RadMenu_Default .rmContentTemplate
+{
+    background: #fff;
+    height: 350px;
+    width: 700px
+}
+
+div.RadMenu .rmPopup
+{
+    border: 1px solid #979797;
+    position: relative;
+    white-space: normal
+}
+
+html .RadMenu_Default a.rmExpanded,
+html .RadMenu_Default a.rmFocused,
+html .RadMenu_Default a.rmLink:hover,
+html .RadMenu_Default a.rmSelected
+{
+    background-color: rgba(255, 255, 255, .5)
+}
+.magi-header-icon-wrapper
+{
+    display: flex;
+    margin-bottom:0.3rem;
+}
+
+.magi-header-icon-wrapper input[type="image"]:not(:last-child)
+{
+    margin-right: 0.3rem;
+}
+
+.mnuBlock
+{
+    background-color: #fff;
+    padding: 2px;
+    margin: 0
+}
+
+.mnuTitle
+{
+    text-transform: uppercase;
+    font-weight: 700
+}
+
+.dockTitle,
+.rdTitleBar em
+{
+    font-weight: 700 !important
+}
+
+.mnuNodeDisabled
+{
+    color: #d3d3d3 !important
+}
+
+.mnuNodeEnabled
+{
+    color: #000 !important
+}
+
+.RadPicker .RadInput .riTextBox
+{
+    font-size: 11pt !important
+}
+
+.RadMo
+{
+    height: 26px !important
+}
+
+.RadComboBox .rcbInputCell INPUT.rcbInput
+{
+    height: 22px;
+    font-size: 11pt;
+    background-color: #fff
+}
+
+.RadColorPicker,
+.RadColorPicker .rcpInput,
+.RadComboBoxDropDown,
+.RadComboBoxDropDown .rcbFooter,
+.RadComboBoxDropDown .rcbHeader,
+.RadComboBoxDropDown .rcbItem em
+{
+    background-color: #fff !important;
+    font-size: 11pt !important
+}
+
+.dockLayout
+{
+    margin: 3px !important;
+    box-sizing: border-box !important;
+}
+
+.dockTitle
+{
+    color: #fff !important;
+    font-size: 8pt
+}
+
+.RadDock
+{
+    -moz-box-shadow: 0 0 5px #666;
+    -webkit-box-shadow: 0 0 5px #666;
+    box-shadow: 0 0 5px #666
+}
+
+.rdTop
+{
+    border: 1px solid #1e90ff
+}
+
+.rdBottom,
+.rdMiddle
+{
+    border-left: 1px solid #fff;
+    border-right: 1px solid #fff
+}
+
+.rdBottom
+{
+    border-top: 1px solid #fff
+}
+
+.rdCenter,
+.rdLeft,
+.rdRight
+{
+    background-image: none !important;
+    background-color: #fff !important
+}
+
+.rdTop .rdCenter,
+.rdTop .rdLeft,
+.rdTop .rdRight
+{
+    background-color: #1e90ff !important;
+    color: #fff !important;
+    height: 10px !important;
+    line-height: 5px !important;
+    min-height: 5px !important
+}
+
+.rdTitleBar em
+{
+    text-align: left;
+    color: #fff !important
+}
+
+.RadUpload .ruFakeInput
+{
+    padding: 0 !important;
+    width: 68px !important
+}
+
+.RadUpload .ruBrowse,
+.RadUpload .ruBrowse .ruButtonHover
+{
+    background-image: none !important;
+    background-color: #fff;
+    height: 19px !important;
+    width: 60px !important;
+    padding: 2px 0 0 !important;
+    margin: 0;
+    font-size: 8pt
+}
+
+.RadScheduler .rsAptResize
+{
+    visibility: hidden
+}
+
+.RadScheduler .rsDialog
+{
+    display: none
+}
+
+.rsTodayCell
+{
+    background: #add8e6 !important
+}
+
+.RadFilter .rfExp,
+.RadFilter .rfField,
+.RadFilter .rfOper
+{
+    min-width: 100px !important
+}
+
+.btnGreen
+{
+    background-color: green;
+    border-radius: 2px;
+    border: 1px solid #006400;
+    color: #fff;
+    padding: 3px 8px !important;
+    text-align: center;
+    display: inline-block;
+    font-size: 10pt !important
+}
+
+.btnGreen:hover
+{
+    color: #fff;
+    background-color: #006400
+}
+
+.txtRequiredOrange
+{
+    border-left: 6px solid orange !important
+}
+
+.errNewStyle
+{
+    color: #000 !important;
+    background-color: #ff0 !important
+}
+
+.alertify,
+.alertify-show
+{
+    -webkit-transition: all .5s cubic-bezier(.175, .885, .32, 1.275);
+    -moz-transition: all .5s cubic-bezier(.175, .885, .32, 1.275);
+    -ms-transition: all .5s cubic-bezier(.175, .885, .32, 1.275);
+    -o-transition: all .5s cubic-bezier(.175, .885, .32, 1.275);
+    transition: all .5s cubic-bezier(.175, .885, .32, 1.275)
+}
+
+.alertify-hide
+{
+    -webkit-transition: all 250ms cubic-bezier(.6, -.28, .735, .045);
+    -moz-transition: all 250ms cubic-bezier(.6, -.28, .735, .045);
+    -ms-transition: all 250ms cubic-bezier(.6, -.28, .735, .045);
+    -o-transition: all 250ms cubic-bezier(.6, -.28, .735, .045);
+    transition: all 250ms cubic-bezier(.6, -.28, .735, .045)
+}
+
+.alertify
+{
+    position: fixed;
+    z-index: 99999;
+    top: 50px;
+    left: 50%;
+    width: 550px;
+    margin-left: -275px;
+    opacity: 1;
+    background: #fff;
+    border: 1px solid #8e8e8e;
+    border: 1px solid rgba(0, 0, 0, .3);
+    border-radius: 6px;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, .3);
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box
+}
+
+.alertify-hidden
+{
+    -webkit-transform: translate(0, -150px);
+    -moz-transform: translate(0, -150px);
+    -ms-transform: translate(0, -150px);
+    -o-transform: translate(0, -150px);
+    transform: translate(0, -150px);
+    opacity: 0;
+    display: none
+}
+
+:root * > .alertify-hidden
+{
+    display: block;
+    visibility: hidden
+}
+
+.alertify-resetFocus
+{
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px
+}
+
+.alertify-message
+{
+    padding: 15px;
+    margin: 0
+}
+
+.alertify-buttons
+{
+    padding: 14px 15px 15px;
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    border-radius: 0 0 6px 6px;
+    box-shadow: inset 0 1px 0 #fff;
+    text-align: right
+}
+
+.alertify-button
+{
+    background: 0 0;
+    border: none;
+    line-height: 1.5;
+    font-size: 100%;
+    display: inline-block;
+    cursor: pointer;
+    margin-left: 10px;
+    border-radius: 4px;
+    font-weight: 400;
+    padding: 4px 12px;
+    text-decoration: none;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05);
+    background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255, 255, 255, 0));
+    background-image: -moz-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255, 255, 255, 0));
+    background-image: -ms-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255, 255, 255, 0));
+    background-image: -o-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255, 255, 255, 0));
+    background-image: linear-gradient(top, rgba(255, 255, 255, .3), rgba(255, 255, 255, 0))
+}
+
+.alertify-button-ok
+{
+    background-color: orange;
+    border-radius: 2px;
+    color: #fff;
+    padding: 3px 8px !important
+}
+
+.alertify-button-ok:hover
+{
+    color: #000;
+    background-color: #ff8c00;
+    border-radius: 2px;
+    padding: 3px 8px !important
+}
+
+span.alertify-header
+{
+    text-align: center;
+    padding: 0.5rem 0 0.5rem;
+    border-bottom: 1px solid #d8d8d8;
+    display: flex;
+    align-items: center;
+    margin-left: -15px;
+    margin-right: -15px;
+    padding-right: 15px;
+    padding-left: 16px;
+    margin-top: -15px;
+    background-color: #f5f5f5;
+    border-radius: 6px 6px 0 0;
+    margin-bottom: 1rem;
+}
+span.alertify-header.old
+{
+    margin-top: -20px;
+    margin-left: -16px;
+    margin-right: -16px;
+}
+
+.btnmargin
+{
+    margin-left: 5px !important
+}
+
+.imgInfoLink
+{
+    text-align: center;
+    font-size: .6rem !important;
+    border-radius: 70px;
+    padding: 2px 5px;
+    font-family: none;
+    color: #fff !important;
+    text-decoration: none;
+    background-color: #1e90ff;
+    height: 16px;
+    width: 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lblReceiptMedium
+{
+    font-size: 7pt !important;
+    line-height: inherit
+}
+
+.lblGrid
+{
+    font-size: 10pt
+}
+
+.rwTitleBar
+{
+    margin: 0 !important;
+    padding: 0
+}
+
+.rwTitleWrapper
+{
+    padding: 0 !important;
+    background-color: #fff
+}
+
+.rwStatusBar
+{
+    border-color: #b3b3b314 !important;
+    color: #333 !important;
+    background-color: #fff !important
+}
+
+.rwIcon
+{
+    display: none !important
+}
+
+.radWidth
+{
+    width: -moz-max-content
+}
+
+.not-allowed
+{
+    cursor: not-allowed !important
+}
+
+.sidenav
+{
+    height: 100vh;
+    width: 0;
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    overflow-x: hidden;
+    transition: .5s;
+    padding-top: 0;
+    display: none
+}
+
+.clickmenu
+{
+    display: none
+}
+
+.sidenav a
+{
+    padding: 5px 8px 5px 15px;
+    text-decoration: none;
+    font-size: 15px;
+    color: #818181;
+    display: block;
+    transition: .3s
+}
+
+.sidenav a:hover
+{
+    color: #000
+}
+
+.sidenav .closebtn
+{
+    position: absolute;
+    top: -7px;
+    right: 0;
+    font-size: 36px;
+    margin-left: 0;
+    color: #fff
+}
+
+.mobilelogo
+{
+    width: 100%;
+    padding: 0.5rem 0.3rem;
+    background: #fff
+}
+
+.mobilelogo img
+{
+    max-width: 260px
+}
+
+#mySidenav.sidenav .accordion
+{
+    background-color: #fff;
+    color: #444;
+    cursor: pointer;
+    padding: 10px 15px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: 0;
+    font-size: 15px;
+    transition: .4s;
+    margin-top: 1px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #ded5d5
+}
+
+#mySidenav.sidenav .active
+{
+    background-color: #000;
+    color: #fff;
+    border-bottom-color: #000
+}
+
+#mySidenav.sidenav .panel
+{
+    padding: 0;
+    float: left;
+    background-color: #fff;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .2s ease-out;
+    width: 100%
+}
+
+#mySidenav.sidenav .dropMobile
+{
+    padding-left: 0;
+    margin: 0;
+    padding-bottom: 5px;
+    float: left;
+    width: 100%
+}
+
+#mySidenav.sidenav .dropMobile li
+{
+    list-style: none;
+    border-top: 1px solid #ccc;
+    padding: 3px 0
+}
+
+#mySidenav.sidenav .dropMobile li:last-child
+{
+    border-bottom: 1px solid #ccc
+}
+
+#mySidenav.sidenav .mobile-menu-heading
+{
+    padding: 5px 15px;
+    float: left;
+    width: 100%;
+    border-top: 1px solid #ccc;
+    box-sizing: border-box
+}
+
+#mySidenav.sidenav .mobile-menu-heading span
+{
+    font-size: 18px;
+    padding-bottom: 5px;
+    float: left;
+    width: 100%
+}
+
+#mySidenav.sidenav .mobile-menu-heading select
+{
+    max-width: 100%;
+    padding: 5px
+}
+
+#mySidenav.sidenav .accordion
+{
+    position: relative;
+    float: left
+}
+
+#mySidenav.sidenav .accordion:after
+{
+    display: inline-block;
+    content: "+";
+    float: right;
+    font-size: 20px;
+    margin-top: -6px
+}
+
+#mySidenav.sidenav .accordion.active:after
+{
+    content: "-"
+}
+
+div[id*="rdResources"] > ul
+{
+    display: flex;
+}
+
+.point-aro
+{
+    margin-right: 3px !important;
+    display: inline-block
+}
+
+.Rounded.Shadow.imgAlign
+{
+    margin: 15px 0
+}
+
+/*.testimonialBox tr td
+{
+    text-align: left !important
+}*/
+
+.rgAltRow,
+.rgRow
+{
+    padding-bottom: 15px
+}
+
+td#Lefttd
+{
+    padding-left: 10px !important
+}
+
+div#ProgramScroll table td
+{
+    padding-left: 0 !important
+}
+
+#cphMain_dlText input#cphMain_dlText_cmdOverViewRegister_0
+{
+    margin-top: .5rem
+}
+
+div#cphMain_pnlRegistrationOpen
+{
+    height: auto !important
+}
+
+div#cphMain_RadStepContact > div > table:first-child tr td span[style],
+div#cphMain_RadStepContact > div > table:nth-child(3) tr td div,
+div#cphMain_RadStepContact > div > table:nth-child(3) tr td span[style],
+table.form_User_Issue tr table span
+{
+    box-sizing: border-box
+}
+
+div#ctl00_cphMain_ddCategory span.rddlIcon
+{
+    width: 16px !important
+}
+
+
+
+table.magi-flex-wrapper > tbody > tr
+{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    align-items: baseline;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+table.magi-flex-wrapper > tbody > tr > td:not(:last-child)
+{
+    padding: 0 .5rem 0 0 !important
+}
+
+table.magi-flex-wrapper
+{
+    width: 100%
+}
+
+table.magi-viewaccount-data-wrapper tr th,
+table.magi-viewaccount-data-wrapper tr td
+{
+    padding-left: 5px;
+}
+
+.magi-myNetworking-wrapper .RadTabStrip
+{
+    overflow: inherit !important;
+    height: inherit
+}
+
+.magi-flex
+{
+    display: flex
+}
+
+.magi-flex-direction-column
+{
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.magi-justify-content-center
+{
+    justify-content: center
+}
+
+.magi-justify-content-space-between
+{
+    justify-content: space-between
+}
+
+.magi-justify-content-end
+{
+    justify-content: flex-end
+}
+
+.magi-justify-content-start
+{
+    justify-content: flex-start
+}
+
+.magi-align-center
+{
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.magi-align-self-center
+{
+    align-self:center;
+}
+
+.magi-align-self-end
+{
+    align-self: end;
+}
+
+.magi-align-self-start
+{
+    align-self: start;
+}
+
+.magi-align-start
+{
+    align-items: flex-start
+}
+
+.magi-align-end
+{
+    align-items: flex-end
+}
+
+.magi-align-self-start
+{
+    align-self: flex-start;
+}
+
+.magi-flex-wrap
+{
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+.magi-top-space
+{
+    margin-top: 0.3rem !important;
+}
+
+
+.magi-xl-top-space
+{
+    margin-top: 1rem !important
+}
+
+.magi-md-top-space
+{
+    margin-top: 0.3rem !important
+}
+
+.magi-xl-bottom-space
+{
+    margin-bottom: 1rem
+}
+
+.magi-md-bottom-space
+{
+    margin-bottom: 0.3rem !important;
+}
+
+.magi-md-left-space
+{
+    margin-left: 0.3rem !important;
+}
+
+.magi-fluid
+{
+    width: 100%
+}
+
+
+.magi-text-center
+{
+    text-align: center
+}
+
+.magi-text-decoration
+{
+    text-decoration: none;
+}
+
+.magi-text-left
+{
+    text-align: left;
+}
+
+.magi-text-right
+{
+    text-align: right;
+}
+
+
+.magi-dbock
+{
+    display: block
+}
+
+.magi-dnone
+{
+    display: none !important
+}
+
+.magi-inlineBlock,
+.magi-inline-block
+{
+    display: inline-block
+}
+
+.magi-input-fluid
+{
+    width: 100% !important
+}
+
+/*table.magi-edit-account .RadInput
+{
+    width: 100% !important
+}*/
+
+table.magi-edit-account tr td:not(:last-child)
+{
+    margin-right: 1rem
+}
+
+.pA
+{
+    padding: 0.3rem;
+}
+
+.magi-mynetworking-indicator span span
+{
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 0.2rem !important;
+}
+
+.magi-mynetworking-indicator span
+{
+    font-size: 9pt;
+    margin-right: 0.5rem !important;
+}
+
+.magiMarginBottom0
+{
+    margin-bottom: 0 !important;
+}
+
+.magi-mobile-spacer
+{
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+/****************************************************/
+
+.magi-virtualEvent-wrapper .magiMbSpace
+{
+    margin-right: 10px;
+}
+
+.magiVirtualCatList
+{
+    min-height: 160px !important;
+}
+
+div#cphMain_RemindersBox .magiVirtualCardBoxContent
+{
+    height: 233px !important;
+}
+
+#belowTypingSection.magiVirtualChatTypeingWrap
+{ /*margin: 0 0px -3px -11px !important;*/
+    /* padding: 10px !important;*/
+}
+
+/**safari hack for css*/
+
+@media not all and (min-resolution:.001dpcm)
+{
+    @supports (-webkit-appearance:none)
+    {
+        span.t-font-icon.rgIcon
+        {
+            line-height: 12px;
+            display: inline-block;
+        }
+    }
+}
+
+/**********************/
+
+@media (min-width:768px)
+{
+    div[id*="updateMegaMenuPanel"] .RadMenu.RadMenu_Default > ul > li:last-child
+    {
+        border: none !important;
+    }
+
+    .magiMobileTabNameWrap,
+    li.backMenu
+    {
+        display: none !important;
+    }
+
+    .magi-left-space > img:not(:last-child),
+    .magi-left-space > input:not(:last-child),
+    .magi-left-space > span:not(:last-child),
+    .magi-left-space > td:not(:last-child),
+    .magi-left-space > a:not(:last-child),
+    .magi-left-space > div:not(:last-child)
+    {
+        margin-right: .3rem
+    }
+
+    .magi-mobile-logo-wrapper,
+    .visible-in-mobile
+    {
+        display: none
+    }
+
+    .RadMenu.RadMenu_Default .mnuBlock
+    {
+        display: block !important
+    }
+
+
+    .magi-custom-right-space
+    {
+        margin-right: .3rem !important
+    }
+
+    .magi-xl-right-space
+    {
+        margin-right: 1rem;
+    }
+
+    .magi-custom-left-space
+    {
+        margin-left: .3rem !important
+    }
+
+    .magi-xl-left-space
+    {
+        margin-left: 1rem !important;
+    }
+
+    td.magi-regestration-right-col
+    {
+        width: 100%;
+    }
+
+    td.magi-regestration-left-col
+    {
+        max-width: 305px;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    td.magi-regestration-left-col .RadTabStrip
+    {
+        overflow: inherit;
+    }
+
+    td.magi-regestration-left-col .rtsLevel.rtsLevel1
+    {
+        height: unset !important;
+    }
+
+    .magi-right
+    {
+        float: right;
+    }
+
+    .magi-left
+    {
+        float: left;
+    }
+
+    .magi-mobile-spacer
+    {
+        display: none;
+    }
+
+    .magiHeaderLoginArea
+    {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        z-index: 2;
+        padding-right: 0 !important;
+    }
+    .magi-tigger-wrap
+    {
+        position: relative;
+        bottom: -1px;
+        border-right: 1px solid #ccc;
+    }
+    div#cphHeader_updateMegaMenuPanel
+    {
+        padding-bottom: 7px;
+    }
+    div[id*="updateMegaMenuPanel"] .RadMenu.RadMenu_Default > ul > li.rmItem:last-child .magi-tigger-wrap
+    {
+        border-right: none;
+    }
+}
+
+
+
+.magi-botom-space > div,
+.magi-botom-space > input,
+.magi-botom-space > span,
+.magi-botom-space > td
+{
+    margin-bottom: .3rem;
+    display: block
+}
+
+.magi-custom-bottom-space
+{
+    padding-top: 0.3rem;
+}
+
+#floatingHeader strong.magi-table-thead
+{
+    position: absolute;
+    left: .5rem;
+    display: none;
+    font-size: 10pt;
+    color: #333;
+    text-align: left;
+    width: 50%;
+}
+
+.magi-interest-cube-wrapper > div
+{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.magi-interest-cube-wrapper div div span.magi-interest-cube-wrapper-cell
+{
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+    margin-right: .3rem
+}
+
+.magi-interest-cube-wrapper div div span:not(.magi-interest-cube-wrapper-cell)
+{
+    display: block
+}
+
+table.magi-three-col-speking-interst > tbody > tr
+{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+
+
+table.magi-three-col-speking-interst > tbody > tr > td:not(:last-child)
+{
+    margin-right: 0.4rem;
+}
+
+table.magi-three-col-speking-interst > tbody > tr > td
+{
+    width: 23.6%;
+}
+
+table.magi-three-col-speking-interst > tbody > tr > td:nth-child(2)
+{
+    width: 33.7%;
+}
+
+table.magi-three-col-speking-interst > tbody > tr > td:nth-child(3)
+{
+    width: 20.8%;
+}
+
+table.magi-three-col-speking-interst > tbody > tr > td:last-child
+{
+    width: 19.8%
+}
+
+.magi-editprofile-wrapper .RadUpload
+{
+    text-align: center;
+    margin: auto
+}
+
+.magi-edit-acount-wrapper table tr td,
+.magi-edit-acount-wrapper table th
+{
+    padding-left: 0.3rem;
+}
+
+.magi-edit-acount-wrapper table th,
+.magi-viewaccount-data-wrapper th
+{
+    font-size: 8pt;
+    font-weight: normal;
+    text-align: left;
+}
+
+.magi-custom-popup
+{
+    max-width: 750px;
+    height: auto !important;
+    position: absolute;
+    left: 0 !important;
+    top: 50% !important;
+    right: 0 !important;
+    margin: 0 auto !important;
+    width: calc(100% - 20px) !important;
+    transform: translateY(-50%) !important;
+    position: fixed !important;
+}
+
+.magi-flex1
+{
+    flex: 1
+}
+
+.magi-tbody-block tbody
+{
+    display: block;
+}
+
+/*=== pager global style ====*/
+
+.magi-box-sizing
+{
+    box-sizing: border-box !important;
+}
+
+.NextPrevAndNumeric
+{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+td.magi-phone-head span
+{
+    flex: 1;
+    text-align: center;
+    font-size: 9pt;
+}
+
+#floatingHeader #mainbody .paddingLeft0
+{
+    padding-left: 0.3rem !important;
+}
+
+
+/*=== regestration page styleing===*/
+
+tr.magi-regestration-two-col-wrapper div
+{
+    box-sizing: border-box !important;
+    width: 100% !important;
+}
+
+
+
+td.magi-regestration-right-col div
+{
+    margin-left: 0;
+}
+
+/*=== mystaff page styleing===*/
+
+td.magi-mystaff-wapper > div
+{
+    margin: 0 !important;
+    padding: 0;
+}
+
+.customPhoneFlex
+{
+    display: inline-block;
+}
+
+.magi-ListStyleNone
+{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+/*=== Virtual Event  page styleing===*/
+.magi-virtualEventTitle
+{
+    margin-bottom: 0.5rem;
+}
+
+.magi-virtualEvent-wrapper ul, .magi-virtualEvent-wrapper a
+{
+    font-size: 0.8rem !important;
+}
+
+.magi-virtualEvent-wrapper a
+{
+    text-decoration: none;
+}
+
+.magi-virtualEvent-wrapper a:hover
+{
+    text-decoration: underline;
+}
+
+.magiVirtualCardBox.magiReminderWrap ul
+{
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.magiVirtualCardBox.magiReminderWrap ul li:not(:last-child),
+.magiVirtualAttendeerWap ul li:not(:last-child)
+{
+    margin-bottom: 0.4rem;
+}
+
+.magiVirtualAttendeerWap ul li a
+{
+    font-weight: 600;
+    display: block;
+    text-align: left !important;
+}
+
+
+.magi-virtualEvent-wrapper div,
+.magi-virtualEvent-wrapper span
+{
+    box-sizing: border-box;
+}
+
+.magiVirtualAttendeerWap
+{
+    padding: 0.7rem;
+    border: 1px solid #969696;
+}
+
+.magi-virtualEvent-inside-wrapper .magi-virtualEventRight-sidebar,
+.magi-virtualEvent-inside-wrapper .magi-virtualEventLeft-sidebar
+{
+    width: 18.5%;
+}
+
+.magi-Video-wrapper
+{
+    width: 60%;
+}
+
+.magi-Video-wrapper iframe
+{
+    max-width: 100%;
+    width: 100%;
+}
+
+.magiVirtualEventChatingList ul#msgsList .magiVirtualChatMsgWapper
+{
+    padding-right: 0.2rem;
+}
+
+/*div#mydivResizable
+{
+    position: relative;
+    padding-top: 50%;
+}
+
+div#mydivResizable iframe
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}*/
+.magi-virtualEventRight-sidebar
+{
+}
+
+.magi-virtualEventLeft-sidebar
+{
+}
+
+.magiVirtualCardBox .magiVirtualCardBoxContent,
+.magivrtualClockWrap
+{
+    border: 1px solid #969696;
+    padding: 0.7rem;
+}
+
+.magivrtualClockWrap
+{
+    min-height: inherit;
+    min-width: 225px;
+}
+
+span.magiVirtualDigitalClockTitle
+{
+    display: block;
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+.magiVirtualDigitalClock
+{
+    /*    font-size: 2rem;
+    font-family: 'digital-7';
+    letter-spacing: 6px;*/
+    color: #000080;
+    font-size: 0.8rem;
+}
+
+.magiVirtuaBottomSpace
+{
+    margin-bottom: 1rem;
+}
+
+
+.magiTimeHour
+{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.magiTimeHour span:not(:last-child)
+{
+    margin-bottom: 0.2rem;
+}
+
+.magiTimeHour span input
+{
+    margin-right: 0.3rem;
+}
+
+.magiTimeHour span label
+{
+    font-weight: 500;
+    font-size: 0.7rem;
+}
+
+.magiTimeHour span
+{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.magivrtualClockWrap
+{
+    text-align: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+div.magiVirtualCardBoxTitle
+{
+    background-color: #87cefa !important;
+    padding: 0.5rem 0.8rem !important;
+    display: flex !important;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    border-left-color: #969696 !important;
+}
+
+.magiVirtualCardBoxTitle span
+{
+    font-weight: 600;
+    color: #000080;
+}
+
+.magiVirtualCardBoxTitle span a
+{
+    text-decoration: none;
+    color: #000080;
+}
+
+span.magiVirtualBtn a
+{
+    background-color: #fff;
+    border-radius: 2px;
+    border: 1px solid gray;
+    color: #000 !important;
+    padding: .2rem .5rem !important;
+    font-weight: normal;
+    font-size: 9pt !important;
+    text-decoration: none !important;
+    display: block;
+}
+
+.popupheader.magiVirtualTitleWrap
+{
+    padding: 0.5rem 1rem;
+}
+
+.magiVirtualTitleWrap span
+{
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.magiVirtualCatList li,
+.magiChatListUl li a
+{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin-bottom: 0.7rem;
+}
+
+.magiVirtualCatList li
+{
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap
+}
+
+
+.magiChatListUl li a
+{
+    padding: 0.5rem 1rem;
+}
+
+.magiChatListUl li a
+{
+    margin-bottom: 0 !important;
+}
+
+.magiChatListUl li a.slcted
+{
+    background-color: #eeeeee;
+}
+
+.magiVirtualCatListIcon,
+.clsAvatarSndr,
+.clsAvatarRv
+{
+    height: 35px;
+    width: 35px;
+    border-radius: 100%;
+    position: relative;
+    background-size: cover;
+    background-position: center center;
+}
+
+
+span.magiVirtualCatListIcon img
+{
+    width: 35px;
+    height: 35px;
+    -o-object-fit: cover;
+    object-fit: cover;
+    -o-object-position: center;
+    object-position: center;
+}
+
+span.magiVirtualCatListIcon img
+{
+    max-width: 35px;
+}
+
+.magiVirtualCatListIcon .magiVirtualCatListOnlineIcon
+{
+    display: block;
+    width: 10px;
+    height: 10px;
+    background-color: #34fc07;
+    border-radius: 100%;
+    position: absolute;
+    right: 0;
+    bottom: 0.2rem;
+}
+
+.magiVirtualCatListIcon span.magiVirtualCatListNameWrap
+{
+    padding-left: 1rem;
+}
+
+
+
+span.magiVirtualCatListNameWrap span.magiVirtualCatListName
+{
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+span.magiVirtualCatListNameWrap
+{
+    flex: 1;
+    padding-left: 0.5rem;
+}
+
+span.magiVirtualCatListNameWrap span
+{
+    display: block;
+}
+
+span.magiVirtualCatListNameWrap
+span.magiVirtualCatListdegi
+{
+    font-size: 0.7rem;
+}
+
+.magiChatListUl .magiVirtualCatListIcon,
+.clsAvatarSndr,
+.clsAvatarRv
+{
+    height: 40px;
+    min-width: 40px;
+}
+
+div#leftPanel .magiChatListUl span.magiVirtualCatListNameWrap
+{
+    padding-left: 1rem;
+}
+
+.magiChatListUl span.magiVirtualCatListNameWrap span.magiVirtualCatListName
+{
+    font-size: 0.7rem;
+}
+
+button.magiVirtualCatListBtn.btnSmall
+{
+    font-size: 0.7rem !important;
+    padding: 0.2rem !important;
+}
+
+.magiChatListUl span.magiVirtualCatListNameWrap span.magiVirtualCatListdegi
+{
+    font-size: 0.8rem;
+}
+
+
+.magiChatBtn
+{
+    width: 80px;
+    background-color: #fff;
+    z-index: 99;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 0.3rem;
+    bottom: 1rem;
+    right: 1rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    border: 1px solid gray;
+    border-radius: 3px;
+    justify-content: space-between;
+    font-weight: 500;
+    margin: 0 auto 1rem;
+    cursor: pointer;
+}
+
+.magiChatBtn img
+{
+    width: 30px;
+}
+
+.magiChatBtn img
+{
+    max-width: 100%;
+}
+
+.magiChatBtn span
+{
+    font-size: 0.9rem;
+}
+
+.magiVirtualClose
+{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #fff;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 100%;
+    z-index: 11;
+}
+
+.magiVirtualClose img
+{
+    max-width: 100%;
+}
+input[id*="imgInstruct"]
+{
+    margin-right: 0.3rem;
+}
+
+@media(min-width:1366px)
+{
+    .magiReminderLeftBoxList span:not(.cube),
+    .magiReminderLeftBoxList span:not(.cube) a
+    {
+        font-size: 11pt !important;
+    }
+}
+
+.magiReminderLeftBoxList
+{
+    padding-bottom: 0 !important;
+}
+
+table#cphMain_ctlNotificationsPanel_dlAllReminders tr:last-child td .magiReminderLeftBoxList
+{
+    border-bottom: none;
+}
+/*
+table.magiSpeakerWrap
+{
+    border: 1px solid #ccc;
+    margin: 1rem auto;
+    padding: 1rem !important;
+    display: block;
+    border-radius: 3px;
+    box-sizing: border-box;
+    max-width: 500px;
+    background-color: #fff;
+    box-shadow: 0 0.1rem 0.5rem #ccc;
+}
+*/
+table.magiSpeakerWrap
+{
+    margin-bottom: 1rem;
+}
+
+table#ctl00_cphMain_rwSpeaker_C_dlSpeaker
+{
+    width: 100% !important;
+}
+
+/*table.magiSpeakerWrap td
+{
+    padding: 0 0 0.3rem 0 !important;
+    display: block;
+    width: 100% !important;
+    text-align: center !important;
+}*/
+
+/*table.magiSpeakerWrap table, table.magiSpeakerWrap tbody, table.magiSpeakerWrap table, table.magiSpeakerWrap tbody tr
+{
+    width: 100% !important;
+    display: block;
+}
+*/
+table.magiSponserLogo tr
+{
+    display: flex !important;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+table.magiSponserLogo tr td
+{
+    display: block;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+}
+
+table.magiSponserLogo tbody
+{
+    display: block;
+}
+
+table.magiSponserLogo img,
+span.magiChatCloseBtn img
+{
+    max-width: 100%;
+}
+
+table.magiSponserLogo tr td div
+{
+    max-width: 200px;
+}
+
+table.magiSponserLogo tr td div a
+{
+    display: block;
+}
+
+@-moz-document url-prefix()
+{
+    #aStaticTextHere p,
+    #typingSomething p
+    {
+        font-size: 10px;
+    }
+
+    #ulChatList
+    {
+        scrollbar-width: thin;
+    }
+}
+
+
+/*---chat style---*/
+.magiChatWrapper
+{
+    padding: 0 0 1rem 0 !important;
+    border: none !important;
+    background-color: #fff !important;
+    box-shadow: 0 0 5px #ccc;
+}
+
+.magiChattingWrapper
+{
+    overflow: hidden;
+}
+
+.magiChatWrapper .rwContent
+{
+    border: none !important;
+    padding: 0 1rem 0 1rem !important;
+}
+
+.magiChattingWrapper *
+{
+    box-sizing: border-box !important;
+}
+
+.magiChattingWrapper > div
+{
+    border: 2px solid #ccc;
+}
+
+.magiChattingLeftWrapper
+{
+    width: 100%
+}
+
+.magiChattingRightWrapper
+{
+    width: 25%;
+}
+
+div#leftPanelParent
+{
+    width: 35%;
+    border-right: 1px solid #ccc;
+}
+
+div#dvChatBox
+{
+    width: 65%;
+    position: relative;
+    border-left: 1px solid #ccc;
+}
+
+.magiChatBoxTitle
+{
+    background-color: #87cefa;
+    padding: 0.5rem 1rem;
+}
+
+.magiChatBoxTitle span
+{
+    text-align: left;
+    color: #283da4;
+    display: block;
+    font-weight: 700;
+}
+
+.magiChatTitle
+{
+    margin-bottom: 1.2rem;
+    position: relative;
+    padding-right: 3.5rem;
+}
+
+span.magiChatIcon
+{
+    display: none;
+    position: absolute;
+    right: 55px;
+    top: -22px;
+    width: 50px;
+    height: 50px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+#ulShowFBFriends li
+{
+    margin: 0;
+    padding: 0.5rem;
+}
+
+ul.magiChatListUl,
+#msgList
+{
+    overflow-y: auto;
+}
+
+ul#msgList
+{
+    height: calc(100% - (51px + 110px));
+}
+
+@media (max-width:1920px) and (min-width:768px)
+{
+    ul#msgList
+    {
+        height: calc(63.8vmin - (51px + 110px));
+    }
+
+    .magiChattingWrapper
+    {
+        height: 64vmin !important;
+        margin-bottom: 1rem;
+    }
+
+    div[id$="rdChatWindow"].RadWindow_Default .rwContent
+    {
+        height: 100% !important;
+        overflow: inherit;
+    }
+
+    div[id$="rdChatWindow"].RadWindow
+    {
+        height: auto !important;
+        padding-bottom: 0 !important;
+    }
+}
+
+
+@media (max-width:1366px) and (min-width:768px)
+{
+    ul#msgList
+    {
+        height: calc(69.8vmin - (51px + 110px));
+    }
+
+    .magiChattingWrapper
+    {
+        height: 70vmin !important;
+        margin-bottom: 1rem;
+    }
+
+}
+
+div#leftPanel,
+#ulShowFBFriends
+{
+    height: calc(100% - 53px);
+}
+
+div#leftPanel
+{
+    height: calc(100% - 84px);
+    max-height: inherit;
+}
+
+div#leftPanel ul
+{
+    height: 100%;
+}
+
+div#thirdDivision span.magiChatMemberOnline
+{
+    font-weight: normal;
+    font-size: 0.7rem !important;
+}
+
+.magiChatBoxTitle
+{
+    background-color: #87cefa;
+    padding: 0.5rem 1rem;
+    min-height: 51px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.macro
+{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: flex-start;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+}
+
+.msj-rta.macro
+{
+    justify-content: flex-end;
+}
+
+.magiChatAvatarMsgWrap
+{
+    background-color: #d7f6f9;
+    max-width: 350px;
+    width: 100%;
+    padding: 1rem;
+    position: relative;
+    margin-left: 2rem;
+}
+
+.text-r.magiChatAvatarMsgWrap
+{
+    background-color: #d7f6f9;
+    margin-right: 2rem;
+    margin-left: 0;
+}
+
+
+.magiChatAvatarMsgWrap:before
+{
+    content: "";
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: -19px;
+    border-width: 20px;
+    border-style: solid;
+    border-color: #d7f6f9 transparent transparent;
+}
+
+.text-r.magiChatAvatarMsgWrap:before
+{
+    left: auto !important;
+    right: -19px;
+    border-color: #d7f6f9 transparent transparent
+}
+
+
+#msgList li
+{
+    padding: 1rem 1rem 0;
+}
+
+#msgList li:last-child
+{
+    padding-bottom: 1rem;
+}
+
+.magiChatAvatarMsgWrap span.magiChatAvatarName
+{
+    font-weight: 600;
+    color: #283da4;
+    display: block;
+    font-size: 0.8rem;
+    margin-bottom: 0.3rem;
+
+}
+
+.magiChatAvararMsg
+{
+    margin-bottom: 0.5rem;
+}
+
+.magiChatAvararMsg p,
+#typeAndSend p.lead.emoji-picker-container
+{
+    margin: 0;
+}
+
+span.magiChatAvatarMsgTime
+{
+    font-weight: 700;
+    font-size: 0.7rem;
+    line-height: 1;
+    display: block;
+}
+
+span.magiChatAvatarMsgTime b
+{
+    font-weight: 600;
+}
+
+.msj-rta.macro .magiChatAvatarWrap
+{
+    order: 2;
+}
+
+#typeAndSend
+{
+    background-color: #ececec;
+    /*padding: 0.7rem 1.5rem;*/
+    padding: 0.7rem 0.6rem;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding-bottom: 1.8rem;
+}
+
+.typingSomthingInsideWrap
+{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#typingSomething
+{
+    position: absolute;
+}
+
+.magiChatSectionWrapper
+{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+
+#msgBox
+{
+    width: calc(100% - (0.5rem + 35px));
+}
+
+.emoji-wysiwyg-editor.mytext
+{
+    min-height: unset !important;
+    height: auto !important;
+    outline: none;
+    font-size: 12px;
+    border: 1px solid #7d7d7d;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 0.7rem 2.5rem 0.7rem 1.5rem;
+}
+
+div#msgBox i.emoji-picker-icon.emoji-picker.fa.fa-smile-o:before
+{
+    background-image: url(/images/Icons/smile.png);
+    background-size: cover;
+    background-position: center center;
+    background-color: #fff;
+    width: 17px;
+    height: 17px;
+}
+
+div#msgBox .emoji-picker-icon
+{
+    right: 20px;
+    top: 7px;
+}
+
+.magiChatBtnWrap
+{
+    margin-left: 0.5rem;
+}
+
+#sendmessage
+{
+    background: #009bfb;
+    font-size: 21px;
+    border-radius: 50%;
+    cursor: pointer;
+    height: 35px;
+    width: 35px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+
+ul.magiChatListUl::-webkit-scrollbar,
+ul#msgList::-webkit-scrollbar,
+.magiVirtualCardBoxContent.magiVirtualEventChatingList .msgList::-webkit-scrollbar,
+#MegaDropDown::-webkit-scrollbar
+{
+    width: 5px;
+}
+
+.magiVirtualCardBoxContent.magiVirtualEventChatingList .msgList::-webkit-scrollbar,
+#MegaDropDown::-webkit-scrollbar
+{
+    width: 3px;
+}
+
+
+/* Track */
+ul.magiChatListUl::-webkit-scrollbar-track,
+ul#msgList::-webkit-scrollbar-track,
+.emoji-wysiwyg-editor.mytext::-webkit-scrollbar-track,
+.magiVirtualCardBoxContent.magiVirtualEventChatingList .msgList::-webkit-scrollbar-track,
+#MegaDropDown::-webkit-scrollbar-track
+{
+    border-radius: 5px;
+    padding: 0.3rem 0;
+}
+
+/* Handle */
+ul.magiChatListUl::-webkit-scrollbar-thumb,
+ul#msgList::-webkit-scrollbar-thumb,
+.emoji-wysiwyg-editor.mytext::-webkit-scrollbar-thumb,
+.magiVirtualCardBoxContent.magiVirtualEventChatingList .msgList::-webkit-scrollbar-thumb,
+#MegaDropDown::-webkit-scrollbar-thumb
+{
+    background: #bbbbbb3d;
+    border-radius: 5px;
+    transition: background 0.3 linear
+}
+
+ul.magiChatListUl:hover::-webkit-scrollbar-thumb,
+ul#msgList:hover::-webkit-scrollbar-thumb,
+.magiVirtualCardBoxContent.magiVirtualEventChatingList .msgList:hover::-webkit-scrollbar-thumb,
+#MegaDropDown:hover::-webkit-scrollbar-thumb
+{
+    background: #afafaf;
+}
+
+
+
+.magiSrollbar::-webkit-scrollbar
+{
+    width: 3px;
+}
+
+
+/* Track */
+.magiSrollbar::-webkit-scrollbar-track
+{
+    border-radius: 5px;
+    padding: 0.3rem 0;
+}
+
+/* Handle */
+.magiSrollbar::-webkit-scrollbar-thumb
+{
+    background: #bbbbbb3d;
+    border-radius: 5px;
+    transition: background 0.3s linear
+}
+
+.magiSrollbar:hover::-webkit-scrollbar-thumb
+{
+    background: #afafaf;
+}
+
+.emoji-wysiwyg-editor.mytext::-webkit-scrollbar
+{
+    width: 2px;
+}
+
+.emoji-wysiwyg-editor.mytext:hover::-webkit-scrollbar-thumb
+{
+    background: #afafaf;
+}
+
+span.magiChatCloseBtn
+{
+    position: absolute;
+    right: 10px;
+    width: 20px;
+    display: none;
+    cursor: pointer;
+}
+
+.maig-myconference-wrapper > div > div
+{
+    max-width: 100% !important;
+    width: calc(100% - 5px);
+    box-sizing: border-box;
+    margin: 0 0 5px !important;
+    height: 100% !important;
+}
+
+.maig-myconference-wrapper > div > div:last-child
+{
+    margin-bottom: 0 !important;
+}
+
+.magi-myconference-right-wrapper
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.maig-myconference-wrapper > div
+{
+    width: 50% !important;
+    min-height: inherit !important;
+    max-height: inherit !important;
+}
+
+/*event pages style*/
+table.magiEventCloudWrapper
+{
+    width: 100%;
+    max-width: 900px;
+}
+
+table.magiEventCloudWrapper tr
+{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+table.magiEventCloudWrapper tr td
+{
+    width: 100%;
+    padding: 0.6rem 1.922rem 1.922rem 1.922rem;
+    box-sizing: border-box;
+}
+
+table.magiEventCloudWrapper tr td
+{
+    width: 50%;
+}
+
+
+.square
+{
+    cursor: pointer;
+    border-radius: 20px;
+    color: aliceblue;
+    border-style: solid;
+    border-width: 10px;
+    max-width: 100%;
+    text-align: center;
+    list-style-type: none;
+    display: inline-block;
+    /* margin: 0px 50px 10px 20px; */
+    position: relative;
+    background-size: cover;
+    /* box-shadow: inset 0 50px rgb(255 255 255 / 10%), inset 2px -15px 30px rgb(0 0 0 / 40%), 2px 2px 5px rgb(0 0 0 / 30%); */
+    -webkit-box-shadow: 3px 3px 0px rgb(175 169 169), 6px 3px 6px rgb(0 0 0 / 90%);
+    -moz-box-shadow: 3px 3px 0px rgba(175,169,169,1), 6px 3px 6px rgba(0,0,0,.9);
+    box-shadow: 3px 3px 0px rgb(175 169 169), 6px 3px 6px rgb(0 0 0 / 90%);
+    -webkit-transition: all .1s ease;
+    -moz-transition: all .1s ease;
+    -ms-transition: all .1s ease;
+    -o-transition: all .1s ease;
+    transition: all .1s ease;
+    width: 100%;
+    box-sizing: border-box;
+    padding-bottom: 68%;
+}
+
+.square:hover
+{
+    -ms-transform: scale(1.0); /* IE 9 */
+    -webkit-transform: scale(1.0); /* Safari 3-8 */
+    transform: scale(1.05);
+    -webkit-box-shadow: 6px 6px 0px rgba(175,169,169,1), 9px 6px 9px rgba(0,0,0,.7);
+    -moz-box-shadow: 6px 6px 0px rgba(175,169,169,1), 9px 6px 9px rgba(0,0,0,.7);
+    box-shadow: 6px 6px 0px rgba(175,169,169,1), 9px 6px 9px rgba(0,0,0,.7);
+}
+
+
+.square:active
+{
+    -webkit-box-shadow: 3px 3px 0px rgba(175,169,169,1), 6px 3px 6px rgba(0,0,0,.9);
+    -moz-box-shadow: 3px 3px 0px rgba(175,169,169,1), 6px 3px 6px rgba(0,0,0,.9);
+    box-shadow: 3px 3px 0px rgba(175,169,169,1), 6px 3px 6px rgba(0,0,0,.9);
+}
+
+.event-square
+{
+    cursor: pointer;
+    border-radius: 20px;
+    max-width: 100%;
+    text-align: center;
+    list-style-type: none;
+    display: inline-block;
+    margin:0;
+    position: relative;
+    /* box-shadow: inset 0 50px rgb(255 255 255 / 10%), inset 2px -15px 30px rgb(0 0 0 / 40%), 2px 2px 5px rgb(0 0 0 / 30%); */
+    /* -webkit-box-shadow: 3px 3px 0px rgb(175 169 169), 6px 3px 6px rgb(0 0 0 / 90%); */
+    -moz-box-shadow: 3px 3px 0px rgba(175,169,169,1), 6px 3px 6px rgba(0,0,0,.9);
+    box-shadow: 2px 2px 3px rgb(0 0 0 / 70%);
+    -webkit-transition: all .1s ease;
+    -moz-transition: all .1s ease;
+    -ms-transition: all .1s ease;
+    -o-transition: all .1s ease;
+    transition: all .1s ease;
+    width: 100%;
+    box-sizing: border-box;
+    padding-bottom: 68%;
+    /* background: rgb(254,255,255); */
+    background: -moz-linear-gradient(left, rgba(254,255,255,1) 0%, rgba(239,237,239,1) 35%, rgba(195,195,198,1) 100%);
+    /* background: -webkit-linear-gradient(left, rgba(254,255,255,1) 0%,rgba(239,237,239,1) 35%,rgba(195,195,198,1) 100%); */
+    /* background: linear-gradient(to right, rgba(254,255,255,1) 0%,rgba(239,237,239,1) 35%,rgba(195,195,198,1) 100%); */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#feffff', endColorstr='#c3c3c6',GradientType=1 );
+    border: 10px solid transparent;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-clip: padding-box;
+}
+
+.event-square:hover
+{
+    -ms-transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+    transform: scale(1.05);
+    box-shadow: 0 29px 16px 0 rgb(0 0 0 / 13%), 0 36px 20px 0 rgb(0 0 0 / 3%);
+}
+
+.event-square:before
+{
+    content: "";
+    box-shadow: inset 1px 1px 3px rgb(0 0 0 / 70%);
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 11px;
+}
+
+.event-square:after
+{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: -10px;
+    z-index: -5;
+    border-radius: inherit;
+    background: rgb(254,255,255);
+    background: -moz-linear-gradient(left, rgba(254,255,255,1) 0%, rgba(239,237,239,1) 35%, rgba(195,195,198,1) 100%);
+    background: -webkit-linear-gradient(left, rgba(254,255,255,1) 0%,rgba(239,237,239,1) 35%,rgba(195,195,198,1) 100%);
+    background: linear-gradient(to right, rgba(254,255,255,1) 0%,rgba(239,237,239,1) 35%,rgba(195,195,198,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#feffff', endColorstr='#c3c3c6',GradientType=1 );
+}
+
+.event-square img
+{
+    transition: 0.3s ease;
+    border-radius: 11px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+}
+
+.child
+{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.separatorbelow
+{
+    border-bottom: 1px solid #D7D7D7;
+}
+
+.separatorabove
+{
+    border-top: 1px solid #D7D7D7;
+}
+
+td.boxStyle.custom-magi-four-col2 table
+{
+    text-align: left;
+}
+
+/*end event pages style*/
+.magiSpecialBtnWrap
+{
+    display: inline-block;
+}
+
+.magiFdaGcpRecordsWrap a
+{
+    word-break: break-word;
+}
+
+
+
+td.magiMainMenuWrapper
+{
+    padding-right: 18%;
+}
+
+/*Tabber css for mobile */
+.magiMobileTabNameWrap
+{
+    display: flex;
+    justify-content: space-between;
+    background-color: #25a0da;
+    align-items: center;
+    padding: 0.3rem;
+}
+
+span.magiMobileTabTrigger
+{
+    width: 30px;
+    height: 30px;
+    border: 1px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s linear;
+}
+
+span.magiMobileTabTrigger em
+{
+    width: 80%;
+    background-color: #ffff;
+    height: 2px;
+    display: block;
+    position: relative;
+    transition: 0.3s linear;
+    pointer-events: none;
+}
+
+span.magiMobileTabTrigger em:after, span.magiMobileTabTrigger em:before
+{
+    content: "";
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: #fff;
+    position: absolute;
+    bottom: -7px;
+    transition: 0.3s linear;
+}
+
+span.magiMobileTabTrigger em:before
+{
+    bottom: auto;
+    top: -7px;
+}
+
+
+span.magiMobileTabTrigger.active
+{
+    border-radius: 100%;
+}
+
+span.magiMobileTabTrigger.active em
+{
+    background-color: transparent;
+}
+
+span.magiMobileTabTrigger.active em:after, span.magiMobileTabTrigger.active em:before
+{
+    transform: rotate( 45deg );
+    top: 0;
+}
+
+span.magiMobileTabTrigger.active em:before
+{
+    top: 0;
+    transform: rotate( -45deg );
+}
+
+span.magiMobileTabName
+{
+    color: #fff;
+    font-weight: 500;
+}
+
+/*virtual event Chat Section Css*/
+.magiVirtualCardBoxContent.magiVirtualEventChatingList .msgList
+{
+    height: 100%;
+    overflow-y: auto;
+}
+
+
+.magiFont10
+{
+    font-size: 10pt !important;
+}
+
+.magiFont9
+{
+    font-size: 9pt !important;
+}
+
+.magiMobieWidthAuto
+{
+    width: auto !important;
+}
+
+.magiMobileLeftSpace
+{
+    margin-left: 0.3rem;
+}
+
+tr.magiVenueInfotrWrap td,
+.magiVerticalTop
+{
+    vertical-align: top;
+}
+
+.magiBreadcrumbWrapper .magiBreadcrumbItem
+{
+    display: inline-block;
+    margin-bottom: 0.3rem;
+}
+
+/*==svg NetworkingModel=*/
+#mainSVG
+{
+    border: 1px solid #ccc;
+}
+
+.magiWidth86
+{
+    width: 86.5%;
+}
+
+td.customVirtualFlexWrap div#ctl00_cphMain_ctChatPanel_ddChatType
+{
+    width: 100px !important;
+}
+
+.customleftPanelSection
+{
+    max-width: unset !important;
+}
+
+.customleftPanelSection .magiRemiderSection > div
+{
+    width: 248px;
+}
+
+.customleftPanelSection #cphMain_pLeftChatPanel
+{
+    width: 258px;
+}
+
+.magi-speed-test-wrapper span
+{
+    font-size: 1rem;
+    color: #00008B;
+    font-weight: 500;
+}
+
+.magi-speed-test-wrapper span:first-child
+{
+    margin-right: 0.5rem;
+}
+
+
+/*css for crom images*/
+div[id*="rdCropImage"] .container
+{
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+div[id*="rdCropImage"] .cropped > img
+{
+    margin-right: 10px;
+}
+
+div[id*="rdCropImage"] .imageBox
+{
+    position: relative;
+    height: 500px;
+    width: 300px;
+    border: 1px solid #aaa;
+    background: #fff;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    cursor: move;
+    margin: 0 auto;
+}
+
+div[id*="rdCropImage"] .imageBox .thumbBox
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 300px;
+    margin-top: -150px;
+    margin-left: -100px;
+    box-sizing: border-box;
+    /*  border: 1px solid rgb(102, 102, 102);*/
+    border: 2px dashed #313131d4;
+    box-shadow: 0 0 0 1000px #00000030;
+    background: none repeat scroll 0% 0% transparent;
+}
+
+div[id*="rdCropImage"] .imageBox .spinner
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    text-align: center;
+    line-height: 400px;
+    background: rgba(0,0,0,0.7);
+}
+.rwPinButton
+{
+    opacity: 0;
+    visibility: hidden;
+}			
+       
+
+
+@media only screen and (max-width: 1366px)
+{
+    .magiWidth86
+    {
+        width: 80.5%;
+    }
+}
+
+@media(max-width:1300px) and (min-width:768px)
+{
+    tr.magiVenueInfotrWrap
+    {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+
+    tr.magiVenueInfotrWrap td
+    {
+        margin-bottom: 0.3rem;
+    }
+}
+
+@media(min-width:993px)
+{
+    .magiChatBtn, span.magiVirtualClose
+    {
+        display: none;
+    }
+}
+
+
+
+@media(max-width:992px)
+{
+    .magi-Video-wrapper.magi-mobile-fluid
+    {
+        order: 1;
+        width: 100%;
+    }
+
+    .magi-virtualEventRight-sidebar
+    {
+        position: fixed !important;
+        background-color: #fff;
+        width: 100% !important;
+        max-width: 320px;
+        height: 100vh;
+        padding: 1rem;
+        top: 0;
+        right: 0;
+        box-shadow: -0.5rem 0 10px #0000003b;
+        z-index: 999;
+        transform: translateX(200%);
+        transition: transform 0.3s;
+        overflow-y: auto;
+    }
+
+    .magi-virtualEventRight-sidebar.active
+    {
+        transform: translateX(0);
+    }
+
+    /*.magi-virtualEventRight-sidebar .magiVirtualCatList,
+    .magiVirtualEventChatingList ul#msgsList
+    {
+        height: 74vh !important;
+    }*/
+
+    .magi-virtualEventLeft-sidebar.magi-mobile-fluid
+    {
+        order: 2;
+        width: 28%;
+    }
+
+    .magi-virtualEventLeft-sidebar
+    {
+        position: static !important;
+    }
+
+    /*span.magi-virtualEventRight-sidebarBorder.Top, span.magi-virtualEventRight-sidebarBorder.Bottom
+    {
+        width: calc(100% - (2rem + 4px)) !important;
+        top: 1rem !important;
+        left: 1rem !important;
+    }
+
+    span.magi-virtualEventRight-sidebarBorder.Right, span.magi-virtualEventRight-sidebarBorder.Left
+    {
+        right: calc(1rem + 3px) !important;
+        height: calc(100% - 2rem) !important;
+    }
+
+    span.magi-virtualEventRight-sidebarBorder.Bottom
+    {
+        bottom: 1rem !important;
+        top: auto !important;
+    }
+
+    span.magi-virtualEventRight-sidebarBorder.Left
+    {
+        left: 1rem !important;
+    }*/
+
+    span.magiVirtualClose
+    {
+        display: none;
+    }
+
+    .magi-virtualEventRight-sidebar.magi-mobile-fluid.active span.magiVirtualClose
+    {
+        display: block;
+    }
+
+    td.customVirtualFlexWrap div#ctl00_cphMain_ctChatPanel_ddChatType
+    {
+        max-width: 177px;
+    }
+}
+
+@media(max-width:1224px) and (min-width:768px)
+{
+    span.magiVirtualDigitalClockTitle
+    {
+        font-size: 0.7rem;
+    }
+}
+
+@media(max-width:1280px) and (min-width:966px)
+{
+    table .magi-three-col-speking-interst > tbody > tr > td
+    {
+        width: 49.4% !important;
+    }
+
+    table.magi-three-col-speking-interst > tbody > tr > td:nth-child(2n)
+    {
+        margin-right: 0 !important;
+    }
+}
+
+
+@media(max-width:1205px)
+{
+
+    table.magiEventCloudWrapper tr td
+    {
+        padding: 1rem;
+    }
+
+    table.magi-three-col-speking-interst .SectionTitle
+    {
+        font-size: .8rem
+    }
+
+    /*table.magi-fluid.magi-edit-account > tbody > tr
+    {
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    }
+
+    table.magi-edit-account tr td
+    {
+        margin-right: 0 !important;
+        margin-bottom: 1rem
+    }
+
+    table.magi-edit-account tr td
+    {
+        flex: 100%;
+        flex-basis: 100% !important;
+        padding-left: 0 !important;
+    }*/
+}
+
+@media(max-width:1204px) and (min-width:768px)
+{
+    table.magi-radio-wrapper > tbody > tr > td:first-child
+    {
+        order: 1
+    }
+
+    table.magi-radio-wrapper > tbody > tr > td:nth-child(2)
+    {
+        order: 2;
+        width: calc(100% - 30%)
+    }
+
+    table.magi-radio-wrapper > tbody > tr > td:nth-child(2) ~ td
+    {
+        order: 3
+    }
+
+    .magi-viewaccount-profile-name .lblTitle
+    {
+        font-size: 14pt;
+    }
+}
+
+@media(max-width:1140px)
+{
+    .rmSlide
+    {
+        left: -50% !important
+    }
+
+    span#ctl00_cphMain_txtComment_wrapper
+    {
+        width: 100% !important;
+    }
+}
+
+@media(max-width:1125px)
+{
+    .magiSpecialFlex
+    {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+    }
+
+    .magiSpecialFlexItem
+    {
+        margin-bottom: 0.3rem;
+    }
+
+    .magiSpecialFlexItem:last-child
+    {
+        margin-bottom: 0;
+    }
+}
+
+@media(max-width:1135px) and (min-width:768px)
+{
+    table .magi-four-col-wrap > tbody > tr
+    {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        justify-content: flex-start
+    }
+
+    table.magi-four-col-wrap > tbody > tr > td
+    {
+        width: 100% !important;
+        flex: 1;
+        margin-right: 1rem;
+        height: inherit !important
+    }
+
+    table.magi-four-col-wrap > tbody > tr > td > div
+    {
+        height: inherit !important
+    }
+
+    table.magi-four-col-wrap .AspectDiv input
+    {
+        max-width: 100%;
+        height: 100%;
+        width: 100%
+    }
+
+    td.custom-gap
+    {
+        display: none
+    }
+
+    td.boxStyle input[type=img]
+    {
+        max-width: 100%;
+        width: 100% !important;
+        height: 100% !important
+    }
+}
+
+@media(max-width:1328px) and (min-width:768px)
+{
+
+    .magi-viewmyschedule-wrapper td,
+    .magi-myschedule-actions
+    {
+        -webkit-box-pack: start;
+        -ms-flex-pack: start;
+        justify-content: flex-start;
+    }
+}
+
+@media(max-width:1320px) and (min-width:768px)
+{
+    #floatingHeader td.customVirtualFlexWrap .customVirtualOption
+    {
+        width: 100px !important;
+    }
+}
+
+@media(max-width:1110px)
+{
+
+    #cphMain_Panel1 .RadDropDownList_Metro:not(.KeepSameWidth),
+    #cphMain_Panel1 .RadInput_Default:not(.KeepSameWidth)
+    {
+        width: auto !important
+    }
+
+
+    tr.magi-profile-wrap td
+    {
+        justify-content: flex-start;
+    }
+        
+    /**==test==*/
+
+    .customPaddingLeft0
+    {
+        padding-left: 0 !important;
+    }
+
+    #floatingHeader table.custom-form-wrapper tr, #floatingHeader table.custom-form-wrapper tbody
+    {
+        display: block;
+    }
+
+    #floatingHeader .custom-form-wrapper .noMargin
+    {
+        margin-bottom: 0 !important
+    }
+
+    #floatingHeader table.custom-form-wrapper tr td,
+    #floatingHeader div.custom-form-wrapper div
+    {
+        display: block;
+        margin-bottom: 0.5rem;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        width: 100% !important;
+        text-align: left !important;
+        float: none !important;
+        max-width: 100% !important
+    }
+
+    #floatingHeader table.custom-form-wrapper tr td:not([colspan]) .RadDropDownList, #floatingHeader table.custom-form-wrapper tr td:not([colspan]) .RadInput,
+    #floatingHeader div.custom-form-wrapper div .RadDropDownList, #floatingHeader div.custom-form-wrapper div .RadInput
+    {
+        width: 100% !important;
+        box-sizing: border-box;
+        margin-bottom: 0.3rem;
+    }
+
+    #floatingHeader table.custom-form-wrapper,
+    #floatingHeader div.custom-form-wrapper
+    {
+        display: block;
+        padding: 0.5rem !important;
+        width: 100%;
+        margin: 1rem 0 !important;
+        border: 1px solid #ccc;
+        border-radius: 0.3rem;
+        box-sizing: border-box;
+    }
+
+    #floatingHeader table.custom-form-wrapper table,
+    .customPhoneFlex
+    {
+        width: 100% !important;
+    }
+
+    #floatingHeader table.custom-form-wrapper tr td br,
+    #floatingHeader div.custom-form-wrapper div br
+    {
+        display: none;
+    }
+
+    #floatingHeader table.custom-form-wrapper tr td > span.lblFormatting,
+    #floatingHeader div.custom-form-wrapper span.lblFormatting
+    {
+        display: block;
+        margin-bottom: 0.3rem;
+    }
+
+    .customPhoneFlex
+    {
+        display: flex !important;
+    }
+
+    .customPhoneFlex span:not(:last-child)
+    {
+        margin-right: 0.2rem;
+        margin-top: 0;
+        margin-bottom: 0 !important;
+    }
+
+    .custom-password-wrap
+    {
+        display: flex !important;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+    }
+
+    .custom-password-wrap img
+    {
+        margin-left: 0.3rem;
+    }
+
+    .custom-fluid
+    {
+        width: 100% !important;
+    }
+
+    tr.custom-block,
+    tr.custom-block td
+    {
+        display: block;
+    }
+
+    .magiChatListUl span.magiVirtualCatListNameWrap span.magiVirtualCatListName
+    {
+        font-size: 0.8rem;
+    }
+
+    .magiChattingWrapper
+    {
+        position: relative;
+    }
+
+    .magiChattingRightWrapper
+    {
+        position: absolute;
+        right: -100%;
+        top: 0;
+        max-width: 300px;
+        background-color: #fff;
+        width: 100%;
+        z-index: 9999;
+        top: 0;
+        transition: 0.3s linear;
+        box-shadow: 0 0 5px #ccc;
+    }
+
+    .magiChattingLeftWrapper
+    {
+        width: 100%;
+    }
+
+    span.magiChatIcon
+    {
+        display: block;
+    }
+
+    span.magiChatIcon img
+    {
+        max-width: 100%;
+    }
+
+    .magiChatWrapper .rwContent
+    {
+        border: none !important;
+        padding: 1rem !important;
+    }
+
+    .magiChatWrapper
+    {
+        width: calc(100% - 4rem) !important;
+        left: 0 !important;
+        right: 0 !important;
+        margin: 0 auto;
+    }
+
+    .magiChatTitle
+    {
+        padding-right: 4rem;
+    }
+
+    .magiChattingRightWrapper.active
+    {
+        right: 0;
+    }
+
+    span.magiChatCloseBtn
+    {
+        display: inline-block;
+    }
+}
+
+@media (max-width:1024px)
+{
+
+    /****************************************************/
+
+    .magi-virtualEventRight-sidebar.magi-mobile-fluid.active
+    {
+        padding: 0;
+    }
+
+    .magi-virtualEventRight-sidebar.magi-mobile-fluid.active span
+    {
+        height: auto !important;
+    }
+
+    .magi-virtualEventRight-sidebar.magi-mobile-fluid.active .magiReminderWrap .magiVirtualCardBoxContent > div
+    {
+        height: auto !important;
+    }
+
+    .magi-virtualEventRight-sidebar.magi-mobile-fluid.active .magiVirtualClose
+    {
+        right: 6px;
+        top: 6px;
+    }
+
+    #cphMain_ctChatPanel_dvChatPanel .magiVirtualClose
+    {
+        display: none;
+    }
+
+    #tblMargin
+    {
+        margin-top: 0;
+    }
+
+    div#mainbody
+    {
+        margin-top: 10px;
+    }
+
+    .magi-virtualEventLeft-sidebar.magi-mobile-fluid .magi-virtualEventLeft-sidebar-InsideWrapper .magiChatBtn
+    {
+        width: 100% !important;
+    }
+
+    #cphMain_pLeftChatPanel #cphMain_ctChatPanel_dvChatPanel .magiReminderWrap .magiVirtualCardBoxContent > div
+    {
+        height: auto !important;
+    }
+
+    #ChatListSection #ulChatList.magiVirtualCatList
+    {
+        min-height: unset !important;
+    }
+
+    .magi-Video-wrapper.magi-mobile-fluid
+    {
+        width: 100%;
+    }
+
+    .magi-virtualEvent-wrapper .magi-align-center #cphMain_lblTitle.magi-virtualEventTitle
+    {
+        width: 100%;
+        font-size: 16px;
+    }
+
+    /*****************************/
+
+    .rmSlide
+    {
+        right: -50% !important;
+        left: auto !important
+    }
+
+
+
+    span#cphMain_lbldesccounter,
+    span#cphMain_lblSessionTitle,
+    span#cphMain_lblSessionDescCounter
+    {
+        margin-left: 0 !important;
+    }
+
+    .magi-placement-Preferences table tbody tr
+    {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        justify-content: flex-start !important;
+    }
+
+    .inputFlexibal .RadInput,
+    .inputFlexibal .RadDropDownList,
+    .inputFlexibal .RadDropDownList_Metro
+    {
+        width: 100% !important;
+    }
+
+    .maig-myconference-wrapper > div
+    {
+        width: 100% !important;
+    }
+
+    .maig-myconference-wrapper
+    {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+    }
+
+    .maig-myconference-wrapper > div > div,
+    .magi-myconference-left-wrapper
+    {
+        margin: 0 0 1rem !important;
+    }
+
+    .magiSpecialBtnWrap .magiSpecialBtn
+    {
+        display: inline-block;
+        margin-bottom: 0.3rem;
+    }
+
+    .magiCustomMarginBottom0
+    {
+        margin-bottom: 0 !important;
+    }
+}
+
+@media (max-width:1024px) and (min-width:768px)
+{
+
+    table.magiIssueListWrap
+    {
+        width: 100%;
+    }
+
+    table.magiIssueListWrap > tbody > tr,
+    table.magiIssueListWrap1 > tbody > tr
+    {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        align-items: flex-end;
+    }
+
+    able.magiIssueListWrap1 > tbody > tr
+    {
+        align-items: center;
+    }
+
+    table.magiIssueListWrap > tbody > tr > td
+    {
+        width: 32.4% !important;
+        padding-bottom: 0.3rem;
+    }
+
+    table.magiIssueListWrap1 > tbody > tr > td
+    {
+        width: 49.1% !important;
+        padding-bottom: 0.3rem;
+    }
+
+    #cphMain_Panel1 table.magiIssueListWrap > tbody > tr > td .RadDropDownList_Metro,
+    #cphMain_Panel1 table.magiIssueListWrap > tbody > tr > td .RadInput_Default,
+    table.magiIssueListWrap > tbody > tr > td .RadPicker.RadPicker_Metro,
+    table.magiIssueListWrap > tbody > tr > td .RadComboBox.RadComboBox_Metro.RadComboBox_Default,
+    #cphMain_Panel1 table.magiIssueListWrap1 > tbody > tr > td .RadDropDownList_Metro,
+    #cphMain_Panel1 table.magiIssueListWrap1 > tbody > tr > td .RadInput_Default,
+    table.magiIssueListWrap1 > tbody > tr > td .RadPicker.RadPicker_Metro,
+    table.magiIssueListWrap1 > tbody > tr > td .RadComboBox.RadComboBox_Metro.RadComboBox_Default
+    {
+        width: 100% !important
+    }
+
+
+    table.magiIssueListWrap > tbody > tr > td br,
+    #cphMain_Panel1 table.magiIssueListWrap1 > tbody > tr br
+    {
+        display: none;
+    }
+}
+
+td.paddingON
+{
+    word-break: break-word;
+}
+
+.magiMbSpace
+{
+    margin-bottom: 0.3rem;
+}
+
+/*table.magi-edit-account > tbody > tr > td:first-child
+{
+    width: 38.8%;
+}
+
+table.magi-edit-account > tbody > tr > td:nth-child(2)
+{
+    width: 29.6%;
+}
+
+table.magi-edit-account > tbody > tr > td:last-child
+{
+    width: 28.3%;
+}*/
+
+table.magi-edit-account > tbody > tr > td
+{
+    width: 40%;
+}
+
+table.custom-form-wrapper .RadDropDownList
+{
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.NewStyle span a
+{
+    display: block;
+}
+
+@media(min-width:768px)
+{
+    .magi100vw
+    {
+        width: calc(100vw - 40px);
+    }
+
+}
+
+.isEmpty:empty
+{
+    display: none !important;
+}
+
+table[id*="dlInterests"]
+{
+    width: 100%;
+}
+
+table.custom-radio-Class td span
+{
+    display: flex;
+    align-items: center;
+}
+
+
+table.custom-radio-Class td span input
+{
+    margin-top: 0;
+    margin-right: 2px;
+    float: none !important;
+}
+
+div#pnlConf
+{
+    width: 200px !important;
+}
+
+div#pnlInfo
+{
+    width: auto;
+    padding: 10px;
+}
+
+.dummySelectButton .RadUpload_Default .ruSelectWrap .ruButton
+{
+    background-color: #fff !important;
+    border-radius: 2px !important;
+    border: 1px solid gray;
+    color: #000 !important;
+    padding: .2rem .5rem !important;
+    margin: 0;
+    width: 80px !important;
+    box-sizing: border-box;
+    height: 25px !important;
+    display: inline-block;
+    min-width: inherit !important;
+    position: relative;
+    text-indent: -99999px;
+    overflow: hidden;
+    font-size: 10pt;    
+    margin-left: 0.3rem;
+}
+
+.dummySelectButton .RadUpload_Default .ruSelectWrap .ruButton:after
+{
+    content: "Select/Drop";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-indent: 0;
+}
+
+.dummySelectButton .RadUpload .ruFakeInput
+{
+    height: 1.628571em;
+}
+
+.magi-auto
+{
+    margin: 0 auto;
+}
+
+#dvForRapidFire
+{
+    box-sizing: border-box;
+    float: none !important;
+    padding-right: 3.5rem !important;
+}
+
+.magi-pop-header
+{
+    display: flex;
+    justify-content: space-between;
+    align-items:center;
+    padding:0.3rem;
+}
+    @media (max-width:1070px) and (min-width:768px)
+    {
+        .rightaligned tr td:first-child
+        {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 0.3rem;
+        }
+        .magi-header-icon-wrapper input[type="image"]
+        {
+            width: 25px;
+        }
+        td.magi-header-icon-wrapper
+        {
+            position: absolute;
+            top: -54%;
+            padding-top: 0 !important;
+        }
+        .rightaligned tr
+        {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        td.magiMainMenuWrapper
+        {
+            min-height: 80px;
+            display: flex;
+            align-items: flex-end;
+        }
+    }
+
+    @media (max-width:965px) and (min-width:768px)
+    {
+        tr .magi-align-center.magi-flex.magi-justify-content-start.magiEmailListHeadWrapper td:first-child
+        {
+            width: 50% !important;
+        }
+   
+    }
+
+    @media (max-width:965px)
+    {
+        .magiBorderBottomNone
+        {
+            border-bottom: none !important;
+        }
+
+        div#cphMain_RadStepContact table tr td
+        {
+            flex: inherit
+        }
+
+        .magi-tab-responsive
+        {
+            border: none !important;
+        }
+
+        .magi-tab-responsive table,
+        .magi-tab-responsive table tbody,
+        .magi-tab-responsive table thead,
+        .magi-tab-responsive table tr,
+        .magi-tab-responsive table tr td,
+        .magi-tab-responsive table tr th
+        {
+            display: block;
+            width: 100% !important;
+            box-sizing: border-box
+        }
+
+        #floatingHeader .magi-createmyschedule-contianer .magi-tab-responsive > table > tbody > tr > td:last-child strong.magi-table-thead,
+        .magi-createmyschedule-contianer .magi-tab-responsive table > tbody > tr > td:last-child > strong.magi-table-thead,
+        .magi-tab-responsive table tfoot,
+        #floatingHeader thead.hide_thead,
+        table.magi-custom-mysuhedule-table-data
+        {
+            display: none
+        }
+
+        .magi-tab-responsive table .rgRow
+        {
+            padding-bottom: 0
+        }
+
+        #floatingHeader .magi-tab-responsive table > tbody > tr > td.paddingON,
+        #floatingHeader .magi-tab-responsive table.rgMasterTable > tbody > tr > td.paddingON
+        {
+            border: none !important;
+            border-bottom: 1px solid #e6e6e6 !important;
+            position: relative;
+            padding: .3rem .3rem .3rem 50% !important;
+            min-height: 40px !important;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+            flex-direction: row;
+            align-items: center;
+            text-align: left;
+            height: auto !important;
+            flex-wrap: wrap;
+        }
+
+        #floatingHeader .magi-tab-responsive table > tbody > tr > td.paddingON, #floatingHeader .magi-tab-responsive table.rgMasterTable > tbody > tr > td.paddingON .RadRowButton16
+        {
+            width: auto;
+            height: auto;
+        }
+
+
+        #floatingHeader .magi-tab-responsive table > tbody > tr > td.paddingON:last-child,
+        #floatingHeader .magi-tab-responsive table.rgMasterTable > tbody > tr > td.paddingON:last-child
+        {
+            border-bottom: none !important;
+        }
+
+        #floatingHeader .magi-tab-responsive table > tbody > tr > td.paddingON:nth-child(even)
+        {
+            background-color: #fbfbfb;
+        }
+
+        #floatingHeader .magi-tab-responsive table > tbody > tr > td.paddingON:nth-child(odd)
+        {
+            background-color: #fff;
+        }
+
+        #floatingHeader #mainbody .magi-tab-responsive table tr.rgNoRecords td
+        {
+            padding: .3rem !important;
+            text-align: center !important;
+        }
+
+        #floatingHeader .magi-tab-responsive table thead tr
+        {
+            display: -webkit-box !important;
+            display: -ms-flexbox !important;
+            display: flex !important;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            background: #1e90ff;
+            justify-content: center !important
+        }
+
+        #floatingHeader .magi-tab-responsive table thead tr th
+        {
+            width: unset !important;
+            border: none;
+        }
+
+        #floatingHeader .magi-tab-responsive table thead tr th:not(:last-child):not(.thHide):after
+        {
+            content: "|";
+            margin-left: 0.3rem;
+            vertical-align: text-bottom;
+        }
+
+        #floatingHeader .magi-tab-responsive table thead tr th.thHide,
+        #floatingHeader .magi-tab-responsive table thead tr th.rgSorted:after
+        {
+            display: none !important;
+        }
+
+        #floatingHeader strong.magi-table-thead
+        {
+            display: block
+        }
+
+        #floatingHeader .magi-tab-responsive .RadGrid .rgAltRow,
+        #floatingHeader .magi-tab-responsive .RadGrid .rgAltRow td,
+        #floatingHeader .magi-tab-responsive .RadGrid .rgEditRow,
+        #floatingHeader .magi-tab-responsive .RadGrid .rgEditRow td,
+        #floatingHeader .magi-tab-responsive .RadGrid .rgFooter,
+        #floatingHeader .magi-tab-responsive .rgGroupHeader,
+        #floatingHeader .magi-tab-responsive .rgHeader,
+        #floatingHeader .magi-tab-responsive .rgRow,
+        #floatingHeader .magi-tab-responsive .rgRow td,
+        #floatingHeader .magi-tab-responsive .rgAltRow,
+        #floatingHeader .magi-tab-responsive .rgEditRow,
+        #floatingHeader .magi-tab-responsive .rgEditRow td,
+        #floatingHeader .magi-tab-responsive .rgFooter
+        {
+            height: auto !important;
+            min-height: inherit !important
+        }
+
+        .magi-tab-responsive.RadGrid_Metro .rgAltRow,
+        .magi-tab-responsive .RadGrid_Metro .rgAltRow
+        {
+            background: inherit !important;
+        }
+
+        .magi-tab-responsive.RadGrid_Metro,
+        .magi-tab-responsive .RadGrid_Metro
+        {
+            border: none !important;
+        }
+
+        table.magi-three-col-speking-interst > tbody > tr > td
+        {
+            width: 100% !important;
+            margin-right: 0 !important;
+        }
+
+        table.magi-three-col-speking-interst > tbody > tr > td:nth-child(2n)
+        {
+            margin-right: 0;
+        }
+
+        table.magi-fluid.magi-edit-acount-wrapper tr.rcbReadOnly
+        {
+            display: -webkit-box !important;
+            display: -ms-flexbox !important;
+            display: flex !important;
+            flex-direction: row !important;
+            -webkit-box-orient: horizontal !important;
+            -webkit-box-direction: normal !important;
+            -ms-flex-direction: row !important;
+            flex-direction: row !important;
+        }
+
+        .magi-tab-responsive table tr.trPaddingOn
+        {
+            border: 1px solid #ccc;
+            margin-bottom: 1rem;
+        }
+
+        .magi-tab-responsive table tr.trPaddingOn:not(:last-child)
+        {
+            margin-bottom: 1rem;
+        }
+
+        #floatingHeader table.magi-fluid.magi-edit-acount-wrapper tr.rcbReadOnly > td
+        {
+            display: inline-block !important;
+            flex: 1;
+            height: 27px
+        }
+
+        #floatingHeader table.magi-fluid.magi-edit-acount-wrapper tr.rcbReadOnly > td:first-child
+        {
+            flex: calc(100% - 20px);
+            min-height: 25px;
+        }
+
+        table.magi-viewaccount-data-wrapper,
+        .magi-mySpeaker-fluid
+        {
+            width: 100%;
+        }
+
+        .magi-mynetworking-tab-space td
+        {
+            padding-left: 0.5rem !important;
+        }
+
+        .magi-tab-responsive .rgAltRow, .magi-tab-responsive .rgRow
+        {
+            padding-bottom: 0;
+        }
+
+        .magi-tab-responsive th.rgHeader
+        {
+            text-align: left !important;
+        }
+
+        .magi-professional-interest table tr td
+        {
+            width: 49%;
+        }
+
+        .magi-professional-interest table tr
+        {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            justify-content: space-between;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+        }
+
+        .magi-interest-inside-wrapper.magi-professional-interest table,
+        .magi-professional-interest table table
+        {
+            width: 100% !important;
+        }
+
+        tr.magiEmailListWrap
+        {
+            display: flex;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        tr.magiEmailListWrap td
+        {
+            width: 19% !important;
+        }
+
+        #cphMain_Panel1 tr.magiEmailListWrap td .RadDropDownList_Metro, #cphMain_Panel1 tr.magiEmailListWrap td .RadInput_Default
+        {
+            width: 100% !important;
+        }
+
+        td.paddingON.tdBlank
+        {
+            display: none !important;
+        }
+    }
+
+    @media (max-width:933px)
+    {
+        div#dvScroll > table > tbody > tr
+        {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            align-items: flex-end;
+            justify-content:flex-start;
+        }
+
+        div#dvScroll > table > tbody > tr > td:first-child input
+        {
+            max-width: 300px;
+            object-fit: contain;
+            height: auto !important;
+        }
+
+        div#dvScroll > table > tbody > tr > td:first-child
+        {
+            width: auto !important;
+            max-width: 100%;
+        }
+    }
+
+    @media (max-width:924px)
+    {
+
+
+        div.RadMenu_Default .rmContentTemplate
+        {
+            width: 100%
+        }
+
+        .RadMenu,
+        ul.rmRootGroup.rmHorizontal
+        {
+            position: static !important
+        }
+
+        .rmSlide
+        {
+            right: 0 !important;
+            left: 0 !important;
+            top: 100% !important;
+            width: auto !important
+        }
+
+        .EnterEvent
+        {
+            top: 15px
+        }
+
+        td.magi-mystaff-wapper > div > div
+        {
+            width: auto !important;
+        }
+    }
+
+    @media (max-width:980px)
+    {
+        /* div#cphMain_pnlMember input
+    {
+        width: 100%;
+        max-width: 100%
+    }
+
+    div#cphMain_pnlMember table
+    {
+        width: 100%
+    }
+
+    div#cphMain_pnlMember .RadInput
+    {
+        width: 100% !important
+    }*/
+    }
+
+    @media (max-width:980px) and (min-width:768px)
+    {
+        div#cphMain_pnlRegistrationOpen table table td
+        {
+            box-sizing: border-box;
+            width: auto !important
+        }
+    }
+
+    .magi-marginAll
+    {
+        margin: 0.2rem !important;
+    }
+
+    @media (max-width:767px)
+    {
+
+        /****************************************************/
+
+        .magi-virtualEvent-wrapper .magi-align-center #cphMain_lblTitle.magi-virtualEventTitle
+        {
+            width: 100%;
+        }
+
+        /*****************************/
+
+        .magi-speed-test-wrapper span
+        {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .magi-speed-test-wrapper span:first-child
+        {
+            margin-right: 0;
+        }
+
+        div#ctl00_cphHeader_RadMenu1_i0_ctl01_rdSiteMapCases li.rsmItem.rsmDisabled > a
+        {
+            display: none;
+        }
+
+        .mnuBlock li.rsmItem.rsmDisabled
+        {
+            margin: 0;
+        }
+
+        .mnuBlock td
+        {
+            padding: 0 !important;
+        }
+
+        .mnuBlock .rsmTemplate span
+        {
+            width: 100% !important;
+            height: auto !important;
+            position: static !important;
+            font-size: 1rem;
+            margin: 0 0 0.2rem !important;
+            display: inline-block;
+        }
+
+        .mnuBlock .rsmTemplate select
+        {
+            width: 100% !important;
+        }
+
+        .mnuBlock .rsmTemplate
+        {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-direction: column;
+            min-height: 38px;
+            border-bottom: 1px solid #ccc;
+            padding: 0.3rem !important;
+        }
+
+        div#cphMain_RadStepContact > div > div:last-child div
+        {
+            float: none !important;
+            padding-left: 0 !important
+        }
+
+        div#cphMain_RadStepContact > div > div:last-child div span,
+        .magi-professional-interest table tr td
+        {
+            width: 100% !important
+        }
+
+        div#cphMain_RadStepContact > div > div:last-child > div > div
+        {
+            margin-bottom: .5rem
+        }
+
+        div#cphMain_RadStepContact > div > div:last-child div
+        {
+            float: none !important;
+            padding-left: 0 !important
+        }
+
+        .magi-mystaff-wapper .dockLayout
+        {
+            margin: 0 0 1rem !important;
+            width: 100% !important;
+        }
+
+        .magi-mystaff-wapper div.rdContent
+        {
+            padding: 0.3rem;
+            overflow: inherit !important;
+            height: auto !important;
+        }
+
+        .magi-mystaff-wapper .rdHorizontal .RadDock
+        {
+            height: auto !important;
+        }
+
+        .customPhoneFlex span:nth-child(2)
+        {
+            width: 70px;
+        }
+
+        #floatingHeader .magi-mobile-flex
+        {
+            display: -webkit-box !important;
+            display: -ms-flexbox !important;
+            display: flex !important;
+            justify-content: flex-start !important;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+        }
+
+        #floatingHeader .magi-mobile-width-auto
+        {
+            width: auto !important;
+        }
+
+        #floatingHeader .magi-mobile-flex-row
+        {
+            flex-direction: row;
+            display: flex;
+        }
+
+        #floatingHeader .magi-mobile-flex.mobile-justify-center
+        {
+            justify-content: center !important;
+        }
+
+        #floatingHeader .magi-mobile-flex .magi-mobile-flex-item
+        {
+            width: auto !important;
+        }
+
+        #floatingHeader .magi-mobile-flex .magi-mobile-flex-item.magi-mobile-left-space
+        {
+            margin-left: 0.3rem;
+        }
+
+        #floatingHeader td.magi-mobile-justify-content-between,
+        #floatingHeader div.magi-mobile-justify-content-between,
+        #floatingHeader tr.magi-mobile-justify-content-between
+        {
+            justify-content: space-between !important;
+        }
+
+        #floatingHeader td.magi-mobile-flex-direction-row,
+        #floatingHeader div.magi-mobile-flex-direction-row,
+        #floatingHeader tr.magi-mobile-flex-direction-row,
+        #floatingHeader span.magi-mobile-flex-direction-row
+        {
+            flex-direction: row !important
+        }
+
+        table.magiAdvisorPop tr
+        {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        table.magiAdvisorPop tr td
+        {
+            width: 100% !important;
+            text-align: center;
+            padding-bottom: 1rem;
+        }
+
+        .magi-mobile-justify-content-start
+        {
+            justify-content: flex-start;
+        }
+
+        .magi-virtualEventLeft-sidebar.magi-mobile-fluid
+        {
+            order: 2 !important;
+        }
+
+        div#cphMain_ctlChatPanel11_dvChatPanel
+        {
+            padding-right: 0 !important;
+        }
+
+        *
+        {
+            box-sizing: border-box
+        }
+
+        .floatingHeader .commain
+        {
+            overflow: hidden
+        }
+
+        .alertify
+        {
+            width: 90%;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            left: 5%;
+            margin: 0
+        }
+
+        /* table
+    {
+        margin: 0 auto
+    }
+*/
+        img#cphHeader_imgMiddle,
+        img#cphHeader_imgRight
+        {
+            display: none
+        }
+
+        #floatingHeader tr
+        {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            width: 100% !important;
+            justify-content: center
+        }
+
+        #floatingHeader td
+        {
+            display: table-row;
+            width: 100% !important;
+            /*text-align: center*/
+        }
+
+        #floatingHeader td[colspan]
+        {
+            width: 100% !important
+        }
+
+        img
+        {
+            max-width: 100%
+        }
+
+        .AspectDiv
+        {
+            text-align: center
+        }
+
+        .boxStyle
+        {
+            text-align: center
+        }
+
+        td.boxStyle.img-wrapper div
+        {
+            height: auto !important
+        }
+
+        .boxStyle
+        {
+            height: auto !important;
+            text-align: center !important
+        }
+
+        .rightaligned
+        {
+            padding: 0 !important;
+            width: 100%
+        }
+
+        div#cphHeader_pnl1
+        {
+            overflow: hidden
+        }
+
+        #floatingHeader div#cphMain_Panel1 tr
+        {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            width: 100% !important
+        }
+
+        #floatingHeader div#cphMain_Panel1 td
+        {
+            display: table-row;
+            width: 100% !important;
+            text-align: left
+        }
+
+        #floatingHeader div#cphMain_Panel1 td[colspan]
+        {
+            width: 100% !important
+        }
+
+        .RadDropDownList
+        {
+            display: block
+        }
+
+        #floatingHeader div#cphMain_Panel1 table
+        {
+            margin: 0;
+            width: 100%
+        }
+
+        table.centered tr
+        {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            width: 100% !important
+        }
+
+        table.centered td
+        {
+            display: table-row;
+            width: 100% !important;
+            text-align: center
+        }
+
+        table.centered td[colspan]
+        {
+            width: 100% !important
+        }
+
+        #floatingHeader table.rightaligned table.rightaligned td
+        {
+            width: auto !important;
+            padding: 0 0.5rem 0 0 !important;
+            text-align: center !important;
+            padding-left: 0 !important;
+            line-height: 0;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+            border-right: 2px solid lightgray;
+            border-left: none !important;
+        }
+
+        #floatingHeader table.rightaligned table.rightaligned td:last-child
+        {
+            border: none;
+            padding-right: 0 !important;
+            margin-right: 0;
+        }
+
+        div#mainbody
+        {
+            width: 100%;
+            min-height: 600px;
+            margin-bottom: 40px;
+        }
+
+        .sidenav
+        {
+            padding-top: 0
+        }
+
+        .sidenav a
+        {
+            font-size: 13px
+        }
+
+        .sidenav
+        {
+            display: inline-block;
+            box-shadow: 5px 5px 105px
+        }
+
+        div#MegaDropDown,
+        div#cphMain_UpdatePanel1 ul.rwzBreadCrumb.rwzLeftImages li.rwzLI a.rwzLink span.rwzImage,
+        td.custom-gap
+        {
+            display: none !important
+        }
+
+        .clickmenu
+        {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            position: absolute;
+            top: 0.8rem;
+            left: 1rem;
+            height: 24px;
+            width: 25px;
+            background-color: #fff;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            -ms-flex-pack: distribute;
+            justify-content: space-around;
+        }
+
+        .clickmenu span
+        {
+            width: 100%;
+            height: 3px;
+            background-color: #000;
+            position: relative;
+        }
+
+        .clickmenu span:first-child
+        {
+            width: 50%;
+        }
+
+        .clickmenu span:nth-child(2)
+        {
+            width: 80%;
+        }
+
+        .clickmenu span:after
+        {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            background-color: #2f3882;
+            transition: 0.3s linear;
+            width: 0;
+            height: 100%;
+        }
+
+        .clickmenu:hover span:after
+        {
+            width: 100%;
+        }
+
+        .footerS
+        {
+            height: auto !important;
+            padding: 0.3rem 0;
+        }
+
+        div#footer table.centered tr
+        {
+            justify-content: center;
+        }
+
+        div#footer table tr td
+        {
+            display: block !important;
+            width: auto !important;
+            margin-right: 1rem;
+        }
+
+        input#cphHeader_imgLogo
+        {
+            max-width: 90%;
+            margin-top: 6px;
+            height: auto !important
+        }
+
+        #cphHeader_tblimage img
+        {
+            height: auto !important
+        }
+
+        .borderLessDialog.RadWindow
+        {
+            max-width: 80%;
+            height: auto !important
+        }
+
+        .borderLessDialog.RadWindow .rwContent
+        {
+            min-height: 225px
+        }
+
+        a#cphHeader_cmdLoggedUser
+        {
+            display: table;
+            margin: 0 auto 4px
+        }
+
+        .pnlconf
+        {
+            position: static !important;
+            height: auto !important;
+            box-sizing: border-box;
+            min-width: 100%
+        }
+
+        .pnlinfo
+        {
+            position: static !important;
+            height: auto !important;
+            min-width: 100%
+        }
+
+        .pnlinfo td
+        {
+            padding: 0.5rem !important;
+        }
+
+        #ProgramScroll2 .RadDropDownList_Metro
+        {
+            width: calc(100% - 142.5px)
+        }
+
+        div#floatingHeader
+        {
+            overflow: hidden
+        }
+
+        .RadWizard
+        {
+            max-width: 100%;
+            min-width: unset !important;
+            padding: 0 !important
+        }
+
+        .rwzHorizontal .rwzLI
+        {
+            width: 100%;
+            float: none;
+            font-size: 8px;
+            display: block !important;
+            margin-bottom: 0.5rem;
+        }
+
+        .rwzHorizontal .rwzLI a
+        {
+            border: 1px solid #ccc !important;
+            margin: 0 !important;
+            padding: 0.3rem !important;
+            line-height: 1.2;
+        }
+
+        .rwzHorizontal .rwzLI a span
+        {
+            line-height: normal !important;
+        }
+
+        .rwzHorizontal .rwzLI a:before
+        {
+            display: none;
+        }
+
+        div#cphMain_Panel1 div
+        {
+            display: block;
+            width: 100% !important;
+            text-align: left;
+            padding-left: 0 !important;
+            margin-bottom: 0
+        }
+
+
+        .RadWizard .rwzContentWrapper table td
+        {
+            text-align: left !important;
+            padding-left: 0 !important
+        }
+
+
+        div#cphMain_Panel1 .riSingle
+        {
+            width: 100% !important;
+            padding-right: 0 !important
+        }
+
+        .cvp
+        {
+            max-width: 94%
+        }
+
+        .spel
+        {
+            max-width: 6%
+        }
+
+        span.input-box-c
+        {
+            max-width: 100%;
+            float: left;
+            width: 96%
+        }
+
+        span.coutry-code
+        {
+            float: left;
+            width: 12px;
+            margin-top: 6px
+        }
+
+        /*
+    .riSingle.RadInput.RadInput_Default
+    {
+        padding: 0 5px 5px 0;
+        max-width: 100% !important;
+        width: auto !important;
+        display: block
+    }
+*/
+
+        span#ctl00_cphMain_txtEmailAddress_wrapper
+        {
+            max-width: 74%
+        }
+
+        span#cphMain_lblContent table td
+        {
+            width: inherit;
+            width: auto !important
+        }
+
+        input#cphMain_cmdVerify
+        {
+            margin-left: 2px;
+            margin-top: 7px
+        }
+
+        .form_User_Issue span#ctl00_cphMain_txtName_wrapper,
+        .form_User_Issue span#ctl00_cphMain_txtUserEmail_wrapper,
+        .form_User_Issue span#ctl00_cphMain_txtUserName_wrapper
+        {
+            max-width: 100%;
+            width: 100% !important
+        }
+
+        .form_User_Issue input[type=text]
+        {
+            min-width: 100%
+        }
+
+        div#ctl00_cphMain_ddCategory,
+        span#ctl00_cphMain_txtForm_wrapper
+        {
+            width: 100% !important
+        }
+
+        #floatingHeader .form_User_Issue td
+        {
+            text-align: left
+        }
+
+        #dvCheckBox span.CheckBox
+        {
+            width: 100%;
+            float: none;
+            text-align: left;
+            padding: 0 0 3px;
+            display: block
+        }
+
+        div#cphMain_pnlact span
+        {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            float: left
+        }
+
+        table#ctl00_cphMain_dgAccounts_ctl00.rgMasterTable tr
+        {
+            display: block;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            width: 100% !important;
+            height: auto !important;
+            text-align: left
+        }
+
+        table#ctl00_cphMain_dgAccounts_ctl00.rgMasterTable tr td
+        {
+            text-align: left;
+            padding: 5px !important;
+            display: table
+        }
+
+        table#ctl00_cphMain_dgAccounts_ctl00.rgMasterTable thead
+        {
+            background: #1e90ff
+        }
+
+        div#cphMain_pnl1 table tr td
+        {
+            text-align: left !important
+        }
+
+        span#cphMain_lblContent
+        {
+            text-align: left !important;
+        }
+
+        div#cphMain_pnlContent.pnlContain table
+        {
+            width: 100%;
+            text-align: left
+        }
+
+        div#cphMain_pnlFilter table tr td
+        {
+            width: auto !important;
+            padding: 10px
+        }
+
+        span#ctl00_cphMain_txtStep1Email_wrapper
+        {
+            width: auto !important;
+            width: 100% !important
+        }
+
+        div#cphMain_pnlPricingText
+        {
+            width: auto !important;
+            margin: 15px 0;
+            padding: 0.3rem;
+            overflow: inherit !important;
+        }
+
+        .RadTabStrip_Metro.rtsLeft .rtsLevel1
+        {
+            border-right: 1px solid #ccc;
+            width: 100% !important
+        }
+
+        div#cphMain_pnlNeedLogin
+        {
+            height: auto !important;
+            margin-left: 0
+        }
+
+        div#cphMain_UpdatePanel1 table td
+        {
+            padding: 3px !important;
+            text-align: left !important;
+            height: auto !important;
+            max-width: 100% !important;
+        }
+
+        div#cphMain_pnlButon table,
+        .magi-m-width-auto
+        {
+            width: auto !important
+        }
+
+        img#cphMain_imgLogo
+        {
+            display: table;
+            margin: 10px auto;
+            height: auto !important;
+        }
+
+        table.Rounded.Shadow
+        {
+            margin: 15px auto !important
+        }
+
+        div#mainbody
+        {
+            min-height: inherit !important;
+            margin-bottom: 10px;
+        }
+
+        span#cphMain_lblContent tr
+        {
+            height: auto !important;
+            padding-bottom: 10px;
+            justify-content: flex-start;
+        }
+
+        span#cphMain_lblContent table
+        {
+            margin-left: 0 !important;
+            width: 100%;
+        }
+
+        .lblTitle
+        {
+            padding-bottom: 8px;
+            display: inline-block;
+            font-size: 20px !important
+        }
+
+        #floatingHeader table.fib tr td
+        {
+            width: auto !important;
+            padding: 12px 4px
+        }
+
+        table#cphMain_dlOrgs td
+        {
+            text-align: left;
+            padding: 3px 0
+        }
+
+        span#cphMain_lblTitle font
+        {
+            float: left;
+            width: 100%
+        }
+
+        .RadGrid .rgAltRow,
+        .RadGrid .rgAltRow td,
+        .RadGrid .rgEditRow,
+        .RadGrid .rgEditRow td,
+        .RadGrid .rgFooter,
+        .RadGrid .rgGroupHeader,
+        .RadGrid .rgHeader,
+        .RadGrid .rgRow,
+        .RadGrid .rgRow td,
+        div#cphMain_pnlRegistrationOpen
+        {
+            height: auto !important
+        }
+
+        /*    div#ctl00_cphMain_dgNames table#ctl00_cphMain_dgNames_ctl00 tr td
+    {
+        max-width: 33%
+    }
+
+    div#ctl00_cphMain_dgNames th.rgHeader
+    {
+        width: 33.3%
+    }
+*/
+        table.ribbon-point td
+        {
+            text-align: left !important
+        }
+
+        table.ribbon-point ul li
+        {
+            padding: 4px 0
+        }
+
+        span#ctl00_cphFooter_rwPopText_C_lblPopTextTitle
+        {
+            font-size: 22px !important
+        }
+
+        table#cphMain_ckPop
+        {
+            margin: 0
+        }
+
+        div#cphMain_R1 table tr td
+        {
+            max-width: initial;
+            padding: 5px 0
+        }
+
+        .SectionTitle
+        {
+            color: #00008b;
+            padding: 5px 0;
+            display: inline-block
+        }
+
+        div#ctl00_cphMain_RadTab > div > ul
+        {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            flex-direction: column
+        }
+
+
+
+        table#cphMain_dlContacts > tbody > tr > td
+        {
+            flex: 100%;
+            margin: 0;
+            padding-left: 0;
+            padding-right: 0;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+
+        table.SquarePanel td
+        {
+            margin-left: 0 !important
+        }
+
+        div#cphMain_phCheck table,
+        div#cphMain_phCheck table td
+        {
+            padding-left: 0 !important;
+            margin-left: 0 !important
+        }
+
+        div#cphMain_phCheck span.rbIcon.p-icon.p-i-checkbox.rbToggleCheckbox
+        {
+            float: left
+        }
+
+        span.rbIcon.p-icon.p-i-checkbox.rbToggleCheckbox
+        {
+            position: relative;
+            top: 3px;
+        }
+
+        table#cphMain_rdSort1 tr td
+        {
+            max-width: 33%
+        }
+
+        div#cphMain_phMain span,
+        div#cphMain_pnlButon span#ctl00_cphMain_txtUserName_wrapper,
+        div#cphMain_pnlGeneral table,
+        div#ctl00_cphMain_RadTab.RadTabStrip .rtsLI,
+        div#ctl00_cphMain_dgMilestone table,
+        span#cphMain_repDocs_lblPKey_3 table,
+        span#ctl00_cphMain_txtPassword_wrapper,
+        table#cphMain_dlQLinks
+        {
+            width: 100% !important
+        }
+
+        table.search-f td
+        {
+            max-width: 50%;
+            padding: 0 !important
+        }
+
+        div#dvScroll > table > tbody > tr > td:first-child
+        {
+            max-width: 250px;
+            margin: 0 auto 0.6rem;
+        }
+
+        div#footer
+        {
+            position: static !important
+        }
+
+
+        div#dvScroll > table > tbody > tr > td:last-child > table table.rightaligned
+        {
+            margin: 0 auto !important
+        }
+
+        .boxStyle
+        {
+            min-height: inherit !important
+        }
+
+        span#cphMain_lblInfo img
+        {
+            margin: 0 auto;
+            max-width: 100%;
+            width: auto;
+            height: auto
+        }
+
+        td.boxStyle.img-wrapper.custom-magi-four-col1
+        {
+            margin-top: 0
+        }
+
+        .footerS table td,
+        td.magi-myconsole-left-wrapper,
+        #floatingHeader .magi-myconsole-filter-wrapper td
+        {
+            padding-left: 0 !important
+        }
+
+        .SquarePanel
+        {
+            height: auto !important
+        }
+
+        .SquarePanel > table > tbody > tr > td > table > tbody > tr > td > span
+        {
+            padding-right: .6rem
+        }
+
+        table.EditScreenStyle td
+        {
+            height: auto !important;
+            min-height: auto !important
+        }
+
+        table.EditScreenStyle > tbody > tr:last-child > td > table + div table
+        {
+            margin: 0
+        }
+
+        td#Lefttd
+        {
+            margin-bottom: 1rem;
+            order: 2;
+        }
+
+        div#cphMain_pnlact table tr td,
+        #floatingHeader .magi-placement-Preferences table tbody tr td
+        {
+            text-align: center !important
+        }
+
+        div#dvCheckBox .btnSmall
+        {
+            margin-bottom: .2rem
+        }
+
+        #ctl00_cphMain_dgAccounts td img[src="images/icons/gold_star.png"]
+        {
+            margin-left: .5rem
+        }
+
+        .rgMasterTable tbody > tr > td > table tbody > tr > td > table > tbody > tr
+        {
+            flex-wrap: nowrap !important;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            display: grid !important;
+            grid-template-columns: 15px 1fr;
+            -ms-display: grid !important;
+            -ms-grid-template-columns: 15px 1fr
+        }
+
+        div#DivcenterPage span.imgLabel.bold
+        {
+            float: none !important
+        }
+
+        div#cphMain_pnlact table tbody
+        {
+            width: 100%;
+            display: block
+        }
+
+        div#cphMain_pnlact table td[style="padding-left:50px"],
+        table.magi-radio-wrapper td,
+        .imgRefresh
+        {
+            padding-left: 0 !important
+        }
+
+        div#cphMain_pnlFilter table,
+        .magi-placement-Preferences table
+        {
+            margin: 0 !important;
+            width: 100%
+        }
+
+        div#cphMain_pnlFilter table tbody,
+        span#lblJournalCount,
+        #floatingHeader .magi-placement-Preferences table tbody tr td label
+        {
+            display: block
+        }
+
+        div#cphMain_pnlFilter table tbody tr
+        {
+            justify-content: flex-start
+        }
+
+        .rwzContentWrapper table,
+        div#DivcenterPage table table,
+        table.magi-fluid.magi-edit-account table,
+        td.popupheader table
+        {
+            margin: 0;
+            width: 100% !important
+        }
+
+        td.magi-myconsole-features-section td
+        {
+            padding-left: 0 !important
+        }
+
+        table.form_User_Issue tr table span
+        {
+            padding-right: 0 !important
+        }
+
+        table.magi-four-col-wrap > tbody > tr > td
+        {
+            margin-bottom: 1rem
+        }
+
+        div#cphHeader_updateMegaMenuPanel
+        {
+            position: relative;
+        }
+
+        div#MegaDropDown
+        {
+            position: fixed;
+            background-color: #fff;
+            top: 0;
+            left: -200%;
+            z-index: 9;
+            height: 100vh;
+            display: block !important;
+            max-width: 320px;
+            overflow-y: scroll;
+            transition: left .5s ease-in-out;
+            box-shadow: 0 0 20px #000;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        div#MegaDropDown.active_menu
+        {
+            left: 0
+        }
+
+        .RadMenu.RadMenu_Default > ul
+        {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+        }
+
+        .RadMenu.RadMenu_Default > ul li.rmItem
+        {
+            display: block;
+            padding: 0 !important;
+            background: 0 0 !important;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: none !important;
+            border-bottom: none;
+        }
+
+        .RadMenu.RadMenu_Default
+        {
+            margin-top: 0 !important
+        }
+
+        .RadMenu.RadMenu_Default > ul li.rmItem .rmRootLink
+        {
+            width: 100%;
+            color: inherit !important;
+        }
+
+        .RadMenu.RadMenu_Default > ul li.rmItem .rmRootLink:hover
+        {
+            background: unset !important;
+        }
+
+        .RadMenu.RadMenu_Default > ul li.rmItem > div.magi-tigger-wrap
+        {
+            display: block;
+            padding: .5rem !important;
+            color: inherit !important;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: none !important;
+            border-bottom: 1px solid #ccc;
+            position: relative;
+        }
+
+        .RadMenu.RadMenu_Default > ul li.rmItem > span.rmRootLink :hover
+        {
+            background: inherit;
+        }
+
+        span.magi-sub-tigger
+        {
+            position: absolute;
+            height: 100%;
+            border-left: 1px solid #ccc;
+            right: 0;
+            top: 0;
+            display: block !important;
+            left: 0;
+            width: 100%;
+            align-items: center;
+            z-index: 1;
+            cursor: pointer;
+        }
+
+        span.magi-sub-tigger:after
+        {
+            content: "";
+            display: block;
+            height: 7px;
+            width: 7px;
+            border: 1px solid #000;
+            transform: rotate( -45deg);
+            border-top: none;
+            border-left: none;
+            transition: .3s linear;
+            line-height: 38px;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            bottom: 0;
+        }
+
+        span.magi-sub-tigger.active:after
+        {
+            transform: rotate(45deg)
+        }
+
+        .RadMenu.RadMenu_Default > ul li.rmItem .rmSlide
+        {
+            position: static !important;
+            display: block !important;
+            width: 100% !important;
+            height: auto !important;
+            visibility: visible !important;
+            overflow: visible !important;
+        }
+
+        .RadMenu.RadMenu_Default > ul li.rmItem .rmSlide > .rmPopup
+        {
+            visibility: visible !important;
+            position: static !important;
+            padding: 0 !important;
+            border: none
+        }
+
+        .RadMenu.RadMenu_Default > ul li.rmItem .rmSlide > .rmPopup > div
+        {
+            padding: 0
+        }
+
+        .EventMenuImage,
+        .MagiMenuImage,
+        .ResourcesMenuImage
+        {
+            display: none
+        }
+
+        .RadMenu.RadMenu_Default > ul li.rmItem .rmSlide > .rmPopup > div td.pad8
+        {
+            padding-left: 0
+        }
+
+        td.pad8
+        {
+            padding-left: 0
+        }
+
+        .RadMenu.RadMenu_Default ul.rsmList.rsmLevel1 > li
+        {
+            padding-left: 0 !important;
+            margin: 0;
+            text-align: left;
+            list-style: none !important
+        }
+
+        .RadMenu.RadMenu_Default ul.rsmList.rsmLevel1
+        {
+            padding: 0 !important;
+            position:relative;
+        }
+
+        .RadMenu.RadMenu_Default ul.rsmList.rsmLevel1 > li a,
+        li.backMenu
+        {
+            display: block;
+            border: none;
+            padding: 0.7rem 1rem !important;
+            font-size: 14px;
+            border-bottom: 1px solid #cccc;
+            border-radius: 0
+        }
+
+        /*.mnuBlock li.rsmItem.rsmDisabled > a.rsmLink:not(:empty) + ul
+        {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            transform: translateX(100%);
+        }*/
+
+        li.backMenu
+        {
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            background-color: #ebebeb;
+        }
+
+        li.backMenu:before
+        {
+            content: "";
+            display: inline-block;
+            border: 2px solid #000;
+            height: 6px;
+            width: 6px;
+            border-top: none;
+            border-right: none;
+            transform: rotate( 45deg );
+            margin-right: 0.5rem;
+            position: relative;
+            top: -1px;
+        }
+
+        .RadMenu.RadMenu_Default ul.rsmList.rsmLevel1 > li a:hover
+        {
+            background: 0 0
+        }
+
+        .RadMenu.RadMenu_Default .mnuBlock
+        {
+            position: absolute;
+            top: 0;
+            z-index: 9;
+            background-color: #fff;
+            transform: translateX(200%);
+            width: 100%;
+            transition: transform 0.5s ease-in,height 0.5s ease-in;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .RadMenu.RadMenu_Default .mnuBlock.activeSubMenu
+        {
+            transform: translateX(100%);
+            height: auto;
+            overflow: visible;
+        }
+
+        #cphHeader_updateMegaMenuPanel
+        {
+            transform: translateX(0);
+            transition: transform 0.5s ease;
+            /* transition-delay: 0.5s;*/
+        }
+
+        #cphHeader_updateMegaMenuPanel.activeMenu
+        {
+            transform: translateX(-100%);
+        }
+
+        .mnuBlock .RadSiteMap > ul .rsmTemplate > div
+        {
+            margin-left: 0 !important
+        }
+
+        .mnuBlock .imgParent,
+        .mnuBlock .menuTitleParent
+        {
+            display: none !important
+        }
+
+        .mnuBlock .RadSiteMap > ul
+        {
+            width: 100% !important
+        }
+
+        .mnuBlock li.rsmItem.rsmDisabled > a.rsmLink
+        {
+            padding: .7rem 1rem !important;
+            margin: 0 !important;
+            font-weight: 600;
+            font-size: 1rem !important;
+            display:block;
+        }
+
+        
+        .mnuBlock .RadSiteMap
+        {
+            height: auto !important
+        }
+
+        .magi-mobile-logo-wrapper
+        {
+            position: relative
+        }
+
+        a.magiclosebtn
+        {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            right: 0;
+            width: 50px;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+        }
+
+        a.magiclosebtn:after,
+        a.magiclosebtn:before
+        {
+            content: "";
+            width: 3px;
+            background-color: #000;
+            display: block;
+            height: 23px;
+            transform: rotate(45deg);
+            transform-origin: center center;
+            position: absolute
+        }
+
+        a.magiclosebtn:before
+        {
+            transform: rotate(-45deg)
+        }
+
+
+        .RadSiteMap .rsmItem .rsmTemplate hr
+        {
+            display: none
+        }
+
+        /*
+    #floatingHeader td[colspan] div
+    {
+        width: 100% !important
+    }
+*/
+
+        span#cphMain_lblProInstruct table tr
+        {
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+        }
+
+        span#cphMain_lblProInstruct table tr td:nth-child(odd)
+        {
+            width: 10px !important;
+            height: 10px !important
+        }
+
+        span#cphMain_lblProInstruct table tr td:nth-child(even)
+        {
+            width: calc(100% - 22px) !important
+        }
+
+        span#cphMain_lblProInstruct table
+        {
+            margin-top: 1rem
+        }
+
+        div#cphHeader_dvEventInFo
+        {
+            left: 0;
+            right: 0
+        }
+
+        div#ctl00_cphMain_SiteMap1 ul li
+        {
+            width: 100% !important
+        }
+
+        table#cphMain_repDocs table tr td
+        {
+            text-align: left !important
+        }
+
+        table#cphMain_repDocs table,
+        td.magi-mystaff-wapper table
+        {
+            margin: 0;
+            width: 100%
+        }
+
+        /*div#ctl00_cphMain_rwSpeaker_C_UpdatePanel6 table table tr
+    {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        text-align: center
+    }
+
+    div#ctl00_cphMain_rwSpeaker_C_UpdatePanel6 table table tr td
+    {
+        flex: 1;
+        width: 100% !important;
+        padding-right: 0 !important;
+        text-align: center !important
+    }*/
+
+        table.magiSpeakerBioDataWrapper tr:not(:first-child) table tr
+        {
+            display: flex;
+            flex-direction: column;
+        }
+
+        table.magiSpeakerBioDataWrapper tr:not(:first-child) table tr td
+        {
+            flex: 1;
+            width: 100% !important;
+            text-align: center !important;
+        }
+
+
+
+        #floatingHeader .magi-custom-select td.rcbInputCell.rcbInputCellLeft,
+        #floatingHeader .magi-connection-wrap td.rcbInputCell.rcbInputCellLeft
+        {
+            width: calc(100% - 20px) !important;
+            min-height: 26px;
+            padding: 2px 22px 2px 5px !important
+        }
+
+        #floatingHeader .magi-custom-select td.rcbInputCell.rcbInputCellLeft .rcbInput
+        {
+            height: auto !important
+        }
+
+        #floatingHeader .magi-custom-select tr.rcbReadOnly,
+        #floatingHeader .magi-connection-wrap tr.rcbReadOnly
+        {
+            flex-direction: row !important
+        }
+
+        #floatingHeader .magi-custom-select td.rcbArrowCell.rcbArrowCellRight,
+        #floatingHeader .magi-connection-wrap td.rcbArrowCell.rcbArrowCellRight
+        {
+            width: 20px !important;
+            min-height: 26px
+        }
+
+        #floatingHeader table.magi-flex-wrapper tbody tr td
+        {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            padding-bottom: .5rem !important
+        }
+
+        #floatingHeader table.magi-flex-wrapper .RadInput
+        {
+            padding-right: 0 !important
+        }
+
+        .magi-flex > span
+        {
+            width: 100%
+        }
+
+        .RadDropDownList.RadDropDownList_Metro
+        {
+            display: block;
+            width: 100% !important
+        }
+
+        .rcbSlide
+        {
+            width: calc(100% - 1.4rem) !important;
+            margin: 0 auto;
+            right: 0;
+            left: 0 !important
+        }
+
+        .rcbSlide > div
+        {
+            width: 100% !important
+        }
+
+        div#floatingHeader .btnMargin
+        {
+            margin-left: 0 !important
+        }
+
+        .RadComboBox_Metro,
+        .RadDropDownList,
+        .RadInput
+        {
+            width: 100% !important
+        }
+
+        .magi-mobile-botom-space
+        {
+            margin-bottom: .3rem !important
+        }
+
+        .magi-mobile-xl-bottom-space
+        {
+            margin-bottom: 1rem !important
+        }
+
+
+        .magi-mobile-top-space
+        {
+            margin-top: .3rem !important
+        }
+
+        .popupheader
+        {
+            padding-left: 5px;
+            padding-right: 5px
+        }
+
+
+        #floatingHeader tr.magi-viewaccount-profile-name td
+        {
+            width: auto !important
+        }
+
+        #floatingHeader td.magi-myprofile-wapper
+        {
+            display: -webkit-box !important;
+            display: -ms-flexbox !important;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+        }
+
+        .magi-interest-inside-wrapper .magi-flex
+        {
+            display: -webkit-box !important;
+            display: -ms-flexbox !important;
+        }
+
+        #floatingHeader .magi-interest-inside-wrapper .magi-flex > div
+        {
+            width: auto !important
+        }
+
+        #floatingHeader table.magi-interest-cube-wrapper tr td.magi-interest-cube-wrapper-cell
+        {
+            width: 16px !important
+        }
+
+        #floatingHeader div#cphMain_Panel1 div .magi-flex
+        {
+            display: flex
+        }
+
+        table.magi-fluid.magi-edit-acount-wrapper .riSingle.RadInput.RadInput_Default
+        {
+            width: 100% !important
+        }
+
+
+
+        .magi-flex
+        {
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+        }
+
+        table.magi-fluid.magi-edit-account table td,
+        .magi-edit-acount-wrapper table tr td
+        {
+            padding-right: 0 !important;
+            padding-left: 0 !important;
+            text-align: left !important
+        }
+
+        table.magi-edit-account .RadInput,
+        table.magi-fluid.magi-edit-acount-wrapper .riSingle.RadInput.RadInput_Default,
+        #floatingHeader .magi-placement-Preferences table tbody tr td label
+        {
+            padding-right: 0 !important
+        }
+
+        /*table.magi-edit-account tr td:not(:last-child)
+        {
+            margin-bottom: 1rem;
+        }*/
+
+        .hide-in-mobile
+        {
+            display: none !important
+        }
+
+        /* #floatingHeader table.magi-fluid.magi-edit-acount-wrapper .magi-tab-responsive strong.magi-table-thead
+    {
+        position: static;
+        display: block;
+        margin-bottom: .5rem
+    }
+
+    #floatingHeader table.magi-fluid.magi-edit-acount-wrapper .magi-tab-responsive > table > tbody > tr > td
+    {
+        padding: .3rem !important
+    }*/
+
+        .magi-interest-cube-wrapper > div > div,
+        .magi-interest-inside-wrapper td > div
+        {
+            flex-direction: row
+        }
+
+        .magi-custom-popup
+        {
+            max-width: 100% !important;
+        }
+
+        table.magi-three-col-speking-interst > tbody > tr > td:not(:last-child)
+        {
+            margin-right: 0;
+        }
+
+        .magi-mobile-fluid
+        {
+            width: 100% !important;
+        }
+
+
+        td.magi-mystaff-wapper .rdTitleBar,
+        td.magi-mystaff-wapper .rdTop .rdCenter,
+        td.magi-mystaff-wapper .rdTop .rdLeft,
+        td.magi-mystaff-wapper .rdTop .rdRight
+        {
+            height: auto !important;
+        }
+
+        #floatingHeader table.magi-mystaff-table > tr
+        {
+            position: relative;
+        }
+
+        #floatingHeader table.magi-mystaff-table tr td:last-child
+        {
+            position: absolute;
+            right: 0.5rem;
+            width: auto !important;
+        }
+
+        td.magi-mystaff-wapper table div,
+        .maig-myconference-wrapper > div table
+        {
+            width: 100% !important;
+        }
+
+        .magi-mycertifications-wrapper div,
+        .magi-myhistory-table-wapper div
+        {
+            height: auto !important;
+        }
+
+        .maig-myconference-wrapper > div
+        {
+            margin: 0 0 1rem !important;
+            max-width: 100% !important;
+        }
+
+        #floatingHeader .magi-mobile-tr-flex
+        {
+            justify-content: flex-start !important;
+        }
+
+        #floatingHeader .magi-mobile-tr-flex > td
+        {
+            width: auto !important;
+        }
+
+        .magi-mobile-height-auto
+        {
+            height: auto !important;
+        }
+
+        .magi-myconsole-filter-wrapper td
+        {
+            padding-left: 0 !important;
+        }
+
+        #floatingHeader .magi-placement-Preferences table tbody tr td
+        {
+            width: 22.7% !important;
+            margin-right: 3%;
+            border: 1px solid #ccc;
+            margin-bottom: 3%;
+        }
+
+        #floatingHeader .magi-placement-Preferences table tbody tr td:nth-child(4n)
+        {
+            margin-right: 0;
+        }
+
+        #floatingHeader .magi-placement-Preferences table tbody tr td:empty
+        {
+            display: none;
+        }
+
+        .magi-mobile-left-p0 td
+        {
+            padding-left: 0 !important;
+        }
+
+        #floatingHeader .magi-paddingLeft0,
+        .RadWindow_Default .magi-paddingLeft0
+        {
+            padding-left: 0 !important;
+        }
+
+        #floatingHeader .magi-paddinRight0,
+        .RadWindow_Default .magi-paddinRight0
+        {
+            padding-right: 0 !important;
+        }
+
+        #floatingHeader .magi-paddingTop0,
+        .RadWindow_Default .magi-paddingTop0
+        {
+            padding-top: 0 !important;
+        }
+
+        #floatingHeader .magi-paddingBottom0,
+        .RadWindow_Default .magi-paddingBottom0
+        {
+            padding-bottom: 0 !important;
+        }
+
+        #floatingHeader .magi-marginLight0,
+        .RadWindow_Default .magi-marginLight0
+        {
+            margin-left: 0 !important
+        }
+
+        .magi-mobile-left-p0 td input[type="checkbox"]
+        {
+            margin-left: 0;
+        }
+
+        .magi-myschedule-actions div img, .magi-myschedule-actions div span
+        {
+            margin-right: 0.5rem;
+        }
+
+        .magi-mobile-noMargin
+        {
+            margin: 0 !important;
+        }
+
+        .magi-fad-wrapper tr
+        {
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+        }
+
+        .magi-fad-wrapper tr td
+        {
+            margin-bottom: 0.3rem;
+            max-width: 100% !important;
+        }
+
+        .magi-fad-wrapper tr td input
+        {
+            margin-right: 0.3rem;
+        }
+
+        .rgDataDiv
+        {
+            overflow: inherit !important;
+            height: auto !important;
+            min-height: inherit !important;
+        }
+
+        .custom-console
+        {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .custom-console div.dockLayout
+        {
+            margin: 0 0 1rem !important;
+        }
+
+        #floatingHeader table.custom-form-wrapper tr td, #floatingHeader div.custom-form-wrapper div
+        {
+            padding: 0 !important;
+        }
+
+        .magi-mobile-left
+        {
+            float: left;
+        }
+
+        .magi-mobile-right
+        {
+            float: right;
+        }
+
+        .magi-virtualEventLeft-sidebar.magi-mobile-fluid
+        {
+            margin-top: 1rem;
+        }
+
+        .magi-virtualEventTitle
+        {
+            font-size: 1.1rem !important;
+            margin-bottom: 0;
+            display: block;
+        }
+
+        .magiVirtualTitleWrap span.lblTitle
+        {
+            padding-bottom: 0;
+            font-size: 1rem !important;
+        }
+
+        #floatingHeader table.magiSponserLogo tr td
+        {
+            display: block;
+            text-align: center !important;
+            display: inline-block !important;
+            width: auto !important;
+        }
+
+        table.magiSponserLogo tr
+        {
+            display: block !important;
+        }
+
+        .magiChatTitle
+        {
+            margin-bottom: 0.3rem;
+            padding-right: 7rem;
+        }
+
+        .magiChatTitle .lblTitle
+        {
+            font-size: 15px !important;
+        }
+
+        span.magiChatIcon
+        {
+            right: 0;
+            top: 0;
+            width: 30px;
+        }
+
+        div#leftPanelParent,
+        div#dvChatBox
+        {
+            width: 100%;
+            border-right: none;
+        }
+
+
+        div#dvChatBox
+        {
+            order: 1;
+            margin-bottom: 1.5rem;
+            width: 100% !important;
+            border: none;
+        }
+
+        div#leftPanelParent
+        {
+            order: 2;
+            width: 100% !important;
+        }
+
+        .magiChatWrapper
+        {
+            width: calc(100% - 1rem) !important;
+        }
+
+        .emoji-wysiwyg-editor.mytext
+        {
+            padding: 0.5rem 1.8rem 0.5rem 0.5rem;
+        }
+
+        div#msgBox .emoji-picker-icon
+        {
+            right: 10px;
+            top: 4px;
+        }
+
+        #typeAndSend
+        {
+            padding: 0.7rem 0.7rem 1.9rem 0.7rem;
+            position: static;
+        }
+
+        .emoji-wysiwyg-editor:empty:before
+        {
+            content: attr(placeholder);
+            color: #9aa2ab;
+            position: absolute;
+            top: 0;
+            left: 0.5rem;
+            right: 0;
+            bottom: 0;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+        }
+
+        .magiChatWrapper .rwContent
+        {
+            padding: 0.5rem !important;
+        }
+
+
+        ul#msgList
+        {
+            height: 300px;
+        }
+
+        table.custom-magi-four-col-table > tbody > tr
+        {
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+        }
+
+        table.custom-magi-four-col-table
+        {
+            width: 100%;
+        }
+
+        table.custom-magi-four-col-table > tbody > tr
+        {
+            grid-template-columns: 1fr;
+        }
+
+        #floatingHeader table.custom-magi-four-col-table td
+        {
+            text-align: left !important;
+        }
+
+        .maig-myconference-wrapper > div > div
+        {
+            min-height: inherit !important;
+            max-height: inherit !important;
+            height: auto !important;
+            width: 100% !important;
+        }
+
+        #floatingHeader .magi-mobile-text-center
+        {
+            text-align: center !important;
+        }
+
+        #floatingHeader .magi-mobile-text-left
+        {
+            text-align: left !important;
+        }
+
+        #floatingHeader .magi-mobile-text-right
+        {
+            text-align: left !important;
+        }
+
+        table.magiIssueListWrap > tbody > tr > td
+        {
+            padding-bottom: 0.3rem;
+        }
+
+        table.magiIssueListWrap > tbody > tr > td br
+        {
+            display: none;
+        }
+
+        table.magiIssueListWrap > tbody > tr > td,
+        table.magiIssueListWrap1 > tbody > tr > td
+        {
+            padding-bottom: 0.3rem;
+        }
+
+        table.magiIssueListWrap > tbody > tr > td br
+        {
+            display: none;
+        }
+
+        #floatingHeader div#cphMain_Panel1 table.magiIssueListWrap > tbody > tr > td .RadComboBox.RadComboBox_Metro.RadComboBox_Default td.rcbInputCell.rcbInputCellLeft
+        {
+            display: unset !important;
+            width: calc(100% - 20px) !important;
+            box-sizing: border-box;
+            height: 26px;
+        }
+
+        #floatingHeader div#cphMain_Panel1 table.magiIssueListWrap > tbody > tr > td .RadComboBox.RadComboBox_Metro.RadComboBox_Default td input
+        {
+            height: unset !important;
+            box-sizing: border-box !important;
+        }
+
+
+        #floatingHeader div#cphMain_Panel1
+        table.magiIssueListWrap > tbody > tr > td td.rcbArrowCell.rcbArrowCellRight
+        {
+            width: 20px !important;
+            height: 26px !important;
+        }
+
+        table.centered.magiEventCloudWrapper tr td
+        {
+            padding: 0.5rem;
+        }
+
+        #floatingHeader table.magiEventCloudWrapper tr td
+        {
+            width: 50% !important;
+        }
+
+        .magi-connection-wrap
+        {
+            background-color: #fff;
+            padding: 0.3rem;
+            border: 1px solid #ccc;
+            margin-bottom: 1rem;
+        }
+
+        .magiVenueInfoBtnWrap
+        {
+            /*text-align: center;*/
+        }
+
+        #cphMain_ctlEventDropDown_btnEvent
+        {
+            margin-bottom: 0.3rem;
+        }
+
+        #cphMain_ctlEventDropDown_btnEvent + div,
+        div#ctl00_cphMain_ctlVirtualEventDropDown_ddVirtual
+        {
+            padding-bottom: 0 !important;
+            margin-bottom: 0.3rem;
+        }
+
+        .magiSpecialBtnWrap
+        {
+            text-align: left;
+            display: block;
+            width: 100%;
+        }
+
+        .magiVenueInfoBtnWrap input[type="submit"]
+        {
+            width: auto !important;
+        }
+
+        div#floatingHeader .magiMobileLeftSpace
+        {
+            margin-left: 0.3rem;
+        }
+
+        div#floatingHeader .magiMobileRightSpace
+        {
+            margin-right: 0.3rem;
+        }
+
+        table.magiSpeakerWrap table tr
+        {
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        table.magiSpeakerWrap table tr td
+        {
+            padding-left: 0 !important;
+            width: 100% !important;
+            padding-right: 0 !important;
+            text-align: center !important;
+        }
+
+        .magi-flex.magi-justify-content-space-between.magiChattingWrapper
+        {
+            height: auto !important;
+        }
+
+        .magiChatAvatarMsgWrap:before
+        {
+            left: -10px;
+            border-width: 10px;
+        }
+
+        .magiChatAvatarMsgWrap
+        {
+            padding: 0.5rem;
+            margin-left: 1rem;
+        }
+
+        div#dvScroll.dvfixed > table > tbody > tr > td:first-child
+        {
+            margin-top: 0.7rem;
+        }
+
+        div#dvScroll
+        {
+            border-bottom: 1px solid #ccc !important;
+            min-height: 61px;
+        }
+
+        .dvfixed .clickmenu
+        {
+            top: 1.4rem;
+        }
+
+        .magiHeaderLoginArea
+        {
+            border-bottom: 1px solid #ccc;
+            padding: 0 !important;
+            border-top: 1px solid #ccc;
+        }
+
+        .magiHeaderLoginArea td
+        {
+            padding-right: 0 !important;
+        }
+
+
+        .RadTabStrip.magiMobileTab li.rtsLI span.rtsLink
+        {
+            border: none;
+            padding: 0.5rem !important;
+            background-color: #fff !important;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: left;
+        }
+
+        .RadTabStrip.magiMobileTab li.rtsLI.rtsSelected span.rtsLink
+        {
+            background-color: #25a0da !important;
+            border-bottom: 1px solid #25a0da;
+        }
+
+        .RadTabStrip.magiMobileTab li.rtsLI.rtsSelected span.rtsLink span.rtsTxt
+        {
+            color: #fff !important;
+        }
+
+        .RadTabStrip.magiMobileTab ul.rtsUL
+        {
+            border: 1px solid #e0e0e0;
+        }
+
+        .RadTabStrip.magiMobileTab li.rtsLI
+        {
+            display: block !important;
+        }
+
+        .RadTabStrip.magiMobileTab li.rtsLI:last-child span.rtsLink
+        {
+            border-bottom: none;
+        }
+
+        .RadTabStrip.magiMobileTab li.rtsLI span.rtsLink span.rtsTxt
+        {
+            font-size: 0.8rem;
+            color: #000;
+            display: block;
+        }
+
+        .RadTabStrip_MetroTouch.rtsTop.magiMobileTab .rtsLevel1
+        {
+            border: none !important;
+        }
+
+        td.magi-regestration-right-col div
+        {
+            height: auto !important;
+        }
+
+        #floatingHeader div#cphMain_Panel1 table.magiCalenderWapper tr
+        {
+            -webkit-box-pack: start !important;
+            -ms-flex-pack: start !important;
+            justify-content: flex-start !important;
+            -ms-flex-wrap: nowrap !important;
+            flex-wrap: nowrap !important;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+        }
+
+        #floatingHeader div#cphMain_Panel1 table.magiCalenderWapper > tr > td
+        {
+            width: auto !important;
+        }
+
+        #floatingHeader div#cphMain_Panel1 table.magiCalenderWapper tr td
+        {
+            width: auto !important;
+            display: block !important;
+        }
+
+        table.magiCalenderWapper
+        {
+            margin-top: 0.2rem !important;
+        }
+
+        tr.magi-viewaccount-profile-name
+        {
+            justify-content: flex-start !important;
+        }
+
+        .magi-mobile-right-space
+        {
+            margin-right: 0.3rem !important;
+        }
+
+        .text-r.magiChatAvatarMsgWrap:before
+        {
+            right: -10px;
+        }
+
+        td.customVirtualFlexWrap
+        {
+            display: flex !important;
+        }
+
+        .magi-mobile-align-start
+        {
+            align-items: flex-start !important;
+        }
+
+        .RadMenu.RadMenu_Default .mnuBlock .rsmColumn
+        {
+            display: block;
+        }
+
+        .mnuBlock > table > tbody > tr > td:not(.pad8),
+        .magiBreadcrumbWrapper,
+        
+        .RadTabStrip.rtsVertical
+        {
+            display: none !important;
+        }
+
+        .RadTabStrip
+        {
+            display: none;
+        }
+
+        table.magi-viewaccount-data-wrapper tr th, table.magi-viewaccount-data-wrapper tr td
+        {
+            padding-left: 0;
+        }
+
+        div#cphMain_RemindersBox .magiVirtualCardBoxContent
+        {
+            height: auto !important;
+        }
+
+        .customleftPanelSection
+        {
+            margin-bottom: 1rem;
+        }
+
+        .customleftPanelSection .magiRemiderSection > div,
+        .customleftPanelSection #cphMain_pLeftChatPanel
+        {
+            width: 100%;
+        }
+
+        .magi-mobile-block
+        {
+            display: block !important;
+        }
+
+        .magi-mobile-inlineblock
+        {
+            display: inline-block;
+            width: auto;
+        }
+
+        .magi-mobile-W50
+        {
+            width: 50% !important;
+        }
+
+        div[id*="rdResources"] > ul
+        {
+            flex-direction: column;
+        }
+
+        .magiMobileTabNameWrap.activeTabName span.magiMobileTabName:after
+        {
+            content: "Menu";
+            text-indent: 0;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 100%;
+            color: #fff;
+        }
+
+        .magiMobileTabNameWrap.activeTabName span.magiMobileTabName
+        {
+            position: relative;
+            color: #25a0da;
+        }
+        div#thirdDivision
+        {
+            max-height:inherit !important;
+        }
+        #dvForRapidFire label
+        {
+            width: 100%;
+            display: block;
+            margin-left: 0 !important;
+            margin-top: 0.5rem;
+        }
+        #dvForRapidFire progress#netProgressBar
+        {
+            width: 100%;
+        }
+        #thirdDivision
+        {
+            flex-wrap: wrap;
+            flex-direction: row !important;
+            padding-right: 10px;
+            padding-left: 10px;
+        }
+        div#thirdDivision > div:last-child
+        {
+            order: 2;
+            text-align: left;
+            margin-bottom: 0;
+        }
+        #topMainSender, .magiChatBoxTitle span
+        {
+            font-size: inherit !important;
+        }
+        .custom-table-flex tr
+        {
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+        }
+        .magi-pop-header
+        {
+            align-items: center;
+            justify-content:center;
+            flex-direction: column;
+        }
+        div[id*="rdCropImage"] .imageBox
+        {
+            width: auto;
+            height: 400px;
+        }
+
+        div[id*="rdCropImage"]
+        {
+            height: auto !important;
+        }
+        div#dvScroll > table > tbody > tr > td:first-child input
+        {
+            max-width: 100%;
+        }
+
+        .sidebar-wrapper
+        {
+            order: 2;
+        }
+        table.magi-edit-account tr td:not(:last-child)
+        {
+            margin-right: 0;
+        }
+        .magi-flex.magi-append-phone-head,
+        .magi-flex.magi-append-phone-head+div
+        {
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        td.magi-phone-flex-mobile
+        {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .magi-flex.magi-append-phone-head
+        {
+            margin-bottom: 0.3rem;
+        }
+        td.magi-phone-head
+        {
+            display: none !important;
+        }
+
+        #dvForRapidFire
+        {
+            padding-right: 3.5rem !important;
+        }
+		.magi-mobile-flex-wrap{
+            flex-wrap:wrap;
+        }				   
+    }
+
+    @media(max-width:500px)
+    {
+        #floatingHeader table.magiEventCloudWrapper tr td
+        {
+            width: 100% !important;
+        }
+    }
+
+
+    @media (max-width:400px)
+    {
+        #dvCheckBox span.CheckBox
+        {
+            width: 100%;
+            float: none;
+            display: block
+        }
+
+        div#dvScroll > table > tbody > tr > td:first-child
+        {
+            max-width: 200px
+        }
+
+        #floatingHeader strong.magi-table-thead
+        {
+            font-size: 9pt;
+            width: 50%;
+        }
+    }
+.custom-popupbox
+{
+    width: 100% !important;
+    max-width: 1100px !important;
+    height: auto !important;
+}
+
+.custom-popupbox .rwContent
+{
+    height: 560px !important;
+}
+
+.rsmTemplate {margin-top: -1px;}
+
+.RadComboBoxDropDown label
+{
+    font-size: 13px !important;
+}

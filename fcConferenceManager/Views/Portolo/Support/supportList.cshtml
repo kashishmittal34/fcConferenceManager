@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Elimar.Models.Help>
+@{
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+}
+<style>
+    td, th {
+        text-align: left;
+    }
+    label:hover{
+        cursor:pointer;
+        color:white;
+    }
+    a{
+        color:black;
+    }
+</style>
+<br />
+<script src="https://kit.fontawesome.com/b79227d049.js" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<form class="container" asp-action="Details" method="get" style="display:inline-block">
+    <div class="form-actions no-color">
+        <table style="border-collapse:separate; border-spacing:15px;">
+            <tr>
+                <td>Find by name: <input class="form-control" type="text" name="nameSearch" value="@ViewData["NameFilter"]" /></td>
+                <td>Find by Email: <input class="form-control" type="text" name="emailSearch" value="@ViewData["EmailFilter"]" /></td>
+                <td style="position:relative;"><input style="position:absolute;bottom:0px;" type="submit" value="Search" class="btn btn-dark" />  | </td>
+                <td style="position:relative; "><a style="position: absolute; bottom: 0px; margin-left: 80px" href="~/support/supportList" class="btn btn-primary">Reset</a></td>
+                @if (ViewBag.AllowAdd)
+                {
+                    <td>
+                        <div style="position:absolute;right:5px;margin:5px 50px">
+                            @Html.ActionLink("create New", "Help", "Support", new { @class = "btn btn-outline-warning" })
+                        </div>
+                    </td>
+                }
+            </tr>
+        </table>
+    </div>
+</form>
+<div class="card container" style="border:2px solid;padding:0px;">
+    <table style="margin:20px 20px 20px 20px; max-width:97%; align-content:flex-start" id="tbldata" class="table  table-bordered table-striped ">
+        <thead>
+            <tr class="table-dark">
+                <th scope="col">Id</th>
+                <th scope="col"><a style="color:white" href="~/support/supportList?nameSort=@ViewData["NameSortParm"]"><label>Name</label></a></th>
+                <th scope="col">Email</th>
+                <th scope="col" style="max-width:150px">Subject</th>
+                <th scope="col">Discription</th>
+                <th scope="col">Reply</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="table">
+                    <td>@item.PKey</td>
+                    <td>@item.Name</td>
+                    <td>@item.Email</td>
+                    <td style="max-width:150px">@item.Subject</td>
+                    <td style="white-space:pre">@item.Discription.Trim()</td>
+                    <td><a href="#" style="text-decoration:none; color:black; background-color:transparent;"><i class="fa-solid fa-comment-dots"></i></a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div><br/>
+<div class="container d-inline " style="position:absolute;left:40%;">
+    <span style="font-size:30px">Pages</span>
+    <a style="align-self:center; font-size:20px; margin-left:20px; margin-bottom:30px;" href="~/support/supportList?pageNo=1&nameSearch=@ViewData["NameFilter"]&emailSearch=@ViewData["EmailFilter"]&nameSort=@ViewData["NameSortParm"]"><<</a>
+    @for (int i = ViewBag.firstPage; i <= ViewBag.lastPage; i++)
+    {
+        if (ViewBag.Page == i)
+        {
+            <a  style="text-align:center; font-size:30px;margin-left:20px; color:orangered" href="~/support/supportList?pageNo=@i&nameSearch=@ViewData["NameFilter"]&emailSearch=@ViewData["EmailFilter"]&nameSort=@ViewData["NameSortParm"]">@i</a>
+        }
+        else
+        {
+            <a  style="text-align:center; font-size:30px;margin-left:20px; color:black" href="~/support/supportList?pageNo=@i&nameSearch=@ViewData["NameFilter"]&emailSearch=@ViewData["EmailFilter"]&nameSort=@ViewData["NameSortParm"]">@i</a>
+        }
+    }
+    <a style="align-self:center; font-size:20px; margin-left:20px; margin-bottom:30px;" href="~/support/supportList?pageNo=@ViewBag.lastPage&nameSearch=@ViewData["NameFilter"]&emailSearch=@ViewData["EmailFilter"]&nameSort=@ViewData["NameSortParm"]">>></a>
+</div>
+

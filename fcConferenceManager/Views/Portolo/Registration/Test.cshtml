@@ -1,0 +1,919 @@
+﻿
+@model Elimar.Models.UserResponse
+@{
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+}
+<style>
+    .span
+    {
+        display: inline-block;
+        width: 75px;
+        height: 38px;
+    }
+</style>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.9/js/jquery.Jcrop.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#FileUpload1').change(function () {
+            $('#Image1').hide();
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#Image1').show();
+                $('#Image1').attr("src", e.target.result);
+                $('#Image1').Jcrop({
+                    onChange: SetCoordinates,
+                    onSelect: SetCoordinates
+                });
+            }
+            reader.readAsDataURL($(this)[0].files[0]);
+        });
+
+        $('#btnCrop').click(function () {
+            var x1 = $('#imgX1').val();
+            var y1 = $('#imgY1').val();
+            var width = $('#imgWidth').val();
+            var height = $('#imgHeight').val();
+            var canvas = $("#canvas")[0];
+            var context = canvas.getContext('2d');
+            var img = new Image();
+            img.onload = function () {
+                canvas.height = height;
+                canvas.width = width;
+                context.drawImage(img, x1, y1, width, height, 0, 0, width, height);
+                $('#imgCropped').val(canvas.toDataURL());
+                $('#btnUpload').show();
+            };
+            img.src = $('#Image1').attr("src");
+        });
+    });
+    function SetCoordinates(c) {
+        $('#imgX1').val(c.x);
+        $('#imgY1').val(c.y);
+        $('#imgWidth').val(c.w);
+        $('#imgHeight').val(c.h);
+        $('#btnCrop').show();
+    };
+</script>
+
+
+
+
+
+<form action="/Registration/RegistrationSubmit" method="post" enctype="multipart/form-data" onsubmit="validateInputs(e);">
+    <input name="ID" value="@Model.ID" hidden />
+    <div>
+        <div>
+
+
+            <div>
+
+
+
+                <div>
+
+
+
+                    <table>
+
+
+                        <tbody>
+
+
+                            <tr>
+
+
+                                <td colspan="6" style="text-align: left">
+
+
+                                    <span style="color: #00008b; font-weight: bold">Name and Contact Information</span>
+
+
+
+                                </td>
+
+
+                            </tr>
+
+
+                            <tr>
+
+
+                                <td>
+
+
+                                    <span title="Selection required">Salutation:</span>
+
+
+                                    <br>
+
+
+                                    <select id="Salutation1" value="@Model.salutation1" name="Salutation1" selected>
+
+
+
+                                        <option value="" @(Model.salutation1 == "" ? "selected" : "")>Select</option>
+
+
+                                        <option value="MR" @(Model.salutation1 == "MR" ? "selected" : "")>MR</option>
+
+
+                                        <option value="MRS" @(Model.salutation1 == "MRS" ? "selected" : "")>MRS</option>
+
+
+                                    </select>
+
+
+                                </td>
+
+
+                                <td style="padding-left: 5px">
+
+
+                                    <span>First Name:</span>
+
+                                    <br>
+
+                                    <input id="firstNameid" type="text" value="@Model.firstname" name="FirstName" required />
+
+
+                                </td>
+
+
+                                <td style="padding-left: 5px">
+
+
+                                    <span>Middle Name:</span>
+
+
+                                    <br>
+
+
+                                    <input type="text" value="@Model.middlename" name="MiddleName" />
+
+
+                                </td>
+
+
+                                <td style="padding-left: 5px">
+
+
+                                    <span>Last Name:</span>
+
+
+                                    <br>
+
+
+                                    <input id="LastName" type="text" value="@Model.lastname" name="LastName" required />
+
+
+                                </td>
+
+
+                                <td style="padding-left: 5px">
+
+
+                                    <span>Suffix:</span>
+
+
+                                    <br>
+
+
+
+                                    <div style="width:70px;" tabindex="0">
+
+
+                                        <select value="@Model.suffix" name="suffix">
+
+
+                                            <option value="" @(Model.suffix == "" ? "selected" : "")>(none)</option>
+
+
+                                            <option value="Jr." @(Model.suffix == "Jr." ? "selected" : "")>Jr.</option>
+
+
+                                            <option value="Sr." @(Model.suffix == "Sr." ? "selected" : "")>Sr.</option>
+
+
+
+                                        </select>
+
+
+                                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <td style="padding-left: 5px">
+
+
+                <span>Nick Name:</span>
+
+
+                <br>
+
+
+                <input type="text" value="@Model.nickname" name="nickname" />
+
+
+            </td>
+
+
+            <td style="padding-left: 5px">
+
+
+                <span>Sign in Account ID:</span>
+
+
+                <br>
+
+
+                <input type="email" value="@Model.signinaccountid" name="signinaccountid" required id="signinaccountid" />
+
+
+
+            </td>
+
+
+
+
+            <table>
+
+
+                <tbody>
+
+
+                    <tr>
+
+
+                        <td style="padding-left: 5px;">
+
+
+                            <span></span>
+
+
+                        </td>
+
+
+                    </tr>
+
+
+                </tbody>
+
+
+            </table>
+
+
+            <table>
+
+
+                <tbody>
+
+
+                    <tr>
+
+
+                        <td>
+
+
+                            <span style="color: #00008b; font-weight: bold">Main Email:</span>
+
+
+                            <br>
+
+
+                            <select name="MainEmailType" value="@Model.MainEmailType" id="MainEmailType">
+
+
+                                <option value="Assistant" @(Model.MainEmailType == "Assistant." ? "selected" : "")>Assistant</option>
+
+
+                                <option value="Personal" @(Model.MainEmailType == "Assistant." ? "selected" : "")>Personal</option>
+
+
+                                <option value="Work" @(Model.MainEmailType == "Work." ? "selected" : "")>Work</option>
+
+
+
+                            </select>
+
+
+                            <input type="email" name="MainEmail" value="@Model.mainemail" required id="MainEmail" />
+
+                            @if (Model.ID != 0 && Model.ID != null)
+                            {
+                                <input type="password" value="@Model.Password" name="Password" required MainEmail id="Password" hidden />
+
+                                <input type="password" value="@Model.Password" name="ConfirmPassword" required id="ConfirmPassword" hidden />
+                            }
+                            else
+                            {
+                                <span>Password:</span>
+
+
+                                <input type="password" value="@Model.Password" name="Password" required MainEmail id="Password" />
+
+
+
+                                <span>Confirm Password:</span>
+
+
+                                <input type="password" value="@Model.Password" name="ConfirmPassword" required id="ConfirmPassword" />
+                            }
+
+
+
+
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                    </tr>
+
+
+                    <tr>
+
+
+                        <td>
+
+
+                            <table>
+
+
+                                <tbody>
+
+
+                                    <tr>
+
+
+                                        <td>
+
+
+                                            <span title="Selection required">Send email to:</span>
+
+
+                                            <br>
+
+
+                                            <div title="Selection required" style="width:220px;" tabindex="0">
+
+
+                                                <select value="@Model.sendemailto" name="SendEmailTo">
+
+
+                                                    <option value="Main Email" @(Model.sendemailto == "Main Email." ? "selected" : "")>Main Email</option>
+
+
+
+                                                </select>
+
+
+                                            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <tr>
+
+
+        <td>
+
+
+            <table>
+
+
+                <tbody>
+
+
+                    <tr>
+
+
+                        <td style="width: 120px">
+
+
+                            <span>Skype Address:</span>
+
+
+                            <br>
+
+
+                            <input type="text" value="@Model.skypeaddress" name="SkypeAddress" />
+
+
+                        </td>
+
+
+                        <td style="padding-left: 5px">
+
+
+                            <span>LinkedIn URL </span>
+
+
+                            <span style="font-size: 10pt; color: #00008b;">(https://www.linkedin.com):</span><br>
+                            <input type="text" value="@Model.linkedinURL" name="LinkedInURL" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <table>
+        <tbody>
+            <tr>
+
+                <td style="padding-top: 20px; vertical-align: top">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td colspan="2">
+                                    <span style="color: #00008b; font-weight: bold">Mailing Address</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right">
+                                    <span title="Selection required">Country:</span>
+                                </td>
+                                <td style="padding-left: 5px; text-align: left">
+                                    <div title="Selection required" style="width:260px;" tabindex="0">
+                                        <select value="@Model.country" name="Country">
+                                            <option value="India" @(Model.country == "India" ? "selected" : "")>India</option>
+                                            <option value="USA" @(Model.country == "USA" ? "selected" : "")>USA</option>
+                                            <option value="Russia" @(Model.country == "Russia" ? "selected" : "")>Russia</option>
+                                            <option value="Australia" @(Model.country == "Australia" ? "selected" : "")>Australia</option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right">
+                                    <span class="span">Address 1:</span>
+                                </td>
+                                <td style="padding-left: 5px; text-align: left">
+                                    <input type="text" value="@Model.address1" name="Address1" required id="Address1" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right">
+                                    <span class=" span">Address 2:</span>
+                                </td>
+                                <td style="padding-left: 5px; text-align: left">
+                                    <input type="text" value="@Model.address2" name="Address2" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right">
+                                    <span class="span">City:</span>
+                                </td>
+                                <td style="padding-left: 5px; text-align: left">
+                                    <input type="text" value="@Model.city" name="city" required id="city" />
+
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right">
+                                    <span title="Selection required" class=" span">State:</span>
+                                </td>
+                                <td style="padding-left: 5px; text-align: left">
+                                    <div title="Selection required" style="width:260px;" tabindex="0">
+                                        <select value="@Model.State" name="State" id="state" required>
+
+                                            <option value="Delhi" @(Model.State == "Delhi" ? "selected" : "")>Delhi</option>
+                                            <option value="Uttar Pradesh" @(Model.State == "Uttar Pradesh" ? "selected" : "")>Uttar Pradesh</option>
+                                            <option value="Bihar" @(Model.State == "Bihar" ? "selected" : "")>Bihar</option>
+                                        </select>
+                                    </div>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right">
+                                    <span class="span">ZIP code:</span>
+                                </td>
+                                <td style="padding-left: 5px; text-align: left">
+                                    <input type="number" value="@Model.zipcode" name="zipcode" id="zipcode" required />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right">
+                                    <span>Time zone:</span>
+                                </td>
+                                <td style="padding-left: 5px; text-align: left">
+                                    <div style="width:260px;" tabindex="0">
+                                        <select value="@Model.timezone" name="Timezone">
+                                            <option value="US/Eastern" @(Model.timezone == "US/Eastern" ? "selected" : "")>US/Eastern</option>
+                                            <option value="US/Central" @(Model.timezone == "US/Central" ? "selected" : "")>US/Central</option>
+                                            <option value="US/Mountain" @(Model.timezone == "US/Mountain" ? "selected" : "")>US/Mountain</option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td style="padding-left: 40px; padding-top: 20px; vertical-align: top">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <span>Phone 1:</span>
+                                    <br>
+                                    <div style="width:120px;" tabindex="0">
+                                    </div>
+                                    <div>
+                                        <select value="@Model.phonetype1" name="Phonetype1">
+                                            <option value="Direct" @(Model.phonetype1 == "Direct" ? "selected" : "")>Direct</option>
+                                            <option value="Home" @(Model.phonetype1 == "Home" ? "selected" : "")>Home</option>
+                                            <option value="Assistant" @(Model.phonetype1 == "Assistant" ? "selected" : "")>Assistant</option>
+
+                                        </select>
+
+                                        <span>+</span>
+                                        <span>
+                                            <input type="number" required name="countryCodephone1" value="1" disabled="disabled" />
+
+                                        </span>
+                                        <input type="number" value="@Model.phone1" name="phone1" id="phone1" />  <span>x</span>
+                                        <span>
+                                            <input type="number" value="@Model.phone1extension" name="phone1extension" />
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>Phone 2:</span>
+                                    <br>
+                                    <div style="width:120px;" tabindex="0">
+                                    </div>
+                                    <div>
+                                        <select value="@Model.phonetype2" name="PhoneType2">
+                                            <option value="Direct" @(Model.phonetype2 == "Direct" ? "selected" : "")>Direct</option>
+
+                                            <option value="Home" @(Model.phonetype2 == "Home" ? "selected" : "")>Home</option>
+                                            <option value="Assistant" @(Model.phonetype2 == "Assistant" ? "selected" : "")>Assistant</option>
+
+                                        </select>
+                                        <span>+</span>
+                                        <span>
+                                            <input type="number" name="countryCodephone2" value="1" disabled="disabled" />
+                                        </span>
+                                        <input type="number" value="@Model.phone2" name="phone2" />  <span>x</span>
+                                        <span>
+                                            <input type="number" value="@Model.phone2extension" name="phone2extension" />
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table style="display: none;">
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <span>Alternate Contact</span>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                    <div style=" padding: 10px;border: 1px solid lightgray;margin-top: 10px;">
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="2" style="margin-bottom: 10px;">
+                                                        <span style="margin-right: 100px;">Assistant: </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align: right; vertical-align: central;">
+                                                        <table>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="text-align: right; padding-bottom: 10px;"></td>
+                                                                    <td style="text-align: left; padding-bottom: 10px; vertical-align: central">
+                                                                        <span>Salutation:</span><br>
+                                                                        <div title="Selection required" style="width:90px;" tabindex="0">
+                                                                            <select value="@Model.salutation2" name="Salutation2">
+                                                                                <option value="" @(Model.salutation2 == null ? "selected" : "")>Select</option>
+
+
+                                                                                <option value="MR" @(Model.salutation2 == "MR" ? "selected" : "")>MR</option>
+
+
+                                                                                <option value="MRS" @(Model.salutation2 == "MRS" ? "selected" : "")>MRS</option>
+
+                                                                            </select>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td style="text-align: left; padding-left: 5px; padding-bottom: 10px; vertical-align: central">
+                                                                        <span>Name:</span>
+                                                                        <br>
+                                                                        <input type="text" value="@Model.name" name="name" />
+
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <tr style="margin-bottom: 10px;">
+                                                    <td style="text-align: left; vertical-align: central; margin-bottom: 10px; padding-bottom: 10px;">
+                                                        <br>
+                                                        <span>Phone:</span>
+                                                    </td>
+                                                    <td style="text-align: left; padding-bottom: 10px;">
+                                                        <table>
+                                                            <tbody>
+                                                                <tr>
+
+
+                                                                    <td style="padding-left: 5px;">
+                                                                        <span style="margin-left: 30px;">   Country Code:</span>
+                                                                        +
+                                                                        <input type="number" value="@Model.countrycode" style="margin-left: 23px;" name="countrycode" />
+                                                                    </td>
+                                                                    <td style="padding-left: 5px;">
+                                                                        <span style="padding-left: 5px;">Phone Number:</span>
+                                                                        <input type="number" value="@Model.phonenumber" name="phonenumber" />
+
+                                                                    </td>
+                                                                    <td style="padding-left: 5px;">
+                                                                        <span>Extension:</span>
+                                                                        <br>
+                                                                        <input type="number" value="@Model.extension" name="extension" />
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align: left; vertical-align: middle; padding-bottom: 10px;">
+                                                        <span>Email:</span>
+                                                    </td>
+                                                    <td style="padding-left: 11px; text-align: left; padding-bottom: 10px; vertical-align: middle;">
+                                                        <input type="email" value="@Model.email" name="email" />
+
+
+
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div>
+        <div style="padding-top: 10px">
+            <span style="color: #00008b; font-weight: bold">Professional Information</span>
+        </div>
+        <div>
+            <div style="vertical-align: top; float: left">
+                <br>
+                <table>
+                    <tbody>
+                    </tbody>
+                </table>
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <td style="text-align: center; padding: 0px">
+
+                                <div>
+
+                                    @if (Model.Uimg == null)
+                                    {
+
+                                        @*<img alt="" id="image" src="@Url.Content("aa")" style="display:  10px;" height="100" width="100" />*@
+
+                                    }
+                                    else
+                                    {
+                                        if (Model.Uimg != null)
+                                        {
+
+                                            <img alt="" id="image1" src="@Url.Content(Model.Uimg)" style="display:  10px;" height="100" width="100" />
+                                        }
+
+                                        else
+                                        {
+
+                                            <img alt="" id="image" src="@Url.Content(Model.Uimg)" style="display:  10px;" height="150" width="150" />
+
+                                        }
+
+                                    }
+
+
+                                </div>
+                                <br />
+                                <div>
+                                    <label>Upload Profile</label>
+                                    <br />
+                                    @*<input type='file' name="file" id="file" onchange="fileCheck(this);" />*@
+
+
+
+
+                                    @*aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*@
+
+                                    <input type="file" id="FileUpload1" />
+                                    <br />
+                                    <br />
+                                    <table border="0" cellpadding="0" cellspacing="5">
+                                        <tr>
+                                            <td>
+                                                <img id="Image1" src="" alt="" style="display: none" />
+                                            </td>
+                                            <td>
+                                                <canvas id="canvas" height="5" width="5"></canvas>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <br />
+                                    <input type="button" id="btnCrop" value="Crop" style="display: none" />
+                                    <input type="submit" id="btnUpload" value="Upload" style="display: none" />
+                                    <input type="hidden" name="imgX1" id="imgX1" />
+                                    <input type="hidden" name="imgY1" id="imgY1" />
+                                    <input type="hidden" name="imgWidth" id="imgWidth" />
+                                    <input type="hidden" name="imgHeight" id="imgHeight" />
+                                    <input type="hidden" name="imgCropped" id="imgCropped" />
+
+
+
+                                    @*aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*@
+
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+
+            </div>
+            <div style="vertical-align: top; float: left; padding-left: 10px">
+                <div>
+                    <br />
+
+                    <br />
+                    <div style="float: left">
+
+                        <span>Job Title:</span>
+                        <br>
+                        <input type="text" value="@Model.jobTitle" name="jobtitle" id="jobtitle" required />
+                    </div>
+                    <div style="float: left; padding-left: 5px">
+                        <span>Department:</span>
+                        <br>
+                        <input type="text" value="@Model.department" name="Department" />
+                    </div>
+                    <div style="float: left; padding-left: 5px">
+                        <span>Organization:</span>
+                        <br>
+                        <input type="text" name="Organization" value="@Model.organization" id="Organization" required />
+
+                    </div>
+                </div>
+                <div style="float: left;">
+                    <span>Degrees and Certifications:</span>
+                    <br>
+                    <input type="text" value="@Model.degreesandcertifications" name="degreesandcertifications" />
+
+                </div>
+                <div style="float: left; padding-left: 5px">
+                    <span>Website:</span>
+                    <br>
+                    <input type="text" value="@Model.website" name="Website" />
+
+                </div>
+
+
+                <div style="float: left; padding-left: 8px">
+                    <span style="color: black; font-weight: bold">CV</span>
+                    <br>
+                    <a id="CVfile" target="_blank"></a>
+                    <input type="file" name="CVfile" value="Upload" id="CVfile" />
+
+                </div>
+
+
+
+                <div>
+
+                    <div style="float: left;" class="cvp">
+                        <div style="float: left;" class="cvp">
+                            <span>Personal Biography:</span>
+                            <br>
+                            <textarea name="personalbiography" value="@Model.personalbiography" rows="100" cols="10000" style="height:150px;" maxlength="600">@Model.personalbiography</textarea>
+                            <br />
+                            <lable style="width:100%"> About My Organization And My Role:</lable>
+                            <br>
+
+                            <textarea name="aboutmyorganizationandmyrole" value="@Model.aboutmyorganizationandmyrole" rows="100" cols="100" style="height:150px;" maxlength="500">@Model.aboutmyorganizationandmyrole</textarea>
+                        </div>
+                        <div></div>
+                        <br />
+
+                        <div style="visibility:hidden">0</div>
+                        <div>
+                            @if (Model.ID != 0 && Model.ID != null)
+                            {
+                                <input type="submit" id="Udateid" style="width: 150px;font-weight: bold" value="Update" onclick="return validateInputs(event);" />
+                            }
+                            else
+                            {
+                                <input type="submit" id="Saveid" style="width: 150px;font-weight: bold" value="Submit" onclick="return validateInputs(event);" />
+
+                            }
+                        </div>
+                    </div>
+
+                    <div style="padding-left: 5px; vertical-align: top; float: left;" class="spel">
+
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.9/js/jquery.Jcrop.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#FileUpload1').change(function () {
+            $('#Image1').hide();
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#Image5').show();
+                $('#Image5').attr("src", e.target.result);
+                $('#Image5').Jcrop({
+                    onChange: SetCoordinates,
+                    onSelect: SetCoordinates
+                });
+            }
+            reader.readAsDataURL($(this)[0].files[0]);
+        });
+
+        $('#btnCrop').click(function () {
+            var x1 = $('#imgX1').val();
+            var y1 = $('#imgY1').val();
+            var width = $('#imgWidth').val();
+            var height = $('#imgHeight').val();
+            var canvas = $("#canvas")[0];
+            var context = canvas.getContext('2d');
+            var img = new Image();
+            img.onload = function () {
+                canvas.height = height;
+                canvas.width = width;
+                context.drawImage(img, x1, y1, width, height, 0, 0, width, height);
+                $('#imgCropped').val(canvas.toDataURL());
+                $('#btnUpload').show();
+            };
+            img.src = $('#Image5').attr("src");
+        });
+    });
+    function SetCoordinates(c) {
+        $('#imgX1').val(c.x);
+        $('#imgY1').val(c.y);
+        $('#imgWidth').val(c.w);
+        $('#imgHeight').val(c.h);
+        $('#btnCrop').show();
+    };
+</script>
+
+
+
+
+
+
+

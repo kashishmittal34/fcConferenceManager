@@ -1,0 +1,338 @@
+@model  List<fcConferenceManager.Models.Speakers>
+@{
+    ViewBag.Title = "Speaker";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .lblTitle
+    {
+        display: inline-block;
+        color: Navy;
+        background-color: transparent;
+        font-size: 18pt;
+    }
+
+    #Speakers
+    {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        column-rule-style: none;
+    }
+
+    #Speakers
+    {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    #Speakers td, #Speakers th
+    {
+        text-align: left;
+        vertical-align: top;
+        padding: 3px;
+    }
+
+    #Speakers tr:nth-child(odd)
+    {
+        background-color: #f2f2f2
+    }
+
+    #Speakers th
+    {
+        background-color: #00a1ff;
+        color: white;
+    }
+
+    .headingbackground
+    {
+        background-color: #f3f3b9
+    }
+
+    .hidedetail
+    {
+        display: none;
+        color: #3e3b3b
+    }
+
+    .summ
+    {
+        color: #3e3b3b;
+        font-weight: normal;
+    }
+
+    .modal
+    {
+        display: none;
+        position: fixed;
+        z-index: 8;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content
+    {
+        margin: 50px auto;
+        border: 1px solid #999;
+        /*  width: 50%;*/
+    }
+
+    .modal form
+    {
+        box-shadow: 0 2px 5px #f5f5f5;
+        background: #eee;
+    }
+
+    .modal .contact-form button
+    {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        background: #1c87c9;
+        font-size: 8px;
+        font-weight: 200;
+        color: #fff;
+    }
+
+    .modal button:hover
+    {
+        background: #2371a0;
+    }
+
+
+    .modal button.button
+    {
+        background: none;
+        border-top: none;
+        outline: none;
+        border-right: none;
+        border-left: none;
+        border-bottom: #02274a 1px solid;
+        padding: 0 0 3px 0;
+        font-size: 8px;
+        cursor: pointer;
+    }
+
+    .modal button.button:hover
+    {
+        border-bottom: #a99567 1px solid;
+        color: #a99567;
+    }
+
+    #frmSpeakerpopup
+    {
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+   /* img[id*="imgSpeakerPhoto"]
+    {
+        object-fit: cover;
+        object-position: center top;
+    }*/
+
+    #Speakers tr
+    {
+        border-color: #f2f2f2;
+    }
+
+    table#Speakers tr u
+    {
+        text-decoration: none;
+    }
+
+    .message-box br
+    {
+        display: none;
+    }
+
+    .cusomImagePopUp
+    {
+        width: 120px;
+    }
+</style>
+<div class="magiMySessionMainWrapper mt-3" id="refdiv">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+            <div class="col-md-8 col-lg-9 flex-grow-1 mb-md-0 mb-3">
+                <div class="row">
+                    <div class="col-md-8">
+                        <label id="lblTitle" class="lblTitle">@ViewBag.PageTitle</label>
+                    </div>
+                    <div class="col-md-4 ">
+                        <div class="d-md-flex flex-wrap justify-content-end mt-1">
+                            <span>@Html.DropDownList("OverViewDropDown", null, new { @class = "bg-light mb-1 me-1 d-inline", id = "OverViewDropDown" })</span>
+                            <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-2 ms-1">Return</a>
+                        </div>
+                    </div>
+                </div>
+                @if (@ViewBag.LabelColor)
+                {
+                    <div class="message-box">@Html.Raw(@ViewBag.FormText)</div>
+                }
+                else
+                {
+                    <div style="background-color: #f3f3b9">@Html.Raw(@ViewBag.FormText)</div>
+                }
+                <div class="mt-3">
+                    <div class="d-inline-block">
+                        <input type="checkbox" id="cb_session" name="cbsession" value="Session" @((Convert.ToBoolean(ViewBag.CBSessionCheck)) ? "checked" : "") />
+                        <label for="cbsession">Show Sessions & Workshops</label>
+                    </div>
+                    <div class="d-inline-block ms-2">
+                        <input type="checkbox" id="cb_org" name="cborganization" value="Organization" @((Convert.ToBoolean(ViewBag.OrgIsCheked)) ? "checked" : "") />
+                        <label for="cborganization">Sort by Organization</label>
+                    </div>
+                    <div id="spekerListContent" class="">
+                        @{
+                            Html.RenderPartial("~/Views/Shared/_SortSpeakerPage.cshtml", Model);
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalOne" class="modal">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width:800px;height:400px">
+        <div class="modal-content">
+            <table style="width: 100%">
+                <tbody>
+                    <tr>
+                        <td>
+                            <table style="width: 100%">
+                                <tbody>
+                                    <tr style="background-color:#76b8f3">
+                                        <td style="padding: 3px; text-align:left;">
+                                            <span id="_lblSpeakerName" class="lblTitlePop" style="font-weight:bold;color:#000000"></span>
+                                        </td>
+                                        <td style="padding:3px; text-align: right">
+                                            <input class="close btn" name="cancel" id="_Close" type="button" value="Close">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top: 5px">
+                            <table style="width: 100%;">
+                                <tbody>
+                                    <tr>
+                                        <td style="vertical-align: top; width:140px;">
+                                            <img id="_imgSpeakerPhoto" class="img-fluid rounded-3 shadow cusomImagePopUp" src="~/accountimages/no-person.jpg">
+                                        </td>
+                                        <td style="padding-left: 10px; vertical-align: top">
+                                            <span id="_lblSpeakerInfo"> </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 140px; text-align:right; padding-right: 20px">
+                                            <span style="font-weight:bold;">Job Title: </span>
+                                        </td>
+                                        <td style="padding-left: 10px; vertical-align: top">
+                                            <span id="_lblSpeakerJobTitle" style="text-align: left;"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style=" width: 140px; text-align: right; padding-right: 20px ">
+                                            <span style="font-weight:bold;">Organization: </span>
+                                        </td>
+                                        <td style="padding-left: 10px; vertical-align: top">
+                                            <span id="_lblOrganizationID" style="text-align: left;"></span>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="@ViewBag.OverViewDropDownSelected" id="DropdownSelected" />
+<script>
+    $(document).ready(function () {
+        if ($('#cb_session').is(":checked"))
+            $(".hidedetail").show();
+        else if (!$('#cb_session').is(":checked"))
+            $(".hidedetail").hide();
+
+        let modalBtns = [...document.querySelectorAll(".button")];
+        modalBtns.forEach(function (btn) {
+            btn.onclick = function () {
+                var spkID = btn.id;
+                $.get("/Events/Spkclick", { id: spkID }, function (data) {
+
+                    document.getElementById("_lblSpeakerName").textContent = data.sname;
+                    document.getElementById("_lblSpeakerInfo").textContent = data.sinfo;
+                    document.getElementById("_lblSpeakerJobTitle").textContent = data.stitle;
+                    document.getElementById("_lblOrganizationID").textContent = data.sOrg;
+                    var imgurl = "~/accountimages/" + spkID + "_img.jpg";
+                    if (data.imageexist)
+                        document.getElementById("_imgSpeakerPhoto").src = "/accountimages/" + spkID + "_img.jpg";
+                });
+
+                let modal = btn.getAttribute('data-modal');
+                document.getElementById(modal).style.display = "block";
+            }
+        });
+        let closeBtns = [...document.querySelectorAll(".close")];
+        closeBtns.forEach(function (btn) {
+            btn.onclick = function () {
+                document.getElementById("_lblSpeakerName").textContent = "";
+                document.getElementById("_lblSpeakerInfo").textContent = "";
+                document.getElementById("_imgSpeakerPhoto").src = "/accountimages/no-person.jpg";
+                let modal = btn.closest('.modal');
+                modal.style.display = "none";
+            }
+        });
+        window.onclick = function (event) {
+            if (event.target.className === "modal")
+                event.target.style.display = "none";
+        }
+        $('input[type="checkbox"]').click(function () {
+            var FilterData = {
+                PostData1: ($('#cb_session').is(":checked") ? "checked" : ""),
+                PostData2: ($('#cb_org').is(":checked") ? "checked" : "")
+            };
+            $('#spekerListContent').load('_SortSpeakerPage', FilterData, function () {
+                if ($('#cb_session').is(":checked"))
+                    $(".hidedetail").show();
+                else if (!$('#cb_session').is(":checked"))
+                    $(".hidedetail").hide();
+            });
+        });
+
+        $('#OverViewDropDown').change(function () {
+            var Data = { DropDownValue: $('#OverViewDropDown').val() };
+            var result = CommonFunctions.AjaxCall('Post', '/MAGI/OverViewDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+            if (result.ActionType === "Redirect")
+                window.location.href = result.RedirectionUrl;
+        });
+        $('#OverViewDropDown').val($('#DropdownSelected').val());
+    });
+    function checkIfImageExists(url, callback) {
+        const img = new Image();
+        img.src = url;
+
+        if (img.complete)
+            callback(true);
+        else {
+            img.onload = () => { callback(true); };
+
+            img.onerror = () => { callback(false); };
+        }
+    }
+</script>   

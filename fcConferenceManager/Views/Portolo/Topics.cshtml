@@ -1,0 +1,264 @@
+﻿@model IEnumerable<fcConferenceManager.Models.Portolo.Topic>
+
+@{
+    ViewBag.Title = "Portolo";
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+}
+@*<link href="~/Css/jquery.dataTables.min.css" rel="stylesheet" />*@
+<link href="/Css/multiple-select.css" rel="stylesheet" />
+<script src="/Scripts/multiple-select.js" type="text/javascript"></script>
+<link href="~/Content/components.css" rel="stylesheet" />
+<link href="~/Css/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/dataTable.buttons.min.js"></script>
+<script src="~/Scripts/jquery.table2excel.min.js"></script>
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+
+</head>
+
+
+<style>
+    .form-control:disabled, .form-control[readonly] {
+        background-color: #e9ecef0f;
+        opacity: 1;
+    }
+
+	.dataTable td .brdr-1 {
+        padding: 0 5px;
+        border-radius: 2px;
+    }				   
+    .dataTables_paginate {
+        width: 100%;
+        text-align: center !important;
+        border: 1px solid #e6e6e6;
+        background-color: #f9f9f9;
+        padding: 5px 0 4px;
+        line-height: 22px;
+        float: none !important;
+        margin: 0px;
+    }
+
+        .dataTables_paginate .paginate_button {
+            border-width: 1px !important;
+            border-style: solid !important;
+            border-color: #e0e0e0 !important;
+            border-radius: 0 !important;
+            color: #000 !important;
+            background: #f9f9f9 !important;
+            padding: 3px !important;
+            display: inline-block !important;
+            position: relative;
+            vertical-align: middle;
+            cursor: pointer !important;
+            font-size: 13px;
+            margin: 5px;
+        }
+
+
+    .dataTables_wrapper .dataTables_paginate a.paginate_button:hover {
+        color: #333 !important;
+        background-color: #e7e7e7 !important;
+    }
+
+    .paginate_button.previous:after, .paginate_button.next:after {
+        content: "";
+        display: block;
+        border-width: 4px;
+        border-style: solid;
+        border-color: transparent #000 transparent transparent;
+        position: absolute;
+        top: 50%;
+        right: 6px;
+        transform: translateY(-50%);
+    }
+
+    .paginate_button.previous, .paginate_button.next {
+        font-size: 0;
+        width: 20px !important;
+        height: 20px;
+    }
+
+        .paginate_button.next:after {
+            border-color: transparent transparent transparent #000;
+            right: auto;
+            left: 6px;
+        }
+
+    .dataTable thead .sorting_desc:after, .dataTable thead .sorting_asc:after, .dataTable thead .sorting:after, .dataTable thead .sorting:before {
+        content: none;
+    }
+</style>
+<body>
+
+    <section class="task-list-form">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    @using (Html.BeginForm("SearchTopic", "Portolo", FormMethod.Get))
+                    {
+                        <div class="control-icons">
+                            <h2>Topic List</h2>
+
+																																			  
+                            <a href="~/portolo/TopicsDownloadExcel"><i class="fa-solid fa-download" title="Download Excel"></i></a>
+									 
+
+                            <button type="submit" value="Search" name="action" style="border-color: white; border: none;background-color:white" title="Search">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                            <a href="~/Portolo/Topics"><i class="fa-solid fa-arrows-rotate"></i></a>
+
+                            <div class="controls">
+                                <a class="brdr-1 btn-sm" href="/Portolo/AddTopic"> Create New</a>
+
+                                <a class="brdr-1 btn-sm" href="" id="btnDelete" onclick="return confirm('Are you sure?')"><i class="fa fa-trash-o"></i> Delete</a>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="exampleFormControlSelect1">Topic Name:</label>
+                                    @Html.TextBox("name", null, new { @class = "form-control form-control-sm", @id = "nameField" })
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="exampleFormControlSelect1">Description:</label>
+                                    @Html.TextBox("description", null, new { @class = "form-control form-control-sm", @id = "description" })
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="exampleFormControlSelect1">Active:</label>
+                                    <select class="form-control form-control-sm" id="active" name="active">
+                                        <option value="">All</option>
+                                        <option value="true" @(ViewBag.IsActive == "true" ? "selected" : "")>Active</option>
+                                        <option value="false"@(ViewBag.IsActive == "false" ? "selected" : "")>Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                    }
+                        <div class="card">
+                            <div class="emp-data">
+                                <table class="table table-bordered mb-0" id="table">
+                                    <thead>
+                                        <tr class="table-hd">
+                                            <th style="width:2px;" data-sortable="false">
+                                                <input type="checkbox" name="select-all" id="select-all" />
+                                            </th>
+                                            <th data-field="Title" data-sortable="true">Topic Name</th>
+                                            <th data-field="Description" data-sortable="true">Description</th>
+                                            <th data-field="status" data-sortable="true">Status</th>
+                                            <th>Edit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (ViewBag.Topics != null)
+                                        {
+                                            foreach (var item in ViewBag.Topics.Rows)
+                                            {
+                                                <tr>
+                                                    <td><input type="checkbox" name="ID" value="@item["TopicID"]" class="custom-checkbox chkCheckBoxId" /> </td>
+                                                    <td> @item["Title"] </td>
+                                                    <td> @item["Description"] </td>
+                                                    @if (item["IsActive"] != false)
+                                                    {
+                                                        <td>Active</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td>Inactive</td>
+                                                    }
+                                                    <td><a class="brdr-1 btn-sm" href="/Portolo/EditTopic/@item["TopicID"]"> Edit</a></td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <p>	© 2022 by Elimar Systems. All Rights Reserved <a href="#" class="ml-5">Website Terms of Use</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        $(document).ready(function () {
+            $("#table").dataTable({
+                paging: true, bFilter: true, ordering: true, searching: true, dom: 'tp', "order": [[0, "desc"]],
+            });
+
+            $(".paginate_button").on("click", function () {
+                $("#select-all").prop('checked', false);
+            });
+        });
+
+
+        var primarykey = [];
+
+        $("#select-all").click(function (event) {
+            if (this.checked) {
+                primarykey.length = 0;
+                // Iterate each checkbox
+                $(':checkbox').each(function () {
+                    this.checked = true;
+                    if (this.value != "on") {
+                        primarykey.push(this.value);
+                    }
+                });
+            }
+            else {
+                $(':checkbox').each(function () {
+                    this.checked = false;
+                });
+            }
+
+        });
+
+        $("#btnDelete").click(function (e) {
+            var checklist = [];
+            $(':checkbox:checked').each(function () {
+                if (this.value != "on")
+                    checklist.push(this.value);
+            });
+
+            var ids = checklist.join(", ");
+            if (ids == "")
+                alert("Please select at least one topic to delete");
+            else {
+                $.ajax({
+                    url: "/Portolo/DeleteTopic",
+                    type: "POST",
+                    data: { ids: ids }
+                });
+            }
+        });
+
+    </script>
+
+    <link rel="stylesheet" href="../Scripts/jquery-ui.css" />
+    <script src="../Scripts/jquery-ui.js"></script>
+</body>
+
+
+
+

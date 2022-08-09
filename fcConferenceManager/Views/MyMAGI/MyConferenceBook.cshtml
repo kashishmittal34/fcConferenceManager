@@ -1,0 +1,664 @@
+﻿@using fcConferenceManager.Models
+@model MyConferenceBookPage
+@{
+    ViewBag.Title = "MyConferenceBook";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="/Css/multiple-select.css" rel="stylesheet" />
+<script src="/Scripts/multiple-select.js" type="text/javascript"></script>
+<link href="/Css/multiple-select.css" rel="stylesheet" />
+
+<style>
+
+    #AttendingBook th
+    {
+        color: navy;
+    }
+
+    .btnSmall
+    {
+        background-color: #fff;
+        border-radius: 2px;
+        border: 1px solid gray;
+        color: #000;
+        padding: .2rem .5rem !important;
+    }
+
+    .btnBookSes
+    {
+        background-color: #fff;
+        border-radius: 2px;
+        border: 1px solid gray;
+        color: #000;
+        padding: .2rem .5rem !important;
+    }
+
+    input.btnSmall[type="submit"]:hover
+    {
+        background-color: grey;
+    }
+
+    input[type="button"]:hover
+    {
+        background-color: grey;
+    }
+</style>
+
+<div class="container-fluid  mt-3 mb-3">
+    <div class="row">
+        <div class='magiSidebarWrapper pe-md-0 mb-3 mb-md-0'>
+            @if (ViewBag.leftPanel_Visible == true)
+            {
+                Html.RenderAction("_PartialLeftPanel", "MyMagi");
+            }
+            @{
+                Html.RenderAction("ChatPanelAction", "MyMagi");
+            }
+        </div>
+        <div class="col-md-8 col-lg-9 flex-grow-1">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2>@ViewBag.PageTitle</h2>
+                </div>
+                <div class="col-lg-4 d-flex justify-content-lg-end align-items-center flex-wrap">
+                    @if (ViewBag.VirtualDropdown_Visible)
+                    {
+                        <select id="VirtualEventDropDown" class="me-1 mb-1">
+                            @if (ViewBag.ddEventVirtualData != null)
+                            {
+                                System.Data.DataTable dt = (System.Data.DataTable)ViewBag.ddEventVirtualData;
+                                foreach (System.Data.DataRow dr in dt.Rows)
+                                {
+                                    @Html.Raw("<option value='" + dr["pKey"] + "' " + ((ViewBag.SelectedDropDown == dr["pKey"].ToString()) ? "selected>" : ">") + dr["strText"] + "</option>")
+                                }
+                            }
+                        </select>
+                    }
+                    <a id="cmdReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 pull-right">Return</a>
+                </div>
+            </div>
+            <div class="magi-content-wrapper">
+                <div>
+                    <span>Personalized Conference Book for <strong>@ViewBag.lblAttName</strong></span>
+                </div>
+                <details class="hidedetail">
+                    <summary style="color:navy"><strong>Instructions</strong></summary>
+                    @Html.Raw(ViewBag.LblInstruction)
+                    <div style="padding:5px 0;">
+                        <label>For instructions and tips about how to download AND print, click here:</label> <a id="btnInstruct" href="">  Instructions</a>
+                    </div>
+                </details>
+                <div>
+                    <label>For assistance, contact us at <a href="https://www.magiworld.org/EventContacts?M=1">support@magiworld.org</a>.</label>
+                </div>
+                <br />
+                <div class="d-md-flex">
+                    <div>
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                @*<a  class="nav-link active" id="attending-tab" type="button" role="tab" aria-selected="false"></a>*@
+                                <button class="nav-link active" id="attending-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="View" aria-selected="false">Book for Activities Attending</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="notAttending-tab" data-bs-toggle="tab" type="button" role="tab" aria-controls="View" aria-selected="true">Book for Activities Not Attending</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="flex-grow-1 ps-md-3 mt-2 mt-md-0">
+                        <input type="button" class="btn" id="btnDownloadBooklet" style="height:33px;" value="Download Event Booklet" />
+                    </div>
+                </div>
+                <div id="ActivitiesAttending" class="table-responsive">
+                    <table id="AttendingBook">
+                        <tr>
+                            <th style=" padding: 5px 0px 0px 5px; min-width:150px; text-align: left">Download </th>
+                            <th style=" padding: 5px 0px 0px 5px; min-width:80px; text-align: left">Size (MB) </th>
+                            <th style=" padding: 5px 0px 0px 5px; min-width:300px; text-align: left">Contents  </th>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><hr style="height: 5px; background-color: gray"></td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                @if (@ViewBag.btnDownloadBookEnable)
+                                {
+                                    <div>
+                                        <input type="button" name="DownloadBook" value="Download Book" style="width:140px;" id="btnDownloadBook" class="btnSmall">
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div>
+                                        <input type="button" name="DownloadBook" value="Download Book" id="btnDownloadBook" class="btnSmall" disabled style="width:140px;">
+                                    </div>
+                                }
+                                @if (@ViewBag.lblBookDownloadVisible)
+                                {
+                                    <div>
+                                        <span id="lblBookDownload" style="width:140px;">@ViewBag.lblBookDownload</span>
+                                    </div>
+                                }
+                                <div style="padding-top: 5px; display: none;">
+                                    <input type="submit" name="DownloadZip" value="Download .ZIP File" id="btnDownloadZip" class="btnSmall" style="width:140px;">
+                                </div>
+                                @if (@ViewBag.btnBookEnabled)
+                                {
+                                    <div style="padding-top: 5px;">
+                                        <input type="submit" name="BuildBook" value="@ViewBag.btnBuildBookText" id="btnBuildBook" class="btnSmall" style="width:140px;">
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div style="padding-top: 5px;">
+                                        <input type="submit" name="BuildBook" value="@ViewBag.btnBuildBookText" id="btnBuildBook" class="btnSmall" disabled style="width:140px;">
+                                    </div>
+                                }
+                            </td>
+                            <td style="padding: 5px 20px 0px 5px; text-align:left; vertical-align: top;">@ViewBag.lblBookSize </td>
+                            <td style="padding: 8px 0px 0px 5px; vertical-align: top;">
+                                <span><b>Your personalized conference book</b> with the activities you selected on your <a href="/MyMAGI/MySession" style='color:blue'>Create My Schedule</a> page.</span>
+                                <a id="btnsplit" style="display:none">SplitBtn</a>
+                            </td>
+
+
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="height:5px;"> <hr style="height: 5px; background-color: gray"> </td>
+                            <td><span id="_lblFrontSec" style="color:#00008b"><strong>Click Buttons to Download Front Materials</strong></span></td>
+                        </tr>
+
+                        <tr class="hidebook" style="width:100%">
+                            <td style="padding-top:5px;"> <input type="submit" name="DownloadSchedule" value="Schedule" id="btnDownloadSchedule" class="btnSmall" style="width:140px;">  </td>
+                            <td style="padding-left:5px;">@ViewBag.lblSizeSched </td>
+                            <td>Your personalized conference schedule </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding-top: 5px;"> <input type="submit" name="DownloadSpeakers" value="Speakers" id="btnDownloadSpeakers" class="btnSmall" style="width:140px;"></td>
+                            <td style="padding-left: 5px;">
+                                @ViewBag.lblSizeSpk
+                            </td>
+                            <td>Profiles of speakers at the conference</td>
+                        </tr>
+
+                        <tr class="hidebook" style="width:100%">
+                            @if (@ViewBag.CertificatebtnVisible)
+                            {
+                                <td style="padding-top:5px;"> <input type="submit" name="DownloadCertificate" value="Certificate" id="btnDownloadCertificate" class="btnSmall" style="width:140px;"></td>
+                            }
+                            else
+                            {
+                                <td style="padding-top:5px;"> <input type="submit" name="DownloadCertificate" value="Certificate" id="btnDownloadCertificate" class="btnSmall" style="width:140px;" disabled></td>
+                            }
+
+                            <td style="padding-left:5px;">@ViewBag.lblSizeCert</td>
+                            <td> @ViewBag.lblCertificateInfo</td>
+                        </tr>
+                        <tr class="hidebookSpecialMeal" style="width:100%">
+                            @if (ViewBag.phSpecialMeal)
+                            {
+                                <td> <input type="submit" name="BookMeal" value="Special Meal" id="btnBookMeal" class="btnSmall" style="width:140px;"></td>
+                                <td style="padding-left:5px;">@ViewBag.lblSizeMeal</td>
+                                <td><span>A placecard you can display at lunch to make sure you get your special meal</span> </td>
+                            }
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="paddingLeft0" style="height:5px;">
+                                <hr style="height: 5px; background-color: gray">
+                            </td>
+                            <td><span id="_lblSection" style="color:#00008b ;font-weight:bold ">@ViewBag.lblSection</span></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <div id="AttendSession">
+                                    @if (ViewBag.WorkshopVisible)
+                                    {
+                                        <div class="magi-tab-responsive">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th style="display: none">
+                                                            <span id="Label9" style="color:#00008b" class="SectionTitle">Download</span>
+                                                        </th>
+                                                        <th></th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (System.Data.DataRow i in Model.SessionBookTable.Rows)
+                                                    {
+                                                        <tr>
+                                                            <td style="padding-top: 5px; vertical-align: top; display: inline-block">
+
+                                                                <div style="display:inline-block">
+
+                                                                    @if (Convert.ToBoolean(@i["RecVisible"].ToString()))
+                                                                    {<input type="button" class="btnBookSes btnSmall" id="@i["EvtSessionInfo"]" name="@i["SessionID"]" value="@i["SessionID"]" style=" vertical-align: middle;width:100px; display: inline-block;" />
+                                                                        <a href="/@i["RecURL"]" id="imgRecord"> <img src="~/Images/Icons/eye.gif" style="width:20px" /></a>
+                                                                    }
+                                                                    else if (@i["DisplaySize"].ToString() != "NA")
+                                                                    {
+                                                                        <input type="button" class="btnBookSes btnSmall" id="@i["EvtSessionInfo"]" name="@i["SessionID"]" value="@i["SessionID"]" style=" vertical-align: middle;width:140px; display: inline-block;" />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <input type="button" class="btnBookSes btnSmall" id="@i["EvtSessionInfo"]" name="@i["SessionID"]" value="@i["SessionID"]" style=" vertical-align: middle;width:140px;" disabled />
+                                                                    }
+                                                                </div>
+                                                                @*<asp:Button ID="cmdBookSes" runat="server" Text='<%#Eval("SessionID")%>' CssClass="btnSmall" Width="140px" CommandArgument='<%#Eval("EvtSessionInfo")%>' OnClick="cmdBookSes_Click" />*@
+                                                                @*<asp:ImageButton ID="imgRecord" runat="server" ImageUrl="~/images/icons/eye.gif" Visible='<%#Eval("RecVisible")%>' Width="20px" CommandArgument='<%#Eval("RecURL")%>' OnClick="imgRecord_Click" />*@
+                                                            </td>
+                                                            <td style="padding: 5px 20px 0px 12px; width: 76px; text-align: left; ">
+                                                                <span id="lblFSize">@i["DisplaySize"]</span>
+
+                                                            </td>
+                                                            <td style="padding: 8px 0px 0px 12px; vertical-align: top">
+                                                                <span id="lblBookCert">@i["SessionTitle"]</span>
+                                                                <div>@Html.Raw(@i["Downloads"])</div>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                    <div style="margin-top:3px;">
+                                        <span id="Label8" class="Font9" style=" font-size: 9pt;">* Slides will be available a few days before the conference.</span>
+                                    </div>
+                                </div>
+                                <div id="NonAttendSession">
+                                    @if (ViewBag.WorkshopVisible1)
+                                    {
+                                        <div class="magi-tab-responsive">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th style="display: none">
+                                                            <span id="Label9" style="color:#00008b" class="SectionTitle">Download</span>
+                                                        </th>
+                                                        <th></th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (ViewBag.WorkshopVisible1)
+                                                    {
+                                                        foreach (System.Data.DataRow i in Model.SessionBookTableNonAttend.Rows)
+                                                        {
+                                                            <tr id="NonAttendSession">
+                                                                <td style="padding-top: 5px; vertical-align: top; display: inline-block">
+
+                                                                    <div style="display:inline-block">
+
+                                                                        @if (Convert.ToBoolean(@i["RecVisible"].ToString()))
+                                                                        {<input type="button" class="btnBookSes btnSmall" id="@i["EvtSessionInfo"]" name="@i["SessionID"]" value="@i["SessionID"]" style=" vertical-align: middle;width:100px; display: inline-block;" />
+                                                                            <a href="/@i["RecURL"]" id="imgRecord"> <img src="~/Images/Icons/eye.gif" style="width:20px" /></a>
+                                                                        }
+                                                                        else if (@i["DisplaySize"].ToString() != "NA")
+                                                                        {
+                                                                            <input type="button" class="btnBookSes btnSmall" id="@i["EvtSessionInfo"]" name="@i["SessionID"]" value="@i["SessionID"]" style=" vertical-align: middle;width:140px; display: inline-block;" />
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <input type="button" class="btnBookSes btnSmall" id="@i["EvtSessionInfo"]" name="@i["SessionID"]" value="@i["SessionID"]" style=" vertical-align: middle;width:140px; display: inline-block;" disabled />
+                                                                        }
+                                                                    </div>
+                                                                    @*<asp:Button ID="cmdBookSes" runat="server" Text='<%#Eval("SessionID")%>' CssClass="btnSmall" Width="140px" CommandArgument='<%#Eval("EvtSessionInfo")%>' OnClick="cmdBookSes_Click" />*@
+                                                                    @*<asp:ImageButton ID="imgRecord" runat="server" ImageUrl="~/images/icons/eye.gif" Visible='<%#Eval("RecVisible")%>' Width="20px" CommandArgument='<%#Eval("RecURL")%>' OnClick="imgRecord_Click" />*@
+                                                                </td>
+                                                                <td style="padding: 5px 20px 0px 12px;width: 60px;text-align: left;">
+                                                                    <span id="lblFSize">@i["DisplaySize"]</span>
+
+                                                                </td>
+                                                                <td style="padding: 8px 0px 0px 5px; vertical-align: top">
+                                                                    <span id="lblBookCert">@i["SessionTitle"]</span>
+                                                                    <div>@Html.Raw(@i["Downloads"])</div>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                    <div style="margin-top:3px;">
+                                        <span id="Label8" class="Font9" style=" font-size: 9pt;">* Slides will be available a few days before the conference.</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="idSection" tabindex="-1" aria-labelledby="Section" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="width:600px ;height:400px; ">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader" style="height:25px">
+                <h5 class="modal-title">Download in Sections</h5>
+                <div>
+                    <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                </div>
+            </div>
+            <table style="width: 100%">
+                <tr>
+                    <td style="padding-top: 10px">
+                        <table width="100%">
+                            <tr>
+                                <td style="vertical-align: top">
+                                    <button id="btnSectionDL" name=".PKeyString" value=".Title" class="btnSmall"></button>
+                                </td>
+                                <td style="padding-left: 12px; width: 80px; vertical-align: top">
+                                    <span id="lblFSize">.DisplaySize</span>
+                                </td>
+                                <td style="padding-left: 10px; vertical-align: top">
+                                    <span>.Descrip</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="PopupHelpandInst" tabindex="-1" aria-labelledby="PopupTandC" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="width:800px; height:600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <table width="100%">
+                    <tr>
+                        <td>
+                            <div style="display:inline-block">
+                                <img src="/Images/miscellaneous/terms.png" style="height:40px;" />
+                            </div>
+                            <div style="display:inline-block">
+                                <h5 class="modal-title">Conference Book Help and Instructions</h5>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="float:right ; padding-right:10px;">
+                                <button id="closeModal" type="button" class="btn me-1 mb-1" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-body" id="dvInfoBody">
+                <div style="font-size:11pt;">@Html.Raw(@ViewBag.FormTextHelp_Ins)</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modelNavInstructions" tabindex="-1" aria-labelledby="modelNavInstructions" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader">
+                <h5 class="modal-title" id="NavigationInstructions">Navigation Instructions</h5>
+                <div>
+                    <button id="closeNavInstructions" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row p-2">
+                    <div class="col-xs-12" id="modalNavBody" style="height:400px; overflow-y:scroll;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modelEvtUpdatesVirtual" tabindex="-1" aria-labelledby="modelEvtUpdatesVirtual" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader">
+                <h5 class="modal-title" id="EvtUpdatesVirtual">Event Updates</h5>
+                <div>
+                    <button id="closeEvtUpdatesVirtual" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                </div>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row p-2">
+                    <div class="col-xs-12 mb-1" id="modalEvtUpdatesVirtualBody" style="height:400px; overflow-y:scroll;">
+                    </div>
+                    <div class="text-center">
+                        <button id="closeEvtUpdatesVirtual" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (ViewBag.OpenSurveyRadWindow)
+{
+    <div class="modal fade" id="rwSurveyQuestion" tabindex="-1" aria-labelledby="rwSurveyQuestion" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="rwSurveyQuestionTitle">Registration Questions</h5>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div class="col-xs-12 pt-1">
+                            @Html.Raw(ViewBag.lblRegText)
+                        </div>
+                        <div class="text-center">
+                            <button id="cmdSaveQ" type="button" class="btn">Proceed</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#rwSurveyQuestion').modal('show');
+            $('#cmdSaveQ').click(function (e) {
+                e.preventDefault();
+                var result = CommonFunctions.AjaxCall('Post', '/Virtual/cmdSaveQClick', '', 'json', 'Error While Updating Schedule');
+                if (result !== null && result !== "ERROR") {
+                    if (result.msg === "OK") {
+                        parent.location.href = result.URL;
+                    }
+                    else
+                        CommonFunctions.Alert("Error Occurred while updating");
+                }
+                else
+                    CommonFunctions.Alert("Error Occurred while updating");
+            });
+        });
+    </script>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#AttendSession').show();
+        $('#NonAttendSession').hide();
+        function onChangeVirtual() {
+            var Data = { DropDownValue: $('#VirtualEventDropDown').val() };
+            switch ($('#VirtualEventDropDown').val()) {
+                case "9":
+                    var result = CommonFunctions.AjaxCall('Get', '/Home/GetNavigationInstructions', '', 'json', 'Error accessing text block data.');
+                    if (result.msg === "OK") {
+                        $('#modalNavBody').html(result.Content);
+                        $('#modelNavInstructions').modal('show');
+                    }
+                    else
+                        CommonFunctions.Alert(result.msg);
+                    break;
+                case "27":
+                    var result = CommonFunctions.AjaxCall('Get', '/Home/GetEventUpdatesContent', '', 'json', 'Error loading Event Updates');
+                    if (result.msg === "OK") {
+                        $('#modalEvtUpdatesVirtualBody').html(result.Content);
+                        $('#modelEvtUpdatesVirtual').modal('show');
+                    }
+                    else
+                        CommonFunctions.Alert(result);
+                    break;
+                case "21":
+                    OpenChatWindow();
+                    break;
+                default:
+                    var result = CommonFunctions.AjaxCall('Post', '/Home/VirtualDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+                    if (result.ActionType === "Redirect")
+                        window.location.href = result.RedirectionUrl;
+                    break;
+            }
+        }
+
+        $('#VirtualEventDropDown').multipleSelect({
+            multiple: false, isopen: false, placeholder: 'Show All', selectAll: false, selectAllText: 'Select all', multiple: false, multipleWidth: 'auto', filter: false, width: 'auto', height: 28, maxHeight: 450, onClick: function () { onChangeVirtual(); },
+        });
+        $('#attending-tab').on('click', function () {
+            document.getElementById("attending-tab").className = "nav-link active";
+            document.getElementById("notAttending-tab").className = "nav-link";
+            $('.hidebook').css('display', 'table-row');
+            $('.hidebookSpecialMeal').css('display', '');
+            var x = document.getElementsByClassName("nav-link active");
+            var tabtext = x[0].innerHTML.replace("Book for Activities", "")
+            var data = { tab: tabtext }
+            var result = CommonFunctions.AjaxCall('Get', '/MyMAGI/TabChanged', data, 'json', 'Error Occurred while Downloading File');
+            if (result.result == "OK") {
+                document.getElementById("_lblSection").textContent = result.TextlblSection;
+                document.getElementById("btnBuildBook").disabled = result.BtnBook;
+            }
+            $('#AttendSession').show();
+            $('#NonAttendSession').hide();
+        });
+        $('#notAttending-tab').on('click', function () {
+
+            document.getElementById("attending-tab").className = "nav-link";
+            document.getElementById("notAttending-tab").className = "nav-link active";
+            $('.hidebook').css('display', 'none');
+            $('.hidebookSpecialMeal').css('display', 'none');
+            var x = document.getElementsByClassName("nav-link active");
+            var tabtext = x[0].innerHTML.replace("Book for Activities", "")
+            var data = { tab: tabtext }
+            var result = CommonFunctions.AjaxCall('Get', '/MyMAGI/TabChanged', data, 'json', 'Error Occurred while Downloading File');
+            if (result.result == "OK") {
+                document.getElementById("_lblSection").textContent = result.TextlblSection;
+                document.getElementById("btnBuildBook").disabled = result.BtnBook;
+            }
+            $('#AttendSession').hide();
+            $('#NonAttendSession').show();
+        });
+
+        $('#btnDownloadBooklet').on('click', function () {
+            var x = document.getElementsByClassName("nav-link active");
+            var tabtext = x[0].innerHTML.replace("Book for Activities", "")
+            var data = { tab: tabtext }
+            var result = CommonFunctions.AjaxCall('Get', '/MyMAGI/DownloadBooklet', data, 'json', 'Error Occurred while Downloading File');
+            if (result.result == "OK") {
+                window.location.href = "/MyMAGI/DownloadBookletFile?FileName=" + result.fname;
+            }
+            else
+                CommonFunctions.Alert(result.Error);
+        });
+
+
+        $('#btnDownloadBook').on('click', function () {
+            var x = document.getElementsByClassName("nav-link active");
+            var tabtext = x[0].innerHTML.replace("Book for Activities", "")
+            var data = {
+                tab: tabtext,
+                btnBuildBookText: document.getElementById('btnBuildBook').value
+            }
+            var result = CommonFunctions.AjaxCall('Get', '/MyMAGI/btnDownloadBook', data, 'json', 'Error Occurred while Downloading File');
+            if (result.result == "OK") {
+                window.location.href = "/MyMAGI/DownloadBookFile?FileName=" + result.fname;
+            }
+            else
+                CommonFunctions.Alert(result.message);
+        });
+
+        $('#btnDownloadZip').on('click', function () {
+            var x = document.getElementsByClassName("nav-link active");
+            var tabtext = x[0].innerHTML.replace("Book for Activities", "")
+            var data = { tab: tabtext }
+            var result = CommonFunctions.AjaxCall('Get', '/MyMAGI/DownloadSlide', data, 'json', 'Error Occurred while Downloading File');
+            if (result.result == "OK") {
+                window.location.href = "/MyMAGI/DownloadBookletFile?FileName=" + result.fname;
+            }
+            else
+                CommonFunctions.Alert(result.message);
+        });
+
+        $('#btnBuildBook').on('click', function () {
+            var x = document.getElementsByClassName("nav-link active");
+            var tabtext = x[0].innerHTML.replace("Book for Activities", "")
+            var data = {
+                tab: tabtext,
+                btnBuildBookText: document.getElementById('btnBuildBook').value
+            }
+            var result = CommonFunctions.AjaxCall('Get', '/MyMAGI/_BuildBook', data, 'json', 'Error Occurred while Downloading File');
+            if (result.result == "OK") {
+                window.location.href = "/MyMAGI/DownloadBookletFile?FileName=" + result.fname;
+
+            }
+            else
+                CommonFunctions.Alert(result.message);
+        });
+        $('#btnDownloadSchedule').on('click', function () {
+            var result = CommonFunctions.AjaxCall('Get', '/MyMAGI/DownloadScheduleFileClick', "", 'json', 'Error Occurred while Downloading File');
+            if (result.result == "OK") {
+                window.location.href = "/MyMAGI/DownloadUserScheduleFile?FileName=" + result.fname;
+            }
+            else
+                CommonFunctions.Alert(result.message);
+        });
+        $('#btnDownloadSpeakers').on('click', function () {
+            var x = document.getElementsByClassName("nav-link active");
+            var tabtext = x[0].innerHTML.replace("Book for Activities", "")
+            var data = { tab: tabtext }
+            var result = CommonFunctions.AjaxCall('Get', '/MyMAGI/DownloadSpeakerFile', data, 'json', 'Error Occurred while Downloading File');
+            if (result.result == "OK") {
+                window.location.href = "/MyMAGI/DownloadSpeakerBookFile?FileName=" + result.fname;
+            }
+            else
+                CommonFunctions.Alert(result.message);
+        });
+        $('#btnDownloadCertificate').on('click', function () {
+            var result = CommonFunctions.AjaxCall('Get', '/MyMAGI/DownloadCertificateBook', "", 'json', 'Error Occurred while Downloading File');
+            if (result.result == "OK") {
+                window.location.href = "/MyMAGI/DownloadUserScheduleFile?FileName=" + result.fname;
+            }
+            else
+                CommonFunctions.Alert(result.message);
+        });
+
+        $('#btnBookMeal').on('click', function () {
+            var result = CommonFunctions.AjaxCall('Get', '/MyMAGI/DownloadSpecialMeal', "", 'json', 'Error Occurred while Downloading File');
+            if (result.result == "OK") {
+                window.location.href = "/MyMAGI/DownloadUserScheduleFile?FileName=" + result.fname;
+            }
+            else
+                CommonFunctions.Alert(result.message);
+        });
+
+        $('.btnBookSes').click(function () {
+            var sinfo = ($(this).attr('id'));
+            var data = { EvtSessionInfo: sinfo };
+            var result = CommonFunctions.AjaxCall('Get', '/MyMAGI/SessionBook', data, 'json', 'Error Occurred while Downloading File');
+            if (result.result == "OK") {
+                window.location.href = "/MyMAGI/DownloadSessionBook?FileName=" + result.fname;
+            }
+            else
+                CommonFunctions.Alert(result.message);
+        });
+
+        $("#btnsplit").click(function (e) {
+            e.preventDefault();
+            $('#idSection').modal('show');
+
+        });
+
+        $("#btnInstruct").click(function (e) {
+            e.preventDefault();
+            $('#PopupHelpandInst').modal('show');
+        });
+
+    });
+</script>

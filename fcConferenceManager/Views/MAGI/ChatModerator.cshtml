@@ -1,0 +1,161 @@
+﻿@model MAGI_API.Models.GroupChats
+@{
+    ViewBag.Title = "Chat Moderator";
+}
+<style>
+    .lblTitle
+    {
+        font-size: 18pt;
+        color: Navy;
+        background-color: transparent;
+    }
+
+    #dvDir
+    {
+        padding:0 10px;
+    }
+
+    #td_ChatSection
+    {
+        width: 300px;
+        display: inline-block;
+    }
+
+    #chatOverlay
+    {
+        display: none;
+        position: absolute;
+        z-index: 199;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: Gray;
+        opacity: 0.5;
+    }
+
+    #overlaycenter
+    {
+        z-index: 1000;
+        width: 62px;
+        background-color: #fff;
+        border-radius: 10px;
+        opacity: 1;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -32px 0 0 -31px;
+    }
+
+    #overlaycenter img
+    {
+        height: 40px;
+        width: 40px;
+        margin: 10px;
+    }
+
+    #messengerAction
+    {
+        left: unset !important;
+        right: 3rem;
+    }
+
+    #tbl_PeopleList tbody tr:nth-child(odd)
+    {
+        background-color: #f2f2f2;
+    }
+
+    #tbl_PeopleList thead td
+    {
+        font-weight: 400;
+        padding: 0 5px;
+    }
+</style>
+<div id="dvDir">
+    <table class="SquarePanel" style="width:100%; height:100%">
+        <tr>
+            <td>
+                <table style="width: 100%">
+                    <tr>
+                        <td>
+                            <label id="lblTitle" class="lblTitle">Chat Moderator</label>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td id="td_ChatSection">
+                <div class="magi-chatting-header">
+                    <select id="chatTypes" onchange="OnClientItemSelectedForChatType()">
+                        @foreach (var v in Model.GroupTypes)
+                        {
+                            <option value="@v.Value">@v.Key</option>
+                        }
+                    </select>
+                </div>
+
+                @if (Model.GroupByTopic.Count > 0)
+                {
+                    <div id="parent_NetworkingTopics" style="padding-top:0;" class="magi-chatting-header">
+                        <select id="ddlNetTopics" onchange="OnSelectingNetworkingTopic()">
+                            <option value="0">Select Topic</option>
+                            @foreach (var v in Model.GroupByTopic)
+                            {
+                                <option value="@v.Value">@v.Key</option>
+                            }
+                        </select>
+                    </div>
+                }
+
+                <div id="chatSectionForPanel" class="magi-chatting-list-wrapper mb-2">
+                    <div id="chatOverlay">
+                        <div id="overlaycenter">
+                            <img src="/images/icons/loading.gif" />
+                        </div>
+                    </div>
+                    <ul id="msgsListForModerate" class="magi-chatting-list magiSrollbar"></ul>
+                </div>
+            </td>
+            <td>
+                <table id="tbl_PeopleList" width="100%">
+                    <thead>
+                        <tr style="background-color:#0094ff ;color:white;">
+                            <th></th>
+                            <th width="100px">ID</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.GroupChatList.Rows.Count > 0)
+                        {
+                            foreach (System.Data.DataRow dr in Model.GroupChatList.Rows)
+                            {
+                                <tr>
+                                    <td style="vertical-align:top">
+                                        <div>@dr["strText"]</div>
+                                    </td>
+                                    <td style="vertical-align:top ;">
+                                        <div class="clsFullBlock parentJoinThesePeople">
+                                            <span class="joinThesePeople">@dr["cnt"]</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="2">
+                                    No records to display
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>

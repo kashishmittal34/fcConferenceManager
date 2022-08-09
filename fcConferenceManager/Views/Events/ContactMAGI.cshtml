@@ -1,0 +1,139 @@
+@{
+    ViewBag.Title = "ContactMAGI";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .myList
+    {
+        width: 600px;
+    }
+
+    .li
+    {
+        width: 25%;
+        font-size: 10pt;
+        height: 40px;
+        margin-top: 5px;
+        /* margin-right: 50px;*/
+        display: inline-block;
+        border-block: solid;
+    }
+
+    img#cphMain_dlContacts_imgPhoto_8
+    {
+        max-width: 237px;
+    }
+
+    .photo
+    {
+        margin-bottom: 0.5em;
+        max-height: 100px;
+        width: 90px;
+    }
+
+    .tab
+    {
+        /* overflow: hidden;*/
+        /* border: 1px solid #ccc;*/
+        /* background-color: #f1f1f1;*/
+    }
+
+    .tab input
+    {
+        background-color: #ccc;
+        float: left;
+        border: solid;
+        border-block-width: thin;
+        border-block-color: lightgray;
+        outline: none;
+        cursor: pointer;
+        transition: 0.3s;
+        font-size: 16px;
+    }
+
+    .tab input:hover
+    {
+        background-color: #548dd4;
+    }
+</style>
+
+<div class="magiMySessionMainWrapper mt-3">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+            <div class="col-md-8 col-lg-9 flex-grow-1">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2>@ViewBag.PageTitle </h2>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="justify-content-end d-flex flex-wrap mt-1">
+                            
+                                <div class="mb-1 me-1 flex-grow-1 flex-md-grow-0">@Html.DropDownList("OverViewDropDown", null, new { @class = "bg-light ", id = "OverViewDropDown" })</div>
+                                <a id="btnReturn" onclick="window.history.go(-1);" type="button" class="btn mb-1 mb-1 ">Return</a>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div style="display:inline-block;width:100%;">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link " id="idFAQs" href="/Events/FAQs" type="button">FAQs</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="idContacts" href="" type="button">MAGI Support Contacts</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="idReportIssue" href="/MAGI/UserIssue" type="button">Report an Issue</a>
+                        </li>
+                    </ul>
+                </div>
+                <div id="myList" class="p-3 px-0 row">
+                    @foreach (fcConferenceManager.Models.ContactMAGI contacts in (List<fcConferenceManager.Models.ContactMAGI>)ViewBag.ContactInfo)
+                    {
+                        <div class="col-lg-4 col-md-6 mb-4" id="">
+                            <div class="d-flex flex-column p-3 rounded-2 border contact-info-box" style="height:238px">
+                                <img id="cphMain_dlContacts_imgPhoto_8" class="photo" src="/accountimages/@contacts.ImagePath" onerror="this.src='/accountimages/no-person.jpg';" />
+                                <i id="title+@contacts.contactRolepKey">@contacts.Title</i>
+                                <strong class="blueColor">@contacts.Name</strong>
+                                <span id="tel+@contacts.contactRolepKey">@contacts.Telephone</span>
+                                <a class="EmailLink" id="@contacts.contactRolepKey" href="">Send Email</a>
+                                <input hidden type="text" id="email+@contacts.contactRolepKey" value="@contacts.Email" />
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="@ViewBag.OverViewDropDownSelected" id="DropdownSelected" />
+<script>
+    $(document).ready(function ()
+    {
+        $(".EmailLink").click(function (e)
+        {
+            e.preventDefault();
+            var roleid=this.id;
+            var email=document.getElementById("email+"+roleid).value;
+            var title=document.getElementById("title+"+roleid).innerText;
+            var tel=document.getElementById("tel+"+roleid).innerText;
+            var data={ rolePkey: roleid, email: email, title: title, tel: tel }
+            result=CommonFunctions.AjaxCall('Get', '/Events/EmailLinkRedirect', data, 'Error While Rediecting.');
+            if (result.msg="OK")
+                window.location.href=result.url;
+            else
+                CommonFunctions.Alert(result.msg);
+        });
+
+        $('#OverViewDropDown').change(function () {
+            var Data = { DropDownValue: $('#OverViewDropDown').val() };
+            var result = CommonFunctions.AjaxCall('Post', '/MAGI/OverViewDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+            if (result.ActionType === "Redirect")
+                window.location.href = result.RedirectionUrl;
+        });
+        $('#OverViewDropDown').val($('#DropdownSelected').val());
+    });
+</script>

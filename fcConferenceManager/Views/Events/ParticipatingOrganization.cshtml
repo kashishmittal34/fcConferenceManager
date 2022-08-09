@@ -1,0 +1,193 @@
+﻿
+@{
+    ViewBag.Title = "ParticipatingOrganisation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #myList
+    {
+        -webkit-column-count: 3;
+        -moz-column-count: 3;
+        column-count: 3;
+    }
+
+    /* #myList li {
+            display: inline-block;
+        }*/
+
+
+    #myList
+    {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    #myList li a
+    {
+        border: 1px solid #ddd;
+        margin-top: -1px; /* Prevent double borders */
+        background-color: #f6f6f6;
+        padding: 12px;
+        text-decoration: none;
+        font-size: 18px;
+        color: black;
+        display: block
+    }
+
+    .inline
+    {
+        display: inline-block;
+    }
+
+    #dvSiteOrg
+    {
+        display: none;
+    }
+
+    .FontOrg
+    {
+        font-family: var(--fontFamily);
+        font-size: 11pt;
+        line-height: normal;
+        margin: 0;
+        padding: 0;
+    }
+
+    @@media(max-width:767px)
+    {
+        ul#myList
+        {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="magiMySessionMainWrapper mt-3">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+            <div class="col-md-8 col-lg-9 flex-grow-1">
+                <div class="col-md-12 d-flex  p-0">
+                    <div class="col-md-10">
+                        @Html.Raw("<h2>" + @ViewBag.PageTitle + "</h2>")
+                    </div>
+                    <div class="col-md-2">
+                        <div class="d-flex justify-content-end justify-content-lg-end align-items-center flex-wrap">
+                            <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 pull-right">Return</a>
+                        </div>
+                    </div>
+                </div>
+
+                @if (ViewBag.phNoProgram == true)
+                {
+                    <div class="col-md-12" style="background-color: beige; padding: 10px; margin-bottom: 0.7rem; display: block; margin-top: 0.7rem;">
+                        <span id="lblInfoText">@Html.Raw(ViewBag.lblInfo)</span>
+                    </div>
+                }
+                <div style="margin-bottom:10px;">
+                    <span class="inline">Display:</span>
+                    <select class="inline" id="idOrgType">
+                        <option value="0">All</option>
+                        @foreach (var item in ViewBag.OrgType)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                    <div id="dvSiteOrg" class="inline">
+                        <span class="inline">Site Type:</span>
+                        <select class="inline" id="idSiteOrgType">
+                            <option value="0">All</option>
+                            @foreach (var item in ViewBag.siteOrgType)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <ul id="myList">
+                    @foreach (fcConferenceManager.Models.ParrticipatingOrganisation orginfo in (List<fcConferenceManager.Models.ParrticipatingOrganisation>)ViewBag.Organization)
+                    {
+                        <li class="FontOrg m-1 mx-0" shown="1">
+                            <a class="a1" hidden>@orginfo.OrgType</a>
+                            <a class="a2" hidden>@orginfo.SiteOrg</a>
+                            @orginfo.OrganizationName
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#idOrgType').on('change', function ()
+    {
+        document.getElementById("dvSiteOrg").style.display = (this.value == 1) ? "inline-block" : "none";
+
+        var filter, ul, li, a, i, txtValue;
+        filter = this.value;
+        ul = document.getElementById("myList");
+        li = ul.getElementsByTagName("li");
+
+        if (this.value == 0)
+        {
+            for (i = 0; i < li.length; i++)
+            {
+                li[i].style.display = "";
+                li[i].setAttribute("shown", "1");
+            }
+        }
+        else
+        {
+            for (i = 0; i < li.length; i++)
+            {
+                a = li[i].getElementsByClassName("a1")[0];
+                txtValue = a.textContent || a.innerText;
+                var shownProp = (txtValue.toUpperCase().indexOf(filter) > -1) ? "" : "none";
+                li[i].style.display = shownProp;
+                if (shownProp != null && shownProp != "")
+                    li[i].setAttribute("shown", "0");
+                else
+                    li[i].setAttribute("shown", "1");
+            }
+        }
+    });
+
+    $('#idSiteOrgType').on('change', function ()
+    {
+        try
+        {
+            var selectedValue = $(this).val().trim();
+            if (selectedValue == "0")
+            {
+                $('#myList li').each(function (i, o)
+                {
+                    if ($(this).attr('shown').trim() == "1")
+                        $(this).show();
+                });
+            }
+            else
+            {
+                $('#myList li').each(function (i, o)
+                {
+                    var siteType = $(this).find('.a2').html().trim();
+                    if ((siteType == selectedValue || (selectedValue == '5' && siteType == '')) && $(this).attr('shown').trim() == "1")
+                    {
+                        $(this).show();
+                    }
+                    else
+                        $(this).hide();
+                });
+            }
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    });
+</script>

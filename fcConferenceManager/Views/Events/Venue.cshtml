@@ -1,0 +1,147 @@
+﻿@using System.Data
+@{
+    ViewBag.Title = "Venue Lodging";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    DataTable dt = new DataTable();
+}
+<style>
+    .lblTitle
+    {
+        padding-bottom: 8px;
+        padding-top: 8px;
+        display: inline-block;
+        color: Navy;
+        background-color: transparent;
+    }
+
+    .Shadow
+    {
+        box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+    }
+
+    .SectionTitle
+    {
+        color: #00008b;
+        font-weight: 700;
+    }
+</style>
+
+<div class="container-fluid mt-2">
+    <div class="row">
+        @{
+            Html.RenderAction("_PartialEventInfo", "Home");
+        }
+        <div class="col-md-8 col-lg-9 flex-grow-1">
+            <div class="row  pt-2">
+                <div class="col-md-8">
+                    @Html.Raw("<h2 class='d-flex justify-content-start align-self-start mb-2 mb-md-0'>" + @ViewBag.PageTitle + "</h2>")
+                </div>
+                <div class="col-md-4">
+                    <div class="d-md-flex justify-content-end  align-items-center flex-wrap">
+
+                        <span>@Html.DropDownList("OverViewDropDown", null, new { @class = "bg-light mb-1 me-1 d-inline", id = "OverViewDropDown" })</span>
+                        <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 ">Return</a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="magi-content-wrapper">
+                @foreach (fcConferenceManager.Models.VenueInfo venueinfo in (List<fcConferenceManager.Models.VenueInfo>)ViewBag.VenueInfo)
+                {
+                    <details open class="mb-2">
+                        <summary>@venueinfo.SectionTitle</summary>
+                        @Html.Raw(venueinfo.SectionText)
+                    </details>
+                }
+            </div>
+            <div class="row col-md-12">
+                @if (ViewBag.VenuImagesText != null)
+                {
+                    dt = (DataTable)ViewBag.VenuImagesText;
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+                        <div class="col-lg-3 col-md-4 col-xxl-2  align-items-center justify-content-center">
+                            @foreach (DataRow dr in dt.Rows)
+                            {
+                                string src = "";
+                                if (dr["Thumbnail"]!= System.DBNull.Value)
+                                {
+                                    src = "data:image/png;base64," + Convert.ToBase64String((byte[])dr["Thumbnail"]);
+                                }
+                                if (src!= "")
+                                {
+                                    <img class="rounded Shadow m-1 imageClick" src="@src" data-id="@dr["Image_pKey"]" title="Venue Image" width="100%" />
+                                }
+                            }
+                        </div>
+                        <div class="col-md-8 col-lg-9 col-xxl-10 my-4 my-md-0">
+
+                            @foreach (DataRow dr in dt.Rows)
+                            {
+                                <div class="col-md-12">
+                                    @if (dr["pKey"] != System.DBNull.Value)
+                                    {
+                                        <img id="@("imgUpCol_" + dr["pKey"])" src="/Images/navigation/righttriangle.png" class="toggleClick" height="12" data-bs-toggle="collapse" data-bs-target="@("#Collapse_" + dr["pKey"])" aria-expanded="false" aria-controls="collapseExample" style="display: @((dr["Collapsible"].ToString().ToLower() == "false") ? "none" : "initial;" )" />
+                                        if ((dr["Collapsible"].ToString().ToLower() == "false"))
+                                        {
+                                            <label id="lblCollapseTitle" class="SectionTitle">@dr["SectionTitle"]</label>
+                                            <br />
+                                            @Html.Raw("<label id='lblSectionText'>" + @dr["SectionText"] + "</label>")
+                                        }
+                                        else
+                                        {
+                                            <a id="hlSectionTitle" href="@dr["TitleLink"]" class="SectionTitle" target="_blank" style="text-decoration:none;">@dr["SectionTitle"]</a>
+                                            <div class="collapse" id="@( "Collapse_" + dr["pKey"])">
+                                                @Html.Raw("<label id='lblSectionText'>" + @dr["SectionText"] + "</label>")
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div id="PhotoModal" class="modal fade" tabindex="-1" aria-labelledby="modelTopicModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader">
+                <h5 class="modal-title">Venue Photo</h5>
+                <div>
+                    <button name="cancelPicture" id="_Cancel" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+            <div class="modal-body p-2">
+                <div class="col-md-12 text-center justify-content-center align-items-center">
+                    <img id="modalImage" src="" title="Venue Image" style="width:380px;" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="@ViewBag.OverViewDropDownSelected" id="DropdownSelected" />
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(document).on('click', '.imageClick', function () {
+            var src = $(this).attr("src");
+            $('#modalImage').attr("src", src);
+            $('#PhotoModal').modal('show');
+        });
+        $(document).on('click', '.toggleClick', function () {
+            var src = $(this).attr("src");
+            var srcNew = (src.includes("righttriangle")) ? "/Images/navigation/downtriangle.png" : "/Images/navigation/righttriangle.png"
+            $(this).attr("src", srcNew);
+        });
+
+        $('#OverViewDropDown').change(function () {
+            var Data = { DropDownValue: $('#OverViewDropDown').val() };
+            var result = CommonFunctions.AjaxCall('Post', '/MAGI/OverViewDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+            if (result.ActionType === "Redirect")
+                window.location.href = result.RedirectionUrl;
+        });
+        $('#OverViewDropDown').val($('#DropdownSelected').val());
+    });
+</script>

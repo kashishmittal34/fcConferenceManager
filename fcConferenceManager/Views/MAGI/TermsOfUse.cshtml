@@ -1,0 +1,79 @@
+﻿
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //Layout = "~/Views/Shared/_PartialLeftPanel.cshtml";
+}
+
+<style>
+    .lblTitle
+    {
+        padding-bottom: 8px;
+        display: inline-block;
+        color: Navy;
+        background-color: transparent;
+        padding-left: 10px;
+        font-size: 18pt;
+    }
+
+    .mainbody
+    {
+        border: solid;
+        border-radius: 12px;
+        padding-left: 2px;
+        border-width: 1px;
+        border-color: lightgray;
+    }
+
+    .divbody
+    {
+        padding-left: 10px;
+    }
+</style>
+<div class="magiMySessionMainWrapper mt-3">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+            <div class="col-md-8 col-lg-9 flex-grow-1">
+                <div class="col-md-12 mainbody mb-3">
+                    <div class="row pt-2">
+                        <div class="col-md-8">
+                            <label id="lblTitle" class="lblTitle">@ViewBag.PageTitle</label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-md-flex justify-content-end flex-wrap pe-2">
+
+                                @Html.DropDownList("OverViewDropDown", null, new { @class = "bg-light me-1 d-inline", id = "OverViewDropDown" })
+                                <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn">Return</a>
+
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="lblTitle">@ViewBag.PageTitle</div>*@
+                    <div class="divbody mb-2">@Html.Raw(@ViewBag.FormText)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="@ViewBag.OverViewDropDownSelected" id="DropdownSelected" />
+<script>
+    $(document).ready(function ()
+    {
+        document.getElementById("OverViewDropDown").selectedIndex=-1;
+
+        $('#OverViewDropDown').change(function ()
+        {
+            var Data={ DropDownValue: $('#OverViewDropDown').val() };
+            var result=CommonFunctions.AjaxCall('Post', '/MAGI/OverViewDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+            if (result.ActionType==="Redirect")
+                window.location.href=result.RedirectionUrl;
+        });
+        $('#OverViewDropDown').val($('#DropdownSelected').val());
+    });
+</script>
+
+
+

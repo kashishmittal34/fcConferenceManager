@@ -1,0 +1,123 @@
+﻿@{ DateTime parentDate = Convert.ToDateTime("1/1/2000");
+    DateTime current = DateTime.Now;
+    ViewBag.SelectedMonth = 0;
+    ViewBag.SelectedYear = 0;
+}
+
+<script src="~/Scripts/CustomScript/payment.js" type="text/javascript"></script>
+<div class="px-3">
+    <span id="lblCardError" style="color:red;"></span>
+    <div class="mb-3" style="padding-top: 10px; text-align: center">
+        <img src="/images/miscellaneous/creditall.gif">
+    </div>
+    <span ID="lblSelectedCharges" style="display:none"></span>
+    <span ID="lblSelectedAcctCharges" style="display:none"></span>
+    <div class="row mb-1 align-items-center ">
+        <div class="col-md-5 text-md-end">
+            <span ID="Label9">Amount: </span>
+        </div>
+        <div class="col-md-7">
+            <label id="lblCreditAmount" style="font-weight:bold;display: none"></label>
+            <input id="txtCreditAmount" class="txtRequired" type="text" min="0" maxlength="10" />
+        </div>
+    </div>
+    <div class="row mb-1 align-items-center ">
+        <div class="col-md-5 text-md-end">
+            <label id="Label1" for="cardtype">Card type:</label>
+        </div>
+        <div class="col-md-7">
+            <select name="CardType" id="ddCardType" class="txtRequired" style="min-width:inherit; width: 100%;">
+                <option value="1">VISA</option>
+                <option value="3">MasterCard</option>
+                <option value="2">AMEX</option>
+                <option value="4">Discover</option>
+            </select>
+        </div>
+    </div>
+    <div class="row mb-1 align-items-center ">
+        <div class="col-md-5 text-md-end">
+            <label for="cardno." id="Label24">Card number:</label>
+        </div>
+        <div class="col-md-7">
+            <input type="text" id="txtCCNum" class="txtRequired cc-number ClearText" pattern="\d*" x-autocompletetype="cc-number" required>
+        </div>
+    </div>
+    <div class="row mb-1 align-items-center">
+        <div class="col-md-5 text-md-end">
+            <label for="expdate" id="Label145">Expiration date:</label>
+        </div>
+        <div class="col-md-7 d-flex">
+            <select id="ddMonth" Width="110px" class="txtRequired" style="min-width:inherit; width: 100%;">
+                <option value="0">Select Month</option>
+
+                @for (int i = 1; i <= 12; i++)
+                {
+
+                    if (parentDate.AddMonths(i - 1).Month == current.Month)
+                    {
+                        ViewBag.SelectedMonth = i;
+                    }
+                    @Html.Raw("<option value='" + @i + "' " + (parentDate.AddMonths(i - 1).Month == current.Month ? "selected" : "") + ">" + (parentDate.AddMonths(i - 1).ToString("MMMM")) + "</option>")}
+            </select>
+            <select id="ddYear" Width="80px" class="txtRequired ms-2" style="min-width:inherit; width: 100%;">
+                <option value="0">Select Year</option>
+                @for (int j = DateTime.Now.Year; j <= DateTime.Now.Year + 30; j++)
+                {
+                    if (j == current.Year)
+                    {
+                        ViewBag.SelectedYear = j;
+                    }
+                    @Html.Raw("<option value='" + @j + "' " + (j == current.Year ? "selected" : "") + ">" + @j + "</option>")}
+            </select>
+        </div>
+    </div>
+    <div class="row mb-1 align-items-center" style="display:@ViewData["phCreditCV"];">
+        <div class="col-md-5 text-md-end">
+            <label for="cvcode" id="Label33">CV code:</label>
+        </div>
+        <div class="col-md-7">
+            <input id="txtCreditCode" class="txtRequired cc-cvc ClearText" MaxLength="4" type="text" autocomplete="off" />
+        </div>
+    </div>
+    <div class="row mb-1 align-items-center" style="display:@ViewData["phCreditName"];">
+        <div class="col-md-5 text-md-end">
+            <label for="name" id="Label31">Name on card:</label>
+        </div>
+        <div class="col-md-7">
+            <input id="txtCreditName" MaxLength="50" type="text" class="txtRequired ClearText" />
+        </div>
+    </div>
+    <div class="row mb-1 align-items-center" style="display:@ViewData["phCreditFirstLast"];">
+        <div class="col-md-5 text-md-end">
+            <label for="name" id="Label53">Name on card (first and last):</label>
+        </div>
+        <div class="col-md-7 d-flex">
+            <input id="txtCreditFirstName" MaxLength="50" type="text" class="txtRequired " />
+            <input id="txtCreditLastname" MaxLength="50" type="text" class="txtRequired ms-2" />
+        </div>
+    </div>
+    <div class="row mb-1 align-items-center" style="display:@ViewData["phCreditZipCode"];">
+        <div class="col-md-5 text-md-end">
+            <label for="zip" id="Label31">ZIP code/Postal code:</label>
+        </div>
+        <div class="col-md-7">
+            <input id="txtCreditZipcode" MaxLength="10" type="text" class="txtRequired ClearText" />
+        </div>
+    </div>
+    <div class="row mb-1 align-items-center" style="display:@ViewData["phCreditAddress"];">
+        <div class="col-md-5 text-md-end">
+            <label for="address" id="Label31">Address:</label>
+        </div>
+        <div class="col-md-7">
+            <input id="txtCreditAddress" MaxLength="50" type="text" class="txtRequired ClearText" />
+        </div>
+    </div>
+    <input type="hidden" value="@ViewBag.SelectedMonth" id="selMonth" />
+    <input type="hidden" value="@ViewBag.SelectedYear" id="selYear" />
+</div>
+
+<script type="text/javascript">
+    var J = Payment.J, number = document.querySelector('.cc-number'), cvc = document.querySelector('.cc-cvc');
+    Payment.formatCardNumber(number, 16);
+    Payment.formatCardCVC(cvc);
+</script>

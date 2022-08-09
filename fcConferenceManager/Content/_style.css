@@ -1,0 +1,883 @@
+/*body{ font-family:Arial, Helvetica, sans-serif; margin:0; padding:0; font-weight:normal;}*/
+body{ min-height: 100%; margin:0; padding:0;  font-family: 'MyriadProRegular', tahoma !important;  font-weight: normal; font-style: normal; font-size:14px;  color:#666;}
+img{ height:auto; /*width:100%;*/}
+a{ outline:none!important;}
+.navigation{ background:#3a4450;}
+.logo{ padding:14px 0px 0px 16px; float:left;}
+.side-nav img{ width:30px; margin-right:6px; }
+.side-nav li a{ color:#fff; font-size:14px; }
+
+.navbar-user > li > a{ border:none; height:50px; line-height:25px; color:#fff; border-left:1px solid #4b5b6e; padding-left:22px; padding-right:22px;}
+.navbar-user > li > a:hover, .navbar-user > li > a:focus{background-color: #008cc6;}
+.navbar-user .open > a, .navbar-user .open > a:hover, .navbar-user .open > a:focus {background-color: #008cc6;}
+.navbar-user img{width:auto; margin-right:6px; vertical-align:-2px; }
+
+.side-nav .dropdown-menu li a{background:url(../images/dot.jpg) no-repeat 16px 18px; padding-left:28px !important;}
+
+/* The html and body elements cannot have any padding or margin. */
+
+
+/* Wrapper for page content to push down footer */
+#wrapper {
+    height: auto;
+    margin: 0 auto -35px;
+    min-height: 100%;
+    padding-bottom:35px;
+}
+
+/* Set the fixed height of the footer here */
+#footer {
+
+background-color: #3a4450;
+height:auto;
+margin-top:15px;
+z-index:1000000;
+position:absolute;
+width:100%;
+padding:10px 0px;
+}
+.copyright{ font-size:11px; color:#b1b3b6; padding:5px 0px 0px 10px;}
+.design{ font-size:11px; color:#b1b3b6; padding:5px 10px 0px 10px; }
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+.container {
+  width: auto;
+
+  padding: 0 15px;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+
+body#login {
+  padding-top: 150px;
+  padding-bottom: 20px;
+  background-color: #eee;
+}
+.form-signin {
+  max-width: 330px;
+  padding: 5px 15px 15px 15px;
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  font-size: 16px;
+  height: auto;
+  padding: 10px;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="text"] {
+  margin-bottom: -1px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.login-panel{max-width:720px; margin:0 auto;
+-webkit-box-shadow: 0px 0px 8px #ccc;
+-moz-box-shadow: 0px 0px 8px #ccc;
+box-shadow: 0px 0px 8px #ccc;}
+
+.login-panel .panel-body{ background:#fff; padding-top:10px;  border-radius:0px;}
+.login-panel .panel-body h3{font-weight:normal; font-size:20px; padding:2px 0px 15px 0px; margin:0; color:#666; }
+.login-panel .panel-body label{ font-weight:normal; color:#858585;}
+.login-panel .panel-body input{ font-weight:normal; color:#888; font-size:14px;}
+.login-panel .panel-heading{ background:#3a4450; padding:0px; height:50px;  border-radius:0px; border:none; }
+.login-panel .panel-heading .logo{ width:auto; height:auto; padding:15px 13px; }
+.login-panel .form-group{ margin-bottom:20px;}
+
+
+.side-nav ul.sub{ margin-left:0px !important; padding-left:32px; margin-top:4px; list-style:none;}
+.side-nav ul.sub li a{background:url(../images/dot.jpg) no-repeat 0px 6px; padding-left:11px !important; padding-right:10px !important;
+margin-bottom:7px; display:block; font-size:12px;}
+.side-nav ul.sub li a:hover{ text-decoration:none; color:#a7e5ff;}
+
+
+
+
+
+
+/*********************New css added oct-28-2014***************************/
+
+h1{ font-size:28px; font-weight:normal !important; color:#008cc6; margin:18px 0 18px 0; padding:0 0 10px 0; border-bottom:1px solid #eeeeee; font-family:Arial, Helvetica, sans-serif;}
+h1 small{ font-size:14px; color:#a5a5a5; font-weight:normal;}
+.table-responsive img{ width:auto;}
+.nopad{ padding:0px;}
+.panel-bordered{ border:1px solid #dbdbdb;}
+.form-group label{ padding-right:0;}
+
+.panel-title{font-size:14px; font-weight:normal !important; color:#fff; padding:0 0 0px 0;  font-family:Arial, Helvetica, sans-serif;}
+.panel-title a{ color:#fff !important; display:block; text-decoration:none; padding:12px 15px;}
+.panel-title a span{ background:url(../images/ar-down.png) no-repeat right; height:20px; width:20px; float:right;} 
+.panel-title a.collapsed span{ background:url(../images/ar-up.png) no-repeat right !important; height:20px; width:20px; float:right;} 
+.nopad{ padding:0;}
+
+.panel-footer {
+    background-color: #f5f5f5;
+    border-bottom-left-radius:0px;
+    border-bottom-right-radius:0px;
+	border: 1px solid #dddddd;
+	border-top:0 !important;
+    padding: 10px 15px;
+}
+.btn-default {
+    background-color: #008cc6;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.btn-primary {
+    background-color: #585f68;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+	border:1px solid #585f68;
+}
+.ic-btn{padding: 6px 12px; margin-bottom:18px;}
+.btn-default i, btn-primary i{ font-size:14px; font-weight:normal; vertical-align:-2px; margin-right:3px; }
+.btn-primary:hover{background-color: #6a7077; border:1px solid #585f68;}
+.p-right{ text-align:right;}
+
+
+
+@media (max-width: 768px) 
+{	
+	.navbar-user { border-top:1px solid #333 !important;}
+	.navbar-user .dropdown-menu .divider{background-color: #333;}
+	.navbar-user .dropdown-menu li a{padding: 5px 15px 5px 42px !important;}
+/*	.side-nav .dropdown-menu li a{padding: 5px 15px 5px 50px !important;}*/
+
+	.side-nav .dropdown-menu{ }
+	.side-nav .dropdown-menu li a{ background:url(../images/dot.jpg) no-repeat 30px 14px; padding-left:46px!important;}
+	.side-nav .dropdown-menu li a:hover{background:url(../images/dot.jpg) no-repeat 30px 14px #0073a2 !important;}
+	.logo{max-width:70%; height:auto;}
+	
+	
+	h1{ font-size:24px;}
+	.p-right{ text-align:left;}
+}
+.input-group-btn .btn{ background:#f4f4f4; border:1px solid #ddd; height:24px; width:24px; border-radius:12px !important; margin-left:6px; vertical-align:top; text-align:center; padding:2px 0 0 0; color:#666; font-size:13px;}
+
+
+/*filter control*/
+.col-heightfix { min-height:46px;min-width: 185px;
+    }
+
+/************************* ADD 19-12-14 **************************/
+.help-block{ display:block; margin-top:5px; color:#737373; font-size:12px;}
+.width80{ width:80%; margin:0 auto;}
+.bg-gridhead{ background:#f9f9f9;}
+.bg-gridhead th{font-family: 'proxima_nova_bold'; font-weight:bold; color:#333; font-size:13px; display:table-cell !important;background:lightgray none repeat scroll 0 0;}
+.action_icon{ vertical-align:middle !important; text-align:center !important;}
+.alert_error{ vertical-align:-6px; padding-right:8px;}
+.posted_name{font-family: 'proxima_nova_bold'; font-weight:normal; color:#333; font-size:14px; padding:0 6px;}
+.model_subtitle{font-family: 'proxima_nova_regular'; font-weight:normal; color:#999; font-size:14px; letter-spacing:0px; margin:0; padding:5px 0;}
+.model_textarea{ height:80px !important;}
+
+.imgUpdateSuccessMsg, .imgUpdateErrorMsg {
+    position: absolute;
+    top: 4px;
+    left: 40px;
+}
+
+.cu-input-group{ padding:5px 0 15px 0;}
+.cu-input-group .input-group-btn{ vertical-align:top;}
+.cu-input-group .input-group-btn .btn{ background:#f4f4f4; border:1px solid #ddd; height:24px; width:24px; border-radius:12px !important; margin-left:6px; vertical-align:top; text-align:center; padding:2px 0 0 0; color:#666; font-size:13px;}
+
+/********************* ADD CSS 04-02-15 *********************/
+.leftic{ width:40px; float:left;}
+.leftpad{ margin-left:45px;}
+.model-table{ width:100%; margin:0px !important; text-align:justify;}
+.model-table td{ white-space:normal; vertical-align:top !important; padding:3px;}
+.model-table td strong{ color:#000; font-size:15px; /*font-family: 'proxima_nova_bold';*/ font-weight:normal;}
+.mdtitle{ padding-bottom:10px;}
+.mdtitle img{ padding-right:4px;}
+
+.tblcastaddnewbtn{
+    clear: both;
+    width: 100%;
+    margin-bottom: 12px;
+}
+.tblcrewaddnewbtn{
+    clear: both;
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+/************************************ New design chagnes for jira - SDAS-747 ************************************/
+.ServiceCountglyphicon{
+    color: #666;
+    font-size: 17px;
+    height: 21px;
+    margin-left: 6px;
+    vertical-align: middle;
+    /*width: 24px;*/
+    cursor:pointer;
+    text-decoration:none !important;
+}
+    .btnUp {
+        padding: 6px 12px;
+        margin-bottom:3px;
+    }
+
+    .btndown {
+        padding: 6px 12px;
+        margin-bottom: 3px;
+    }
+
+/************************************ Quiestionnair changes (FieldServiceParameter) ************************************/
+
+.pf_select{}
+.pf_que{ font-family: 'proxima_nova_cn_bold', arial; font-weight:normal; font-size:18px; color:#333; padding:10px 0; line-height:1;border-bottom:1px solid #ddd;}
+.pf_logo{ text-align:center; vertical-align:middle; border-right:1px solid #ddd; position:absolute; width:10%; left:0; top:auto;}
+.pf_select table{ margin:0 !important; padding:0 !important;}
+.pf_select table td{ border-bottom:1px solid #ddd; padding:8px; white-space:nowrap;}
+.fix_table{ width:90%; overflow-x:scroll;  margin-left:10%; overflow-y:visible; background:#FFF;}
+.mainpad { padding:15px 0;
+}
+@media (max-width: 1086px) {
+.gridpad{ padding:15px 15px 15px 0px;}
+.pf_logo{left:0;}
+}
+
+
+.GridviewScrollHeader TH, .GridviewScrollHeader TD 
+{ 
+    padding: 10px; 
+    white-space: nowrap; 
+    border-right: 1px solid #dbe7e8; 
+    border-bottom: 1px solid #dbe7e8; 
+} 
+.GridviewScrollItem TD 
+{ 
+    padding: 10px; 
+    white-space: nowrap; 
+    border-right: 1px solid #dbe7e8; 
+    border-bottom: 1px solid #dbe7e8; 
+} 
+
+
+.GridviewScrollItem .Wrap 
+{ 
+    white-space: normal; 
+} 
+.GridviewScrollPager  
+{ 
+    border-top: 1px solid #dbe7e8; 
+    background-color: #FFFFFF; 
+} 
+.GridviewScrollPager TD 
+{ 
+    padding-top: 3px; 
+    font-size: 14px; 
+    padding-left: 5px; 
+    padding-right: 5px; 
+} 
+.GridviewScrollPager A 
+{ 
+    color: #666666; 
+} 
+.GridviewScrollPager SPAN 
+{ 
+    font-size: 16px; 
+    font-weight: bold; 
+}
+
+/************************************ Metadata tab changes ************************************/
+
+.sqb_title {
+    background: url(../Content/images/gr_title.png) top repeat-x !important;
+    position: relative;
+    font-family: 'proxima_nova_cn_bold', arial;
+    font-weight: normal;
+    font-size: 26px;
+    color: #FFF !important;
+    line-height: 1;
+    height: 46px;
+    padding: 10px 15px 0;
+}
+
+    .sqb_title span {
+        position: absolute;
+        top: 17px;
+        right: 15px;
+        font-family: 'proxima_nova_cn_regular', arial;
+        font-weight: normal;
+        font-size: 16px;
+        color: #FFF;
+    }
+
+.sqb_content {
+    background: #FFF url(../Content/images/grbg.png) top repeat-x;
+    border: 1px solid #ccc;
+    border-top: none;
+    padding: 15px;
+    margin-bottom: 30px;
+}
+
+.sqb_con_metadata {
+    /*background: #FFF url(../Content/images/grbg.png) top repeat-x;*/
+    border: 1px solid #ccc;
+    border-top: none;
+    padding: 20px 25px;
+    font-size: 14px;
+    line-height: 1.2;
+}
+
+.movie_img {
+    float: left;
+    width: 135px;
+    height: 200px;
+}
+
+.movie_content {
+    /*margin-left: 155px;*/
+    margin-left: 158px;
+    position: relative;
+}
+
+.sq_logo {
+    padding: 13px 0;
+}
+
+h2.sub_title {
+    padding: 0 0 8px 0;
+    font-family: 'proxima_nova_cn_regular', arial;
+    font-weight: normal;
+    text-transform: none;
+    letter-spacing: normal;
+    font-size: 30px;
+    color: #333;
+}
+
+.metadata_tab {
+    margin: 25px 0 30px 0;
+    height: 55px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+    .metadata_tab ul {
+        width: 100%;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        background: url(../Content/images/sprites2.png) 0px -1064px repeat-x;
+        height: 53px;
+        border-radius: 6px;
+    }
+
+    .metadata_tab li {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        float: left;
+        width: 33%;
+        position: relative;
+        height: 53px;
+        font-family: 'proxima_nova_cn_regular', arial;
+        font-weight: normal;
+        color: #333;
+        font-size: 16px;
+    }
+
+        .metadata_tab li .text {
+            display: inline-block;
+            padding: 18px 13px 0 0;
+        }
+
+        .metadata_tab li.tb3 {
+            width: 34%;
+        }
+
+.tb2 .tb_ar {
+    position: absolute;
+    left: -13px;
+    top: 0px;
+    width: 26px;
+    height: 53px;
+    background: url(../Content/images/sprites2.png) right -1011px no-repeat;
+}
+
+.tb3 .tb_ar {
+    position: absolute;
+    left: -13px;
+    top: 0px;
+    width: 26px;
+    height: 53px;
+    background: url(../Content/images/sprites2.png) right -1011px no-repeat;
+}
+
+.tickblock {
+    width: 19px;
+    display: inline-block;
+    margin: 0px 7px 0 16px;
+    height: 14px;
+    vertical-align: -2px;
+}
+
+    .tickblock.tk {
+        background: url(../Content/images/sprites2.png) -219px -1031px no-repeat;
+    }
+
+a.help {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    background: url(../Content/images/sprites2.png) -180px -1028px no-repeat;
+    vertical-align: middle;
+    margin-left: 3px;
+}
+
+.first_open .tb1 {
+    background: url(../Content/images/sprites2.png) 0px -1117px repeat-x;
+    border-radius: 5px 0 0 5px;
+}
+
+.first_open .tb2 .tb_ar {
+    background-position: -284px -1011px;
+}
+
+.second_open .tb2 {
+    background: url(../Content/images/sprites2.png) 0px -1117px repeat-x;
+}
+
+    .second_open .tb2 .tb_ar {
+        background-position: -258px -1011px;
+    }
+
+.second_open .tb3 .tb_ar {
+    background-position: -284px -1011px;
+}
+
+.third_open .tb3 {
+    background: url(../Content/images/sprites2.png) 0px -1117px repeat-x;
+    border-radius: 0 5px 5px 0;
+}
+
+    .third_open .tb3 .tb_ar {
+        background-position: -258px -1011px;
+    }
+
+.sq_text {
+    font-size: 15px;
+    color: #333;
+    padding: 0 0 4px 0;
+}
+
+.time_saver {
+    margin: 25px auto;
+    text-align: center;
+    /* width: 650px;*/
+}
+
+    .time_saver a {
+        margin: 0 20px;
+    }
+
+    .time_saver .qs_btnlink {
+        margin: 0 20px;
+    }
+
+.TimeSaverbutton {
+    color: #333;
+    text-shadow: 0 1px 0 rgba(255,255,255,.6);
+    line-height: 1;
+    font-size: 18px;
+    text-transform: uppercase;
+    font-family: 'proxima_nova_cn_regular', arial;
+    letter-spacing: 1px;
+    position: relative;
+    display: inline-block;
+    height: 78px;
+    text-decoration: none;
+    background: url(../Content/images/btn_yellow_left.png) top left no-repeat;
+    padding: 0 0 0 75px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+    .TimeSaverbutton span {
+        display: inline-block;
+        height: 78px;
+        padding: 23px 20px 0 12px;
+        background: url(../Content/images/btn_yellow_right.png) top right no-repeat;
+    }
+
+    .TimeSaverbutton h3 {
+        font-size: 24px;
+        color: #333;
+        font-family: 'proxima_nova_cn_bold', arial;
+        text-transform: none;
+        padding: 0 0 3px 0;
+        margin: 0;
+        line-height: 1;
+    }
+
+    .TimeSaverbutton img {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    .TimeSaverbutton:hover, .TimeSaverbutton:focus {
+        color: #333;
+    }
+
+    .TimeSaverbutton img.tick_action {
+    }
+
+
+    .TimeSaverbutton .tickTimeSaver {
+        position: absolute;
+        left: auto;
+        top: -13px;
+        right: -13px;
+        background: url(../Content/images/tick_yellow.png) no-repeat;
+        width: 44px;
+        height: 44px;
+    }
+
+    ul.treemenu li a.mainlink {
+    font-size: 18px !important;
+    display: block;
+    padding: 1px 0 5px 18px;
+    color: #333;
+    text-decoration: none;
+    background: url(../Content/images/sprites.png) -1px -465px no-repeat;
+    border-top: 1px solid #ddd;
+    list-style: none;
+    list-style-type: none;
+}
+
+ul.treemenu li.open a.mainlink {
+    background: url(../Content/images/sprites.png) 0px -365px no-repeat;
+}
+
+ul.treemenu li ul > li > a {
+    display: block;
+    padding: 4px 0 4px 13px;
+    color: #333;
+    text-decoration: none;
+}
+
+a.ar_open {
+    background: url(../Content/images/sprites.png) 0px -419px no-repeat;
+    padding-left: 13px;
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a.ar_close {
+    background: url(../Content/images/sprites.png) 0px -519px no-repeat;
+    padding-left: 13px;
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+ul.treemenu li ul > li > a.childmainlink {
+    background: url(../Content/images/sprites.png) 0px -508px no-repeat;
+}
+
+ul.treemenu li ul > li.open a.childmainlink {
+    background: url(../Content/images/sprites.png) 0px -408px no-repeat;
+}
+
+ul.treemenu li ul > li a.secondchildlink {
+    background: url(../Content/images/sprites.png) 0px -506px no-repeat;
+}
+
+ul.treemenu li ul > li li.open a.secondchildlink {
+    background: url(../Content/images/sprites.png) 0px -408px no-repeat !important;
+}
+
+ul.treemenu li ul > li li a.thirdchildlink {
+    background: url(../Content/images/sprites.png) 0px -506px no-repeat;
+}
+
+ul.treemenu li ul > li li li.open a.thirdchildlink {
+    background: url(../Content/images/sprites.png) 0px -408px no-repeat !important;
+}
+
+.custom_tab .tick {
+    background-position: 0 -283px;
+    margin-left: 13px;
+}
+
+ul.treemenu {
+    padding: 10px 0;
+    margin: 0;
+    list-style: none;
+    list-style-type: none;
+}
+
+    ul.treemenu li {
+        font-size: 18px !important;
+        list-style: none;
+        list-style-type: none;
+        /*border-bottom: 1px solid #ddd;*/
+    }
+
+
+        ul.treemenu li ul > li {
+            font-size: 16px !important;
+            color: #333;
+            /*border-bottom: 0px solid #ddd;
+            border-top: 1px solid #ddd;*/
+        }
+
+        ul.treemenu li ul > :first-child {
+            border: none;
+        }
+
+        ul.treemenu li ul {
+            /*border-top: 1px solid #ddd;*/
+            /*padding: 0 0 0 12px;*/
+            padding: 0 0 0 0px;
+        }
+
+.tree_content {
+    border-top: 1px solid #ddd;
+    padding: 15px 0;
+    font-size: 14px;
+    color: #666;
+}
+
+    .tree_content .form-horizontal {
+        padding: 15px 0;
+    }
+
+ .validationError {
+    background: none repeat scroll 0 0 rgb(255, 232, 112);
+    border-radius: 4px;
+}
+
+.requireBackground {
+    padding: 4px 6px;
+}
+
+first_open li a {
+    color: #515151;
+}
+
+.second_open li a {
+    color: #515151;
+}
+
+.third_open li a {
+    color: #515151;
+}
+
+.popOverBox {
+    font-size: 14px;
+    white-space: nowrap;
+}
+popOverBox h3 {
+    font-size: 15px;
+    font-weight: bold;
+    color: #333;
+    padding: 0;
+    margin: 0;
+}
+
+.popover-title {
+    min-width: 365px;
+    max-width: 565px;
+    text-transform: none;
+}
+
+.pop_sml_logo {
+    /*white-space: nowrap;*/
+}
+
+    .pop_sml_logo img {
+        margin-right: 5px;
+        padding: 2px;
+    }
+
+.requiredField:before {
+    content: "*";
+    color: red;
+    font-size : 18px;
+    font-weight: bold;
+}
+
+.marginL5px{
+    margin-left: 5px !important;
+}
+
+.marginL15px{
+    margin-left: 15px !important;
+}
+
+.sundance-dashbord-orders{
+    background-color: #FFD22D; 
+    height: 20px; 
+    border-radius: 5px;
+}
+
+.quiver-dashbord-orders{
+    background-color: #A4C932; 
+    height: 20px; 
+    border-radius: 5px;
+}
+
+.dashboard-header{
+    color: #4488a4;
+    text-decoration: none;
+}
+
+/*change by pratiksha*/
+
+.ic-success {
+    width: 16px;
+    height: 16px;
+    background: url(../Content/images/sprites.png) -92px -83px no-repeat;
+    display: inline-block;
+    vertical-align: -4px;
+}
+
+@media (max-width: 768px) {
+    .sitedrop {
+        width: 94% !important; margin:0 3% 10px 3%;
+    }
+}
+
+/************************************ Start :: Finance CSS ***********************************************************/
+
+.dbn-content{ background:#FFF; font-family: 'proxima_nova_cn_regular', arial; font-weight:normal; line-height:1; font-size:16px;}
+.dbn-top{ padding:40px 30px 0; background:#f7f7f7;}
+
+.db-value{ position:absolute; top:20px; right:22px; color:#333; font-size:48px; line-height:1; font-family: 'proxima_nova_cn_bold', arial;}
+.db-box p{ position:absolute; bottom:18px; right:22px; font-size:32px; color:#333; line-height:1;}
+a.db-box{ text-decoration:none; display:block; height:120px; overflow:hidden; background:#ffca07; /*change*/ position:relative;}
+/*.db-box:hover .db-icon.revenue, .db-box:hover .db-icon.orders, .db-box:hover .db-icon.titles{ background-position:0px -120px;}*/
+
+.dbn-content h1{ font-size:30px !important; border:none !important;  font-family: 'proxima_nova_bold', arial !important; font-weight:normal !important; color:#333 !important; letter-spacing:normal !important; text-transform:none !important; margin: 20px 0; display: inline-block; }
+.ms-center{ text-align:center; margin:20px 0 30px 0;}
+.dbnfield{ margin:0 auto; width:1100px;}
+
+
+@media (max-width:1200px) {
+    .dbnfield {
+        margin: 0 auto;
+        width: auto;
+    }
+}
+
+
+
+.dbnf{ width: 25%; padding:0 10px; float:left;}
+.dbnf .k-widget{ width:100%; }
+.dbnf p{ padding:0 0 5px 0; color:#333333; font-size:16px; text-align: center; }
+.dbnf .form-control{ border-radius:4px;}
+
+.dbn-middle{padding:36px 30px 0;}
+.dbn_tab{ background:#797979; height:50px;}
+.dbn_tab ul{ list-style:none; padding:0; margin:0;}
+.dbn_tab ul li{ list-style-type:none; padding:0; margin:0; height:50px; position:relative; float:left; border-right:1px solid #999999; }
+#estimate .dbn_tab ul li{ width: 16.66666667%; }
+#actual .dbn_tab ul li{ width: 20%; }
+.dbn_tab ul li a{ height:50px; display:block; text-transform:uppercase; text-decoration:none; text-align: center; font-family: 'proxima_nova_regular', arial; color:#FFF; font-size:16px; padding:15px 35px 0 35px;}
+.dbn_tab ul li a:hover{ background:#696969;}
+.dbn_tab ul li.active:after{ content:""; background:url(images/ar_s.png) no-repeat; /*change*/ width:15px; height:8px; position:absolute; bottom:-8px; left:50%; margin-left:-8px; }
+.dbn_tab ul li.active a{ background:#008cc6; /*change*/ color:#FFF;}
+.nsgs{ margin:0; padding:0; width:100%; color:#333;}
+.ns, .gs{background:#28a4d7; /*change*/ color:#000; height:60px; border-radius:4px; padding:0 10px; font-size:20px; text-align:center; text-transform:uppercase;}
+/*.gs{background:#797979; color:#FFF; height:60px; border-radius:4px 0px 0px 4px; padding:0 10px; font-size:34px; text-align:center; text-transform:uppercase;}*/
+
+.ns-value{ height:60px; background:#FFF; border-radius:0px 4px 4px 0px; font-size:40px; padding:10px 20px 0 20px;  border:1px solid #ddd; border-left:none; font-family: 'proxima_nova_bold', arial !important;}
+
+
+/*.nsgs{ margin:0; padding:0; width:100%; color:#333;}
+.ns, .gs{background:#ffca07; /*change*/ color:#000; height:60px; border-radius:4px 0px 0px 4px; padding:0 10px; font-size:34px; text-align:center; text-transform:uppercase;}
+/*.gs{background:#797979; color:#FFF; height:60px; border-radius:4px 0px 0px 4px; padding:0 10px; font-size:34px; text-align:center; text-transform:uppercase;}*/*/
+
+.ns-value{ height:60px; background:#FFF; border-radius:0px 4px 4px 0px; font-size:40px; padding:10px 20px 0 20px;  border:1px solid #ddd; border-left:none; font-family: 'proxima_nova_bold', arial !important;}
+.dbn-circle{ padding:40px 0 20px;}
+.dbn-circle table{ width:auto; margin:0 auto; padding:0;}
+.dbn-circle td{ text-align:center}
+.circle{ width:160px; height:160px; margin:0 30px;}
+.dbn-circle h6{font-family: 'proxima_nova_regular', arial; font-size:32px; padding:15px 0 0 0; margin:0; font-weight:normal; color:#333;}
+
+.db-table{border-collapse:collapse; border-spacing:0; margin:0 !important;}
+.db-table td, .db-table th{ border:1px solid #ddd !important; padding:10px; font-size:16px; }
+.db-table th{color:#222; background:#f4f4f4; font-weight:normal;}
+.dbg-total{font-family: 'proxima_nova_cn_bold', arial !important; font-size:20px; color:#333; }
+
+@media (max-width:992px) {
+.dbn-top{ padding:25px 15px 0; background:#f7f7f7;}
+.dbn-middle{padding:25px 15px 0;}
+.dbn_tab ul li a{font-size:16px; padding:16px 27px 0 27px;}
+.ns, .gs{font-size:28px;}
+.ns-value{padding:12px 20px 0 20px; font-size:36px;}
+.dbn-circle{ padding:30px 0 10px;}
+
+.circle{ width:160px; height:160px; margin:0 10px;}
+.dbn-circle h6{ font-size:28px; padding:10px 0 0 0; }
+
+.dbn_tab ul li a{  font-size:13px; padding:18px 0 0 0;}
+
+}
+
+/************************************ End :: Finance CSS ***********************************************************/
+
+.clear {
+    clear: both;
+    padding: 0;
+    margin: 0;
+    height: 0;
+}
+
+.help_icon {
+    margin-bottom: 2px;
+    display: inline-block;
+    width: 20px;
+    height: 18px;
+    margin-left: 5px;
+    vertical-align: middle;
+    background: url(images/sprites3.png) -103px -23px no-repeat;
+    cursor: pointer !important;
+}
+
+    .help_icon:hover {
+        background-position: -103px -41px;
+    }
+
+.popover {
+    max-width: 450px !important;
+    width: auto !important;
+    margin-right: 0% !important;
+}
+
+.popover-title {
+    min-width: 365px;
+    max-width: 565px;
+    text-transform: none;
+}
+
+.popOverBox {
+    font-size: 14px;
+}

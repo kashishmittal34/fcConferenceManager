@@ -1,0 +1,319 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    bool answersAvailable = false;
+    System.Data.DataTable dtAnswer = new System.Data.DataTable();
+    System.Data.DataRow[] subdt = null;
+    if (ViewBag.QuesAnswer!= null)
+    {
+        dtAnswer = (System.Data.DataTable)ViewBag.QuesAnswer;
+        if (dtAnswer.Rows.Count>0)
+        {
+            answersAvailable = true;
+        }
+    }
+}
+<style>
+    details
+    {
+        color: #1c1919;
+    }
+
+    .CategoryList
+    {
+        color: #131111;
+    }
+
+    .FAQ input[id*="txtSuggestion"]
+    {
+        height: auto !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    summary
+    {
+        color: #000;
+    }
+</style>
+
+<div class="magiMySessionMainWrapper mt-3">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+            <div class="col-md-8 col-lg-9 flex-grow-1">
+                <div class="row">
+                    <div class="col-md-8 ">
+                        <h2>@ViewBag.Title</h2>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="d-flex flex-wrap justify-content-end">
+                            @Html.DropDownList("OverViewDropDown", null, new { @class = "bg-light mb-1 me-1 d-inline", id = "OverViewDropDown" })
+                            <a id="btnReturn" onclick="window.history.go(-1);" type="button" class="btn mb-1 mb-1 ">Return</a>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: inline-block; width: 100%; margin-bottom:15px;">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active " id="idFAQs" href="" type="button">FAQs</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link " id="idContacts" href="/Events/EventContact" type="button">MAGI Support Contacts</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="idReportIssue" href="/MAGI/UserIssue" type="button">Report an Issue</a>
+                        </li>
+                    </ul>
+                </div>
+
+                @if (@ViewBag.dvFAQSignVisible)
+                {
+                    <div id="dvFAQSign">
+                        <span ID="lblFAQSignIn">@Html.Raw(@ViewBag.lblFAQSignIn)</span>
+                    </div>
+                }
+
+                @if (@ViewBag.lblFAQText != "" && @ViewBag.lblFAQText != null)
+                {
+                    <div><span ID="lblFAQ">@Html.Raw(@ViewBag.lblFAQText)</span></div>
+                }
+                <br />
+                <div style="padding-top:15px">
+                    <div class="d-flex col-xxl-5 col-md-6 col-sm-12">
+                        Search:
+                        <input id="txtSearch" runat="server" maxlength="50" width="180" type="text" class="Font10 ms-2 me-2">
+                        <button id="btnSearch" type="button" class="btn me-1 ms-1"> Search </button>
+                        <div class=" col-md-3 d-flex">
+                            <input type="button" id="btnExpandAll" value="Expand All" class="lblSmall me-1 ms-1" style="border: none; background-color: #fff; color: blue; text-decoration: underline;">
+                            <input type="button" id="btnCollapseAll" value="Collapse All" class="lblSmall me-1 ms-1" style="border: none; background-color: #fff; color: blue; text-decoration: underline;">
+                        </div>
+                    </div>
+                    <div>
+                        <span id="lblMinChar" style="display:none;color:red;font-weight:bold;" class="Font11">Should be text on search.</span>
+                    </div>
+                    <div class="mt-2" id="LoadPartialFAQs">
+                        @{
+                            Html.RenderAction("_PartialFAQs");
+                        }
+                    </div>
+
+                    @if (!ViewBag.dvFAQSignVisible)
+                    {
+                        <div>
+                            <label for="lblStaff" class="lblSmall">Staff options:</label>
+                        </div>
+                        <div class="magi-flex magi-align-center magi-flex-wrap magi-xl-bottom-space custom-flex">
+                            <label for="Mobile" class="lblSmall"><input type="checkbox" id="ckM" name="scp_Mobile" value="1" onchange="CKMCheked(this)" style="vertical-align: text-bottom;" /> Simulate current platform as being Mobile</label>
+                            <label for="Event" class="lblSmall"><input type="checkbox" id="ckC" name="scd_Event" value="2" onchange="CKCCheked(this)" style="vertical-align: text-bottom;" /> Simulate current date as being during Event</label>
+                            <label for="Attendee" class="lblSmall"><input type="checkbox" id="ckAtt" name="scu_Attendee" value="3" onchange=" " style="vertical-align: text-bottom;" /> Simulate current user as Attendee</label>
+                            <label for="ShowID" class="lblSmall"><input type="checkbox" id="ckIDs" name="ShowID" value="4" onchange="ckIDsCheked(this)" style="vertical-align: text-bottom;" /> Show IDs</label>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="@ViewBag.OverViewDropDownSelected" id="DropdownSelected" />
+
+<script>
+    $(document).ready(function () {
+        document.getElementById("OverViewDropDown").selectedIndex = -1;
+        $("#lblMinChar").hide();
+        $('#OverViewDropDown').val($('#DropdownSelected').val());
+
+        $('#btnSearch').on('click', function () {
+            $("#lblMinChar").hide();
+            var searchtext = document.getElementById("txtSearch").value;
+            if (searchtext != "") {
+                var ids = $('.FAQCategory').map(function () { return $(this).attr('id'); });
+                var ckcChecked = ckC.checked ? "1" : "0";
+                var ckmChecked = ckM.checked ? "1" : "0";
+                var data = { CategoryId: 0, searchtext: searchtext, CKC: ckcChecked, CKM: ckmChecked };
+                var result = CommonFunctions.AjaxCall('Get', '/Events/GETFAQsQuestions', data, 'json', 'Error Occurred while Downloading File');
+                if (result.result == "OK") {
+                    var resultData = JSON.parse(result.FAQs);
+                    for (var k in resultData) {
+                        var Category = document.getElementById('CategoryList_' + resultData[k].FAQCategory_pkey);
+                        Category.open = true;
+                        var details = document.getElementsByClassName('Details_' + resultData[k].FAQ_pKey);
+                        var D = Array.from(details);
+                        for (let i = 0; i < D.length; i++)
+                            D[i].open = true;
+                    }
+                }
+                else
+                    CommonFunctions.Alert(result.message);
+            } else
+                $("#lblMinChar").show();
+        });
+
+        $('.FAQCategory').on('click', function () {
+            var Categorypkey = ($(this).attr('id'));
+            var id = "FAQstable+" + Categorypkey;
+            var trs = document.getElementsByTagName("table");
+            var rows = document.getElementById(id).rows.length;
+            var details = document.getElementsByClassName('FAQQuestn');
+            var D = Array.from(details);
+            for (let i = 0; i < D.length; i++)
+                D[i].open = false;
+
+            if (rows < 1) {
+                var ckIDsChecked = ckIDs.checked ? "1" : "0";
+                var ckcChecked = ckC.checked ? "1" : "0";
+                var ckmChecked = ckM.checked ? "1" : "0";
+
+                var data = { CategoryId: Categorypkey, ckIdcCheckBox: ckIDsChecked, CKC: ckcChecked, CKM: ckmChecked };
+                var result = CommonFunctions.AjaxCall('Get', '/Events/GETFAQsQuestions', data, 'json', 'Error Occurred while Downloading File');
+                if (result.result == "OK")
+                {
+                    var resultData = JSON.parse(result.FAQs);
+                    for (var k in resultData) {
+                        var Category = document.getElementById('CategoryList_' + resultData[k].FAQCategory_pkey);
+                        Category.open = true;
+
+                        var details = document.getElementsByClassName('Details_' + resultData[k].FAQ_pKey);
+                        var D = Array.from(details);
+                        for (let i = 0; i < D.length; i++)
+                            D[i].open = true;
+                    }
+                }
+            }
+        });
+
+        async function ExpandAllInfo() {
+            var ids = $('.FAQCategory').map(function () {
+                return $(this).attr('id');
+            });
+            document.getElementById("txtSearch").value = '';
+            for (let i of ids) {
+                var id = "FAQstable+" + i;
+                var rows = document.getElementById(id).rows.length;
+                if (rows < 1) {
+                    var ckIDsChecked = ckIDs.checked ? "1" : "0";
+                    var ckcChecked = ckC.checked ? "1" : "0";
+                    var ckmChecked = ckM.checked ? "1" : "0";
+
+                    var data = { CategoryId: i, searchtext: "", ckIdcCheckBox: ckIDsChecked, CKC: ckcChecked, CKM: ckmChecked };
+                    var result = CommonFunctions.AjaxCall('Get', '/Events/GETFAQsQuestions', data, 'json', 'Error Occurred while Downloading File');
+                    if (result.result == "OK") {
+                        var resultData = JSON.parse(result.FAQs);
+                        for (var k in resultData) {
+                            var Category = document.getElementById('CategoryList_' + resultData[k].FAQCategory_pkey);
+                            Category.open = true;
+
+                            var details = document.getElementsByClassName('Details_' + resultData[k].FAQ_pKey);
+                            var D = Array.from(details);
+                            for (let i = 0; i < D.length; i++)
+                                D[i].open = true;
+
+                        }
+                    }
+                    else {
+                        CommonFunctions.Alert(result.message);
+                    }
+                }
+            }
+
+            var details = document.getElementsByClassName('CategoryList');
+            var D = Array.from(details);
+            for (let i = 0; i < D.length; i++) {
+                D[i].open = true;
+            }
+        }
+
+        function collapseAll() {
+            var details = document.getElementsByClassName('FAQQuestn');
+            var D = Array.from(details);
+            for (let i = 0; i < D.length; i++)
+                D[i].open = false;
+
+            var details = document.getElementsByClassName('CategoryList');
+            var D = Array.from(details);
+            for (let i = 0; i < D.length; i++)
+                D[i].open = false;
+        }
+
+        $('#btnExpandAll').on('click', function (e) {
+            e.preventDefault();
+            ExpandAllInfo();
+        });
+
+        $('#btnCollapseAll').on('click', function (e) {
+            e.preventDefault();
+            collapseAll();
+        });
+
+        $('#OverViewDropDown').change(function () {
+            var Data = { DropDownValue: $('#OverViewDropDown').val() };
+            var result = CommonFunctions.AjaxCall('Post', '/MAGI/OverViewDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+            if (result.ActionType === "Redirect")
+                window.location.href = result.RedirectionUrl;
+        });
+
+
+    });
+    function SaveFAQSuggestion(FAQ_pKey, FAQCategory_pKey) {
+        var value = $("input[type=radio][name= " + FAQ_pKey + "rdbtn]:checked").val();
+        var text = document.getElementById(FAQ_pKey + "txtSuggestion").value;
+        var data = { QuestionpKey: FAQ_pKey, SelectedValue: value, SuggestionText: text };
+        var result = CommonFunctions.AjaxCall('Get', '/Events/SubmitFAQs', data, 'json', 'Error Occurred while Downloading File');
+        if (result.result == "OK") {
+        }
+        var id = "FAQstable+" + FAQCategory_pKey;
+        var details = document.getElementsByClassName('FAQQuestn');
+        var D = Array.from(details);
+        for (let i = 0; i < D.length; i++) {
+            D[i].open = false;
+        }
+    }
+    function CKMCheked(ckM) {
+        var ckcChecked = ckC.checked ? "1" : "0";
+        var ckmChecked = ckM.checked ? "1" : "0";
+        var data = { CKC: ckcChecked, CKM: ckmChecked };
+        $('#LoadPartialFAQs').load('/Events/_PartialFAQS', data);
+    }
+    function CKCCheked(ckC) {
+        var ckcChecked = ckC.checked ? "1" : "0";
+        var ckmChecked = ckM.checked ? "1" : "0";
+        var data = { CKC: ckcChecked, CKM: ckmChecked };
+        $('#LoadPartialFAQs').load('/Events/_PartialFAQS', data);
+    }
+    function ckIDsCheked(ckIDs) {
+        if (ckIDs.checked)
+            $(".showIDs").show();
+        else
+            $(".showIDs").hide();
+    }
+    //function ExpendFAQ(Categorypkey) {
+    //    var id = "FAQstable+" + Categorypkey;
+    //    var trs = document.getElementsByTagName("table");
+    //    var rows = document.getElementById(id).rows.length;
+    //    if (document.getElementsByClassName("FAQQuestn") != null) {
+    //        var details = document.getElementsByClassName('FAQQuestn');
+    //        var D = Array.from(details);
+    //        for (let i = 0; i < D.length; i++) {
+    //            D[i].open = false;
+    //        }
+    //    }
+    //    var ckIDsChecked = ckIDs.checked ? "1" : "0";
+    //    var ckcChecked = ckC.checked ? "1" : "0";
+    //    var ckmChecked = ckM.checked ? "1" : "0";
+    //    var data = { CategoryId: Categorypkey, ckIdcCheckBox: ckIDsChecked, CKC: ckcChecked, CKM: ckmChecked };
+    //    var result = CommonFunctions.AjaxCall('Get', '/Events/GETFAQsQuestions', data, 'json', 'Error Occurred while Downloading File');
+    //    if (result.result == "OK") {
+    //        var table = document.getElementById("FAQstable+" + Categorypkey);
+    //        if (table != null)
+    //            table.innerHTML = "";
+    //        for (var k in result.FAQs) {
+    //            $(table).append('<tr><td>' + result.FAQs[k] + '</td></tr>');
+    //        }
+    //    }
+    //    else
+    //        CommonFunctions.Alert(result.message);
+    //}
+</script>

@@ -1,0 +1,575 @@
+﻿/*================================================ tooltip ======================================*/
+.RadToolTip .rtContent
+{
+    font-size: 10pt;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/*================================================ Rad Tab Strip ======================================*/
+.RadTabStrip
+{
+    height: 30px;
+    border-bottom: 1px solid dodgerblue;
+    margin: 0px;
+}
+
+.RadTabStrip .rtText
+{
+    line-height: 12px;
+    font-size: 10pt;
+}
+
+.RadTabStrip .rtsLink
+{
+    /*top right bottom left*/
+    padding: 3px 5px 3px 5px !important;
+}
+
+/*================================================ Rad Map ======================================*/
+.RadMap .k-marker.k-marker-my-custom-shape:before
+{
+    color: green;
+    font-size: 25px;
+    margin-top: 2px;
+}
+
+/*================================================ Rad Listbox ======================================*/
+.RadListBox .rlbDisabled,
+.RadListBox .rlbCheckAllItems > label,
+.RadListBox .rlbItem > label
+{
+    font-size: 10pt;
+    /*font-family: Verdana, Geneva, Tahoma, sans-serif;*/
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 12px;
+}
+
+.RadListBox .rlbCheckAllItem, .RadListBox .rlbItem
+{
+    /*top right bottom left*/
+    padding: 2px 8px 2px 10px !important;
+}
+
+/*================================================ Rad Scheduler ======================================*/
+.RadScheduler .rsVerticalHeaderTable
+{
+    font-weight: 300 !important;
+    font-size: 10pt;
+}
+
+/*================================================ Rad Window Popup ======================================*/
+/* remove main borders */
+.borderLessDialog.RadWindow
+{
+    border: none;
+    padding: 0;
+}
+
+/* remove the border around the content */
+.borderLessDialog.RadWindow .rwContent
+{
+    border: none;
+    background-color: white;
+    /* applies shadow to the element */
+    -moz-box-shadow: 0 0 8px #666;
+    -webkit-box-shadow: 0 0 8px #666;
+    box-shadow: 0 0 12px #666;
+}
+
+/* keeps the border around the content */
+.borderDialog.RadWindow .rwContent
+{
+    background-color: white;
+    /* applies shadow to the element */
+    -moz-box-shadow: 0 0 8px #666;
+    -webkit-box-shadow: 0 0 8px #666;
+    box-shadow: 0 0 12px #666;
+}
+
+div.RadWindow .rwTitleRow em
+{
+    line-height: 12px;
+    font-size: 12px;
+    height: 16px;
+    /*font-family: Verdana, Geneva, Tahoma, sans-serif;*/
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/*================================================ Rad Grid ======================================*/
+.RadGrid .rgPagerCell .rgPagerButton,
+.RadGrid .rgPagerCell .rgActionButton
+{
+    padding: 0px !important;
+}
+
+.RadGrid .rgPagerCell .rgNumPart a
+{
+    font-size: 10pt !important;
+    padding: 2px !important;
+}
+
+/*hyper link cells */
+.RadGrid .rgRow a, .RadGrid .rgAltRow a, .RadGrid .rgEditRow a
+{
+    font-size: 10pt;
+}
+
+/*button columns*/
+/*hides the unused icon input button columns*/
+/*.RadGrid .t-font-icon {
+    display: none !important;
+}
+
+.RadGrid .t-text {
+    font-size: 10pt !important;
+}
+
+.RadGrid td .t-button {
+    vertical-align: top;
+    padding: 0px;
+    line-height: 8pt;
+    text-align: left;
+    border:none;
+}*/
+
+/* Mike- for labels within template columns */
+.RadRowText
+{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 10pt;
+}
+
+/* Mike- for button images */
+.RadRowButton24
+{
+    height: 24px;
+    width: 24px;
+}
+
+.RadRowButton20
+{
+    height: 20px;
+    width: 20px;
+}
+
+/*font size and height for regular rows*/
+.RadGrid
+{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.RadGrid .rgRow,
+.RadGrid .rgAltRow,
+.RadGrid .rgEditRow,
+.RadGrid .rgFooter,
+.RadGrid .rgGroupHeader
+{
+    height: 24px !important;
+    font-size: 10pt;
+    line-height: normal;
+}
+
+/*bottom border of cell*/
+.RadGrid_Metro .rgRow > td,
+.RadGrid_Metro .rgAltRow > td,
+.RadGrid_Metro .rgEditRow > td
+{
+    border-bottom: 1px solid lightgray !important;
+    border-right: 0px solid red !important;
+    border-left: 0px solid yellow !important;
+}
+
+/*cells input row*/
+.RadGrid .rgRow td,
+.RadGrid .rgAltRow td,
+.RadGrid .rgEditRow td
+{
+    /*top right bottom left*/
+    padding: 2px 2px 2px 2px !important;
+}
+
+/*sort button on header*/
+.RadGrid .rgHeader a
+{
+    color: white !important;
+}
+
+/*.RadGrid th.rgSorted {
+    color: red!important;
+}*/
+
+.RadGrid th.rgSorted a
+{
+    color: black !important;
+}
+
+/*general header*/
+.RadGrid .rgHeader
+{
+    /*top right bottom left*/
+    padding: 2px 2px 2px 2px !important;
+    background-color: dodgerblue;
+    color: white !important;
+    height: 18px !important;
+    border-left-color: dodgerblue !important;
+}
+
+/*================================================ checkbox ======================================*/
+.RadButton .rbCheckBox
+{
+    border-color: red !important;
+}
+
+.RadButton .rbText
+{
+    font-size: 11pt;
+    vertical-align: middle !important;
+}
+
+.RadButton.rbRadioButton .rbText
+{
+    /*color:green !important;*/
+    vertical-align: middle !important;
+}
+
+/*.RadButton .rbRadioButton .rbIcon .rbToggleRadio {
+    border-color: red !important;
+    padding: .4em 0 10px 0 !important;
+}*/
+
+.RadRadio
+{
+    padding-bottom: 10px !important;
+}
+/*================================================ Textbox ======================================*/
+.Font11
+{
+    font-size: 11pt !important;
+}
+
+.Font10
+{
+    font-size: 10pt !important;
+}
+
+.Font18
+{
+    font-size: 18pt;
+}
+
+.Font24
+{
+    font-size: 24pt;
+}
+
+.RadInput .riTextBox
+{
+    /*font-size: 11pt !important;*/
+    font-size: 11pt;
+    /*font-family: Verdana, Geneva, Tahoma, sans-serif;*/
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+.RadInput .riTextBox.riFocused
+{
+    border-color: darkblue;
+}
+
+.RadInput .riTextBox.riHover
+{
+    border-color: gray;
+}
+
+.RadInput .riTextBox.riEnabled
+{
+    background-color: white;
+    border-color: lightgray;
+}
+
+.RadInput .riTextBox.riDisabled
+{
+    background-color: gainsboro;
+}
+
+.txtRequired
+{
+    border-left: 6px solid dodgerblue !important;
+}
+
+.txtStd
+{
+    height: 27px !important;
+}
+
+/*================================================ Menu ======================================*/
+div#MegaDropDown
+{
+    margin: 0 auto;
+    font-size: 12pt;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+div#MegaDropDown h3
+{
+    /*margin: 0 0 15px 0;
+        padding: 4px 8px;*/
+    font-size: 12pt;
+    font-weight: normal;
+    letter-spacing: 1px;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+div.RadSiteMap .rsmLink,
+div.RadSiteMap .rsmTemplate
+{
+    padding: 0;
+}
+
+/*spacing between items on sitemap links*/
+.RadSiteMap .rsmItem
+{
+    margin-bottom: 2px;
+}
+
+.RadSiteMap .rsmTwoLevels .rsmLevel1 .rsmItem
+{
+    list-style: disc inside none;
+}
+
+/*links within the sitemap*/
+div.RadSiteMap .rsmTwoLevels .rsmLevel1 .rsmLink,
+div.RadSiteMap .rsmTwoLevels .rsmLevel1 .rsmTemplate
+{
+    padding-left: 0;
+    font-size: 11pt;
+}
+
+div.RadMenu_Default ul.rmRootGroup,
+div.RadMenu_Default div.rmRootGroup
+{
+    background: none;
+    border: 0;
+    height: 100%;
+    /*padding-left: 20px;*/
+}
+
+div.RadMenu_Default .rmRootGroup .rmRootLink
+{
+    padding-bottom: 0px !important;
+    padding-left: 10px !important;
+    padding-top: 0px !important;
+}
+
+div.RadMenu .rmItem
+{
+    position: static;
+}
+
+html .RadMenu_Default .rmRootLink
+{
+    font-size: 12pt;
+}
+
+/*setting the width and height of the popout */
+div.RadMenu_Default .rmLink,
+html div.RadMenu_Default li.rmItem.rmSelected .rmLink,
+html div.RadMenu_Default li.rmItem.rmExpanded .rmLink
+{
+    color: #FFF;
+    /*text-transform: uppercase;*/
+}
+
+/*this is the width and height of the popout*/
+div.RadMenu_Default .rmContentTemplate
+{
+    background: none repeat scroll 0 0 #FFFFFF;
+    height: 350px;
+    width: 700px;
+}
+
+div.RadMenu .rmPopup
+{
+    border: 1px solid #979797;
+    /*padding: 8px 0 0 10px;*/
+    position: relative;
+    white-space: normal;
+    /*margin-left: 1px;*/
+}
+
+html .RadMenu_Default a.rmLink:hover,
+html .RadMenu_Default a.rmFocused,
+html .RadMenu_Default a.rmSelected,
+html .RadMenu_Default a.rmExpanded
+{
+    background-color: rgba(255, 255, 255, .5);
+}
+
+.mnuBlock
+{
+    background-color: white;
+    padding: 2px;
+    margin: 0px;
+}
+
+.mnuTitle
+{
+    text-transform: uppercase;
+    font-size: 12pt;
+    font-weight: bold;
+}
+
+.mnuSubtitle
+{
+    font-size: 12pt;
+    /*font-weight:bold;*/
+    /*color:white;*/
+}
+
+.mnuNodeDisabled
+{
+    color: LightGray !important;
+}
+
+.mnuNodeEnabled
+{
+    color: Black !important;
+}
+
+/* ==================================== Date Picker ===============================================*/
+.RadPicker .RadInput .riTextBox
+{
+    font-size: 11pt !important;
+}
+
+.RadMo
+{
+    height: 26px !important;
+}
+
+/* ===================================== RadComboBox =======================================*/
+.RadComboBox .rcbInputCell INPUT.rcbInput
+{
+    height: 22px;
+    font-size: 11pt;
+    background-color: white;
+}
+
+.RadComboBoxDropDown,
+.RadComboBoxDropDown .rcbHeader,
+.RadComboBoxDropDown .rcbFooter,
+.RadComboBoxDropDown .rcbItem em
+{
+    background-color: White !important;
+    font-size: 11pt !important;
+}
+
+
+/* ===================================== color picker =======================================*/
+.RadColorPicker,
+.RadColorPicker .rcpInput
+{
+    background-color: White !important;
+    font-size: 11pt !important;
+}
+
+/*====================================== RAD DOCK Styling ============================================*/
+.dockLayout
+{
+    margin: 6px !important;
+}
+
+.dockTitle
+{
+    color: white !important;
+    font-weight: bold !important;
+    font-size: 8pt;
+}
+
+.RadDock
+{
+    /* applies shadow to the element */
+    -moz-box-shadow: 0 0 8px #666;
+    -webkit-box-shadow: 0 0 8px #666;
+    box-shadow: 0 0 8px #666;
+}
+
+.rdTop
+{
+    border: 1px solid mediumpurple;
+}
+
+/*this sets left and right border to the RadDock content, as when we removed the sprite image, we do not have borders anymore*/
+.rdMiddle, .rdBottom
+{
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+}
+
+this sets bottom border to the RadDock bottom part, as when we removed the sprite image, we do not have borders anymore .rdBottom
+{
+    border-top: 1px solid white;
+}
+
+/* this removes background image sprite in order to be able to set background color to the titlebar */
+.rdLeft, .rdCenter, .rdRight
+{
+    background-image: none !important;
+    background-color: white !important;
+}
+
+/* this sets background color to the whole titlebar */
+.rdTop .rdLeft, .rdTop .rdCenter, .rdTop .rdRight
+{
+    background-color: mediumpurple !important;
+    color: white !important;
+    height: 10px !important;
+    line-height: 5px !important;
+    min-height: 5px !important;
+}
+
+.rdTitleBar em
+{
+    text-align: left;
+    color: white !important;
+    font-weight: bold !important;
+}
+
+/*====================================== RAD FILE PICKER Styling ============================================*/
+.RadUpload .ruFakeInput
+{
+    padding: 0px !important;
+    width: 68px !important;
+}
+
+.RadUpload .ruBrowse, .RadUpload .ruBrowse .ruButtonHover
+{
+    background-image: none !important;
+    background-color: white;
+    height: 19px !important;
+    width: 60px !important;
+    /*top right bottom left*/
+    padding: 2px 0px 0px 0px !important;
+    margin: 0px;
+    font-size: 8pt;
+}
+
+/*====================================== RAD SCHEDULER Styling ============================================*/
+/*hides the drag bars on the aside of the appointment cell*/
+.RadScheduler .rsAptResize
+{
+    visibility: hidden;
+}
+
+/*hide the edit dialog on double-click*/
+.RadScheduler .rsDialog
+{
+    display: none;
+}
+
+.rsTodayCell
+{
+    background: lightblue !important;
+}

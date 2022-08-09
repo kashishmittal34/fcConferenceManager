@@ -1,0 +1,281 @@
+@{
+    ViewBag.Title = "Standards";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .lblTitle
+    {
+        font-size: 18pt;
+        color: Navy;
+        background-color: transparent;
+    }
+
+    .btnSmall
+    {
+        background-color: #fff;
+        border: 1px solid black;
+        border-radius: 2px;
+        font-size: 10pt;
+    }
+
+    .btnSmall:hover
+    {
+        background-color: lightgray;
+    }
+
+    #tblStandard td
+    {
+        border: none;
+        padding: 5px 0;
+    }
+
+    #tblStandard thead
+    {
+        display: none;
+    }
+
+    table.dataTable tr.even
+    {
+        background-color: #ffffff !important;
+    }
+
+    table.dataTable tr > td:first-child
+    {
+        width: 20px !important;
+        vertical-align: top !important;
+        margin-top: 10px !important;
+        padding-top: 6px !important;
+    }
+</style>
+<div class="magiMySessionMainWrapper mt-3">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+
+            <div class="col-md-8 col-lg-9 flex-grow-1">
+                <div class="d-flex justify-content-between pt-2">
+                    <div>
+                        <h2>MAGI Best Practice Standards</h2>
+                        <input type="hidden" id="hdcnt" value="0" />
+                        <input type="hidden" id="hdfMAGIMember" value="@ViewBag.bMAGIMember" />
+                    </div>
+                    <div>
+                        <div class="justify-content-end justify-content-lg-end flex-wrap pull-right me-2 mt-1">
+                            @if (ViewBag.btncmdMemberVisible)
+                            {
+                                <a id="btnMember" href="/standards?S=1" style="text-align: left;" type="button" class="btn mb-1 mb-1 btnSmallYellow">Become a MAGI Member</a>
+                            }
+                            <a id="btnReturn" href="@ViewBag.ReturnUrl" style="text-align: left;" type="button" class="btn mb-1 mb-1 ">Return</a>
+                            <input type="hidden" value="@ViewBag.bLoggedIn" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <label id="lblText">@Html.Raw(ViewBag.lblText)</label>
+                </div>
+                <div class="d-md-flex flex-wrap">
+                   <div>
+                        <label class="lblSmall">User:</label><br />
+                        @Html.DropDownList("ddUsers", null, new { @class = "", id = "ddUsers" })
+                    </div>
+                    <div class="ms-md-1">
+                        <label class="lblSmall">Category:</label><br />
+                        @Html.DropDownList("ddCategory", null, new { @class = "", id = "ddCategory" })
+                    </div>
+                    <div class="ms-md-1">
+                        <label class="lblSmall">Study Stage:</label><br />
+                        @Html.DropDownList("ddPhase", null, new { @class = "", id = "ddPhase" })
+                    </div>
+                    <div class="ms-md-1">
+                        <label class="lblSmall">Search:</label><br />
+                        <input type="text" id="txtSearch" class="w-100" maxlength="100" width="300" style="border:1px solid lightgray" />
+                    </div>
+                    <div class="ms-md-1 mt-3">
+                        <input type="image" id="btnReset" value="Refresh Page" title="Refresh Page" src="/images/icons/undo.png" style="height: 32px;" />
+                        <input type="image" id="btnSearch" title="Search" src="/images/icons/redo.png" style="height: 32px; " />
+                    </div>
+                </div>
+                <div class=" d-flex flex-wrap mt-2">
+                    @if (ViewBag.bLoggedIn)
+                    {
+                        <button type="button" id="btnSelectAll" class="btn">Select All</button>
+                        <button type="button" id="btnSelectNone" class="btn ms-1">Clear Selection</button>
+                        <button type="button" id="btnCreateArchive" class="btn ms-1">Download Selections</button>
+                    }
+                </div>
+                <div class="table-responsive mt-3">
+                    <table id="tblStandard" style="border:none;width:100% !important;"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<link href="~/Css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        RefreshStandardTable();
+        function RefreshStandardTable() {
+            var DataSet = null;
+            var blogged = false;
+            var loggedIn = '@ViewBag.bLoggedIn';
+            if (loggedIn == 'True')
+                blogged = true;
+            var txt = $('#txtSearch').val().toString();
+            var category = $('#ddCategory :selected').val();
+            var phase = $('#ddPhase :selected').val();
+            var user = $('#ddUsers :selected').val();
+
+            var data = {
+                bLoggedIn: blogged,
+                ddCategory: category,
+                ddPhase: phase,
+                ddUser: user,
+                strText: txt,
+                strAccountPkey:'@ViewBag.ID'
+            }
+            var result = CommonFunctions.AjaxCall('Get', '/Resources/RefreshStandardGrid', data, '', 'Error While Fetching Data.');
+            if (result !== null || result !== "ERROR") {
+                if (result.msg === "OK")
+                    DataSet = JSON.parse(result.Source);
+                if ('@ViewBag.bLoggedIn' === 'True')
+                {
+                    if (DataSet.length === 0) {
+                        document.getElementById("btnSelectAll").style.visibility = "hidden";
+                        document.getElementById("btnSelectNone").style.visibility = "hidden";
+                        document.getElementById("btnCreateArchive").style.visibility = "hidden";
+                    } else {
+                        document.getElementById("btnSelectAll").style.visibility = "visible";
+                        document.getElementById("btnSelectNone").style.visibility = "visible";
+                        document.getElementById("btnCreateArchive").style.visibility = "visible";
+                    }
+                }
+
+                $("#btnCreateArchive").attr("disabled", ($('.chbox:checked').length===0));
+            }
+
+            $('#tblStandard').dataTable({
+                paging: false, bPaginate: false, bInfo: false, bLengthChange: false, bFilter: false, rowsPerPageOptions: false, ordering: false, sorting: false, searching: false, "order": [[0, "desc"]],
+                bDestroy: true, fixedHeader: true, data: DataSet,
+                language: {
+                    emptyTable: "No Matching selections were found"
+                },
+                columns: [
+                    {
+                        title: "CheckType",
+                        data: { ShowCheck: "ShowCheck", pKey: "pKey", UserFileName:"UserFileName"},
+                        render: function (data) {
+                            if (`${data.ShowCheck}` == "1") {
+                                return `<input type="checkbox" class="chbox" id="" value="">`
+                            } else {
+                                return ``
+                            }
+                        },
+                    },
+                    {
+                        title: "",
+                        data: { StandardTitle: "StandardTitle", UDate: "UDate", Description: "Description", ShowCheck: "ShowCheck" },
+                        render: function (data) {
+
+                                if (`${data.Description}` == "" || `${data.Description}` == "null") {
+                                    return `${data.StandardTitle} &nbsp;  ${data.UDate} <br/>`
+                                } else {
+                                    return `${data.StandardTitle} &nbsp; ${data.UDate} <br/> &nbsp; &nbsp; &nbsp; <label style="font-style:italic ; font-size:10pt;">${data.Description}</label> `
+                                }
+                        }
+                    },
+                    //{
+                    //    title: "FilePkey",
+                    //    data: "pKey",
+                    //    bVisible: false,
+                    //},
+                    //{
+                    //    title: "UserFileName",
+                    //    data: "UserFileName",
+                    //    bVisible: false,
+                    //    //aTargets: [0]
+                    //},
+                ],
+                select: {
+                    style: 'multi',
+                    selector: 'td:first-child'
+                },
+            });
+
+            $("#btnCreateArchive")
+        }
+
+        $('select').on('change', function () {
+            RefreshStandardTable();
+        });
+
+        $('#btnReset').on('click', function () {
+            document.getElementById("ddCategory").selectedIndex = "0";
+            document.getElementById("ddPhase").selectedIndex = "0";
+            document.getElementById("ddUsers").selectedIndex = "0";
+            document.getElementById("txtSearch").value = "";
+            RefreshStandardTable();
+        });
+
+        $('#btnSearch').on('click', function () {
+            RefreshStandardTable();
+        });
+
+        $("#btnSelectAll").on("click", function (e) {
+            oTable = $('#tblStandard').DataTable();
+            var rows = oTable.rows({ 'search': 'applied' }).nodes();
+            $('input[type="checkbox"]', rows).prop('checked', true);
+            $("#btnCreateArchive").attr("disabled", ($('.chbox:checked').length === 0));
+        });
+
+        $("#btnSelectNone").on("click", function (e) {
+            oTable = $('#tblStandard').DataTable();
+            var rows = oTable.rows({ 'search': 'applied' }).nodes();
+            $('input[type="checkbox"]', rows).prop('checked', false);
+            $("#btnCreateArchive").attr("disabled", ($('.chbox:checked').length === 0));
+        });
+
+        $(document).on("click", '.chbox', function ()
+        {
+           $("#btnCreateArchive").attr("disabled", ($('.chbox:checked').length===0));
+        });
+
+        $("#btnCreateArchive").on('click', function () {
+            var sItems = new Array();
+            oTable = $('#tblStandard').DataTable();
+            $("#tblStandard TBODY TR").each(function (e) {
+                var rowcb = oTable.row(this);
+                var row = oTable.row(this).data();
+                var bchecked = false;
+                var $tr = $(rowcb.node());
+                var $checkbox = $tr.find('td:first-child input[type="checkbox"]')
+                if ($checkbox.is(':checked'))
+                    bchecked = true;
+
+                if (bchecked)
+                {
+                    var files = {};
+                    files.Pkey = row.pkey;
+                    files.FileName = row.UserFileName;
+                    files.IsChecked = bchecked;
+                    sItems.push(files);
+                }
+            });
+            if (sItems.length >0)
+            {
+                var data=JSON.stringify(sItems);
+                var result=CommonFunctions.AjaxCall('Post', '/Resources/CreateArchive', data, 'json', 'Error While Processing.', 'application/json; charset=utf-8');
+                if (result!==null&&result!=="Error")
+                {
+                    if (result.res=="OK")
+                        window.location.href="/Resources/DownloadStandardZip";
+                    else
+                        CommonFunctions.Alert(result.msg);
+                }
+            }
+        });
+
+    });
+</script>

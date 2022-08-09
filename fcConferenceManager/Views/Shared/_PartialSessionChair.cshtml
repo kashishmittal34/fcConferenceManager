@@ -1,0 +1,435 @@
+﻿@if (ViewBag.ShowChairPreference)
+{
+    <link href="/Css/multiple-select.css" rel="stylesheet" />
+    <script src="/Scripts/multiple-select.js" type="text/javascript"></script>
+    <script src="/Scripts/moment-with-locales.js" type="text/javascript"></script>
+    <style>
+        .ms-parent
+        {
+            width: 100% !important;
+        }
+    </style>
+    <div class="row col-md-12 p-0">
+        <div class="col-md-8 pull-left">
+            @Html.Raw("<h2 class=''>My Session Chair Preferences</h2>")
+        </div>
+        <div class="col-md-4 pull-right">
+            <div class="pull-right">
+                <a id="btnReturnSPartial" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 ">Return</a>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <label>@Html.Raw(ViewBag.lblMyPreferences)</label>
+        </div>
+        <div class="col-md-12 mt-3 p-2">
+            <input type="hidden" id="rblChairSessionVal" value="@ViewBag.ddChairPreference_Selected" />
+            <input type="hidden" value="@ViewBag.Selected_TrackpKey" id="SelectedTracksVal" />
+            <input type="hidden" value="@ViewBag.Selected_SessionpKey" id="SelectedSessionVal" />
+            <div class="row col-md-12">
+                <div class="col-md-4">
+                    <label class=" ms-3">I am willing to chair a session: </label>
+                </div>
+                <div class="col-md-8">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="rblChrSssn" id="rblChrSssnYes" value="1" @((ViewBag.rblChrSssn_Selected == "1") ? "checked" : "")>
+                        <label class="form-check-label" id="rblChrSssnYesLbl" for="rblChrSssnYes" style="font-size: 10pt !important;">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline pe-0">
+                        <input class="form-check-input" type="radio" name="rblChrSssn" id="rblChrSssnNo" value="0" @((ViewBag.rblChrSssn_Selected == "0") ? "checked" : "")>
+                        <label class="form-check-label smallFont" id="rblChrSssnNoLbl" for="rblChrSssnNo" style="font-size: 10pt !important;">No</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row col-md-12 mt-2 clear-inputs" id="divSelChairPref" style="display:none;">
+                <div class="col-md-4">
+                    <label class=" ms-3">Session chair preferences: </label>
+                </div>
+                <div class="col-md-8">
+                    <select id="SessionChairPref" class="col-md-12">
+                        <option value="">Select</option>
+                        @if (ViewBag.ChairPreference != null)
+                        {
+                            System.Data.DataTable dt = (System.Data.DataTable)ViewBag.ChairPreference;
+                            if (dt != null && dt.Rows.Count > 0)
+                            {
+                                foreach (System.Data.DataRow dr in dt.Rows)
+                                {
+                                    string selection = (ViewBag.ddChairPreference_Selected == dr["Pkey"].ToString()) ? "Selected" : "";
+                                    <option value='@dr["Pkey"]' @selection>@dr["strText"]</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row col-md-12 mt-2 clear-inputs" id="divTime" style="display:none;">
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-8">
+                    <div class="d-inline-block">
+                        <select id="dpStartSchedule" class="RTDInputClear">
+                            @*<option value="">Select</option>*@
+                            @{
+                                if (ViewBag.ddStartSchedule != null)
+                                {
+                                    foreach (fcConferenceManager.Models.GenericListItem info in ViewBag.ddStartSchedule)
+                                    {
+                                        <option value="@info.value">  @info.strText </option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="d-inline-block">
+                        <label for="appt">From Time: </label>
+                        <input type="time" id="fromTime" name="fromTime" min="08:00" max="20:00" />
+                    </div>
+                    <div class="d-inline-block">
+                        <label for="appt">To Time: </label>
+                        <input type="time" id="toTime" name="toTime" min="08:00" max="20:00" />
+                    </div>
+                    <div class="d-inline-block">
+                        <button id="saveDateTime" type="button" class="btn mb-1 ms-2 me-1">Save</button>
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        Selected Dates:
+                        <div class="col-md-12" id="SelectedTimeList">
+                            @if (!string.IsNullOrEmpty(ViewBag.dtlSelected))
+                            {
+                                string dtlSelected = ViewBag.dtlSelected;
+                                foreach (string s in dtlSelected.Split(','))
+                                {
+                                    <div class="removeDiv mt-1"><label class="updatedTimeStrings">@s</label> <img src="/images/icons/RedX.png" class="removeTimeIcon" height="16" style="cursor:pointer" /></div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row col-md-12 mt-2 clear-inputs" id="divSelectTrack" style="display:none;">
+                <div class="col-md-4">
+                    <label class=" ms-3">Choose Track: </label>
+                </div>
+                <div class="col-md-8">
+                    <select id="TrackList" multiple>
+                        @if (ViewBag.TrackList != null)
+                        {
+
+                            System.Data.DataTable dt = (System.Data.DataTable)ViewBag.TrackList;
+                            if (dt != null && dt.Rows.Count > 0)
+                            {
+                                foreach (System.Data.DataRow dr in dt.Rows)
+                                {
+                                    <option value='@dr["pkey"]'>@dr["TrackID"]</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row col-md-12 mt-2 clear-inputs" id="divSelectSession" style="display:none;">
+                <div class="col-md-4">
+                    <label class=" ms-3">Choose up to three specific sessions: </label>
+                </div>
+                <div class="col-md-8">
+                    <select id="SessionList" multiple>
+                        @if (ViewBag.SessionCombo != null)
+                        {
+                            System.Data.DataTable dt = (System.Data.DataTable)ViewBag.SessionCombo;
+                            if (dt != null && dt.Rows.Count > 0)
+                            {
+                                foreach (System.Data.DataRow dr in dt.Rows)
+                                {
+                                    <option value='@dr["pkey"]'>@dr["strText"]</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row col-md-12 p-0 mt-3">
+                <div class="col-md-4"> </div>
+                <div class="col-md-8">
+                    <button type="button" id="cmdApply" class="btn">Apply</button>
+                    <button type="button" id="cmdSave" class="btn">Save & Close</button>
+                    <button type="button" id="cmdClearAll" class="btn">Clear All Preferences</button>
+                    <button type="button" id="cmdClose" class="btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+
+            function onCloseFilter() { }
+
+            $("#TrackList").multipleSelect({
+                multiple: true, isopen: false, placeholder: 'Select Tracks', selectAll: false, multipleWidth: 'auto', filter: false, width: 'auto', height: 28, maxHeight: 250, onClose: function () { onCloseFilter(); }
+            });
+
+            $("#SessionList").multipleSelect({
+                multiple: true, isopen: false, placeholder: 'Any', minimumCountSelected: 3, selectAll: false, multipleWidth: 'auto', filter: false, width: 'auto', height: 28, maxHeight: 250, onClose: function () { onCloseFilter(); }
+            });
+
+            $('#divSelChairPref').hide();
+
+            if ($('input[name="rblChrSssn"]:checked').val() === "1")
+                $('#divSelChairPref,#cmdClearAll').show();
+            else
+            {
+                $('#SessionChairPref').val('');
+                $('#divSelChairPref,#cmdClearAll').hide();
+            }
+
+            if ($('#SelectedTracksVal').val() === "")
+            {
+                $("#TrackList").val('');
+                $("#TrackList").multipleSelect('refresh');
+            }
+
+            if ($('#SelectedSessionVal').val() === "")
+            {
+                $("#SessionList").val('');
+                $("#SessionList").multipleSelect('refresh');
+            }
+
+            function CheckValue(SelectedValues)
+            {
+                $('#divTime,#cmdApply,#divSelectTrack,#divSelectSession').hide();
+
+                if ($('#SelectedTracksVal').val() !== "")
+                {
+                    var values = $('#SelectedTracksVal').val().split(">");
+                    var SelectedVal = [];
+                    $.each(values, function (i, val)
+                    {
+                        var infoval = val.replace('<', '').trim('');
+                        if (infoval !== "")
+                            SelectedVal.push(infoval);
+                    });
+                    $("#TrackList").multipleSelect('setSelects', SelectedVal);
+                }
+
+                if ($('#SelectedSessionVal').val() !== "")
+                {
+                    var values = $('#SelectedSessionVal').val().split(">");
+                    var SelectedVal = [];
+                    $.each(values, function (i, val)
+                    {
+                        var infoval = val.replace('<', '').trim('');
+                        if (infoval !== "")
+                            SelectedVal.push(infoval);
+                    });
+                    $("#SessionList").multipleSelect('setSelects', SelectedVal);
+                }
+
+                if ($('input[name="rblChrSssn"]:checked').val() === "1")
+                {
+                    switch (SelectedValues)
+                    {
+                        case "2":
+                            $('#divTime,#cmdApply').show();
+                            break;
+                        case "3":
+                            $('#divSelectTrack,#cmdApply').show();
+                            break;
+                        case "4":
+                            $('#divSelectSession').show();
+                            break;
+                    }
+                }
+            }
+
+            CheckValue($('#SessionChairPref').val());
+
+            $('#SessionChairPref').change(function () { CheckValue($('#SessionChairPref').val()); });
+
+            $('input[name="rblChrSssn"]').change(function ()
+            {
+                if ($('input[name="rblChrSssn"]:checked').val() === "1")
+                {
+                    $('#divSelChairPref,#cmdClearAll').show();
+                    CheckValue($('#SessionChairPref').val());
+                }
+                else
+                    $('#divSelChairPref,#divTime,#cmdApply,#divSelectTrack,#divSelectSession,#cmdClearAll').hide();
+            });
+
+            $('#cmdClearAll').click(function (e)
+            {
+                e.preventDefault();
+                var result = CommonFunctions.AjaxCall('Post', '/MyMAGI/ClearChairPreference', null, 'json', 'Error While Clearing Preferences');
+                if (result !== null && result != "ERROR")
+                {
+                    if (result === "OK")
+                    {
+                        $("#TrackList,#SelectedSessionVal,#SessionList,#SelectedTracksVal").val('');
+                        $('#SelectedTimeList').html('');
+                        $("#TrackList,#SessionList").multipleSelect('refresh');
+                        $('input[name="rblChrSssn"][value="0"]').prop("checked", true);
+                        $('.clear-inputs input').val(null);
+                        $('.clear-inputs select').val(null);
+                        $('#divSelChairPref,#divTime,#cmdApply,#divSelectTrack,#divSelectSession,#cmdClearAll').hide();
+                        CommonFunctions.Alert("Preferences Cleared");
+                    }
+                    else
+                        CommonFunctions.Alert(result);
+                }
+                else
+                    CommonFunctions.Alert("Error While Clearing Preferences");
+            });
+
+            $(document).on('click', '.removeTimeIcon', function (e)
+            {
+                $(this).parent('.removeDiv').remove();
+            });
+
+            function SavePreference()
+            {
+                if ($('input[name="rblChrSssn"]:checked').val() === "1")
+                {
+                    if ($('#SessionChairPref').val() === "")
+                    {
+                        CommonFunctions.Alert("Select any session chair preference");
+                        return false;
+                    }
+                }
+
+                if ($('#SessionChairPref').val() == "2")
+                {
+                    var valid = true, cntrlName = '';
+
+                    if ($('#fromTime').val() == null || $('#fromTime').val() == '')
+                    {
+                        valid = false;
+                        cntrlName = 'Start Time';
+                    }
+                    else if ($('#toTime').val() == null || $('#toTime').val() == '')
+                    {
+                        valid = false;
+                        cntrlName = 'End Time';
+                    }
+
+                    if (!valid)
+                    {
+                        CommonFunctions.Alert(cntrlName + " cannot be blank");
+                        return false;
+                    }
+                }
+
+                var strSessionList = $("#SessionList").multipleSelect('getSelects').join(',');
+                const words = strSessionList.split(',');
+
+                if ($('#SessionChairPref').val() == 4) {
+                    if (parseInt(words.length) > 3) {
+                        CommonFunctions.Alert("Choose up to three specific sessions");
+                        return false;
+                    }
+                }
+             
+                var strTrackList = $("#TrackList").multipleSelect('getSelects').join(',');
+                var TimeList = [];
+                $.each($('.updatedTimeStrings'), function (i, val) { TimeList.push(val.innerText); });
+
+                var data = {
+                    rblChrSssn: $('input[name="rblChrSssn"]:checked').val(),
+                    ddChairPreference: ($('#SessionChairPref').val().trim() !== "") ? $('#SessionChairPref').val() : "0",
+                    getSessionList: strSessionList,
+                    getTrackList: strTrackList,
+                    time: TimeList.join(','),
+                };
+                var result = CommonFunctions.AjaxCall('Post', '/MyMAGI/SaveSessionChairPreference', data, 'json', 'Error While Updating Preferences');
+                if (result !== null && result != "ERROR")
+                {
+                    if (result === "OK")
+                    {
+                        $('#dpStartSchedule,#fromTime,#toTime').val('');
+                        return true;
+                    }
+                    else
+                        CommonFunctions.Alert(result);
+                }
+                else
+                    CommonFunctions.Alert('Error While Updating Preferences');
+            }
+
+            $('#cmdApply').click(function (e)
+            {
+                e.preventDefault();
+                var result = SavePreference();
+                if (result)
+                    CommonFunctions.Alert("Preferences Applied");
+            });
+
+            $('#cmdSave').click(function (e)
+            {
+                e.preventDefault();
+                var result = SavePreference();
+                if (result)
+                {
+                    CommonFunctions.Alert("Preferences Saved");
+                    parent.location.href = "/MyMAGI/MyOptions";
+                }
+            });
+
+            $('#cmdClose').click(function (e)
+            {
+                parent.location.href = "/MyMAGI/MyOptions";
+            });
+
+            $('#saveDateTime').click(function (e)
+            {
+                e.preventDefault();
+                if ($('#dpStartSchedule').val() === "")
+                {
+                    CommonFunctions.Alert("Select Date First");
+                    return false;
+                }
+                if ($('#fromTime').val() === "")
+                {
+                    CommonFunctions.Alert("Enter both times");
+                    return false;
+                }
+                if ($('#toTime').val() === "")
+                {
+                    CommonFunctions.Alert("Enter both times");
+                    return false;
+                }
+                var dataUpdated = true;
+                var startTime = moment($('#fromTime').val(), 'h:mm A').format('h:mm A');
+                var endTime = moment($('#toTime').val(), 'h:mm A').format('h:mm A');
+                if (moment($('#fromTime').val())._i > moment($('#toTime').val())._i || startTime === endTime)
+                {
+                    CommonFunctions.Alert("To time must be greater than From time");
+                    return false;
+                }
+                var timeHtml = $('#dpStartSchedule').val() + ' ' + startTime + ' - ' + endTime;
+                $('.updatedTimeStrings').each(function (i, val)
+                {
+                    if (val.outerText === timeHtml)
+                        dataUpdated = false;
+                });
+                if (dataUpdated)
+                {
+                    var dataHtml = '<div class="removeDiv mt-1"><label class="updatedTimeStrings">' + timeHtml + '</label> <img src="/images/icons/RedX.png" class="removeTimeIcon" height="16" style="cursor:pointer" /></div>';
+                    $('#SelectedTimeList').append(dataHtml);
+                }
+            });
+        });
+    </script>
+}
+else
+{
+    if (!string.IsNullOrEmpty(ViewBag.Redirect))
+    {
+        <script type="text/javascript">
+            $(document).ready(function ()
+            {
+                window.location.href = "/Home/Index";
+            });
+        </script>
+    }
+}

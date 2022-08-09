@@ -1,0 +1,36 @@
+
+
+
+.k-list > .k-state-highlight,
+
+.k-ghost-splitbar-vertical,
+.k-ghost-splitbar-horizontal,
+.k-draghandle.k-state-selected:hover,
+.k-scheduler .k-scheduler-toolbar .k-state-selected,
+.k-scheduler .k-today.k-state-selected,
+.k-marquee-color {
+  color: #333;
+  background-color: #e9e9e9;
+  border-color: #1984c8;
+}
+
+.k-pager-wrap .k-pager-nav.k-pager-last {
+  border-radius: 1.0833em;
+}
+.k-pager-wrap,
+.k-pager-numbers .k-link {
+  line-height: 2em;
+}
+.k-pager-wrap > .k-link {
+  height: 2em;
+  line-height: 2em;
+}
+.k-pager-wrap > .k-link,
+.k-pager-numbers .k-link,
+.k-pager-numbers .k-state-selected {
+  min-width: 2em;
+}
+.k-state-focused,
+.k-grouping-row .k-state-focused {
+  border-color: transparent;
+}

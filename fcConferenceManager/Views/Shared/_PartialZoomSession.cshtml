@@ -1,0 +1,226 @@
+﻿@using System.Data
+@model DataSet
+@{
+    bool Available = false, bEventSesssionData = false;
+    DataTable EventSessionData = new DataTable();
+
+    if (Model != null)
+    {
+        Available = (Model.Tables.Count > 0);
+    }
+    if (Available)
+    {
+        EventSessionData = Model.Tables[3];
+        bEventSesssionData = Convert.ToBoolean(ViewData["EventSessionData"].ToString());
+    }
+
+    fcConferenceManager.Models.HelpIconData HelpIconInfo = new fcConferenceManager.Models.HelpIconData();
+    bool HelpIconAvailable = false;
+    string IntroType = "";
+    IntroType = ((ViewData["Type"] == null) ? "" : ViewData["Type"].ToString());
+    if (ViewData["HelpIconData"] != null)
+    {
+        HelpIconAvailable = true;
+        HelpIconInfo = (fcConferenceManager.Models.HelpIconData)ViewData["HelpIconData"];
+    }
+    DataTable ReminderList = new DataTable();
+    bool VisibleTips = false, ListVisible = false;
+    if (ViewBag.Reminder_Visible == true)
+    {
+
+        if (ViewData["Reminders"] != null)
+        {
+            ReminderList = (DataTable)ViewData["Reminders"];
+            if (ReminderList != null && ReminderList.Rows.Count > 0)
+            {
+                ListVisible = true;
+            }
+        }
+        if (ViewData["VisibleTips"] != null)
+        {
+            VisibleTips = true;
+        }
+    }
+}
+
+@if (bEventSesssionData)
+{
+    <input type="hidden" value="@ViewData["PageMeetingSwitch"]" />
+    bool bWebinarStarted = ((EventSessionData.Rows[0]["WebinarStarted"] != System.DBNull.Value) ? Convert.ToBoolean(EventSessionData.Rows[0]["WebinarStarted"]) : false);
+    bool bMeetingStarted = ((EventSessionData.Rows[0]["MeetingStarted"] != System.DBNull.Value) ? Convert.ToBoolean(EventSessionData.Rows[0]["MeetingStarted"]) : false);
+    bool bSessionTitleText = bMeetingStarted;
+    bool bSessionTitleHeader = (!bMeetingStarted);
+    string TitleText = "(" + EventSessionData.Rows[0]["SessionID"] + ") " + EventSessionData.Rows[0]["SessionTitle"];
+
+    <div class="col-md-12">
+        <h5 class="SectionTitle">@TitleText</h5>
+    </div>
+    <div class="col-md-12 mt-1 mb-3">
+        <button id="btnRefresh" class="btn me-1" type="button">Refresh</button>
+        <button id="btnPopOut" class="btn me-1" type="button">Pop Out</button>
+        @if (ViewBag.IsStaff)
+        {
+            <div class="form-check-inline">
+                <input class="form-check-input" type="radio" name="userTypeRadio" id="userTypeRadio1" value="0" @((ViewBag.intVSEventUserType == 0) ? "checked" : "") />
+                <label class="form-check-label" for="flexRadioDefault1"> Speaker </label>
+            </div>
+            <div class="form-check-inline">
+                <input class="form-check-input" type="radio" name="userTypeRadio" id="userTypeRadio2" value="1" @((ViewBag.intVSEventUserType == 1) ? "checked" : "") />
+                <label class="form-check-label" for="flexRadioDefault2"> Attendee </label>
+            </div>
+        }
+    </div>
+    <div class="d-flex magiEventTimingWrapper justify-content-between mb-2 p-1">
+        <div>
+            <span class="magiEventTimingTitle"> Event Time (EDT) </span>
+            <span class="magiEventTiming mytime"> @ViewData["CurrentTime"] </span>
+        </div>
+        <div>
+            <span class="magiEventTimingTitle"> My Time </span>
+            <span class="magiEventTiming time"> 6:40 PM </span>
+        </div>
+        <div class="magiEventTimingHour">
+            <span class="d-flex align-items-center">
+                <input type="radio" value="AM/PM" name="TimeTypeCheck" class="timeformatAMPM" checked="checked" />
+                <label>AM/PM</label>
+            </span>
+            <span class="d-flex align-items-center">
+                <input type="radio" value="24Hour" class="timeformatAMPM" name="TimeTypeCheck" />
+                <label>24 Hour</label>
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 mt-2">
+            @if (ViewBag.VirtualDropdown_Visible && Available)
+            {
+                DataTable ddEventVirtualData = Model.Tables[0];
+                <select id="VirtualEventDropDown" class="col-md-12 me-1 mb-1">
+                    @if (ddEventVirtualData != null)
+                    {
+                        foreach (System.Data.DataRow dr in ddEventVirtualData.Rows)
+                        {
+                            @Html.Raw("<option value='" + dr["pKey"] + "' " + ((ViewBag.SelectedDropDown == dr["pKey"].ToString()) ? "selected>" : ">") + dr["strText"] + "</option>")
+                        }
+                    }
+                </select>
+            }
+            <input type="hidden" id="EsID" value='@ViewData["intESpKey"]' />
+            <input type="hidden" id="SID" value="@ViewData["intSession_pKey"]" />
+            <input type="hidden" id="SessionID" value="@ViewData["strSessionID"]" />
+            <input type="hidden" id="TotalAttendeeVal" value="@ViewData["TotalAttendee"]" />
+            <div class="mb-2 p-2 magi-Event-speaker-profile mt-3">
+                @if (Available)
+                {
+                    DataTable ddDialIn = Model.Tables[2];
+                    <select name="ddDialIn" id="ddDialIn" class="customPhoneSelect">
+                        <option value="">Webinar Telephone Numbers</option>
+                        @if (ddDialIn != null)
+                        {
+                            if (ddDialIn.Rows.Count > 0)
+                            {
+                                foreach (System.Data.DataRow dr in ddDialIn.Rows)
+                                {
+                                    @Html.Raw("<option value='" + dr["pKey"] + "'>" + dr["strText"] + "</option>")
+                                }
+                            }
+                        }
+                    </select>
+                }
+                <ul id="CommonLinks" class="p-0">
+                    <li>
+                        <a href="javascript:void(0);" id="SpeakerProfilesLink" title="Speaker profiles" class="underline-on-hover" style="text-decoration: none; padding-top:0;padding-bottom:0; color: navy; cursor: pointer;">Speaker profiles</a>
+                    </li>
+                </ul>
+                <ul id="speakerLinks" class="p-0" style="display:@((ViewBag.intVSEventUserType == 0) ? "inital;" : "none;")">
+                    <li>
+                        <a ID="lnkSpeakerDocument" runat="server" title="Document management" class="underline-on-hover " Style="text-decoration: none; color: navy; cursor: pointer; ">Document management</a>
+                    </li>
+                    <li>
+                        <input type="hidden" ID="hdfhostkeyWebinar" Value="@ViewData["WebinarHostKey"]" />
+                        <div>
+                            <a id="aWebinarURL" target="_blank" href="@ViewData["aWebinarURL"]" title="Open Session in Zoom app (not in browser)" class="underline-on-hover" style="text-decoration: none; color: navy; cursor: pointer; display: @((Convert.ToBoolean(ViewData["WebinarURLVisible"]))? "initial" : "none")" font-underline="false"><span class="@((Convert.ToBoolean(ViewData["WebinarStarted"]))? "blink_me" : "noblink")" style="font-size: 0.8rem !important;" id="aSpanZoomWebinar">Open Session in Zoom app</span></a>
+                            <input type="image" id="imgCopyWebinarHostkey" runat="server" class="liPadding" src="/images/Icons/CopyHostKey.png" visible="false" alt="Copy host key" onclick="copyhostkeyWebinar()" title="Copy Host Key" height="20" style="display:none;">
+                            @*style="display: @((Convert.ToBoolean(ViewData["imgCopyWebinarHostkey"]))? "initial" : "none");"*@
+
+                        </div>
+                    </li>
+                    <li>
+                        <input type="hidden" ID="hdfhostkeyMeeting" Value="@ViewData["HallwayHostKey"]" />
+                        <div>
+                            <a id="aMeetingURL" target="_blank" href="@ViewData["aMeetingURL"]" title="Open Hallway Discussion in Zoom app (not in browser)" class="underline-on-hover" style="text-decoration: none; color: navy; cursor: pointer; display: @((Convert.ToBoolean(ViewData["MeetingVisible"]))? "initial" : "none")" font-underline="false"><span class="@((Convert.ToBoolean(ViewData["MeetingStarted"]))? "blink_me" : "noblink")" style="font-size: 0.8rem !important;" runat="server" id="aSpanZoomMeeting">Open Hallway Discussion in Zoom app</span></a>
+                            <input type="image" id="imgCopyMeetingHostkey" class="liPadding" runat="server" src="/images/Icons/CopyHostKey.png" visible="false" alt="Copy host key" onclick="copyhostkeyMeeting()" title="Copy Host Key" height="20" style="display:none;">
+                            @*style="display: @((Convert.ToBoolean(ViewData["imgCopyMeetingHostkey"]))? "initial" : "none");"*@
+                        </div>
+                    </li>
+                    <li>
+                        <a ID="lnkAttendanceLog" class="underline-on-hover" Style="color: navy; text-decoration: none; cursor: pointer;display: @((bEventSesssionData)? "initial" : "none")">@ViewData["AttendacneLog"]</a>
+                    </li>
+                    <li>
+                        <a ID="lnkZoomProblemSpekaer" title="Zoom problems?" class="underline-on-hover" Style="color: navy; text-decoration: none; cursor: pointer;">Zoom problems?</a>
+                    </li>
+                    <li>
+                        <a ID="lnkSpeakerBreakoutGroup" title="Breakout group management" class="underline-on-hover " Style="color: navy; text-decoration: none; cursor: pointer;display:@((Convert.ToBoolean(ViewData["IsBreakOut"]))? "initial;":"none;")">Breakout group management</a>
+                    </li>
+                    <li>
+                        <a ID="lnkSpeakerPolling" title="Polling management" class="underline-on-hover " Style="color: navy; text-decoration: none; cursor: pointer;display: @((Convert.ToBoolean(ViewData["SpeakerPollingLink"]))? "initial" : "none")">Polling management</a>
+                    </li>
+
+                    <li>
+                        <a ID="lnkAttendeeQuestion" title="Questions" class="underline-on-hover " Style="color: navy; text-decoration: none; cursor: pointer;display: @((Convert.ToBoolean(ViewData["AttendeeQuestionLink"]))? "initial" : "none")">Questions</a>
+                    </li>
+                    <li>
+                        <a ID="lnkSpkrChangeSession" title="Changing sessions" OnClientClick="return OpenInstructionPopup();" class="underline-on-hover" Style="color: navy; text-decoration: none; cursor: pointer;">Changing sessions</a>
+                    </li>
+                    <li>
+                        <asp:Literal runat="server" ID="TPlnk" />
+                    </li>
+
+                </ul>
+                <ul id="attendeeeLinks" class="p-0" style="display:@((ViewBag.intVSEventUserType == 1) ? "inital;" : "none;")">
+                    <li>
+                        <a ID="lnkDocument" title="Documents" class="underline-on-hover" Style="color: navy; text-decoration: none; cursor:pointer;">Documents</a>
+                    </li>
+                    <li>
+                        <a ID="lnksmalDiscussion" title="Breakout group" class="underline-on-hover" Style="color: navy; text-decoration: none; cursor: pointer;display:@((Convert.ToBoolean(ViewData["IsBreakOut"]))? "initial;":"none;") ">Breakout group</a>
+                    </li>
+                    <li>
+                        <a id="aAttWebinarURL" href="@ViewData["aWebinarURL"]" class="underline-on-hover" title="Open Session in Zoom app (not in browser)" style="color: navy; text-decoration: none; cursor: pointer; display: @((Convert.ToBoolean(ViewData["AttWebinarURLVisible"]))? "initial" : "none")" font-underline="false"><span class="blink_me" id="Span1">Open session in Zoom app</span></a>
+                    </li>
+                    <li>
+                        <a ID="lnkZoomProblem" title="Zoom problems?" class="underline-on-hover" Style="color: navy; text-decoration: none; cursor: pointer;">Zoom problems?</a>
+                    </li>
+                    <li>
+                        <a ID="lnkExhibitors" title="Applicable event sponsors" class="underline-on-hover" Style="color: navy; text-decoration: none; cursor: pointer;display: @((Convert.ToBoolean(ViewData["ExhibitorsLink"]))? "initial" : "none")">Applicable event sponsors</a>
+                    </li>
+                    <li>
+                        <a ID="lnkRelatedSessionLink" title="Related sessions" class="underline-on-hover" Style="color: navy; text-decoration: none; cursor: pointer;display: @((Convert.ToBoolean(ViewData["RelatedSessionLink"]))? "initial" : "none")">Related sessions</a>
+                    </li>
+                    <li>
+                        <a ID="lnkPolling" title="Polling" class="underline-on-hover" Style="color: navy; text-decoration: none; cursor: pointer;display: @((Convert.ToBoolean(ViewData["PollingLink"]))? "initial" : "none")">Polling</a>
+                    </li>
+                    <li>
+                        <a ID="lnkChangingSession" title="Changing sessions" class="underline-on-hover" Style="color: navy; text-decoration: none; cursor: pointer;">Changing sessions</a>
+                    </li>
+                    <li>
+                        <div style="display: none; font-size: 9pt; text-align: left; padding-bottom: 5px;">
+                            If you go to full-screen mode, click on your keyboard Escape button to return.
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+
+            @{
+                Html.RenderAction("ChatPanelAction", "MyMagi");
+            }
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            $('#modelZoomSessionLP').modal('show');
+        });
+    </script>
+}

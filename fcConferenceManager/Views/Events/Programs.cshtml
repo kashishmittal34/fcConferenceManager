@@ -1,0 +1,604 @@
+﻿@{
+    ViewBag.Title = "Programs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="/Css/multiple-select.css" rel="stylesheet" />
+@* Video *@
+<link href="/Css/video-js.css" rel="stylesheet" />
+<script src="/Scripts/video.min.js" type="text/javascript"></script>
+<script src="/Scripts/Youtube.js" type="text/javascript"></script>
+<style>
+
+    @@media (min-width:1367px)
+    {
+
+        span[id*="lblEmitRow_"] > table > tbody > tr > td:nth-child(2n)
+        {
+            flex-basis: 10.5% !important;
+        }
+    }
+
+    ._imgLabel
+    {
+        display: none;
+        color: #3e3b3b
+    }
+
+    ._descriptionblock
+    {
+        display: none;
+    }
+
+    ._relatedSessionblock
+    {
+        display: none;
+    }
+
+    ._Speakerblock
+    {
+        display: none;
+    }
+
+    span[id*="lblEmitRow_"]
+    {
+        display: block;
+    }
+
+    span[id*="lblEmitRow_"] > table > tbody > tr
+    {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    span[id*="lblEmitRow_"] > table
+    {
+        width: 100%;
+    }
+
+    span[id*="lblEmitRow_"] > table > tbody > tr > td:first-child
+    {
+        flex-basis: 23.5%;
+    }
+
+    span[id*="lblEmitRow_"] > table > tbody > tr > td:nth-child(2n)
+    {
+        flex-basis: 14%;
+    }
+
+    span[id*="lblEmitRow_"] > table > tbody > tr > td:last-child
+    {
+        flex: 1;
+    }
+
+    @@media(max-width:767px)
+    {
+        div#dvProgramContent table table tr
+        {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        div#dvProgramContent table table tr td
+        {
+            flex: 1;
+            width: 100% !important;
+            text-align: left !important;
+        }
+
+        span[id*="lblEmitRow_"] > table > tbody > tr
+        {
+            flex-direction: column;
+        }
+
+        span[id*="lblEmitRow_"] > table > tbody > tr > td
+        {
+            flex-basis: 100%;
+        }
+    }
+</style>
+<div class="magiMySessionMainWrapper mt-3">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+            <div class="col-md-8 col-lg-9 flex-grow-1">
+                <div class="row">
+                    <div class="col-md-7">
+                        @Html.Raw("<h2 class=''>" + @ViewBag.PageTitle + "</h2>")
+                    </div>
+                    <div class="col-md-5">
+                        <div class="d-flex justify-content-end flex-wrap">
+                            @Html.DropDownList("OverViewDropDown", null, new { @class = "bg-light mb-1 me-md-1 d-inline", id = "OverViewDropDown" })
+                            <button id="btnDownloadProgram" type="button" class="btn me-1 mb-1 mb-1 ">Download</button>
+                            <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 ">Return</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-md-12 pt-1 pb-1">
+                    <b style="color :blue">@Html.Raw(ViewBag.SectionTitle)</b>
+                </div>
+                @if (Convert.ToBoolean(ViewBag.phNoProgram))
+                {
+                    <div class="col-md-12" style="background-color: beige; padding: 10px">
+                        <span id="lblInfoText">@Html.Raw(ViewBag.lblInfo)</span>
+                    </div>
+                }
+                <div class="magi-content-wrapper mb-2">
+                    <div class="align-items-center d-md-flex flex-wrap justify-content-start">
+                        <div class="d-inline-block">
+                            <input type="checkbox" id="_ShowDescription" name="cbox" class="me-1 ms-1" @((Convert.ToBoolean(ViewBag.ckBlurb)) ? "checked" : "") value="ShowDescription" />
+                            <label for="_ShowDescription">Show Descriptions</label>
+                        </div>
+                        <div class="d-inline-block">
+                            <input type="checkbox" id="_ShowSpeaker" name="cbox" class="me-1 ms-2 showSelected" @((Convert.ToBoolean(ViewBag.ckShowSpeak)) ? "checked" : "") value="ShowSpeaker" />
+                            <label for="_ShowSpeaker">Show Speaker</label>
+                        </div>
+                        <div class="d-inline-block">
+                            <input type="checkbox" id="_ShowEduLabel" name="cbox" class="me-1 ms-2" @((Convert.ToBoolean(ViewBag.ckShowEdu)) ? "checked" : "") value="ShowEduLabel" />
+                            <label for="_ShowEduLabel">Show Education Level</label>
+                        </div>
+                        <div class="d-inline-block">
+                            <input type="checkbox" id="_ShowRelatedSession" name="cbox" class="me-1 ms-2 showSelected" @((Convert.ToBoolean(ViewBag.ckShowRelated)) ? "checked" : "") value="ShowRelatedSession" />
+                            <label for="_ShowRelatedSession" class="me-1">Show Related Session</label>
+                        </div>
+                        <div class="d-inline-block">
+                            <input type="checkbox" id="_ShowLiveStream" name="cbox" class="me-1 ms-2 showSelected" @((Convert.ToBoolean(ViewBag.IsLiveStream)) ? "checked" : "") value="ShowRelatedSession" />
+                            <label for="_ShowLiveStream" class="me-1">Show Live Stream</label>
+                        </div>
+                        <button id="TrackHighlight" class="btn ms-1 me-1 me-md-1" type="button">Highlight Tracks</button>
+                        <button id="TopicHighlight" class="btn ms-1 me-1 me-md-1" type="button">Highlight Topics</button>
+
+                        <div class="d-inline-block">
+                            <select id="_Audience" class="ms-1 mt-1" required name="Audience">
+                                <option value="all"> ALL </option>
+                                @if (ViewBag.Audience != null)
+                                {
+                                    foreach (var item in ViewBag.Audience)
+                                    {
+                                        if (item.Text != null)
+                                        {
+                                            <option value="@item.Value" @((ViewBag.SelectedAudience == item.Value) ? "Selected" : "")> @item.Text </option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="dvProgramContent">
+                    @{
+                        Html.RenderPartial("_PartialProgram");
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="TrackModal" class="modal fade" tabindex="-1" aria-labelledby="modelTrackModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader">
+                <h5 class="modal-title">Tracks:</h5>
+                <div>
+                    <button name="select" id="_SelectTrack" type="button" class="btn">Select</button>
+                    <button name="clear" id="_ClearTrack" type="button" class="btn">Clear</button>
+                    <button name="cancel" id="_CancelTrack" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+            <div class="modal-body p-2">
+                <div class="col-xs-12">
+                    <select id="_Tracks" multiple="multiple" required name="Tracks" class="clstracks">
+                        @if (ViewBag.TrackList != null)
+                        {
+                            foreach (var item in ViewBag.TrackList)
+                            {
+                                <option value="@item.Value" name="ntrack"> @item.Text </option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="TopicModal" class="modal fade" tabindex="-1" aria-labelledby="modelTopicModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader">
+                <h5 class="modal-title">Topics:</h5>
+                <div>
+                    <button name="select" id="_SelectTopic" type="button" class="btn">Select</button>
+                    <button name="clear" id="_ClearTopic" type="button" class="btn">Clear</button>
+                    <button name="cancelTopic" id="_Cancel" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+            <div class="modal-body p-2">
+                <div class="col-xs-12">
+                    <select id="_Topics" multiple="multiple" required name="Topics" class="clstopics">
+                        @if (ViewBag.TopicList != null)
+                        {
+                            foreach (var item in ViewBag.TopicList)
+                            {
+                                <option style="width: 360px;" value="@item.Value" name="ntopic"> @item.Text </option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modelVideoPlayer" tabindex="-1" aria-labelledby="modelVideoPlayer" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header justify-content-end" style=" background-color: #fff !important; padding: 0px !important;">
+                <label id="closeVideoPlayer" class="pull-right  float-end mb-2" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+            </div>
+            <div class="modal-body" id="modelHelpMediaBody">
+                <div class="row p-2">
+                    <video id="VideoPlayer" class="video-js" controls preload="auto" width="300" height="400">
+                        <p class="vjs-no-js">
+                            To view this video please enable JavaScript, and consider upgrading to a web browser that
+                        </p>
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="selTracks" value="@ViewBag.SelectedTracks" />
+<input type="hidden" id="selTopics" value="@ViewBag.SelectedTopic" />
+<input type="hidden" id="selAudience" value="@ViewBag.SelectedAudience" />
+
+<input type="hidden" value="@ViewBag.OverViewDropDownSelected" id="DropdownSelected" />
+<script src="/Scripts/multiple-select.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        function onCloseFilter() { }
+        $("#_Tracks,#_Topics").multipleSelect({ multiple: true, isopen: false, placeholder: 'All', selectAll: true, selectAllText: 'Check All', multiple: false, filter: false, width: '100%', height: 28, maxHeight: 250, onClose: function () { onCloseFilter(); } });
+        function UpdateSelections() {
+            var isShowSpeaker = $('#_ShowSpeaker').is(":checked");
+            var isShowRelated = $('#_ShowRelatedSession').is(":checked");
+            var isShowDescription = $('#_ShowDescription').is(":checked");
+            var isShowEDU = $('#_ShowEduLabel').is(":checked");
+            var SelectedTopics = $('#_Topics').val().join(";");
+            var SelectedTracks = $('#_Tracks').val().join(";");
+            var SelectedAudience = $('#_Audience').val();
+            var isLiveStream = $('#_ShowLiveStream').is(":checked");
+            var FilterData = { bProgramSpeaker: isShowSpeaker, bProgramRelated: isShowRelated, bShowDesc: isShowDescription, bShowEdu: isShowEDU, bLiveStream: isLiveStream, strTopics: SelectedTopics, strTracks: SelectedTracks, strAudience: SelectedAudience };
+            var result = CommonFunctions.AjaxCall('Post', '/Events/UpdateSelections', FilterData, 'json', 'Error Occurred while Updating');
+        }
+        function AudienceChange() {
+            var topicname = $("#_Topics").val();
+            var trackname = $("#_Tracks").val();
+            var id = $('#_Audience').val();
+            var tds = document.getElementsByClassName('Session_Content_Audience');
+            var tdstrack = document.getElementsByClassName('Session_Content');
+            var tdsTxt = document.getElementsByClassName('Session_ContentText');
+            var tdTopics = document.getElementsByClassName('Session_Content_Topics');
+            if (id == "all") {
+                for (var i = 0, j = tds.length; i < j; ++i) {
+                    tdsTxt[i].style.color = "navy";
+                }
+
+            } else if (trackname != "") {
+                for (var i = 0, j = tds.length; i < j; ++i) {
+                    tdsTxt[i].style.color = "Gray";
+                    var str = tdstrack[i].innerText;
+                    trackname.forEach(track => {
+                        if (track == str) {
+                            tdsTxt[i].style.color = "navy";
+                        }
+
+                    });
+                    var straud = tds[i].innerText;
+                    if (id == straud) {
+                        tdsTxt[i].style.color = "navy";
+                    }
+                }
+            } else if (topicname != "") {
+                for (var i = 0, j = tds.length; i < j; ++i) {
+                    tdsTxt[i].style.color = "Gray";
+                    var auctype = tds[i].innerText;
+                    var str = tdTopics[i].innerText;
+                    if (str != "") {
+                        const myArr = str.split(",");
+                        if (topicname.some(item => myArr.includes(item))) {
+                            tdsTxt[i].style.color = "navy";
+                        }
+                    }
+                    if (id == auctype) {
+                        tdsTxt[i].style.color = "navy";
+                    }
+                }
+            } else if (topicname == "" && trackname == "") {
+                for (var i = 0, j = tds.length; i < j; ++i) {
+                    tdsTxt[i].style.color = "Gray";
+                    var str = tds[i].innerText;
+                    if (id == str) {
+                        tdsTxt[i].style.color = "navy";
+                    }
+                }
+            }
+        }
+        function TracksUpdated() {
+            var ele = document.getElementsByName('ntopic');
+            for (var x = 0; x < ele.length; x++) {
+                if (ele[x].type == 'checkbox')
+                    ele[x].checked = false;
+            }
+            var trackname = $("#_Tracks").val();
+            var tds = document.getElementsByClassName('Session_Content');
+            var tdsTxt = document.getElementsByClassName('Session_ContentText');
+            var greycolor = document.getElementsByClassName('clblur');
+
+            if (trackname == "") {
+                for (var i = 0, j = tds.length; i < j; ++i) {
+                    tdsTxt[i].style.color = "navy";
+                }
+                document.getElementById("TrackHighlight").style.backgroundColor = "White";
+            }
+            else {
+                for (var i = 0, j = tds.length; i < j; ++i) {
+                    tdsTxt[i].style.color = "Gray";
+                    greycolor[i].style.color = "Gray";
+                    var str = tds[i].innerText;
+                    trackname.forEach(track => {
+                        if (track == str)
+                            tdsTxt[i].style.color = "navy";
+                    });
+                }
+                document.getElementById("TrackHighlight").style.backgroundColor = "#25a0da";
+                document.getElementById("TopicHighlight").style.backgroundColor = "White";
+            }
+        }
+        function TopicUpdate() {
+            var topicname = $("#_Topics").val();
+            var tdsTxt = document.getElementsByClassName('Session_ContentText');
+            var tdTopics = document.getElementsByClassName('Session_Content_Topics');
+            var greycolor = document.getElementsByClassName('clblur');
+
+            if (topicname == "") {
+                for (var i = 0, j = tdTopics.length; i < j; ++i) {
+                    tdsTxt[i].style.color = "navy";
+                }
+                document.getElementById("TopicHighlight").style.backgroundColor = "White";
+            }
+            else {
+                for (var i = 0, j = tdTopics.length; i < j; ++i) {
+                    tdsTxt[i].style.color = "Gray";
+                    greycolor[i].style.color = "Gray";
+                    var str = tdTopics[i].innerText;
+                    if (str != "") {
+                        const myArr = str.split(", ");
+                        if (topicname.some(item => myArr.includes(item)))
+                            tdsTxt[i].style.color = "navy";
+
+                        $('.SCT_Values').each(function (val, i) {
+                            var topic = i.dataset["topic"].trim();
+                            i.style.display = ((topicname.includes(topic)) ? "initial" : "none");
+                            var Child = i.children[0];
+                            var topics = Child.dataset["topics"].split(', ');
+                            Child.style.display = "none";
+                            if (topicname.length > 1 && topicname.includes(topics[1]))
+                                Child.style.display = "initial";
+                        });
+                    }
+                }
+                document.getElementById("TopicHighlight").style.backgroundColor = "#25a0da";
+                document.getElementById("TrackHighlight").style.backgroundColor = "White";
+            }
+        }
+        function TrackClear() {
+            $("#_Tracks > option:selected").attr("selected", false);
+            var ele = document.getElementsByName('ntrack');
+            for (var x = 0; x < ele.length; x++) {
+                if (ele[x].type == 'checkbox')
+                    ele[x].checked = false;
+            }
+            var trackname = $("#_Tracks").val();
+            var tds = document.getElementsByClassName('Session_Content');
+            var tdsTxt = document.getElementsByClassName('Session_ContentText');
+            if (trackname != "") {
+                for (var i = 0, j = tds.length; i < j; ++i) {
+                    tdsTxt[i].style.color = "navy";
+                }
+                document.getElementById("TrackHighlight").style.backgroundColor = "White";
+            }
+            $("#_Tracks").val('');
+            $("#_Tracks").multipleSelect('refresh');
+        }
+        function TopicClear() {
+            $("#_Topics > option:selected").attr("selected", false);
+            var ele = document.getElementsByName('ntopic');
+            for (var x = 0; x < ele.length; x++) {
+                if (ele[x].type == 'checkbox')
+                    ele[x].checked = false;
+            }
+            var topicname = $("#_Topics").val();
+            var tdsTxt = document.getElementsByClassName('Session_ContentText');
+            var tdTopics = document.getElementsByClassName('Session_Content_Topics');
+            if (topicname != "") {
+                for (var i = 0, j = tdTopics.length; i < j; ++i) {
+                    tdsTxt[i].style.color = "navy";
+                }
+                document.getElementById("TopicHighlight").style.backgroundColor = "White";
+
+            }
+            $('select option:selected').removeAttr("selected");
+            $("#_Topics").val('');
+            $("#_Topics").multipleSelect('refresh');
+        }
+        function LiveStreamUpdate() {
+            var isLiveStream = $('#_ShowLiveStream').is(":checked");
+            var bStreams = document.getElementsByClassName('Session_LiveStream');
+            $.each(bStreams, function (i, val) {
+                var isLive = (val.dataset["val"].toLowerCase() === 'true');
+                var blurid = "IDBlur_" + val.id.split("_")[1];
+                var id = "ID_" + val.id.split("_")[1];
+                document.getElementById(blurid).style.color = "navy";
+                document.getElementById(id).style.color = "navy";
+                if (isLiveStream && !isLive) {
+                    document.getElementById(blurid).style.color = "Gray";
+                    document.getElementById(id).style.color = "Gray";
+                }
+            });
+        }
+
+
+        $('input[type="checkbox"]').change(function () {
+            UpdateSelections();
+            var isShowSpeaker = $('#_ShowSpeaker').is(":checked");
+            var isShowRelated = $('#_ShowRelatedSession').is(":checked");
+            var isShowDescription = $('#_ShowDescription').is(":checked");
+            var isShowEDU = $('#_ShowEduLabel').is(":checked");
+            if (isShowEDU)
+                $("._imgLabel").show();
+            else
+                $("._imgLabel").hide();
+
+            if (isShowDescription)
+                $("._descriptionblock").show();
+            else
+                $("._descriptionblock").hide();
+
+            if (isShowRelated)
+                $("._relatedSessionblock").show();
+            else
+                $("._relatedSessionblock").hide();
+
+            if (isShowSpeaker)
+                $("._Speakerblock").show();
+            else
+                $("._Speakerblock").hide();
+        });
+        $('.showSelected').change(function (e) {
+            e.preventDefault();
+            var isShowSpeaker = $('#_ShowSpeaker').is(":checked");
+            var isShowRelated = $('#_ShowRelatedSession').is(":checked");
+            var isShowDescription = $('#_ShowDescription').is(":checked");
+            var isShowEDU = $('#_ShowEduLabel').is(":checked");
+            var isLiveStream = $('#_ShowLiveStream').is(":checked");
+            var FilterData = { bProgramSpeaker: isShowSpeaker, bProgramRelated: isShowRelated, bShowDesc: isShowDescription, bShowEdu: isShowEDU, bLiveStream: isLiveStream };
+            $('#dvProgramContent').load('_PartialProgram', FilterData, function () {
+                if ($('#_ShowRelatedSession').is(":checked")) { $("._relatedSessionblock").show(); } else { $("._relatedSessionblock").hide(); }
+                if ($("#_ShowDescription").is(':checked')) { $("._descriptionblock").show(); } else { $("._descriptionblock").hide(); }
+                if ($("#_ShowEduLabel").is(':checked')) { $("._imgLabel").show(); } else { $("._imgLabel").hide(); }
+                if ($('#_ShowSpeaker').is(":checked")) { $("._Speakerblock").show(); } else { $("._Speakerblock").hide(); }
+                LiveStreamUpdate();
+            });
+        });
+
+        $('#TrackHighlight').click(function () {
+            $('#TrackModal').modal('show')
+        });
+        $('#TopicHighlight').click(function () {
+            $('#TopicModal').modal('show');
+        });
+        $("#_SelectTrack").click(function () {
+            TopicClear();
+            TracksUpdated();
+            $("#_Topics").val('');
+            $("#_Topics").multipleSelect('refresh');
+            UpdateSelections();
+            $('#TrackModal').modal('hide');
+        });
+        $("#_SelectTopic").click(function () {
+            TrackClear();
+            TopicUpdate();
+            UpdateSelections();
+            $('#TopicModal').modal('hide');
+        });
+        $("#_ClearTrack").click(function () {
+            TrackClear();
+            LiveStreamUpdate();
+            UpdateSelections();
+            $('#TrackModal').modal('hide');
+        });
+        $("#_ClearTopic").click(function () {
+            TopicClear();
+            UpdateSelections();
+            LiveStreamUpdate();
+            $('#TopicModal').modal('hide');
+            $('.SCT_Values').hide();
+        });
+        $("#_Audience").change(function () {
+            AudienceChange();
+            UpdateSelections();
+        });
+        $('#btnDownloadProgram').click(function () {
+            var data = {
+                ckShowRelated: $("#_ShowRelatedSession").is(':checked'),
+                ckBlurb: $("#_ShowDescription").is(':checked'),
+                ckShowEdu: $("#_ShowEduLabel").is(':checked'),
+                ckShowSpeak: $("_ShowSpeaker").is(':checked')
+            };
+            var DocumentResult = CommonFunctions.AjaxCall('GET', '/Events/DownloadProgram', data, 'Error While Downloading program.');
+            if (DocumentResult != null) {
+                if (DocumentResult.msg === "OK")
+                    window.location.href = "/Events/DownloadProgramFile?FileName=" + DocumentResult.strFilename + "&strDisplayFileName=" + DocumentResult.strDisplayFileName;
+                else {
+                }
+            }
+        });
+        $('#OverViewDropDown').change(function () {
+            var Data = { DropDownValue: $('#OverViewDropDown').val() };
+            var result = CommonFunctions.AjaxCall('Post', '/MAGI/OverViewDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+            if (result.ActionType === "Redirect")
+                window.location.href = result.RedirectionUrl;
+        });
+        $('#OverViewDropDown').val($('#DropdownSelected').val());
+
+
+
+        if ($('#selAudience').val() !== "" && $('#selAudience').val() !== "all") {
+            $('#_Audience').val($('#selAudience').val());
+            AudienceChange();
+        }
+        if ($('#selTracks').val() !== "") {
+            $('#_Tracks').multipleSelect('setSelects', $('#selTracks').val().split(';'));
+            TracksUpdated();
+        }
+        if ($('#selTopics').val() !== "") {
+            $('#_Topics').multipleSelect('setSelects', $('#selTopics').val().split(';'));
+            TopicUpdate();
+        }
+        if ($('#_ShowLiveStream').is(":checked")) {
+            LiveStreamUpdate();
+        }
+        if ($("#_ShowRelatedSession").is(':checked')) { $("._relatedSessionblock").show(); } else { $("._relatedSessionblock").hide(); }
+        if ($("#_ShowDescription").is(':checked')) { $("._descriptionblock").show(); } else { $("._descriptionblock").hide(); }
+        if ($("#_ShowEduLabel").is(':checked')) { $("._imgLabel").show(); } else { $("._imgLabel").hide(); }
+        if ($("#_ShowSpeaker").is(':checked')) { $("._Speakerblock").show(); } else { $("._Speakerblock").hide(); }
+
+        var VideoMedia = videojs("VideoPlayer", { "techOrder": ["html5", "youtube"], "ytcontrols": false, "autoplay": true, "preload": "auto", "loop": true });
+
+        $(document).on('click', '.schPlayPromo', function () {
+            var ClickedElem = $(this)[0];
+            var dsElem = ClickedElem.dataset;
+            var Link = dsElem["url"];
+            if (Link !== null && Link !== "") {
+                var vimeoResult = Link.match(/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|album\/(?:\d+)\/video\/|video\/|)(\d+)(?:[a-zA-Z0-9_\-]+)?/i);
+                if (vimeoResult !== null) {
+                    $('#VimeoLinkURL').text(Link);
+                    $('#VimeoLinkURL').attr("href", Link);
+                    $('#modelRecordingURLVimeo').modal('show');
+                }
+                else {
+                    var youtubeResult = Link.match(/(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/);
+                    if (youtubeResult !== null)
+                        VideoMedia.src({ type: 'video/youtube', src: Link });
+                    else
+                        VideoMedia.src(Link);
+                    $('#modelVideoPlayer').modal('show');
+                }
+            }
+        });
+        $('#closeVideoPlayer').click(function () {
+            VideoMedia.pause();
+        });
+    });
+</script>

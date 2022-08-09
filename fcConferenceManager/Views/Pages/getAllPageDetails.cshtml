@@ -1,0 +1,649 @@
+﻿@model PagedList.IPagedList<fcConferenceManager.Models.page>
+@using PagedList.Mvc
+
+@{
+    ViewBag.Title = "Pages";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+
+<style>
+    .searchbar
+    {
+        background-color: lightblue;
+        margin-bottom: 5px;
+    }
+
+    .group
+    {
+        font-size: 10pt;
+    }
+
+    .group label
+    {
+        font-size: 8pt;
+    }
+
+
+
+
+    .lblTitle
+    {
+        padding-bottom: 12px;
+        /* padding-top: 8px;*/
+        display: inline-block;
+        color: Navy;
+        background-color: transparent;
+        padding-left: 2px;
+        font-weight: 400;
+    }
+</style>
+
+<link href="~/Css/PagedList.css" rel="stylesheet" />
+
+@using (Html.BeginForm("getAllPageDetails", "Pages", FormMethod.Post, new { page = 1 }))
+{
+    <div class="magiMySessionMainWrapper mt-3">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8 col-lg-9 flex-grow-1">
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="d-flex">
+                                <h2 class="ms-1">Pages</h2>
+                                &nbsp;&nbsp;
+                                <button type="button" style="border: hidden; height: 32px; border-radius: 100%; background-color:white " onclick="window.location.href='@Url.Action("ExcelExport", new { FilterName = Convert.ToString(ViewBag.FilterName), FilterURL = Convert.ToString(ViewBag.FilterURL), FilterStatus = Convert.ToString(ViewBag.FilterStatus), FilterEventType = Convert.ToString(ViewBag.FilterEventType), SortOrder = Request["SortOrder"] })'"><img src="~/images/Icons/excel.png" height="32" /></button>
+                                <button type="reset" onclick="window.location.href = '@Url.Action("getAllPageDetails", "Pages")'" style="border: hidden; height: 32px; border-radius: 100%; background-color: white"><img src="~/images/Icons/undo.png" height="32" /></button>
+                                <button type="submit" style="border: hidden; height: 32px; border-radius: 100%; background-color:white "><img src="~/images/Icons/redo.png" height="32" /></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="searchbar d-block d-md-flex p-1">
+                        <div class="group me-md-1 me-0">
+                            @{
+                                if (ViewBag.FilterName != null)
+                                {
+                                    string y = Convert.ToString(ViewBag.FilterName);
+                                    @Html.TextBox("FilterName", y, new { placeholder = "Page Title", @onchange = "MyTrimmer();", @id = "trim_input1" });
+                                }
+
+                                else
+                                {
+                                    @Html.TextBox("FilterName", "", new { placeholder = "Page Title", @onchange = "MyTrimmer();", @id = "trim_input2" });
+
+                                }
+
+                            }
+                        </div>
+                        <div class="group me-md-1 me-0">
+                            @{
+                                if (ViewBag.FilterURL != null)
+                                {
+                                    string x = Convert.ToString(ViewBag.FilterURL);
+                                    @Html.TextBox("FilterURL", x, new { placeholder = "Page URL" });
+
+                                }
+
+                                else
+                                {
+                                    @Html.TextBox("FilterURL", "", new { placeholder = "Page URL" });
+                                }
+
+                            }
+                        </div>
+                        <div class="group me-md-1 me-0">
+
+                            @Html.DropDownList("FilterStatus", new SelectList(ViewBag.getDropDownStatus, "Value", "Text"), new { style = "height:25px; width:125px;border-radius: 5px;" })
+
+
+                        </div>
+                        <div class="group">
+                            @Html.DropDownList("FilterEventType", new SelectList(ViewBag.getDropDownEventType, "Value", "Text"), new { style = "height:25px; width:150px;border-radius: 5px;" })
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<br />
+
+@using (Html.BeginForm("BatchUpdateStatus", "Pages", FormMethod.Post))
+{
+    <div>
+
+        <div style="float:left; margin-bottom:30px; padding-left:12px">
+            <input class="btn btn-default" type="button" value="Add New Page" onclick="location.href='@Url.Action("AddPageDetails", "Pages")'" />
+        </div>
+        <div style="text-align: right; padding-right: 12px" class="UpdateBtn">
+
+            @*<input type="button" value="Update Status/Section" class="btn btn-default" data-toggle="modal" id="btnUpdateStatus" onClick="$('#StatusModal').modal()" />*@
+            <a class="btn" style="color:black; text-underline-offset:unset;" href="#openModal">Update Status/Section</a>
+            <div id="openModal" class="modalDialog">
+                <div>
+                    <a href="#close" title="Close" class="close">X</a>
+                    <h2>Batch Update Status/Section</h2>
+                    <hr />
+                    <div class="modal-body">
+                        @Html.Label("Set Status")
+                        @Html.DropDownList("BatchStatus", new SelectList(ViewBag.getDropDownStatus, "Value", "Text"), new { @class = "form-control", style = "border - radius:50px" })
+                        <br />
+                        <br />
+                        @Html.Label("Set Section")
+                        @Html.DropDownList("BathStatus", new SelectList(ViewBag.getDropDownSection, "Value", "Text"), new { @class = "form-control", style = "border - radius:50px" })
+
+                        @*@Html.TextBox("BatchSection", "", new { @class = "form-control" })*@
+                        <br />
+                        <br />
+                        <button type="submit" class="btn btn-success">Update</button>
+                        <button type="button" class="btn btn-default" onclick="window.location.href='@Url.Action("getAllPageDetails")'">Close</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <!--<div id="StatusModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">-->
+        <!-- Modal content-->
+        <!--<div class="modal-content" style="height:400px">
+                    <div class="modal-header">
+
+                        <h4 class="modal-title">Batch Update Status/Section</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        @Html.Label("Set Status")
+                        @Html.DropDownList("BatchStatus", new SelectList(ViewBag.getDropDownStatus, "Value", "Text"), new { @class = "form-control" })
+                        <br />
+                        <br />
+                        @Html.Label("Set Section")
+                        @Html.TextBox("BatchSection", "", new { @class = "form-control" })
+                        <br />
+                        <br />
+                        <button type="submit" class="btn btn-success">Update</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                    </div>
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>-->
+
+
+
+    </div>
+
+    <table class="table magi-table MyTable" width=100%>
+        <tr>
+            <th width="20px">
+                <input type="checkbox" id="selecctall" style="margin:5px 0 0 5px" />
+            </th>
+            <th width="90px">
+                @Html.DisplayNameFor(model => model[0].Title)
+                @{
+                    if (ViewBag.FilterSortOrder == "Title")
+                    {
+
+
+                        <a href="/Pages/getAllPageDetails?SortOrder=TitleDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+                    }
+                    else
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=Title" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+                    }
+                }
+            </th>
+
+
+            <th width="120px">
+                @Html.DisplayNameFor(model => model[0].newTitle)
+                @{
+                    if (ViewBag.FilterSortOrder == "newTitle")
+                    {
+
+
+                        <a href="/Pages/getAllPageDetails?SortOrder=newTitleDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+                    }
+                    else
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=newTitle" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+                    }
+                }
+            </th>
+
+            <th width="80px">
+                @Html.DisplayNameFor(model => model[0].Section)
+                @{
+                    if (ViewBag.FilterSortOrder == "Section")
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=SectionDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+                    }
+                    else
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=Section" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+                    }
+                }
+
+            </th>
+            <th width="90px">
+                @Html.DisplayNameFor(model => model[0].EventType)
+                @{
+                    if (ViewBag.FilterSortOrder == "EventType")
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=EventTypeDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+                    }
+                    else
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=EventType" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+                    }
+                }
+
+            </th>
+            <th width="70px">
+                @Html.DisplayNameFor(model => model[0].Status)
+                @{
+                    if (ViewBag.FilterSortOrder == "Status")
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=StatusDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+                    }
+                    else
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=Status" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+                    }
+                }
+
+
+            </th>
+            <th width="90px">
+                @Html.DisplayNameFor(model => model[0].EventName)
+                @{
+                    if (ViewBag.FilterSortOrder == "EventName")
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=EventNameDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+                    }
+                    else
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=EventName" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+
+                    }
+                }
+
+            </th>
+            <th width="130px">
+                @Html.DisplayNameFor(model => model[0].URL)
+                @{
+                    if (ViewBag.FilterSortOrder == "URL")
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=URLDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+
+                    }
+                    else
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=URL" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+
+                    }
+                }
+
+
+            </th>
+
+            <th width="130px">
+                @Html.DisplayNameFor(model => model[0].newURL)
+                @{
+                    if (ViewBag.FilterSortOrder == "newURL")
+                    {
+
+
+                        <a href="/Pages/getAllPageDetails?SortOrder=newURLDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+                    }
+                    else
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=newURL" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+                    }
+                }
+            </th>
+
+            <th width="110px">
+                @Html.DisplayNameFor(model => model[0].AccessFrom)
+                @{
+                    if (ViewBag.FilterSortOrder == "AccessFrom")
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=AccessFromDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+
+                    }
+                    else
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=AccessFrom" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+
+                    }
+                }
+
+
+            </th>
+            <th width="100px">
+                @Html.DisplayNameFor(model => model[0].AccessTo)
+                @{
+                    if (ViewBag.FilterSortOrder == "AccessTo")
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=AccessToDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+
+                    }
+                    else
+
+
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=AccessTo" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+
+                    }
+                }
+
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model[0].Notes)
+                @{
+                    if (ViewBag.FilterSortOrder == "Notes")
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=NotesDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+
+                    }
+                    else
+                    {
+                        <a href="/Pages/getAllPageDetails?SortOrder=Notes" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+
+                    }
+                }
+
+
+            </th>
+            <th width="160px">
+
+                @Html.DisplayNameFor(model => model[0].LinkDocumentation)
+                @{
+                    if (ViewBag.FilterSortOrder == "LinkDocumentation")
+                    {
+
+
+                        <a href="/Pages/getAllPageDetails?SortOrder=LinkDocumentationDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+
+                    }
+                    else
+                    {
+
+                        <a href="/Pages/getAllPageDetails?SortOrder=LinkDocumentation" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+
+                    }
+                }
+
+            </th>
+
+            <th width="90px"></th>
+        </tr>
+        @{
+            if (Model.Count > 0)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+
+
+                        <td>
+                            <input class="checkbox" type="checkbox" name="check[]" value="@item.Id" style="margin:5px 0 0 3px" />
+                            @*@Html.CheckBoxFor(modelItem => item.Check, new { @id = item.Id, @name = "check", @value = item.Id })*@
+                        </td>
+                        <td style="word-break: break-all;">
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.newTitle)
+                        </td>
+                        <td style="word-break: break-all;">
+                            @Html.DisplayFor(modelItem => item.Section)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EventType)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </td>
+                        <td style="word-break: break-all;">
+                            @Html.DisplayFor(modelItem => item.EventName)
+                        </td>
+                        <td style="word-break: break-all;">
+                            <a href="@item.URL">@item.URL</a>
+                        </td>
+                        <td style="word-break: break-all;">
+                            <a href="@item.newURL">@item.newURL</a>
+                        </td>
+                        <td style="word-break: break-all;">
+                            @Html.DisplayFor(modelItem => item.AccessFrom)
+                        </td>
+                        <td style="word-break: break-all;">
+                            @Html.DisplayFor(modelItem => item.AccessTo)
+                        </td>
+                        <td style="word-break: break-all;">
+                            @Html.DisplayFor(modelItem => item.Notes)
+                        </td>
+                        <td style="word-break: break-all;">
+                            @Html.DisplayFor(modelItem => item.LinkDocumentation)
+                        </td>
+
+                        <td>
+                            @Html.ActionLink("Edit", "updatePageDetails", new { id = item.Id }) |
+                            @Html.ActionLink("Delete", "deletePage", new { id = item.Id }, new { onclick = "return confirm('Are you sure want to Delete?');" })
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="14" style="text-align:center">NO RECORD FOUND!!!!</td>
+
+                </tr>
+            }
+        }
+
+    </table>
+
+}
+
+<hr />
+<br />
+<div style="text-align:center">
+    &nbsp;&nbsp;&nbsp; <b>Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</b>
+
+    @using (Html.BeginForm("getAllPageDetails", "Pages"))
+    {
+        <div>
+            @Html.PagedListPager(Model, page => Url.Action("getAllpageDetails", "Pages", new { FilterName = ViewBag.FilterName, FilterURL = ViewBag.FilterURL, FilterStatus = ViewBag.FilterStatus, FilterEventType = ViewBag.FilterEventType, page, SortOrder = Request["SortOrder"] }))
+        </div>
+    }
+</div>
+<style>
+    .modalDialog
+    {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(0,0,0,0.8);
+        z-index: 99999;
+        opacity: 0;
+        -webkit-transition: opacity 400ms ease-in;
+        -moz-transition: opacity 400ms ease-in;
+        transition: opacity 400ms ease-in;
+        pointer-events: none;
+    }
+
+    .modalDialog:target
+    {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .modalDialog > div
+    {
+        width: 400px;
+        position: relative;
+        margin: 10% auto;
+        padding: 5px 20px 13px 20px;
+        border-radius: 5px;
+        background: -moz-linear-gradient(#fff, #fff);
+        background: -webkit-linear-gradient(#fff, #fff);
+        background: -o-linear-gradient(#fff, #fff);
+    }
+
+    .close
+    {
+        background: #606061;
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        text-align: center;
+        top: -10px;
+        width: 24px;
+        text-decoration: none;
+        font-weight: bold;
+        -webkit-border-radius: 12px;
+        -moz-border-radius: 12px;
+        border-radius: 12px;
+        -moz-box-shadow: 1px 1px 3px #000;
+        -webkit-box-shadow: 1px 1px 3px #000;
+        box-shadow: 1px 1px 3px #000;
+    }
+
+    .close:hover
+    {
+        background: #00d9ff;
+    }
+    /*.modal-content {
+
+        height: 500px;
+    }*/
+
+    table #th01
+    {
+        background-color: #f1f1f1;
+    }
+
+    tr:nth-child(2n+1)
+    {
+        background-color: #cbd6e4;
+        color: black;
+    }
+
+
+
+    th
+    {
+        color: black;
+        background-color: #a4a2a8;
+        padding: 2px;
+        height: 70px;
+    }
+
+    table, th, td
+    {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    td
+    {
+        padding: 2px;
+        color: black;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        $(".UpdateBtn").hide();
+        $(".checkbox").click(function () {
+            var flag = 0;
+            $('.checkbox').each(function () {
+                if ($(this).is(":checked")) {
+                    flag = flag + 1;
+                }
+            })
+            if (flag > 0) {
+                $(".UpdateBtn").show();
+            } else {
+                $(".UpdateBtn").hide();
+            }
+        });
+
+
+        $(document).ready(function () {
+            $('#selecctall').click(function (event) {
+                if ($(this).is(":checked")) {
+                    $(".UpdateBtn").show();
+                } else {
+                    $(".UpdateBtn").hide();
+                }
+                if (this.checked) {
+                    $('.checkbox').each(function () { //loop through each checkbox
+                        $(this).prop('checked', true); //check
+                    });
+                } else {
+                    $('.checkbox').each(function () { //loop through each checkbox
+                        $(this).prop('checked', false); //uncheck
+                    });
+                }
+            });
+        });
+
+        function MyTrimmer() {
+
+            document.getElementById("trim_input1").value = document.getElementById("trim_input").value.trim();
+            document.getElementById("trim_input2").value = document.getElementById("trim_input2").value.trim();
+        }
+
+
+
+
+        var _validFileExtensions = [".xlsx"];
+        function ValidateSingleInput(oInput) {
+            if (oInput.type == "file") {
+                var sFileName = oInput.value;
+                if (sFileName.length > 0) {
+                    var blnValid = false;
+                    for (var j = 0; j < _validFileExtensions.length; j++) {
+                        var sCurExtension = _validFileExtensions[j];
+                        if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                            blnValid = true;
+                            break;
+                        }
+                    }
+
+
+                    if (!blnValid) {
+                        alert("Sorry, Invalid File Format, allowed extensions are: " + _validFileExtensions.join(", "));
+                        oInput.value = "";
+                        return false;
+                    }
+                }
+            }
+
+
+
+            return true;
+        }
+        function RedoClick() {
+
+            window.location.href = "/Pages/getAllPageDetails";
+        }
+    </script>
+}

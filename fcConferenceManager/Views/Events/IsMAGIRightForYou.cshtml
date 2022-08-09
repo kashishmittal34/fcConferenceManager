@@ -1,0 +1,104 @@
+﻿
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+
+    /* #mainbody > table > tbody > tr
+             {
+                display: flex;
+                flex-direction: column;
+             }*/
+    .mainbody
+    {
+        border: solid;
+        border-radius: 12px;
+        padding-left: 2px;
+        border-width: 1px;
+        border-color: lightgray;
+    }
+
+    .divbody
+    {
+        padding-left: 10px;
+    }
+</style>
+
+<div class="magiMySessionMainWrapper mt-3">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+            <div class="col-md-8 col-lg-9 flex-grow-1 ">
+                <div class="col-md-12 mb-3 p-2 mainbody">
+                    <div class="row pt-2">
+                        <div class="col-md-8">
+                            <h2 id="lblTitle">@ViewBag.PageTitle</h2>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="justify-content-end d-flex flex-wrap me-2 mt-1">
+                                <span class="flex-grow-1 flex-md-grow-0 mb-1 me-1">@Html.DropDownList("OverViewDropDown", null, new { @class = "bg-light ", id = "OverViewDropDown" })</span>
+                                <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 ">Return</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 d-flex align-items-start">
+                        <img id="Image56" src="~/images/icons/MAGI_guarantee_100.jpg" />
+                        <div style="padding-top: 24px; padding-left: 5px;">
+                            <label><b>Money-Back Satisfaction Guarantee</b>. MAGI is the only clinical research conference that offers a money-back guarantee</label>
+                            <a href="" id="btnTerms">(terms and conditions)</a><br />
+                            <label>Find out for yourself why 99%+ of participants are satisfied with MAGI conferences.</label>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-12">
+                        @Html.Raw(@ViewBag.FormText)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="PopupText" tabindex="-1" aria-labelledby="printInfo" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl" style="width:800px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="d-flex">
+                            <img src="~/Images/miscellaneous/terms.png" style="height:40px;" />
+                            <h3 class="ml-0 pl-0">Registration Terms and Conditions</h3>
+                        </div>
+                        <div>
+                            <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                        </div>
+                    </div>
+                    <div class="modal-body" id="dvInfoBody">
+                        <div style="font-size:9pt;">@Html.Raw(@ViewBag.PopUpText)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<input type="hidden" value="@ViewBag.OverViewDropDownSelected" id="DropdownSelected" />
+<script>
+    $(document).ready(function () {
+        document.getElementById("OverViewDropDown").selectedIndex = -1;
+
+        $('#OverViewDropDown').change(function () {
+            var Data = { DropDownValue: $('#OverViewDropDown').val() };
+            var result = CommonFunctions.AjaxCall('Post', '/MAGI/OverViewDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+            if (result.ActionType === "Redirect")
+                window.location.href = result.RedirectionUrl;
+        });
+
+        $("#btnTerms").click(function (e) {
+            e.preventDefault();
+            $('#PopupText').modal('show');
+        });
+        $('#OverViewDropDown').val($('#DropdownSelected').val());
+    });
+</script>

@@ -1,0 +1,790 @@
+﻿@model Elimar.Models.TaskListRequest
+
+@{
+    ViewBag.Title = "TaskList";
+}
+
+@*<h2>TaskList</h2>*@
+@{
+
+
+
+
+    List<SelectListItem> PortoloRepeatTask = new List<SelectListItem>();
+    if (ViewBag.PortoloRepeatTask != null)
+    {
+        PortoloRepeatTask = ((System.Collections.Generic.List<SelectListItem>
+)ViewBag.PortoloRepeatTask);
+    }
+
+    List<SelectListItem> RepeatTask = new List<SelectListItem>();
+    if (ViewBag.RepeatTask != null)
+    {
+        RepeatTask = ((System.Collections.Generic.List<SelectListItem>
+)ViewBag.RepeatTask);
+    }
+
+    List<SelectListItem> TaskStatus = new List<SelectListItem>();
+    if (ViewBag.TaskStatus != null)
+    {
+        TaskStatus = ((System.Collections.Generic.List<SelectListItem>
+    )ViewBag.TaskStatus);
+    }
+
+    List<SelectListItem> TaskList = new List<SelectListItem>();
+    if (ViewBag.TaskList != null)
+    {
+        TaskList = ((System.Collections.Generic.List<SelectListItem>
+    )ViewBag.TaskList);
+    }
+}
+@{
+    ViewBag.Title = "Portolo";
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+}
+
+
+
+<html>
+
+@*<script type="text/javascript">
+
+        $.noConflict(false);
+        $(function () {
+
+            $("#datepicker").datepicker({
+                dateFormat: "mm/dd/y"
+            });
+        });
+
+        $(function () {
+
+            $("#datepicker1").datepicker({
+                dateFormat: "mm/dd/y"
+            });
+        });
+
+
+    </script>*@
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <!--<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../Css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Css/Portolostyle.css">
+    <link rel="stylesheet" href="../Css/responsive.css">-->
+    @*<title>Portolo</title>*@
+    <!--<meta name="description"
+          content="A web design and development company with 10+ years of experience in building results-driven web solutions for your custom business needs." />-->
+
+    <script type="text/javascript">
+	   
+
+							   
+
+        $(document).ready(function () {
+            $("#ddlCategory").val($("#category").val());
+            $("#ddTaskStatus").val($("#status").val());
+
+								   
+            $("#reviewed").val($("#hdreviewed").val());
+            $("#ddlRepeatTask").val($("#intRepeat").val());
+            $("#ddlPortoloRepeatTask").val($("#intPortoloRepeat").val());
+
+            $("#ddlPortoloRepeatTask").val($("#intPortoloRepeat").val());
+
+												   
+													   
+												  
+
+            var plandates = $("#intPortoloRepeat").val();
+            if (plandates != "3") {
+                $("#datepicker").prop('disabled', true);
+                $("#datepicker1").prop('disabled', true);
+                $("#datepicker").val(null);
+                $("#datepicker1").val(null);
+            }
+            else if (plandates == "3") {
+                $("#datepicker").prop('disabled', false);
+                $("#datepicker1").prop('disabled', false);
+            }
+        });
+
+        function getval(e) {
+            if (e.value != "3") {
+                $("#datepicker").prop('disabled', true);
+                $("#datepicker1").prop('disabled', true);
+                $("#datepicker").val(null);
+                $("#datepicker1").val(null);
+            }
+            else if (e.value == "3") {
+                $("#datepicker").prop('disabled', false);
+                $("#datepicker1").prop('disabled', false);
+            }
+        }
+	   
+
+        function removeSpaces(string) {
+            return string.split(' ').join('');
+													
+													 
+													  
+        }
+    </script>
+</head>
+
+	
+<body>
+    <style>
+        .form-control:disabled, .form-control[readonly] {
+            background-color: #e9ecef0f;
+            opacity: 1;
+
+			 
+        }
+    </style>
+    <section class="task-list-form">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    @*@using (Html.BeginForm("Delete", "Portolo", FormMethod.Post))
+                        {*@
+                    <form action="" method="post">
+
+
+                        @*<form>*@
+                        <div class="control-icons">
+                            <h2>Task List</h2>
+                            <button type="submit" value="Reset" name="action" style="border-color: white; border: none;background-color:white" title="Reset">
+                                <a href=""><i class="fa-solid fa-arrows-rotate"></i></a>
+                            </button>
+		
+										   
+					
+		   
+
+                            <button type="submit" value="Search" name="action" style="border-color: white; border: none;background-color:white" title="Search">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+
+                            @*<a href="@ViewBag.Baseurl/Task/TaskList"><i class="fa-solid fa-magnifying-glass"></i></a>*@
+                            <a href="@ViewBag.Baseurl/portolo/DownloadExcel"><i class="fa-solid fa-download" title="Download Excel"></i></a>
+				 
+                            <div class="controls">
+                                @*<button>@Html.ActionLink("CreateTask", "CreateTask", "Portolo", null, new { style = "color:orange;", @class = "brdr-1 btn-sm" })</button>*@
+                                @*<button class="brdr-1 btn-sm">
+                                    <a href="@Url.Action("CreateTask", "Portolo")" target="_blank">Create New</a>
+                                    </button>*@
+                                @*<button class="brdr-1 btn-sm">@Html.ActionLink("Create New", "CreateTask", "Portolo", new { style = "color:orange;" })</button>*@
+                                <a class="brdr-1 btn-sm" href="@ViewBag.Baseurl/Task/AddTask"> Create New</a>
+
+                                @*<button href="@ViewBag.Baseurl/Portolo/CopyTask" class="brdr-1 btn-sm">Copy</button>*@
+                                @*<a class="brdr-1 btn-sm" value="Copy" name="Copy" href="@ViewBag.Baseurl/Portolo/CopyTask"> Copy Task</a>*@
+                                @*<button type="submit" value="Search" name="action" class="brdr-1 btn-sm">Search</button>*@
+                                <button type="submit" value="CopyTask" name="action" class="brdr-1 btn-sm">Copy</button>
+
+                                <button type="submit" value="Delete" name="action" class="brdr-1 btn-sm" onclick="return confirm('Are you sure?')"><i class="fa fa-trash-o"></i> Delete</button>
+
+
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="exampleFormControlSelect1">Plan Dates:</label>
+                                    @*<select class="form-control form-control-sm" id="plandates" onchange="getval(this);" name="planType">
+            <option value="0" @(ViewBag.Request.planType == 0 ? "selected" : "0")>All</option>
+            <option value="1" @(ViewBag.Request.planType == 1 ? "selected" : "0")>Past Week</option>
+            <option value="2" @(ViewBag.Request.planType == 2 ? "selected" : "0")>Next Week</option>
+            <option value="3" @(ViewBag.Request.planType == 3 ? "selected" : "0")>Other</option>
+
+        </select>*@
+
+                                    @Html.DropDownList("intPortoloRepeat", PortoloRepeatTask, new { @class = "form-control form-control-sm", id = "ddlPortoloRepeatTask", @ViewBag.Request.intPortoloRepeat , @onchange = "getval(this);" })
+
+                                    <input type="hidden" value="@ViewBag.Request.intPortoloRepeat" id="intPortoloRepeat" />
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="exampleFormControlSelect1"></label>
+                                    @*<input type="date" class="form-control form-control-sm">*@
+                                    <label for="exampleFormControlSelect1">From:</label>
+                                    <input type="text" class="form-control form-control-sm" name="duedate" id="datepicker" value="String.Format(" {0:d}", @ViewBag.Request.duedate !=null?ViewBag.Request.duedate:DateTime.Now)"
+                                           placeholder="mm/dd/yy" readonly="readonly" />
+                                    <input type="text" style="display: none" value="@ViewBag.Request.duedate" name="duedate" id="duedatehidden" />
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="exampleFormControlSelect1">To:</label>
+                                    <input type="text" class="form-control form-control-sm" id="datepicker1" readonly="readonly" value="@ViewBag.Request.forecast" name="forecast" placeholder="mm/dd/yy" />
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="exampleFormControlSelect1">Number:</label>
+                                    @*<input type="text" class="form-control form-control-sm">*@
+                                    <input tpye="text" class="form-control form-control-sm" value="@ViewBag.Request.number" id="number" onblur="this.value=removeSpaces(this.value);" name="number">
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="exampleFormControlSelect1">Title:</label>
+                                    @*<input type="text" class="form-control form-control-sm">*@
+                                    <input tpye="text" class="form-control form-control-sm" value="@ViewBag.Request.title" id="title" onblur="this.value=(this.value);" name="title">
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="exampleFormControlSelect1">Status:</label>
+
+                                    @Html.DropDownList("status", TaskStatus, new { @class = "form-control form-control-sm", id = "ddTaskStatus", @ViewBag.Request.status })
+                                    <input type="hidden" value="@ViewBag.Request.status" id="status" />
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="exampleFormControlSelect1">Category:</label>
+                                    @Html.DropDownList("intcategory", TaskList, new { @class = "form-control form-control-sm", id = "ddlCategory", @ViewBag.Request.intcategory }
+
+                                     )
+                                    <input type="hidden" value="@ViewBag.Request.intcategory" id="category" />
+
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="exampleFormControlSelect1">Active:</label>
+                                    <select class="form-control form-control-sm" id="active" name="active">
+                                        <option value="" @(ViewBag.Request.active == "" ? "selected" : "")>All</option>
+                                        <option value="true" @(ViewBag.Request.active == "true" ? "selected" : "")>Active</option>
+                                        <option value="false" @(ViewBag.Request.active == "false" ? "selected" : "")>Inactive</option>
+                                    </select>
+
+
+                                    @*<select class="form-control form-control-sm" id="exampleFormControlSelect1">
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>*@
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="exampleFormControlSelect1">Reviewed:</label>
+                                    <select class="form-control form-control-sm" id="reviewed" name="reviewed">
+                                        <option value="" @(ViewBag.Request.reviewed == "" ? "selected" : "")>All</option>
+                                        <option value="true" @(ViewBag.Request.reviewed == "true" ? "selected" : "")>Yes</option>
+                                        <option value="false" @(ViewBag.Request.reviewed == "false" ? "selected" : "")>No</option>
+
+                                    </select>
+                                    <input type="hidden" value="@ViewBag.Request.reviewed" id="hdreviewed" />
+                                </div>
+                            </div>
+                            @*<div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlSelect1">Task List Range:</label>
+                                        <select class="form-control form-control-sm" id="exampleFormControlSelect1">
+                                            <option value="0" @(ViewBag.Request.tasklistrange == "0" ? "selected" : "")>All</option>
+                                            <option value="1" @(ViewBag.Request.tasklistrange == "1" ? "selected" : "")> Back 1 year</option>
+                                            <option value="2" @(ViewBag.Request.tasklistrange == "2" ? "selected" : "")> Back 2 year</option>
+                                            <option value="3" @(ViewBag.Request.tasklistrange == "3" ? "selected" : "")> Back 3 year</option>
+                                        </select>
+                                    </div>
+                                </div>*@
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="exampleFormControlSelect1">Repeat:</label>
+                                    @Html.DropDownList("intRepeat", RepeatTask, new { @class = "form-control form-control-sm", id = "ddlRepeatTask", @ViewBag.Request.intRepeat })
+
+                                    <input type="hidden" value="@ViewBag.Request.intRepeat" id="intRepeat" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="emp-db mt-3">
+
+                            <div class="card">
+                                <div class="emp-data">
+                                    <table id="myTableshorting" class="table table-bordered mb-0">
+                                        <thead>
+                                            <tr class="table-hd">
+                                                <th onclick="sortTable(0)">
+                                                    <input type="checkbox" name="select-all" onchange="Checkboxchange(this);" id="select-all" />
+                                                </th>
+                                                <th onclick="sortTable(1)">Number</th>
+                                                <th onclick="sortTable(2)">Name</th>
+                                                <th onclick="sortTable(3)">Title</th>
+                                                <th onclick="sortTable(4)">Description</th>
+                                                <th onclick="sortTable(5)">Plan</th>
+                                                <th onclick="sortTable(6)">Due Date</th>
+                                                <th onclick="sortTable(7)">Forecast</th>
+                                                <th onclick="sortTable(8)">Category</th>
+                                                <th onclick="sortTable(9)">Status</th>
+                                                <th onclick="sortTable(10)">Most Recent Note</th>
+                                            </tr>
+                                        </thead>
+
+
+                                        @*<button type="submit" value="Delete" class="btn btn-sm btn-danger rounded-0" onclick="return confirm('Are you sure?')"><i class="fa fa-trash-o"></i> Delete</button>
+                                            <input type="submit" value="Del" />*@
+                                        @if (ViewBag.BindList != null)
+                                        {
+                                            <tbody id="myTable">
+                                                @foreach (var item in ViewBag.BindList)
+                                                {
+									 
+                                                    <tr>
+		   
+
+                                                        <td>
+                                                            <input type="checkbox" name="ID" value="@item.pKey" class="custom-checkbox chkCheckBoxId" />
+                                                            @*<input type="checkbox" value="@item.pKey" class="ItemsCheckboxForAllTasks" id="check" />
+                                                                <input name="ID" value="@item.pKey" hidden />*@
+                                                        </td>
+                                                        <td valign="top">
+
+                                                            @*<a style="color:black" href="@Url.Action("EditTask", new { id = item.pKey }).Replace("Portolo","Task")"> @item.number</a>*@
+																					 
+																
+                                                            <a style="color:black" href="@Url.Action("EditTask" , new {id = @item.pKey }).Replace("Portolo","Task")">@item.number</a>
+
+                                                        </td>
+                                                        <td>
+                                                            @item.name
+                                                        </td>
+                                                        <td>
+                                                            @item.title
+                                                        </td>
+                                                        <td>
+                                                            @item.description
+                                                        </td>
+                                                        <td>
+                                                            @if (item.plan != null)
+                                                            {
+                                                                @item.plan.ToString("MM\\/dd\\/yy");
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            @if (item.duedate != null)
+                                                            {
+                                                                @item.duedate.ToString("MM\\/dd\\/yy");
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            @if (item.forecast != null)
+                                                            {
+                                                                @item.forecast.ToString("MM\\/dd\\/yy");
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            @item.TaskCategoryID
+                                                        </td>
+                                                        <td>
+                                                            @item.TaskStatusID
+                                                        </td>
+                                                        <td>
+                                                            @item.mostrecentnote
+                                                        </td>
+ 
+                                                    </tr>
+
+                                                }
+                                            </tbody>
+                                        }
+
+										 
+                                    </table>
+
+                                </div>
+                                <div @*class="col-md-12 text-center"*@>
+                                    <ul class="pagination pagination-lg pager" id="myPager"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    @*//  }*@
+						  
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <p>	© 2022 by Elimar Systems. All Rights Reserved <a href="#" class="ml-5">Website Terms of Use</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    @if (TempData["Message"] != null)
+    {
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                alert("@TempData["Message"]");
+            });
+        </script>
+    }
+		
+    <script>
+        $(document).ready(function () {
+            // Toggle menu on click
+
+
+            $("#menu-toggler").click(function () {
+                toggleBodyClass("menu-active");
+            });
+
+										 
+            function toggleBodyClass(className) {
+                document.body.classList.toggle(className);
+            }
+
+
+        });
+        var primarykey = [];
+
+        function Checkboxchange(e) {
+            $("#select-all").click(function (event) {
+                if (this.checked) {
+                    primarykey.length = 0;
+                    // Iterate each checkbox
+                    $(':checkbox').each(function () {
+                        this.checked = true;
+                        if (this.value != "on") {
+
+                            primarykey.push(this.value);
+                        }
+                    });
+                } else {
+                    $(':checkbox').each(function () {
+                        this.checked = false;
+                    });
+                }
+            });
+					 
+        }
+
+
+        var checkids = "";
+			
+    </script>
+    <link rel="stylesheet" href="../Scripts/jquery-ui.css" />
+    <script src="~/Scripts/jquery-2.1.1.min.js"></script>
+    <script src="../Scripts/jquery-ui.js"></script>
+
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>*@
+    @*<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">*@
+
+    <style>
+        .pager {
+            padding-left: 0;
+            margin: 20px 0;
+            text-align: center;
+            list-style: none;
+        }
+
+        .pagination {
+            display: inline-block;
+            padding-left: 0;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .pagination {
+            display: flex;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        ol, ul {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        dl, ol, ul {
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        ol, ul {
+            padding-left: 2rem;
+        }
+
+        * {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .pager li > a, .pager li > span {
+            display: inline-block;
+            padding: 5px 14px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+        }
+
+        .pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
+            z-index: 3;
+            color: #fff;
+            cursor: default;
+            background-color: #337ab7;
+            border-color: #337ab7;
+        }
+    </style>
+
+
+    <script>
+        $.fn.pageMe = function (opts) {
+
+            var $this = this,
+                defaults = {
+                    perPage: 50,
+                    showPrevNext: false,
+                    hidePageNumbers: false
+                },
+                settings = $.extend(defaults, opts);
+
+            var listElement = $this;
+            var perPage = settings.perPage;
+            var children = listElement.children();
+            var pager = $('.pager');
+
+            if (typeof settings.childSelector != "undefined") {
+                children = listElement.find(settings.childSelector);
+            }
+
+            if (typeof settings.pagerSelector != "undefined") {
+                pager = $(settings.pagerSelector);
+            }
+
+            var numItems = children.size();
+            var numPages = Math.ceil(numItems / perPage);
+
+            pager.data("curr", 0);
+
+            if (settings.showPrevNext) {
+                $('<li><a href="#" class="prev_link">«</a></li>').appendTo(pager);
+            }
+
+            var curr = 0;
+            // Added class and id in li start
+            while (numPages > curr && (settings.hidePageNumbers == false)) {
+                $('<li id="pg' + (curr + 1) + '" class="pg"><a href="#" class="page_link">' + (curr + 1) + '</a></li>').appendTo(pager);
+                curr++;
+            }
+            // Added class and id in li end
+
+            if (settings.showPrevNext) {
+                $('<li><a href="#" class="next_link">»</a></li>').appendTo(pager);
+            }
+
+            pager.find('.page_link:first').addClass('active');
+            pager.find('.prev_link').hide();
+            if (numPages <= 1) {
+                pager.find('.next_link').hide();
+            }
+            pager.children().eq(1).addClass("active");
+
+            children.hide();
+            children.slice(0, perPage).show();
+            if (numPages > 3) {
+                $('.pg').hide();
+                $('#pg1,#pg2,#pg3').show();
+                $("#pg3").after($("<li class='ell'>").html("<span>...</span>"));
+            }
+
+            pager.find('li .page_link').click(function () {
+                var clickedPage = $(this).html().valueOf() - 1;
+                goTo(clickedPage, perPage);
+                return false;
+            });
+            pager.find('li .prev_link').click(function () {
+                previous();
+                return false;
+            });
+            pager.find('li .next_link').click(function () {
+                next();
+                return false;
+            });
+
+            function previous() {
+                var goToPage = parseInt(pager.data("curr")) - 1;
+                goTo(goToPage);
+            }
+					
+            function next() {
+                goToPage = parseInt(pager.data("curr")) + 1;
+                goTo(goToPage);
+					   
+            }
+
+            function goTo(page) {
+                var startAt = page * perPage,
+                    endOn = startAt + perPage;
+
+                // Added few lines from here start
+
+                $('.pg').hide();
+                $(".ell").remove();
+                var prevpg = $("#pg" + page).show();
+                var currpg = $("#pg" + (page + 1)).show();
+                var nextpg = $("#pg" + (page + 2)).show();
+                if (prevpg.length == 0) nextpg = $("#pg" + (page + 3)).show();
+                if (prevpg.length == 1 && nextpg.length == 0) {
+                    prevpg = $("#pg" + (page - 1)).show();
+                }
+                $("#pg1").show()
+                if (curr > 3) {
+                    if (page > 1) prevpg.before($("<li class='ell'>").html("<span>...</span>"));
+                    if (page < curr - 2) nextpg.after($("<li class='ell'>").html("<span>...</span>"));
+                }
+
+                if (page <= numPages - 3) {
+                    $("#pg" + numPages.toString()).show();
+                }
+                currpg.addClass("active").siblings().removeClass("active");
+                // Added few lines till here end
+
+                children.css('display', 'none').slice(startAt, endOn).show();
+
+                if (page >= 1) {
+                    pager.find('.prev_link').show();
+                } else {
+                    pager.find('.prev_link').hide();
+                }
+
+                if (page < (numPages - 1)) {
+                    pager.find('.next_link').show();
+                } else {
+                    pager.find('.next_link').hide();
+                }
+
+                pager.data("curr", page);
+                /*pager.children().removeClass("active");
+                pager.children().eq(page + 1).addClass("active");*/
+
+            }
+        };
+
+        $(document).ready(function () {
+						
+            $('#myTable').pageMe({
+
+                pagerSelector: '#myPager',
+                showPrevNext: true,
+                hidePageNumbers: false,
+                perPage: 50
+            });
+
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#datepicker").datepicker({ format: "MM/dd/y" });
+            $("#datepicker1").datepicker({ format: "MM/dd/y" });
+
+            $(function () {
+
+                $("#datepicker").datepicker({
+                    dateFormat: "mm/dd/y"
+					   
+                });
+            });
+
+            $(function () {
+
+                $("#datepicker1").datepicker({
+                    dateFormat: "mm/dd/y"
+                });
+            });
+        });
+
+        function sortTable(n) {
+            perPage: 50;
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("myTableshorting");
+            switching = true;
+            //Set the sorting direction to ascending:
+            dir = "asc";
+            /*Make a loop that will continue until
+            no switching has been done:*/
+            while (switching) {
+                //start by saying: no switching is done:
+                switching = false;
+                rows = table.rows;
+                /*Loop through all table rows (except the
+                first, which contains table headers):*/
+                for (i = 1; i < (rows.length - 1); i++) {
+                    //start by saying there should be no switching:
+                    shouldSwitch = false;
+                    /*Get the two elements you want to compare,
+                    one from current row and one from the next:*/
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    /*check if the two rows should switch place,
+                    based on the direction, asc or desc:*/
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            //if so, mark as a switch and break the loop:
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            //if so, mark as a switch and break the loop:
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    /*If a switch has been marked, make the switch
+                    and mark that a switch has been done:*/
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    //Each time a switch is done, increase this count by 1:
+                    switchcount++;
+                } else {
+                    /*If no switching has been done AND the direction is "asc",
+                    set the direction to "desc" and run the while loop again.*/
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+
+            }
+
+            var trs = $("#myTable tr");
+            trs.hide();
+            trs.slice(0, 50).show();
+        }
+    </script>
+
+</body> 
+
+</html>

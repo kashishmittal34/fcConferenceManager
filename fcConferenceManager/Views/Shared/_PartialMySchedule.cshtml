@@ -1,0 +1,554 @@
+﻿@using System.Data
+@model  DataTable
+@{
+    string LastDate = null;
+}
+
+@if (ViewBag.ListType == "Calendar")
+{
+    @* Calendar *@
+    <link href="~/Css/jquery-calendar.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="~/Scripts/moment-with-locales.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.touchSwipe.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery-calendar.min.js"></script>
+
+    <style>
+        .close
+        {
+            background: none;
+            border: none;
+            color: black;
+        }
+    </style>
+}
+
+
+@if (ViewBag.ListType == "List")
+{
+
+    <div class="col-lg-12" id="ScheduleListContent">
+        @if (Model != null)
+        {
+            int dtx = -1;
+            for (int i = 0; i < Model.Rows.Count; i++)
+            {
+                string LastOpenDate = "";
+                @*if ((Model.Rows.Count - 1) != i)
+                    {
+                        if (dtx == -1 && Model.Rows[i]["ckOpenCheck"].ToString() == "1")
+                        {
+                            DateTime st = Convert.ToDateTime(Model.Rows[i]["StartTime"].ToString()), etEventDate = Convert.ToDateTime(Model.Rows[i]["EvtStartDate"]), openDate = Convert.ToDateTime(Model.Rows[i]["EventDayEnd"]);
+
+                            TimeSpan diff = etEventDate - st; TimeSpan diffOpen = etEventDate - openDate;
+                            TimeSpan Intervals = openDate - st;
+                            bool Update = (diff.Days == diffOpen.Days && System.Math.Abs(Intervals.TotalMinutes) > 20);
+                            DateTime TimeEnd = Convert.ToDateTime(Model.Rows[i]["TimeEnd"]), TimeStartNext = Convert.ToDateTime(Model.Rows[i + 1]["TimeStart"]);
+                            if (Update && Model.Rows[i]["EndTime"].ToString() != LastOpenDate)
+                            {
+                                dtx = 0;
+                                LastOpenDate = Model.Rows[i]["EndTime"].ToString();
+                                <tr class="openRows">
+                                    <td style="width: 160px;min-width:160px;">
+                                        @Model.Rows[i]["EventDayEnd"]-@Model.Rows[i + 1]["TimeStart"].ToString()
+                                    </td>
+                                    <td style="width: 145px;min-width:145px;">
+                                    </td>
+                                    <td style="width: 50px;min-width: 50px;">
+                                        <span>
+                                            (open)
+                                        </span>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            }
+                        }
+                    }*@
+
+                if (Model.Rows[i]["DayNum"].ToString() != LastDate)
+                {
+                    <div class="eventDate">
+                        <b class="blueColor">
+                            Day @Model.Rows[i]["DayNum"]: @string.Format("{0:dddd, MMMM d, yyyy}", Model.Rows[i]["EndTime"])
+                        </b>
+                    </div>
+                    @Html.Raw("<div class='table-responsive magiTableResponsive magiMysheduleEventList'><table class='table align-top w-auto mb-2'><tbody>")
+                    dtx = -1;
+                }
+                LastDate = Model.Rows[i]["DayNum"].ToString();
+
+                if ((Model.Rows.Count - 1) != i)
+                {
+
+                    if (Model.Rows[i]["DayNum"].ToString() == LastDate && Model.Rows[i + 1]["DayNum"].ToString() == LastDate)
+                    {
+
+                        if (Model.Rows[i]["EndTime"].ToString() != LastOpenDate && dtx == -1)
+                        {
+                            DateTime st = Convert.ToDateTime(Model.Rows[i]["StartTime"].ToString()),
+                                    etEventDate = Convert.ToDateTime(Model.Rows[i]["EvtStartDate"]), openDate = Convert.ToDateTime(Model.Rows[i]["EventDayEnd"]);
+
+                            TimeSpan diff = etEventDate - st; TimeSpan diffOpen = etEventDate - openDate;
+                            TimeSpan Intervals = openDate - st;
+                            bool Update = (diff.Days == diffOpen.Days && System.Math.Abs(Intervals.TotalMinutes) > 20);
+
+                            DateTime TimeEnd = Convert.ToDateTime(Model.Rows[i]["TimeEnd"]), TimeStartNext = Convert.ToDateTime(Model.Rows[i + 1]["TimeStart"]);
+
+                            if (Update && TimeEnd < TimeStartNext && (!(TimeEnd < TimeStartNext && st != TimeStartNext)))
+                            {
+                                LastOpenDate = Model.Rows[i]["EndTime"].ToString();
+                                dtx = 0;
+                                <tr class="openRows">
+                                    <td style="width: 160px;min-width:160px;">
+                                        @Model.Rows[i]["TimeEnd"]-@Model.Rows[i + 1]["TimeStart"].ToString()
+                                    </td>
+                                    <td style="width: 145px;min-width:145px;">
+                                    </td>
+                                    <td style="width: 50px;min-width: 50px;">
+                                        <span>
+                                            (open)
+                                        </span>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            }
+                        }
+                    }
+                }
+
+                if (Model.Rows[i]["DayNum"].ToString() == LastDate)
+                {
+                    <tr>
+                        <td class="@((Model.Rows[i]["bSpeaker"].ToString() == "1") ? "fw-bold" : "")" style="width: 160px;min-width:160px;">
+                            @Model.Rows[i]["TimeSlot"]
+                        </td>
+                        <td style="width: 145px;min-width:145px;" class="shceduleIconsVisible">
+                            <div class="d-flex align-items-center flex-wrap pt-0 sessioniconwrap">
+                                @{
+                                    DateTime Current = Convert.ToDateTime(ViewBag.CurrentTime), EndTime = Convert.ToDateTime(Model.Rows[i]["EndTime"].ToString()), Starttime = Convert.ToDateTime(Model.Rows[i]["StartTime"].ToString());
+                                    TimeSpan timeSpanMin = Starttime - Current, timeSpanUtcMin = Starttime - DateTime.UtcNow.AddHours(-4);
+                                    bool bFeedback = false;
+                                    bFeedback= (ViewBag.IsStaff || ViewBag.bSurrogateStaff || ((Convert.ToInt32(Model.Rows[i]["FeedbackAvailable"].ToString()) > 0 || Model.Rows[i]["bSpeaker"].ToString() == "1"  || Model.Rows[i]["IsZoomVerification"].ToString() == "1") && Convert.ToDateTime(ViewBag.CurrentTime) >= Convert.ToDateTime(Model.Rows[i]["EndTime"].ToString()) && Model.Rows[i]["ShowFeedback"].ToString() == "1")) && Convert.ToBoolean(Model.Rows[i]["CollectFeedback"]);
+
+                                    bool bWebinar = (ViewBag.IsStaff || (Model.Rows[i]["bSpeaker"].ToString() == "1" && ((timeSpanMin.TotalMinutes <= Convert.ToInt32(ViewData["LinkShowSpeakerBefore"]) || timeSpanUtcMin.TotalMinutes <= Convert.ToInt32(ViewData["LinkShowSpeakerBefore"])) && Current <= EndTime.AddMinutes(Convert.ToInt32(ViewData["intWebinarLinkShowAfter"])))) || (timeSpanMin.TotalMinutes <= Convert.ToInt32(ViewData["LinkShowBefore"]) || timeSpanUtcMin.TotalMinutes <= Convert.ToInt32(ViewData["LinkShowBefore"])) && Current <= Convert.ToDateTime(EndTime).AddMinutes(Convert.ToInt32(ViewData["intWebinarLinkShowAfter"])));
+                                    bool bWebinarWait = (Current <= EndTime && Current.Date == EndTime.Date);
+                                    bool bRecording = (ViewBag.IsStaff || (Current >= EndTime && Model.Rows[i]["bShowRecording"].ToString() == "True"));
+                                    bool bPromo = (ViewBag.IsStaff || (Current >= Convert.ToDateTime(Model.Rows[i]["EvtEndDate"].ToString()) && Current <= Starttime));
+                                    string RecURL = Model.Rows[i]["RecURL"].ToString();
+                                    string animateAnchor = (Model.Rows[i]["bNotClickedPlay"].ToString() == "1") ? "zoomInOut" : "";
+                                    if (bRecording && (Convert.ToBoolean(Model.Rows[i]["Attending"]) || Convert.ToBoolean(Model.Rows[i]["Watching"])))
+                                    {
+                                        if (RecURL != "")
+                                        {
+                                            @Html.Raw("<a href='javascript:void(0)' class='me-2 schRecAnchor " + animateAnchor + "' data-id='" + Model.Rows[i]["pKey"].ToString() + "' data-url='" + RecURL.Trim() + "' data-title='" + HttpUtility.JavaScriptStringEncode(Model.Rows[i]["RecTitle"].ToString()) + "' data-videotype='" + Model.Rows[i]["VideoType"].ToString() + "'  title='Play recording'><img src='/images/icons/play.png' width='16' alt='Play recording' /></a>")
+                                        }
+                                    }
+                                    if (bRecording && (Convert.ToBoolean(Model.Rows[i]["Attending"]) || Convert.ToBoolean(Model.Rows[i]["Watching"])))
+                                    {
+                                        string videoPath = Model.Rows[i]["VideoPath"].ToString();
+
+                                        if (videoPath != "" && RecURL == "")
+                                        {
+                                            @Html.Raw("<a href='javascript:void(0)' class='me-2 schPlayVideo " + animateAnchor + "' data-id='" + Model.Rows[i]["pKey"].ToString() + "' data-url='" + videoPath.Trim() + "' data-title='" + HttpUtility.JavaScriptStringEncode(Model.Rows[i]["RecTitle"].ToString()) + "' title='Play recording'><img src='/images/icons/play.png' width='16' alt='Play recording' /></a>")
+                                        }
+                                    }
+                                    if (ViewBag.trCloudICons && bFeedback)
+                                    {
+                                        string bFeedbackAttr = ((Convert.ToInt32(Model.Rows[i]["AttendedPercent"]) > 0) ? "title='Update Session feedback' class='me-2 icon giveFeedback iconFeedbackUpdate' style='background-color: green'" : "title='Give Session feedback' class='me-2 icon giveFeedback zoomInOut iconFeedbackUpdate' style='background-color: red'");
+                                        @Html.Raw("<a href='javascript:void(0)'  data-id='" + Model.Rows[i]["pKey"].ToString() + "' data-percent='" + Model.Rows[i]["AttendedPercent"] + "'  " + bFeedbackAttr + ">F</a>")
+                                    }
+                                    if (bPromo)
+                                    {
+                                        string strPromoUrl = Model.Rows[i]["RecordingURL"].ToString().Replace("\\", "\\\\");
+                                        if (strPromoUrl != "")
+                                        {
+                                            if (strPromoUrl.Contains("SpeakerVideo"))
+                                            {
+                                                strPromoUrl = System.Web.VirtualPathUtility.ToAbsolute(strPromoUrl);
+                                            }
+
+                                            @Html.Raw("<a href='javascript:void(0)' data-id='" + Model.Rows[i]["pKey"].ToString() + "' data-url='" + strPromoUrl.Trim() + "' class='me-2 schPlayPromo' title='Play promo'><img src='/images/icons/megaphone2.png' width='16' alt='Play promo' /></a>")
+                                        }
+                                    }
+                                    string bQuestion = (ViewBag.trCloudICons && (ViewBag.IsStaff || Convert.ToDateTime(ViewBag.CurrentTime) <= Convert.ToDateTime(Model.Rows[i]["StartTime"].ToString())) ? "style='display:block;'" : "style='display:none;'");
+                                    string bTpKey = (((ViewBag.IsStaff || Model.Rows[i]["bSpeaker"].ToString() == "1" || Model.Rows[i]["IsTechnicalProducer"].ToString() == "1" || Model.Rows[i]["IsTpKey"].ToString() == "1") && Model.Rows[i]["TP_pKey"].ToString() != "0") ? "style='display:block;background-color: orange;cursor:pointer;'" : "style='display:none;'");
+                                    string bSynopsis = ((Model.Rows[i]["ckOpenCheck"].ToString() == "1") ? "style='display:block;'" : "style='display:none;'").ToString();
+                                    if (Model.Rows[i]["Session_pkey"].ToString() != "0")
+                                    {
+                                        @Html.Raw("<a href='javascript: void(0)' data-id='" + Model.Rows[i]["pKey"].ToString() + "' class='me-2 icon askQuestion askQuestionIcon' title= 'Ask question'" + bQuestion + ">?</a>")
+                                    }
+                                    if ((bWebinar || bWebinarWait || Model.Rows[i]["IsTpKey"].ToString() == "1")  && ViewBag.trCloudICons && Convert.ToBoolean(Model.Rows[i]["Attending"]))
+                                    {
+                                        if (!bWebinar && bWebinarWait)
+                                        {
+                                            @Html.Raw("<a href='javascript:void(0);' class='me-1' title='Attend Session icon will appear " + ((Model.Rows[i]["bSpeaker"].ToString() == "1") ? ViewData["LinkShowSpeakerBefore"].ToString() : ViewData["LinkShowBefore"].ToString()) + " minutes before session start' style='width:16px!important'><img src='/Images/Icons/sand-clock.png' style='Vertical-align:middle' width='16px' height='16px' /></a>");
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("<a href='/VirtualSession?1=1&ESPK=" + clsUtility.Encrypt(Model.Rows[i]["pKey"].ToString()) + "' class='me-2 zoomInOut'  title='Attend session'><img src='/Images/Icons/laptop.jpg' width='16' alt='laptop icon'/></a>")
+                                        }
+                                    }
+                                    @Html.Raw("<a class='imgInfoLink icon download TpInfoIcon me-1' id='" + @Model.Rows[i]["pKey"].ToString() +"' data-id='"+ @Model.Rows[i]["pKey"].ToString() +"' data-bspk='"+ @Model.Rows[i]["bSpeaker"].ToString() +"' title='Technical producer contact information' "+ bTpKey +">T</a>")
+                                    string Description = (string.IsNullOrEmpty(Model.Rows[i]["EventSpecificDescription"].ToString()) ? HttpUtility.JavaScriptStringEncode(Model.Rows[i]["Description"].ToString()) : "");
+                                    @Html.Raw("<a href='javascript:void(0)' id='EsID_" + @Model.Rows[i]["pKey"].ToString() + "' data-id='" + Model.Rows[i]["pKey"].ToString() + "'  class='SessionInfoLink' title='Session resources'><img src='/images/icons/eye.gif' width='15' alt='eye icon'" + bSynopsis + "  title='Session resources'/></a>")
+                                }
+                            </div>
+                        </td>
+                        <td class="@((Model.Rows[i]["bSpeaker"].ToString() == "1") ? "fw-bold" : "")" style="width: 60px; min-width: 60px; ">
+                            @{
+                                if (Model.Rows[i]["Session_pkey"].ToString() != "0")
+                                {
+                                    @Model.Rows[i]["SessionID"]
+                                }
+                            }
+                        </td>
+                        @{
+                            string title = Model.Rows[i]["Sessiontitle"].ToString();
+                            bool ckOpenCheck = Convert.ToBoolean(Model.Rows[i]["ckOpenCheck"]);
+                            if (!ckOpenCheck)
+                            {
+                                string desc = Model.Rows[i]["Description"].ToString();
+                                DateTime et = Convert.ToDateTime(Model.Rows[i]["et"].ToString());
+                                DateTime st = Convert.ToDateTime(Model.Rows[i]["st"].ToString());
+                                TimeSpan t = Current - st;
+                                TimeSpan t1 = Current - et;
+                                double inerval = t.TotalMinutes; double EndInerval = t1.TotalMinutes;
+                                if (inerval <= Convert.ToInt32(ViewData["LinkShowSpeakerBefore"]) && EndInerval > 0)
+                                {
+                                    title = title + " " + desc + (!String.IsNullOrEmpty(Model.Rows[i]["Link"].ToString()) ? " - (<a href='" + Model.Rows[i]["Link"].ToString() + "' target='_blank'>Join</a>)" : "");
+                                }
+                                else
+                                {
+                                    title = title + " " + desc + (!String.IsNullOrEmpty(Model.Rows[i]["Link"].ToString()) ? " - (Join)" : "");
+                                }
+                            }
+                        }
+                        <td class="magi-custom-td-width @((Model.Rows[i]["bSpeaker"].ToString() == "1")? "fw-bold" : "")" id="EsTitle_@Model.Rows[i]["pKey"].ToString()">@title</td>
+                    </tr>
+                }
+
+                if ((Model.Rows.Count - 1) != i)
+                {
+                    if (Model.Rows[i]["DayNum"].ToString() == LastDate && Model.Rows[i + 1]["DayNum"].ToString() == LastDate)
+                    {
+                        if (Model.Rows[i]["EndTime"].ToString() != LastOpenDate)
+                        {
+                            DateTime st = Convert.ToDateTime(Model.Rows[i]["StartTime"].ToString()), et = Convert.ToDateTime(Model.Rows[i]["EndTime"].ToString()), stNext = Convert.ToDateTime(Model.Rows[i + 1]["StartTime"].ToString());
+
+                            if (et < stNext && st != stNext)
+                            {
+                                LastOpenDate = Model.Rows[i]["EndTime"].ToString();
+                                <tr class="openRows">
+                                    <td style="width: 160px;min-width:160px;">
+                                        @Model.Rows[i]["TimeEnd"]-@Model.Rows[i + 1]["TimeStart"].ToString()
+                                    </td>
+                                    <td style="width: 145px;min-width:145px;">
+                                    </td>
+                                    <td style="width: 50px;min-width: 50px;">
+                                        <span>
+                                            (open)
+                                        </span>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            }
+                        }
+                    }
+                    else if (Model.Rows[i]["DayNum"].ToString() == LastDate && Model.Rows[i + 1]["DayNum"].ToString() != LastDate)
+                    {
+                        if (Model.Rows[i]["TimeEnd"].ToString() != LastOpenDate)
+                        {
+                            DateTime et = Convert.ToDateTime(Model.Rows[i]["EndTime"].ToString());
+                            TimeSpan ts = (Convert.ToDateTime(Model.Rows[i]["EventDayLimit"].ToString()) - et);
+                            if (ts.TotalMinutes > 10 && et < Convert.ToDateTime(Model.Rows[i]["EventDayLimit"].ToString()))
+                            {
+                                <tr class="openRows">
+                                    <td style="width: 160px;min-width:160px;">
+                                        @Model.Rows[i]["TimeEnd"]-@Model.Rows[i]["LTFormat"].ToString()
+                                    </td>
+                                    <td style="width: 145px;min-width:145px;">
+                                    </td>
+                                    <td style="width: 50px;min-width: 50px;">
+                                        <span>
+                                            (open)
+                                        </span>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (Model.Rows[i]["TimeEnd"].ToString() != LastOpenDate)
+                    {
+                        DateTime et = Convert.ToDateTime(Model.Rows[i]["EndTime"].ToString());
+                        TimeSpan ts = (Convert.ToDateTime(Model.Rows[i]["EventDayLimit"].ToString()) - et);
+                        if (ts.TotalMinutes > 10 && et < Convert.ToDateTime(Model.Rows[i]["EventDayLimit"].ToString()))
+                        {
+                            <tr class="openRows">
+                                <td style="width: 160px;min-width:160px;">
+                                    @Model.Rows[i]["TimeEnd"]-@Model.Rows[i]["LTFormat"].ToString()
+                                </td>
+                                <td style="width: 145px;min-width:145px;">
+                                </td>
+                                <td style="width: 50px;min-width: 50px;">
+                                    <span>
+                                        (open)
+                                    </span>
+                                </td>
+                                <td></td>
+                            </tr>
+                        }
+                    }
+
+
+                }
+                if ((Model.Rows.Count - 1) != i)
+                {
+                    if (Model.Rows[i]["DayNum"].ToString() != Model.Rows[i + 1]["DayNum"].ToString())
+                    {
+                        @Html.Raw("</tbody></table></div>")
+                    }
+                }
+                else
+                {
+                    @Html.Raw("</tbody></table></div>")
+                }
+            }
+        }
+    </div>
+}
+
+
+@if (ViewBag.ListType == "Calendar")
+{
+    <div class="row p-2" id="ScheduleCalendarContent">
+        <div id="calendar"></div>
+    </div>
+}
+
+<div id="EmailContent" style="display:none;">
+    @if (Model != null)
+    {
+        string StartTimeWithOffset = "", EndTimeWithOffset = "", TimeStringHTML = "";
+        int dtx = -1;
+        for (int i = 0; i < Model.Rows.Count; i++)
+        {
+            if (Model.Rows[i]["DayNum"].ToString() != LastDate)
+            {
+                @Html.Raw("<table style='width: 100%;'><tbody><tr><td colspan='4' style='color:#00008B; background-color: #d7f6f9; padding: 5px;margin-top:5px;margin-bottom:5px;'><strong> Day " + Model.Rows[i]["DayNum"] + ":" + string.Format("{0:dddd, MMMM d, yyyy}", Model.Rows[i]["EndTime"]) + "</strong></td></tr>")
+                dtx = -1;
+            }
+            LastDate = Model.Rows[i]["DayNum"].ToString();
+
+            if ((Model.Rows.Count - 1) != i)
+            {
+                string LastOpenDate = "";
+                if (Model.Rows[i]["DayNum"].ToString() == LastDate && Model.Rows[i + 1]["DayNum"].ToString() == LastDate)
+                {
+                    if (Model.Rows[i]["EndTime"].ToString() != LastOpenDate && dtx == -1)
+                    {
+
+                        DateTime st = Convert.ToDateTime(Model.Rows[i]["StartTime"].ToString()),
+                                    etEventDate = Convert.ToDateTime(Model.Rows[i]["EvtStartDate"]), openDate = Convert.ToDateTime(Model.Rows[i]["EventDayEnd"]);
+
+                        TimeSpan diff = etEventDate - st; TimeSpan diffOpen = etEventDate - openDate;
+                        TimeSpan Intervals = openDate - st;
+                        bool Update = (diff.Days == diffOpen.Days && System.Math.Abs(Intervals.TotalMinutes) > 20);
+
+                        DateTime TimeEnd = Convert.ToDateTime(Model.Rows[i]["TimeEnd"]), TimeStartNext = Convert.ToDateTime(Model.Rows[i + 1]["TimeStart"]);
+
+                        if (Update && TimeEnd < TimeStartNext && (!(TimeEnd < TimeStartNext && st != TimeStartNext)))
+                        {
+                            LastOpenDate = Model.Rows[i]["EndTime"].ToString();
+                            dtx = 0;
+                            <tr class="openRows">
+                                <td style="width: 160px;min-width:160px;vertical-align:top;">
+                                    @Model.Rows[i]["TimeEnd"] - @Model.Rows[i + 1]["TimeStart"].ToString()
+                                </td>
+                                <td class='magiActionIconGap' style='width:145px;vertical-align: top;padding-left: 5px;'></td>
+                                <td style="width: 50px;min-width: 50px;vertical-align: top;">
+                                    <span>  (open) </span>
+                                </td>
+                                <td></td>
+                            </tr>
+                        }
+                    }
+                }
+            }
+
+            StartTimeWithOffset = "";
+            EndTimeWithOffset = "";
+            TimeStringHTML = "";
+            bool offserAvailable = ViewBag.OffsetVal != null && ViewBag.OffsetVal != 0;
+            DateTime endTime = new DateTime(), startTime = new DateTime();
+
+            if (offserAvailable)
+            {
+                int intVenuetoUTC = (ViewBag.OffsetVenue);
+                if ((Model.Rows.Count-1) != i)
+                {
+                    startTime = Convert.ToDateTime(Model.Rows[i]["TimeStart"]);
+                    endTime = Convert.ToDateTime(Model.Rows[i +1]["TimeEnd"]);
+                }
+                else if (Model.Rows.Count-1 == i)
+                {
+                    startTime = Convert.ToDateTime(Model.Rows[i]["TimeStart"]);
+                    endTime = Convert.ToDateTime(Model.Rows[i]["TimeEnd"]);
+                }
+                DateTime ConvertedStarttime = startTime.AddMinutes(intVenuetoUTC).AddMinutes(ViewBag.OffsetVal);
+                DateTime ConvertedEndtime = endTime.AddMinutes(intVenuetoUTC).AddMinutes(ViewBag.OffsetVal);
+                string timeSlotConverted = String.Format("{0:t}", ConvertedStarttime) + " - " + String.Format("{0:t}", ConvertedEndtime);
+                TimeStringHTML +=  timeSlotConverted;
+            }
+
+            if (Model.Rows[i]["DayNum"].ToString() == LastDate)
+            {
+                <tr>
+                    <td class="@((Model.Rows[i]["bSpeaker"].ToString() == "1") ? "fw-bold" : "")" style="width: 160px; min-width: 160px; vertical-align: top; padding-bottom: 10px;font-size:11pt; ">
+                        @Model.Rows[i]["TimeSlot"]
+                        @if (!string.IsNullOrEmpty(TimeStringHTML))
+                        {
+                            @Html.Raw("<br /> My Time: <br />")
+                            @TimeStringHTML
+                        }
+                    </td>
+                    <td class='magiActionIconGap' style='width:145px;vertical-align: top;padding-left: 5px;'></td>
+                    <td style="width: 60px; min-width: 60px; vertical-align: top;">
+                        <a href="javascript:void(0)">@Model.Rows[i]["SessionID"] </a>
+                    </td>
+                    <td style='vertical-align: top;'>@Model.Rows[i]["Sessiontitle"]</td>
+                </tr>
+            }
+
+            if ((Model.Rows.Count - 1) != i)
+            {
+                string LastOpenDate = "";
+                if (Model.Rows[i]["DayNum"].ToString() == LastDate && Model.Rows[i + 1]["DayNum"].ToString() == LastDate)
+                {
+                    if (Model.Rows[i]["EndTime"].ToString() != LastOpenDate)
+                    {
+                        DateTime st = Convert.ToDateTime(Model.Rows[i]["StartTime"].ToString()), et = Convert.ToDateTime(Model.Rows[i]["EndTime"].ToString()), stNext = Convert.ToDateTime(Model.Rows[i + 1]["StartTime"].ToString());
+
+                        if (et < stNext && st != stNext)
+                        {
+                            LastOpenDate = Model.Rows[i]["EndTime"].ToString();
+                            <tr class="openRows">
+                                <td style="width: 160px;min-width:160px;">
+                                    @Model.Rows[i]["TimeEnd"]-@Model.Rows[i + 1]["TimeStart"].ToString()
+                                </td>
+                                <td class='magiActionIconGap' style='width:145px;vertical-align: top;padding-left: 5px;'></td>
+                                <td style="width: 50px;min-width: 50px;vertical-align: top;">
+                                    <span>  (open) </span>
+                                </td>
+                                <td></td>
+                            </tr>
+                        }
+                    }
+                }
+                else if (Model.Rows[i]["DayNum"].ToString() == LastDate && Model.Rows[i + 1]["DayNum"].ToString() != LastDate)
+                {
+                    if (Model.Rows[i]["TimeEnd"].ToString() != LastOpenDate)
+                    {
+                        DateTime et = Convert.ToDateTime(Model.Rows[i]["EndTime"].ToString());
+                        TimeSpan ts = (Convert.ToDateTime(Model.Rows[i]["EventDayLimit"].ToString()) - et);
+                        if (ts.TotalMinutes > 10 && et < Convert.ToDateTime(Model.Rows[i]["EventDayLimit"].ToString()))
+                        {
+                            <tr class="openRows" style="margin-top:10px; ">
+                                <td style="width: 160px;min-width:160px;">
+                                    @Model.Rows[i]["TimeEnd"]-@Model.Rows[i]["LTFormat"].ToString()
+                                </td>
+                                <td class='magiActionIconGap' style='width:145px;vertical-align: top;padding-left: 5px;'></td>
+                                <td style="width: 50px;min-width: 50px;vertical-align: top;">
+                                    <span>  (open) </span>
+                                </td>
+                                <td></td>
+                            </tr>
+                        }
+                    }
+                }
+            }
+
+            if ((Model.Rows.Count - 1) != i)
+            {
+                if (Model.Rows[i]["DayNum"].ToString() != Model.Rows[i + 1]["DayNum"].ToString())
+                {
+                    @Html.Raw("</tbody></table>")
+                }
+            }
+            else
+            {
+                @Html.Raw("</tbody></table>")
+            }
+        }
+    }
+</div>
+
+@if (ViewBag.ListType == "Calendar")
+{
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            moment.locale('en');
+            var EventDataSource = null;
+            EventDataSource=@Html.Raw(ViewBag.JDataSource);
+            var EventStartDate=moment();
+                if (EventDataSource!==null)
+                {
+                    EventDataSource = EventDataSource.map(function (n, i)
+                    {
+                        var ob = {
+                            start: Math.floor(new Date(n.startStr).getTime() / 1000),
+                            end: Math.floor(new Date(n.endStr).getTime() / 1000),
+                            title: n.title,
+                            content: n.content,
+                            category: n.category
+                        };
+                        EventStartDate = Math.floor(new Date(n.EvtStartstr).getTime() / 1000);
+                        return ob;
+                    });
+
+                //Init the calendar
+                var calendar=$('#calendar').Calendar({
+                    locale: 'en',
+                    view: 'week',
+                    enableKeyboard: true,
+                    unixTimestamp: EventStartDate,   // Starts Calendar Date
+                    events: EventDataSource,
+                    setTimestamp: EventDataSource,
+                    weekday: {
+                        timeline: {
+                            fromHour: 9, // start hour
+                            toHour: 22, // end hour
+                            intervalMinutes: 10,
+                            format: 'HH:mm a',
+                            heightPx: 50,
+                            autoResize: true
+                        },
+                        dayline: {
+                            format: 'ddd, DD',
+                            heightPx: 31,
+                            month: {
+                                format: 'MMMM YYYY',
+                                heightPx: 30,
+                                weekFormat: 'W'
+                            }
+                        }
+                    },
+                    month: {
+                        format: 'dddd, LL ', heightPx: 31,
+                        weekline: { format: 'W',  heightPx: 80 },
+                        dayheader: { format: 'dddd', heightPx: 30 },
+                        day: {format: 'LL' }
+                    },
+                }).init();
+            }
+
+            $('.close').click(function ()
+            {
+                $('#calendar-modal').modal('hide');
+            });
+        });
+    </script>
+}

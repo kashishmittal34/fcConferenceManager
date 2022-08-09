@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <tools name="MainToolbar" enabled="true">
+    <tool name="AjaxSpellCheck" />
+    <tool name="Print" />
+    <tool name="FindAndReplace" />
+    <tool separator="true"/>
+    <tool name="Cut" shortcut="CTRL+X"/>
+    <tool name="Copy" shortcut="CTRL+C"/>
+    <tool name="Paste" shortcut="CTRL+V"/>
+    <tool name="PasteFromWord" />
+    <tool name="PasteFromWordNoFontsNoSizes" />
+    <tool name="PastePlainText" />
+    <tool name="PasteAsHtml"  />
+    <tool separator="true"/>
+    <tool name="InsertLink" shortcut="CTRL+K"/>
+    <tool name="Unlink" shortcut="CTRL+SHIFT+K"/>
+    <tool name="InsertSymbol" />
+    <tool separator="true"/>    
+    <tool name="Undo" shortcut="CTRL+Z"/>
+    <tool name="Redo" shortcut="CTRL+Y"/>
+  </tools>
+  <tools>
+    <tool name="FontName" />
+    <tool name="RealFontSize" />
+    <tool separator="true"/>
+    <tool name="ForeColor"/>
+    <tool name="BackColor"/>
+    <tool separator="true"/>    
+    <tool name="ConvertToUpper" />
+    <tool name="ConvertToLower" />
+    <tool separator="true"/>
+    <tool name="Bold" shortcut="CTRL+B"/>
+    <tool name="Italic" shortcut="CTRL+I"/>
+    <tool name="Underline" shortcut="CTRL+U"/>
+    <tool name="StrikeThrough" />
+    <tool name="Superscript" />
+    <tool name="Subscript" />
+  </tools>
+	<realFontSizes>
+		<item value="8px"></item>
+		<item value="9px"></item>
+		<item value="10px"></item>
+		<item value="11px"></item>
+		<item value="12px"></item>
+		<item value="13px"></item>
+		<item value="14px"></item>
+		<item value="15px"></item>
+		<item value="16px"></item>
+		<item value="18px"></item>
+		<item value="20px"></item>
+		<item value="22px"></item>
+		<item value="24px"></item>
+		<item value="26px"></item>
+		<item value="28px"></item>
+		<item value="32px"></item>
+		<item value="36px"></item>
+		<item value="48px"></item>
+		<item value="72px"></item>
+	</realFontSizes>
+  <tools>
+    <tool name="JustifyLeft" />
+    <tool name="JustifyCenter" />
+    <tool name="JustifyRight" />
+    <tool name="JustifyFull" />
+    <tool name="JustifyNone" />
+    <tool separator="true"/>
+    <tool name="FormatStripper" />
+    <tool name="Zoom" />
+    <tool separator="true"/>
+    <tool name="Help" shortcut="F1"/>
+  </tools>
+</root>

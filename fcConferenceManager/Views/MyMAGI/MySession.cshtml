@@ -1,0 +1,903 @@
+﻿@model fcConferenceManager.Models.MySessionsPage
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var ItemsList = (IEnumerable<fcConferenceManager.Models.GenericListItem>)ViewData["ListData"];
+}
+@if (ViewBag.NotSchedule == false)
+{
+    <link href="~/Css/multiple-select.css" rel="stylesheet" />
+    <script src="~/Scripts/multiple-select.js"></script>
+    @* Video *@
+    <link href="/Css/video-js.css" rel="stylesheet" />
+    <script src="/Scripts/video.min.js" type="text/javascript"></script>
+    <script src="/Scripts/Youtube.js" type="text/javascript"></script>
+    <style>
+        .boldChildSpan span
+        {
+            font-weight: bold;
+        }
+
+        marquee
+        {
+            width: 100%;
+        }
+
+        .slideinEffect
+        {
+            animation: right_to_left 2S ease-in-out;
+        }
+
+
+        @@keyframes right_to_left
+        {
+            from
+            {
+                margin-left: 20%;
+                text-shadow: 1px 0 0 black;
+            }
+
+            to
+            {
+                margin-left: 0;
+            }
+        }
+
+        @@keyframes left_to_right
+        {
+            from
+            {
+                margin-left: -20%;
+                text-shadow: 1px 0 0 black;
+            }
+
+            to
+            {
+                margin-left: 0;
+            }
+        }
+
+        .BorderClass
+        {
+            border: 1px;
+            border-style: double;
+            border-right: none;
+            margin: 1px;
+        }
+
+        .BorderClass2
+        {
+            border: 1px;
+            border-style: double;
+            margin: 1px;
+        }
+    </style>
+    <div class="magiMySessionMainWrapper mt-3">
+        <div class="container-fluid">
+            <div class="row">
+                <div class='magiSidebarWrapper pe-md-0 mb-3 mb-md-0'>
+                    @if (ViewBag.leftPanel_Visible == true)
+                    {
+                        Html.RenderAction("_PartialLeftPanel", "MyMagi");
+                    }
+                    @{
+                        Html.RenderAction("ChatPanelAction", "MyMagi");
+                    }
+                </div>
+                <div class="col-md-8 col-lg-9 flex-grow-1">
+                    <h2>@ViewBag.LblTitle</h2>
+                    <div class="magi-content-wrapper">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#create" type="button" role="tab" aria-controls="create" aria-selected="true">Create</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" href="/MyMAGI/MySchedule" type="button" role="tab" aria-controls="View" aria-selected="false">View</a>
+                            </li>
+                            <li class="nav-item w-50 mt-1 ms-2">
+                                <div id="slidindiv" class="" style="display:none;">
+                                    <label ID="txtFlowing">Attend sessions from the View tab</label>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="create" role="tabpanel">
+                                <div class="p-2  px-0">
+                                    <div class="align-items-center flex-wrap mb-2 mb-md-3 row">
+                                        <div class="col-lg-4 mb-2 mb-md-1">
+                                            <b class="blueColor">@ViewBag.StandardRegion</b>
+                                        </div>
+                                        <div class="col-lg-8 d-flex justify-content-lg-end align-items-center flex-wrap">
+                                            @{
+                                                if (Model.HelpIconInfo != null)
+                                                {
+                                                    if ((Model.HelpIconInfo.PageIconVisible))
+                                                    {
+                                                        string bAutoplay = (Model.HelpIconInfo.bAutoPlay) ? "true" : "false";
+                                                        <input type="hidden" id="vidAutoPlayType" value="@bAutoplay" />
+                                                        @Html.Raw("<input id='PageHelpIcon' type='image' src='/images/icons/videoPlay2.png' value='' width='32' class='me-1 mb-1' />")
+                                                    }
+                                                }
+                                            }
+                                            @if (ViewBag.VirtualDropdown_Visible)
+                                            {
+                                                <select id="VirtualEventDropDown" class="me-md-1 mb-1 mb-md-0 mb-md-1">
+                                                    @if (Model.ddEventVirtualData != null)
+                                                    {
+                                                        foreach (System.Data.DataRow dr in Model.ddEventVirtualData.Rows)
+                                                        {
+                                                            @Html.Raw("<option value='" + dr["pKey"] + "' " + ((ViewBag.SelectedDropDown == dr["pKey"].ToString()) ? "selected>" : ">") + dr["strText"] + "</option>")
+                                                        }
+                                                    }
+                                                </select>
+                                            }
+                                            @if (ViewBag.CalendarButtonVisible)
+                                            {
+                                                <a id="btnDownloadSchedule" class="btn me-1 mb-1 mb-md-0 mb-md-1">Download ICS Calendar File</a>
+                                            }
+                                            <a id="cmdReturn" href="@ViewBag.ReturnUrl" class="btn mb-1 mb-md-0 mb-md-1">
+                                                Return & Autosave
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-md-3">
+                                        <div class="col-lg-12">
+                                            <p class="removeBr" style="margin-bottom:0;">@Html.Raw(ViewBag.LblInstruct)</p>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-lg-12 d-md-flex align-items-end flex-wrap">
+                                            @if (Model.cbTracks != null)
+                                            {
+                                                <div class="me-md-1 mb-2 mb-md-1">
+                                                    <div class="col-xs-12">
+                                                        <label class="lblSmall">
+                                                            Tracks:
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-xs-12">
+                                                        <select id="cbTracks" multiple>
+                                                            @foreach (System.Data.DataRow dr in Model.cbTracks.Rows)
+                                                            {
+                                                                <option value="@dr["pKey"]">@dr["strText"]</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            }
+                                            <div class="me-md-1 mb-2 mb-md-1">
+                                                <div class="col-xs-12">
+                                                    <label class="lblSmall">
+                                                        Topics:
+                                                    </label>
+                                                </div>
+                                                <div class="col-xs-12">
+                                                    <select id="cbTopics" class="cbFilter" multiple>
+                                                        @foreach (System.Data.DataRow dr in Model.cbTopics.Rows)
+                                                        {
+                                                            <option value="@dr["pKey"]">@dr["strText"]</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="me-md-1 mb-2 mb-md-1">
+                                                <div class="col-xs-12">
+                                                    <label class="lblSmall">
+                                                        Levels:
+                                                    </label>
+                                                </div>
+                                                <div class="col-xs-12">
+                                                    <select id="cbLevels" class="cbFilter" multiple>
+                                                        @foreach (System.Data.DataRow dr in Model.cbLevels.Rows)
+                                                        {
+                                                            <option value="@dr["pKey"]">@dr["strText"]</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="me-md-1 mb-2 mb-md-1">
+                                                <div class="col-xs-12">
+                                                    <label class="lblSmall">
+                                                        Primary Audience:
+                                                    </label>
+                                                </div>
+                                                <div class="col-xs-12">
+                                                    <select id="ddAudience" class="cbFilter">
+                                                        <option value="">All</option>
+                                                        @foreach (System.Data.DataRow dr in Model.ddPrimaryAudience.Rows)
+                                                        {
+                                                            <option value="@dr["pKey"]">@dr["strText"]</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            @if (Model.cbDays != null)
+                                            {
+                                                <div class="me-md-1 mb-2 mb-md-1">
+                                                    <div class="col-xs-12">
+                                                        <label class="lblSmall">
+                                                            Days:
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-xs-12">
+                                                        <select id="cbDays" class="cbFilter" multiple>
+                                                            @foreach (System.Data.DataRow dr in Model.cbDays.Rows)
+                                                            {
+                                                                <option value="@dr["pKey"]">@dr["strText"]</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            }
+                                            <button id="btnClearFilter" class="btn me-1 me-md-1 mb-2 mb-md-1">
+                                                Clear Filters
+                                            </button>
+                                            <div class="mb-2 m-lg-1">
+                                                <div class="col-xs-12">
+                                                    <label class="lblSmall">
+                                                        <span id="txtContactHours">@ViewBag.TextContactHours</span> <b id="lblContacthrs">@ViewBag.lblContactHrs</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-xs-12">
+                                                    <input type="hidden" id="contHourpKey" value="@ViewBag.ContactHourPkey" style="display:none;" />
+                                                    <input type="hidden" id="typeSingle" value="@ViewBag.TypeSingle" style="display:none;" />
+                                                    <select id="hiddenCertificates" style="display:none;">
+                                                        @foreach (fcConferenceManager.Models.GenericListItem Model in ItemsList)
+                                                        {
+                                                            <option value="@Model.pKey">@Model.strText</option>
+                                                        }
+                                                    </select>
+                                                    <select id="ddCountactHours" class="cbFilter">
+                                                        <option value="" class="boldChildSpan">Certificate of attendance</option>
+                                                        @foreach (System.Data.DataRow dr in Model.ddCertificateHours.Rows)
+                                                        {
+                                                            string strClass = (ItemsList.Where(s => (s.strText == dr["strText"].ToString())).FirstOrDefault() != null) ? "boldChildSpan" : "";
+                                                            <option class="@strClass" value="@dr["pKey"]">@dr["strText"]</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        @if (ViewBag.lblOverlap_Visible)
+                                        {
+                                            <div style="padding-bottom:5px;"><span id='lblOverlapSession' style="font-size: 8pt;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">It appears that you have marked sessions Attend that you do not plan to attend...</span></div>
+                                        }
+                                        <div class="row-mb-3 mt-mb-5" id="PartialView_Container">
+                                            @{
+
+                                                Html.RenderPartial("_PartialMySession", Model.SessionList);
+                                            }
+                                        </div>
+                                    </div>
+                                    <!---end create tab-->
+                                    <!--- view tab -->
+                                    <div class="tab-pane fade" id="view" role="tabpanel">
+                                        <div class="p-2  px-0">
+                                            <div class="row mb-2">
+                                                <div class="col-lg-4 mb-2 mb-lg-0">
+                                                    view
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--end view tab-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="sessionInfoModel" tabindex="-1" aria-labelledby="sessionInfoModel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content" style="height:600px;">
+                <div class="modal-header justify-content-end flex-column flex-md-row" style=" background-color: #fff !important; padding: 0px !important;">
+                    <label id="closeSession" class="pull-right  float-end mb-2" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                </div>
+                <div class="modal-body" id="SeeisonInfoContainer" style="max-height: 600px;">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelAskQuestion" tabindex="-1" aria-labelledby="modelAskQuestion" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader flex-column flex-md-row">
+                    <h5 class="modal-title">Ask Speakers a Question About Their Topic</h5>
+                    <div>
+                        <button id="cmdSaveQuestion" type="button" class="btn">Ok</button>
+                        <button id="closeQuestion" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body" id="askQuestionBody">
+                    <div class="row">
+                        <input type="hidden" ID="evntSessionpKey" />
+                        <input type="hidden" ID="QuestionPkey" />
+                        <div class="col-xs-12 mb-3">
+                            <label for="txtAreaQuestion" class="mb-2 mb-lg-0">Question:</label>
+                            <textarea class="form-control" id="txtAreaQuestion" rows="3"></textarea>
+                        </div>
+                        <div class="col-xs-12" id="gridQuestionContent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelHelpMedia" tabindex="-1" aria-labelledby="modelHelpMedia" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header justify-content-end" style=" background-color: #fff !important; padding: 0px !important;">
+                    <label id="closeHelpMedia" class="pull-right  float-end mb-2" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                </div>
+                <div class="modal-body" id="modelHelpMediaBody">
+                    <div class="row p-2">
+                        @{
+                            if (Model.HelpIconInfo != null)
+                            {
+                                if ((Model.HelpIconInfo.PageIconVisible))
+                                {
+                                    <input type="hidden" id="LogIDinfo" value="" />
+                                    <input type="hidden" id="pageVideoLink" value="@Model.HelpIconInfo.PageDocumentLink" data-filename="@Model.HelpIconInfo.PageFileName" data-usetype="@Model.HelpIconInfo.PageValue" data-type="@Model.HelpIconInfo.PageMediaType" data-mime="@Model.HelpIconInfo.PageMime" />
+                                    <video id="pageVideoContent" class="video-js" controls preload="auto" width="300" height="400">
+                                        <p class="vjs-no-js">
+                                            To view this video please enable JavaScript, and consider upgrading to a web browser that
+                                        </p>
+                                    </video>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelVideoPlayer" tabindex="-1" aria-labelledby="modelVideoPlayer" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header justify-content-end" style=" background-color: #fff !important; padding: 0px !important;">
+                    <label id="closeVideoPlayer" class="pull-right  float-end mb-2" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                </div>
+                <div class="modal-body" id="modelHelpMediaBody">
+                    <div class="row p-2">
+                        <video id="VideoPlayer" class="video-js" controls preload="auto" width="300" height="400">
+                            <p class="vjs-no-js">
+                                To view this video please enable JavaScript, and consider upgrading to a web browser that
+                            </p>
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelNavInstructions" tabindex="-1" aria-labelledby="modelIframeVideo" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="NavigationInstructions">Navigation Instructions</h5>
+                    <div>
+                        <button id="closeNavInstructions" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div class="col-xs-12" id="modalNavBody" style="height:400px; overflow-y:scroll;">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelDownloadScheduleCalendar" tabindex="-1" aria-labelledby="modelDownloadScheduleCalendar" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="ScheduleCalendar" title="Download ICS Calendar File">Download ICS Calendar File</h5>
+                    <div>
+                        <button id="closeScheduleCalendar" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2" id="ScheduleCalendarPlaceHolder">
+                        <label id="lblScheduleDownloadCalendar"> Uploading an ICS file with a session for the second time will enter it a second time in your personal calendar. </label><br />
+                        <div class="d-flex justify-content-center align-items-center mt-2" style="text-align:center">
+                            <a id="cmdDownloadAllSchedule" href="/MyMAGI/DownloadCalendarFile?Download=All" class="btn me-1 mb-1" title="Download all sessions">Download all sessions</a>
+                            <a id="cmdDownloadSchedule" href="/MyMAGI/DownloadCalendarFile?Download=New" class="btn me-1 mb-1" title="Just new sessions">Just new sessions</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modelEvtUpdatesVirtual" tabindex="-1" aria-labelledby="modelEvtUpdatesVirtual" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="EvtUpdatesVirtual">Event Updates</h5>
+                    <div>
+                        <button id="closeEvtUpdatesVirtual" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div class="col-xs-12 mb-1" id="modalEvtUpdatesVirtualBody" style="height:400px; overflow-y:scroll;">
+                        </div>
+                        <div class="text-center">
+                            <button id="closeEvtUpdatesVirtual" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    if (ViewBag.OpenSurveyRadWindow)
+    {
+        <div class="modal fade" id="rwSurveyQuestion" tabindex="-1" aria-labelledby="rwSurveyQuestion" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header modalBlueHeader">
+                        <h5 class="modal-title" id="rwSurveyQuestionTitle">Registration Questions</h5>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="row p-2">
+                            <div class="col-xs-12 pt-1">
+                                @Html.Raw(ViewBag.lblRegText)
+                            </div>
+                            <div class="text-center">
+                                <button id="cmdSaveQ" type="button" class="btn">Proceed</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#rwSurveyQuestion').modal('show');
+                $('#cmdSaveQ').click(function (e) {
+                    e.preventDefault();
+                    var result = CommonFunctions.AjaxCall('Post', '/Virtual/cmdSaveQClick', '', 'json', 'Error While Updating Schedule');
+                    if (result !== null && result !== "ERROR") {
+                        if (result.msg === "OK") {
+                            parent.location.href = result.URL;
+                        }
+                        else
+                            CommonFunctions.Alert("Error Occurred while updating");
+                    }
+                    else
+                        CommonFunctions.Alert("Error Occurred while updating");
+                });
+            });
+        </script>
+    }
+    <script type="text/javascript">
+        $(document).ready(function () {
+            setTimeout(function () {
+                $('#slidindiv').toggleClass("slideinEffect");
+                $('#slidindiv').show();
+            }, 1000);
+
+            function CheckFiltered() {
+                var cbDaysVal = $('#cbDays').val();
+                if (cbDaysVal === undefined) { cbDaysVal = ""; }
+
+                var cbTracksVal = $('#cbTracks').val();
+                if (cbTracksVal === undefined) { cbTracksVal = ""; }
+
+                var FilterData = {
+                    Audience: $("#ddAudience option:selected").val().toString(), Days: cbDaysVal.toString(),
+                    Tracks: cbTracksVal.toString(), Levels: $('#cbLevels').val().toString(), Topics: $('#cbTopics').val().toString(),
+                    Cert: $('#ddCountactHours').val().toString()
+                };
+
+                $('#PartialView_Container').load('_PartialMySession', FilterData);
+            }
+
+            function onCloseFilter(sender) {
+                // $('#btnClearFilter').show(); Show Button Clear
+                CheckFiltered();
+            }
+
+            function onChangeFunction(sender) {
+                var optionSelectedVal = 0;
+                if ($('#ddCountactHours').val() !== "")
+                    optionSelectedVal = ($("#hiddenCertificates option:contains(" + $('#ddCountactHours  option:selected').text() + ")").val());
+                if (optionSelectedVal === undefined)
+                    optionSelectedVal = 0;
+
+                var Data = {
+                    contHourpKey: ((optionSelectedVal > 0 && $('#ddCountactHours').val() != "") ? $('#contHourpKey').val() : "0"), typeSingle: $('#typeSingle').val(), CertType: optionSelectedVal
+                }
+                var result = CommonFunctions.AjaxCall('Post', '/MyMAGI/UpdateContactHours', Data, 'json', 'Error While Updating Schedule');
+                $('#txtContactHours').text(result.TextContactHours);
+                $('#lblContacthrs').text(result.lblContactHrs);
+            }
+
+            //Filters -- Update
+            $("#cbDays,#cbTracks,#cbTopics,#cbLevels").multipleSelect({
+                multiple: true, isopen: false, placeholder: 'Show All', selectAll: false, selectAllText: 'Select all', multiple: false, multipleWidth: 'auto', filter: false, width: 'auto', height: 28, maxHeight: 250, onClose: function () { onCloseFilter(); }
+            });
+
+            $('#ddAudience').multipleSelect({
+                multiple: false, isopen: false, placeholder: 'All', selectAll: false, selectAllText: 'Select all', multiple: false, multipleWidth: 'auto', filter: false, width: 'auto', height: 28, maxHeight: 250, onClose: function () { onCloseFilter(); }
+            });
+
+            $('#ddCountactHours').multipleSelect({
+                multiple: false, isopen: false, placeholder: 'All', selectAll: false, selectAllText: 'Select all', multiple: false, multipleWidth: 'auto', filter: false, width: 'auto', height: 28, maxHeight: 250, onClick: function () { onChangeFunction(); }, onClose: function () { onCloseFilter(); }
+            });
+
+            $('#btnClearFilter').click(function () {
+                $("#cbDays,#cbTracks,#cbTopics,#cbLevels,#ddCountactHours,#ddAudience").val('');
+                $("#cbDays,#cbTracks,#cbTopics,#cbLevels").multipleSelect('refresh');
+                $('#ddCountactHours,#ddAudience').multipleSelect('refresh');
+                CheckFiltered();
+                closed = false
+            });
+
+            function UpdateOverlap() {
+                var result = CommonFunctions.AjaxCall('Post', '/MyMAGI/GetOverLappingSessions', '', 'json', 'Error While Updating Schedule');
+                if (result !== "ERROR" && result !== null) {
+                    if (result.msg === "OK") {
+                        var Elements = document.getElementsByClassName('SessionInfoLink');
+                        if (Elements.length > 0) {
+                            $.each(Elements, function (i, val) {
+                                var overlapList = result.OverLappingSession.split(',');
+                                val.style.color = '#0000EE';
+                                if (overlapList.indexOf(val.innerText) > -1)
+                                    val.style.color = 'red';
+                            });
+                        }
+                    }
+                }
+            }
+
+            // State has changed to checked/unchecked.
+            $(document).on('change', '.ckCheckItem', function (e) {
+                var thisCheck = $(this)[0];
+                var _watchElement = "#watchCheckbox_" + thisCheck.dataset.id;
+                var _slideElement = "#slidesCheckbox_" + thisCheck.dataset.id;
+                var _attendRemoteElement = "#attendRemoteCheckbox_" + thisCheck.dataset.id;
+                var _attendElement = "#attendCheckbox_" + thisCheck.dataset.id;
+                var bWatchData = (($(_watchElement)[0].disabled) ? false : $(_watchElement)[0].checked);
+                var bSlideData = (($(_slideElement)[0].disabled) ? false : $(_slideElement)[0].checked);
+                var bAttendData = (($(_attendElement)[0].disabled) ? false : $(_attendElement)[0].checked);
+                var bAttendRemoteData = false;
+                if ($(_attendRemoteElement)[0] !== null && $(_attendRemoteElement)[0] !== undefined)
+                    bAttendRemoteData = (($(_attendRemoteElement)[0].disabled) ? false : $(_attendRemoteElement)[0].checked);
+
+                var thisID = ("#" + thisCheck.id);
+                var bAttendChange = (thisID === _attendElement);
+                var bAttendRemoteChange = (thisID === _attendRemoteElement);
+                var bWatchChange = (thisID === _watchElement);
+                var bSlideChange = (thisID === _slideElement);
+
+                if (((bAttendChange || bAttendRemoteChange || bWatchChange) && !bSlideChange) && (bAttendData || bAttendRemoteData || bWatchData)) {
+                    bSlideData = true;
+                }
+                if (!bSlideChange) {
+                    if (bAttendChange && bAttendData) {
+                        bAttendRemoteData = false;
+                        $(_attendRemoteElement).prop("checked", false);
+                        $(_attendRemoteElement).checked = false;
+                    }
+                    else if (bAttendRemoteChange && bAttendRemoteData) {
+                        bAttend = false;
+                        $(_attendElement).prop("checked", false);
+                        $(_attendElement).checked = false;
+                    }
+                }
+
+                var RequestCheckType = "";
+                if (bAttendChange || bAttendRemoteChange)
+                    RequestCheckType = "attend";
+                if (bSlideChange)
+                    RequestCheckType = "slide";
+                if (bWatchChange)
+                    RequestCheckType = "watch";
+
+                if (thisCheck.dataset.pvtact == "2" && thisCheck.dataset.isinvite !== "2")
+                    CommonFunctions.Alert("Attendance at this activity requires approval");
+
+                var data = {
+                    Type: RequestCheckType, pKey: thisCheck.dataset.id, sessionID: thisCheck.dataset.session, sessionkey: thisCheck.dataset.sessionid, CheckChanged: thisCheck.checked, bAttend: bAttendData, bAttendRemote: bAttendRemoteData,
+                    bSlide: bSlideData, bWatch: bWatchData, ActDate: thisCheck.dataset.st, EndTime: thisCheck.dataset.et, PrivateActivity: thisCheck.dataset.pvtact, IsInvitation: thisCheck.dataset.isinvite
+                };
+                var result = CommonFunctions.AjaxCall('Post', '/MyMAGI/SetAttend', data, 'json', 'Error While Updating Schedule');
+                if (result === "OK") {
+                    if (bSlideData) {
+                        $(_slideElement).prop("checked", true);
+                        $(_slideElement).checked = true;
+                    }
+                }
+                else if (result !== "Error") {
+
+                    if (bSlideData) {
+                        $(_slideElement).prop("checked", true);
+                        $(_slideElement).checked = true;
+                    }
+                    if (!bSlideChange) {
+                        CommonFunctions.Alert(result);
+                    }
+                }
+                else {
+                    if (thisCheck.checked) {
+                        thisCheck.removeAttribute("checked");
+                        thisCheck.checked = false;
+                    }
+                    CommonFunctions.Alert(result);
+                }
+                UpdateOverlap();
+            });
+
+            function onChangeVirtual() {
+                var Data = { DropDownValue: $('#VirtualEventDropDown').val() };
+                switch ($('#VirtualEventDropDown').val()) {
+                    case "9":
+                        var result = CommonFunctions.AjaxCall('Get', '/Home/GetNavigationInstructions', '', 'json', 'Error accessing text block data.');
+                        if (result.msg === "OK") {
+                            $('#modalNavBody').html(result.Content);
+                            $('#modelNavInstructions').modal('show');
+                        }
+                        else
+                            CommonFunctions.Alert(result.msg);
+                        break;
+                    case "27":
+                        var result = CommonFunctions.AjaxCall('Get', '/Home/GetEventUpdatesContent', '', 'json', 'Error loading Event Updates');
+                        if (result.msg === "OK") {
+                            $('#modalEvtUpdatesVirtualBody').html(result.Content);
+                            $('#modelEvtUpdatesVirtual').modal('show');
+                        }
+                        else
+                            CommonFunctions.Alert(result);
+                        break;
+                    case "21":
+                        OpenChatWindow();
+                        break;
+                    default:
+                        var result = CommonFunctions.AjaxCall('Post', '/Home/VirtualDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+                        if (result.ActionType === "Redirect")
+                            window.location.href = result.RedirectionUrl;
+                        break;
+                }
+            }
+            $('#VirtualEventDropDown').multipleSelect({
+                multiple: false, isopen: false, placeholder: 'Show All', selectAll: false, selectAllText: 'Select all', multiple: false, multipleWidth: 'auto', filter: false, width: 'auto', height: 28, maxHeight: 450, onClick: function () { onChangeVirtual(); },
+            });
+
+            $(document).on('click', '.SessionInfoLink', function () {
+                var ClickedElem = $(this)[0];
+                var iframe = document.createElement('iframe');
+                iframe.src = '/MySessionPage?ESPK=' + ClickedElem.dataset["id"] + "&IsHow=1";
+                iframe.width = '100%';
+                iframe.height = '100%';
+                $('#SeeisonInfoContainer').html(iframe);
+                $('#sessionInfoModel').modal('show');
+                iframe = '';
+            });
+
+            $(document).on('click', '.askQuestionIcon', function () {
+                var ClickedElem = $(this)[0];
+                var elemID = ClickedElem.dataset["id"];
+                $('#evntSessionpKey').val(elemID);
+                $('#QuestionPkey').val('0');
+                $('#txtAreaQuestion').val('');
+                var FilterData = { EventSessionPKey: elemID };
+                $('#gridQuestionContent').load('_PartialQuestionsGrid', FilterData);
+                $('#modelAskQuestion').modal('show');
+            });
+
+            $('#cmdSaveQuestion').click(function () {
+                if ($('#txtAreaQuestion').val() === null || $('#txtAreaQuestion').val().trim() === "") {
+                    CommonFunctions.Alert("Enter the question.");
+                    return;
+                }
+
+                var data = { Question: $('#txtAreaQuestion').val(), EventSessionPKey: $('#evntSessionpKey').val(), QuestionID: $('#QuestionPkey').val() };
+                var result = CommonFunctions.AjaxCall('Post', '/MyMAGI/UpdateQuestions', data, 'json', 'Error While Updating Schedule');
+                if (result.status === "OK") {
+                    $('#txtAreaQuestion').val('');
+                    $('#QuestionPkey').val('');
+                    var FilterData = { EventSessionPKey: $('#evntSessionpKey').val() };
+                    $('#gridQuestionContent').load('_PartialQuestionsGrid', FilterData);
+                }
+                else
+                    CommonFunctions.Alert(result.msg);
+            });
+
+            $(document).on('click', '.editQuestion', function () {
+                var ClickedElem = $(this)[0];
+                var elemID = ClickedElem.dataset["id"];
+                var result = CommonFunctions.AjaxCall('Post', '/MyMAGI/GetQuestionData', { QuestionID: elemID }, 'json', 'Error While Updating Schedule');
+                if (result.msg === "OK") {
+                    $('#QuestionPkey').val(elemID);
+                    $('#txtAreaQuestion').val(result.Question);
+                    $('#modelAskQuestion').modal('show');
+                }
+                else
+                    CommonFunctions.Alert(result.msg);
+            });
+
+            $('#closeQuestion').click(function () {
+                $('#evntSessionpKey').val('');
+                $('#txtAreaQuestion').val('');
+                $('#QuestionPkey').val('');
+                $('#modelAskQuestion').modal('hide');
+            });
+
+            //$('#cmdReturn').click(function ()
+            //{
+            //    window.history.back();
+            //});
+
+            var VideoMedia = videojs("VideoPlayer", { "techOrder": ["html5", "youtube"], "ytcontrols": false, "autoplay": true, "preload": "auto", "loop": true });
+
+            $(document).on('click', '.schPlayPromo', function () {
+                var ClickedElem = $(this)[0];
+                var dsElem = ClickedElem.dataset;
+                var Link = dsElem["url"];
+                if (Link !== null && Link !== "") {
+                    var vimeoResult = Link.match(/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|album\/(?:\d+)\/video\/|video\/|)(\d+)(?:[a-zA-Z0-9_\-]+)?/i);
+                    if (vimeoResult !== null) {
+                        $('#VimeoLinkURL').text(Link);
+                        $('#VimeoLinkURL').attr("href", Link);
+                        $('#modelRecordingURLVimeo').modal('show');
+                    }
+                    else {
+                        var youtubeResult = Link.match(/(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/);
+                        if (youtubeResult !== null)
+                            VideoMedia.src({ type: 'video/youtube', src: Link });
+                        else
+                            VideoMedia.src(Link);
+
+                        $('#modelVideoPlayer').modal('show');
+                    }
+                }
+            });
+
+            $('#closeVideoPlayer').click(function () {
+                VideoMedia.pause();
+            });
+
+            $('#closeIframeVideo').click(function () {
+                $('#IframeVideo').attr('src', "");
+            });
+            $('#btnDownloadSchedule').click(function () {
+                $('#modelDownloadScheduleCalendar').modal('show');
+            });
+        });
+    </script>
+
+    if (Model.HelpIconInfo != null)
+    {
+        if ((Model.HelpIconInfo.PageIconVisible))
+        {
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    var player = videojs("pageVideoContent", { "techOrder": ["html5", "youtube"], "ytcontrols": false, "autoplay": true, "preload": "auto" });
+                    player.ready(function () {
+                        var promise = player.play();
+                        if (promise !== undefined) {
+                            promise.then(function () {
+                                // Autoplay started!
+                            }, function (error) {
+                                console.info(error);
+                            });
+                        }
+                    });
+
+                    player.on("ended", function ()
+                    {
+                        alertify.set({ labels: { ok: 'Yes', cancel: 'No' }, buttonReverse: true });
+                        if (typeof alertify !== 'undefined')
+                        {
+                            alertify.confirm('I have watched the entire video', function (e) {
+                                CommonFunctions.AjaxCall('Post', '/Home/UpdateHelpLogTime', { ID: $('#LogIDinfo').val() }, 'json', 'Error Occurred while Updating Log');
+                            });
+                        }
+                        else 
+                        {
+                            var r = confirm('I have watched the entire video');
+                            if (r)
+                                CommonFunctions.AjaxCall('Post', '/Home/UpdateHelpLogTime', { ID: $('#LogIDinfo').val() }, 'json', 'Error Occurred while Updating Log');
+                            else
+                                CommonFunctions.AjaxCall('Post', '/Home/UpdateHelpLogTime', { ID: $('#LogIDinfo').val() }, 'json', 'Error Occurred while Updating Log');
+                        }
+                    });
+                    function PageVideoPlay(mediatype, sourceType, valueinfo) {
+                        var vimeoResult = valueinfo.match(/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|album\/(?:\d+)\/video\/|video\/|)(\d+)(?:[a-zA-Z0-9_\-]+)?/i);
+                        if (vimeoResult !== null) {
+                            window.open(valueinfo, '_blank');
+                        }
+                        else {
+                            if (mediatype.toLocaleLowerCase() === "video" || mediatype.toLocaleLowerCase() === "audio")
+                                player.src({ type: sourceType, src: valueinfo });
+                            if (mediatype.toLocaleLowerCase() === "video url") {
+                                var youtubeResult = valueinfo.match(/(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/);
+                                if (youtubeResult !== null)
+                                    player.src({ type: 'video/youtube', src: valueinfo });
+                                else
+                                    player.src(valueinfo);
+                            }
+
+                            $('#pageVideoContent').show();
+                            $('#modelHelpMedia').modal('show');
+                        }
+                    }
+                    function Logupdate(pvalue, fName, Autoplay) {
+                        $('#LogIDinfo').val(0);
+                        var data = {
+                            type: pvalue,
+                            fileName: fName,
+                            bAutoplay: Autoplay,
+                        }
+                        var result = CommonFunctions.AjaxCall('POST', '/Home/UpdateHelpIconLog', data, 'json', 'Error Occurred while Updating Log');
+                        if (result != null) {
+                            if (result.msg === "OK") {
+                                $('#LogIDinfo').val(result.LogResult);
+                            }
+                        }
+                    }
+                    var AutoplayPageVideo = $('#vidAutoPlayType').val();
+                    if (AutoplayPageVideo !== null) {
+                        var elemDS = $('#pageVideoLink')[0].dataset;
+                        var mType = elemDS["type"];
+                        if (AutoplayPageVideo === "true") {
+                            var fname = elemDS["filename"];
+                            var uType = elemDS["usetype"];
+                            Logupdate(uType, fname, true);
+
+                            var valLink = $('#pageVideoLink').val();
+                            var sType = elemDS["mime"];
+                            if (mType.toLocaleLowerCase() === "document" || mType.toLocaleLowerCase() === "live url")
+                                window.open(valLink, '_blank');
+                            else
+                                PageVideoPlay(mType, sType, valLink);
+                        }
+                    }
+                    $('#PageHelpIcon').click(function (e) {
+                        e.preventDefault();
+                        var valLink1 = $('#pageVideoLink').val();
+                        var elem1DS = $('#pageVideoLink')[0].dataset;
+                        var mT1 = elem1DS["type"];
+                        var sT1 = elem1DS["mime"];
+                        var fname1 = elem1DS["filename"];
+                        var uType1 = elem1DS["usetype"];
+                        Logupdate(uType1, fname1, false);
+                        if (mT1.toLocaleLowerCase() === "document" || mT1.toLocaleLowerCase() === "live url")
+                            window.open(valLink1, '_blank');
+                        else
+                            PageVideoPlay(mT1, sT1, valLink1);
+                    });
+                    $('#closeHelpMedia').click(function () {
+                        player.pause();
+                    });
+                });
+            </script>
+        }
+    }
+}
+else
+{
+    <div class="magiViewMyScheduleWrapper mt-3">
+        <div class="container-fluid">
+            <div class="row">
+                <label> @ViewData["NotAttendeeText"] </label>
+            </div>
+        </div>
+    </div>
+    if (ViewBag.ShowAlert == true)
+    {
+        <script type="text/javascript">
+            $(document).ready(function ()
+            {
+                CommonFunctions.Alert("@ViewData["NotAttendeeText"]");
+            });
+        </script>
+    }
+}

@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewBag.Title = "UpcomingEvent";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .block {
+    display: inline-block;
+    }
+    table {
+        width :100% ;
+    }
+    table .firstcol{
+        width: 20%;
+    }
+    a:hover
+    {
+        text-decoration: underline !important;
+    }
+</style>
+
+
+    <div class="magiMySessionMainWrapper mt-3" >
+        <div class="container-fluid">
+            <div class="row">
+                @{
+                    Html.RenderAction("_PartialEventInfo", "Home");
+                }
+                <div class="col-md-8 col-lg-9 flex-grow-1">
+                    <div class="col-md-12">
+                        @*<div class="lblTitle"><h2>@ViewBag.PageTitle</h2></div>*@
+
+                        <div>
+                            <table width="100%">
+                                <tr>
+                                    <td>
+                                        <table width="100%" class="popupheader">
+                                            <tr>
+                                                <td style="padding: 3px; text-align: left">
+                                                    <div style="float:left;" class="lblTitle"><h2>@ViewBag.PageTitle</h2></div>
+                                                </td>
+                                                <td>
+                                                    <div style="text-align: left; float: right;"><a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 pull-right">Return</a></div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="row">
+                            @foreach (var item in Model)
+                            {
+
+                                @*<div style="display:block;">*@
+                                <div class="d-md-flex">
+                                    <div style="max-width:250px;width:100%;" class="pe-3">
+                                        <input class="ImgFconf img-fluid rounded-3 shadow" type="image" id="@item.ID" style="width:250px" src="@item.Image" />
+
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <b><a class="ImgFconf" id="@item.ID" href="" style="color: navy; text-decoration: none;">@item.Title</a></b>
+                                        <div>@item.Venue</div>
+                                        <div>@item.Date</div>
+                                        <p style="text-align: justify;font-size:inherit;">@item.Description</p>
+                                        <input type="hidden" value="@item.ID" name="Event_pKey" />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    $(document).ready(function () {
+
+
+        $(".ImgFconf").click(function (e) {
+
+            e.preventDefault();
+            var id = this.id;
+            var data = { Event_Pkey: id};
+            window.location.href = "/Events/FutureEvent?Event_Pkey=" + id ;
+           // CommonFunctions.AjaxCall('GET', '/Events/FutureEvent', data, 'Error While Getting Event Information.');
+            //if (DocumentResult != null) {
+            //    if (DocumentResult.msg === "OK")
+            //        window.location.href = "/Events/FutureEvent?EventPkey=" + DocumentResult.FileName;
+            //    else {
+            //    }
+            //}
+
+        });
+
+
+    });
+
+</script>

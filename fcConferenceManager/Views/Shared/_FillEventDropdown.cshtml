@@ -1,0 +1,38 @@
+﻿@if (ViewBag.EventDropdown)
+{
+    <span style="position: absolute; margin: 4px; background-color: #f9f9f9; width: 180px; height: 20px;" class="custom-select-span"></span>
+    <select id="ddMainEventDropDown" onchange="UpdateEventDropDown(1)" style="width:200px;">
+        @if (TempData["ddEvent"] != null)
+        {
+            System.Data.DataTable dt = (System.Data.DataTable)TempData["ddEvent"];
+            foreach (System.Data.DataRow dr in dt.Rows)
+            {
+                string data = ViewData["ddEventitemSelected"].ToString();
+                string Selected = (data == dr["pKey"].ToString()) ? "Selected" : "";
+                <option data-id="@dr["strDataText"]" value="@dr["pKey"]" @Selected>@dr["strText"]</option>
+            }
+        }
+    </select>
+}
+@if (ViewBag.MyEventDropDown)
+{
+    if (ViewData["ddMyEventVisible"] != null  && Convert.ToBoolean(ViewData["ddMyEventVisible"]) == true)
+    {
+        <select id="ddMainMyEventDropDown" onchange="UpdateEventDropDown(2)" style="width:200px;">
+            @if (TempData["ddMyEvent"] != null)
+            {
+                System.Data.DataTable dt = (System.Data.DataTable)TempData["ddMyEvent"];
+                foreach (System.Data.DataRow dr in dt.Rows)
+                {
+                    string data = ViewData["ddEventitemSelected"].ToString();
+                    string Selected = (data == dr["pKey"].ToString()) ? "Selected" : "";
+                    <option data-id="@dr["strDataText"]" value="@dr["pKey"]" @Selected>@dr["strText"]</option>
+                }
+            }
+        </select>
+    }
+    else
+    { 
+        <span id="" title="@ViewData["lblConferenceToolTip"]" style="font-size: 11pt;">@ViewData["lblConference"]</span>
+    }
+}

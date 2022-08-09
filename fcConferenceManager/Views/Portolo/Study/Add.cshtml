@@ -1,0 +1,99 @@
+﻿@model fcConferenceManager.Models.Portolo.Study
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+
+</head>
+
+<style>
+    .form-control:disabled, .form-control[readonly] {
+        background-color: #e9ecef0f;
+        opacity: 1;
+    }
+</style>
+<body>
+
+    <section class="task-list-form">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <form action="/Study/Edit" method="post" enctype="multipart/form-data" onsubmit="validateInputs(e);">
+                        @Html.HiddenFor(model => model.pkey)
+                        @Html.HiddenFor(model => model.FilePath)
+                        @Html.HiddenFor(model=> model.FileName)
+                        
+                        <div class="control-icons">
+                            <h2> Add Material </h2>
+
+                            <div class="controls">
+                                <input type="submit" name="Save" value="Save" id="idSave" class="brdr-1 btn-sm" onclick="return validateInputs(event);">
+                                <a href="~/Study/Study" class="brdr-1 btn-sm" style="padding:7px 5px"> Cancel </a>
+                                @Html.HiddenFor(model => model.UserId)
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-box">
+                                    <div class="form-group">
+                                        <label>Title:</label>
+                                        @Html.TextBoxFor(model => model.FileTitle, new { @class = "form-control form-control-sm", @id = "title" })
+                                    </div>
+                                    <div class="form-group">
+                                        <br />
+                                        <label>Description:</label>
+                                        @Html.TextAreaFor(model => model.FileDescription, new { @class = "form-control form-control-sm", cols = "100", rows = "10" })
+                                    </div><br />
+                                    <div class="form-group">
+                                        <label>File:</label>
+                                        <input type="file" name="file"/>
+
+                                    </div>
+                                    @if (Model.FileName != "" && Model.FileName != null)
+                                    {
+                                         <i class="fas fa-cloud-download"></i> @Html.DisplayFor(model => model.FileName)
+                                    }
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <p>	© 2022 by Elimar Systems. All Rights Reserved <a href="#" class="ml-5">Website Terms of Use</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+<script type="text/javascript" language="javascript">
+
+    function validateInputs(e) {
+        
+        var title = $.trim($('#title').val());
+        var description = $.trim($('#description').val());
+        if (title == "") {
+            $("#title").focus();
+
+            alert("Please enter the title of the topic");
+            return false;
+        }
+    }
+</script>

@@ -1,0 +1,427 @@
+﻿@model Elimar.Models.UserResponse
+@{
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+}
+<h3 style="color: black; font-weight: bold">
+    @Model.firstname @Model.lastname's Profile
+
+</h3>
+<h4 class="magi-justify-content-space-between" style="text-align: right; vertical-align: top; padding:7px" >
+    @Html.ActionLink("Edit", "Registration", "Registration", new { userID = Model.ID}, null)
+
+</h4>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+</head>
+<body>
+    <script type="text/javascript" language="javascript">
+    $(document).ready(function () {
+       var imageurl = '@Url.Content("ViewBag.Baseurl/User-images/empty image.png")';
+        $("#image").attr("src", imageurl);
+    });
+    function fileCheck(elm) {
+        debugger;
+        var fn = String($(elm).val());
+        var filename = fn.match(/[^\\/]*$/)[0]; // remove C:\fakename
+        var imageurl = '@Url.Content("ViewBag.Baseurl/User-images/imagename")';
+        imageurl = imageurl.replace('imagename', filename);
+        $("#image").attr("src", imageurl);
+        $("#image1").attr("src", imageurl);
+        var data = filename.split(".")[1];
+        if (data.toLowerCase() != 'jpg' && data.toLowerCase() != 'png' && data.toLowerCase() != 'gif')
+        {
+            alert("Invalid file, Please select jpg,png,gif files"); 
+		 
+            $("#file").val('');    
+          var imageurl = '@Url.Content("ViewBag.Baseurl/User-images/empty image.png")';
+            $("#image1").attr("src", imageurl);
+            $("#image").attr("src", imageurl);
+
+            return false;
+        }
+
+
+    }
+
+    function validateInputs(e) {
+
+        debugger;
+        var Salutation1 = $.trim($('#Salutation1').val());
+        var firstName = $.trim($('#firstNameid').val());
+        var LastName = $.trim($('#LastName').val());
+        var signinaccountid = $.trim($('#signinaccountid').val());
+        var MainEmail = $.trim($('#MainEmail').val());
+        var MainEmailType = $.trim($('#MainEmailType').val());
+        var ConfirmPassword = $.trim($('#ConfirmPassword').val());
+        var Password = $.trim($('#Password').val());
+        var Address1 = $.trim($('#Address1').val());
+        var city = $.trim($('#city').val());
+        var state = $.trim($('#state').val());
+        var zipcode = $.trim($('#zipcode').val());
+        var jobtitle = $.trim($('#jobtitle').val());
+        var Organization = $.trim($('#Organization').val());
+        var phone1 = $.trim($('#phone1').val());
+        if (Salutation1 == "") {
+            $("#Salutation1").focus();
+            alert("Please Select Salutation");
+            return false;
+        }
+        if (firstName == "") {
+            $("#firstNameid").focus();
+            alert("Please Fill First Name");
+            return false;
+        }
+        else if (LastName == "") {
+            $("#LastName").focus();
+            alert("Please Fill Last Name");
+            return false;
+        }
+        else if (signinaccountid == "") {
+            $("#signinaccountid").focus();
+            alert("Please Fill Sign in Account ID");
+            return false;
+        }
+        else if (MainEmail == "") {
+            $("#MainEmail").focus();
+            alert("Please Fill Main Email");
+            return false;
+        }
+        else if (MainEmailType == "") {
+            $("#MainEmailType").focus();
+            alert("Please Fill MainEmailType");
+            return false;
+        }
+        else if (Password == "") {
+            $("#Password").focus();
+            alert("Please Fill Password");
+            return false;
+        }
+        else if (ConfirmPassword == "") {
+            $("#ConfirmPassword").focus();
+            alert("Please Fill Confirm Password");
+            return false;
+        }
+        else if (Password != ConfirmPassword) {
+            $("#Password").focus();
+            $("#ConfirmPassword").focus();
+            alert("Password and ConfirmPassword value not match.");
+            return false;
+        }
+        else if (phone1 == "") {
+            $("#phone1").focus();
+            alert("Please Fill Phone 1");
+            return false;
+        }
+        else if (Address1 == "") {
+            $("#Address1").focus();
+            alert("Please Fill Address1");
+            return false;
+        }
+        else if (city == "") {
+            $("#city").focus();
+            alert("Please Fill City");
+            return false;
+        }
+        else if (state == "") {
+            $("#state").focus();
+            alert("Please Select State");
+            return false;
+        }
+        else if (zipcode == "") {
+            $("#zipcode").focus();
+            alert("Please Fill ZIP code");
+            return false;
+        }
+        else if (jobtitle == "") {
+            $("#jobtitle").focus();
+            alert("Please Fill Job Title");
+            return false;
+        }
+
+        else if (Organization == "") {
+            $("#Organization").focus();
+            alert("Please Fill Organization");
+            return false;
+        }
+        else {
+            return true
+        }
+
+    }
+
+    </script>
+    <style>
+        .span {
+   
+            display: inline-block;
+            width: 75px;
+            height: 38px;
+        }
+
+
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #BA68C8
+        }
+
+        .profile-button {
+            background: rgb(99, 39, 120);
+            box-shadow: none;
+            border: none
+        }
+
+            .profile-button:hover {
+                background: #682773
+            }
+
+            .profile-button:focus {
+                background: #682773;
+                box-shadow: none
+            }
+
+            .profile-button:active {
+                background: #682773;
+                box-shadow: none
+            }
+
+        .back:hover {
+            color: #682773;
+            cursor: pointer
+        }
+
+        .labels {
+            font-size: 11px
+        }
+
+        .add-experience:hover {
+            background: #BA68C8;
+            color: #fff;
+            cursor: pointer;
+            border: solid 1px #BA68C8
+        }
+    </style>
+
+
+    <form action="/Registration/RegistrationSubmit" method="post" enctype="multipart/form-data" onsubmit="validateInputs(e);">
+        <input name="ID" value="@Model.ID" hidden />
+        <div>
+
+            <div>
+                <div>
+                   
+                    <div >
+                        
+
+                        <div class="row">
+                            <div class="col-md-3 border-right" >
+
+                                @*<div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span class="font-weight-bold">Edogaru</span><span class="text-black-50">edogaru@mail.com.my</span><span> </span></div>*@
+                                <tr class="d-flex flex-column align-items-center text-center p-3 py-5">
+                                    <td @*style="text-align: left;  padding: -12px; border: 0px solid lightgray; margin-top: 7px;"*@>
+
+		  
+		 		   
+
+                                        @if (Model.Uimg == null)
+                                        {
+
+                                            <img alt="" id="image" src="@Url.Content("aa")" style="display:  10px;" height: 278px; width: 266px; />
+                                        }
+                                        else
+                                        {
+                                            if (Model.Uimg != null)
+                                            {
+
+                                                <img alt="" id="image1" src="@Url.Content(Model.Uimg)" style="display: 10px; height: 278px; width: 266px;" />
+                                            }
+
+                                            else
+                                            {
+
+                                                <img alt="" id="image" src="@Url.Content(Model.Uimg)" style="display: 10px; height: 278px; width: 266px;" />
+
+                                            }
+
+                                        }
+
+                                        <br>
+                                        <br>
+                                        <span style="text-align: center; vertical-align: top;"> @Model.personalbiography</span>
+                                    </td>
+                                </tr>
+                            </div>
+                            <div class="col-md-7 border-right">
+                                
+                                    @*<div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h4 class="text-right" style=" padding-top: 0rem !important;">Identification</h4>
+                                    </div>*@
+                                    <div class="row mt-2">
+                                        @*<div class="col-lg-10">*@
+                                            <div class="prof-info">
+                                                <div class="card">
+                                                    <div class="prof-data">
+                                                        <h4 class="mt-3 mb-2">Identification</h4>
+                                                        <table class="table table-bordered">
+                                                            <tr>
+                                                                <td>Salutation</td>
+                                                                <td>@Model.salutation1</td>
+                                                                <td>First Name</td>
+                                                                <td>@Model.firstname</td>
+                                                            </tr>
+
+
+                                                            <tr>
+                                                                <td>Middle Name</td>
+                                                                <td>@Model.middlename</td>
+
+                                                                <td>Lastname Name</td>
+                                                                <td>@Model.lastname</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>Suffix</td>
+                                                                <td>@Model.suffix</td>
+                                                                @*</tr>
+                    <tr>*@
+                                                                <td>Nickname</td>
+                                                                <td>@Model.nickname</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Sign In Account ID</td>
+                                                                <td>@Model.signinaccountid</td>
+                                                                @*</tr>
+                    <tr>*@
+                                                                <td>Email</td>
+                                                                <td>@Model.MainEmailType</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Send Mail To</td>
+                                                                <td>@Model.sendemailto</td>
+                                                                @*</tr>
+                    <tr>*@
+                                                                <td>Country</td>
+                                                                <td>@Model.country</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>State</td>
+                                                                <td>@Model.State</td>
+                                                                @*</tr>
+                    <tr>*@
+                                                                <td>Job Title</td>
+                                                                <td>@Model.jobTitle</td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+
+                                                    <div class="prof-info">
+                                                       
+                                                            <div class="prof-data">
+                                                                <h4 class="mt-3 mb-2">
+                                                                    Contact Informaton
+                                                                </h4>
+                                                                <table class="table table-bordered">
+                                                                    <tr>
+                                                                        <td>Personal Bio</td>
+                                                                        <td>@Model.personalbiography</td>
+                                                                    
+                                                                        <td>Mobile No</td>
+                                                                        <td>@Model.phone1</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Email</td>
+                                                                        <td>@Model.MainEmailType</td>
+                                                                   
+                                                                        <td>Skype Address</td>
+                                                                        <td>@Model.skypeaddress</td>
+                                                                    </tr>
+
+                                                                    <tr>
+                                                                        <td>Linked IN</td>
+                                                                        <td>@Model.linkedinURL</td>
+                                                                    
+                                                                        <td>Organization</td>
+                                                                        <td>@Model.organization</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Degree & Certificate</td>
+                                                                        <td>@Model.degreesandcertifications</td>
+                                                                    
+                                                                        <td>Website</td>
+                                                                        <td>@Model.website</td>
+                                                                    </tr>
+
+                                                                </table>
+                                                            </div>
+                                                       
+                                                    </div>
+                                                </div>
+                                        @*</div>*@
+
+                                                    <!--<div class="col-lg-10">
+                                                        <div class="prof-info">
+                                                            <div class="card">
+                                                               
+                                                               
+                                                               
+                                                                </div>
+                                                            </div>
+                                                        </div>-->
+                                                        @*<div class="col-md-12"><label class="labels">Salutation :</label> <span>@Model.salutation1</span></div>
+            <div class="col-md-12"><label class="labels">First Name :</label> <span>@Model.firstname</span></div>
+            <div class="col-md-12"><label class="labels">Middle Name :</label> <span>@Model.middlename </span></div>
+            <div class="col-md-12"><label class="labels">Last Name :</label> <span>@Model.lastname</span></div>
+            <div class="col-md-12"><label class="labels">Suffix :</label> <span> @Model.suffix </span></div>
+            <div class="col-md-12"><label class="labels">Nickname :</label> <span>  @Model.nickname</span></div>
+            <div class="col-md-12"><label class="labels">Sign In Account ID :</label> <span>@Model.signinaccountid</span></div>
+            <div class="col-md-12"><label class="labels">Main Email :</label> <span>@Model.MainEmailType</span></div>
+            <div class="col-md-12"><label class="labels">Send Mail To : </label> <span>@Model.sendemailto</span></div>
+            <div class="col-md-12"><label class="labels">Country :</label> <span>@Model.country</span></div>
+            <div class="col-md-12"><label class="labels">State :</label> <span>@Model.State</span></div>
+            <div class="col-md-12"><label class="labels">Job Title :</label> <span>@Model.jobTitle</span></div>*@
+
+                                                    <!--</div>-->
+                                                    
+                                                    <div class="row mt-3">
+                                                        @*<div class="col-md-6"><label class="labels">Country</label><input type="text" class="form-control" placeholder="country" value=""></div>
+            <div class="col-md-6"><label class="labels">State/Region</label><input type="text" class="form-control" value="" placeholder="state"></div>*@
+
+
+                                                    </div>
+
+
+
+                                                </div>
+
+
+
+
+                                           
+                                            <!--<div class="col-md-4" style="padding-top: 0rem !important; border-radius: 25px;  padding: 20px; width: 407px; height: 374px; ">
+                                                <div class="p-3 py-5" style="padding-top: 1rem !important;">
+                                                    <h4>Contact Informaton</h4><br>-->
+                                                   
+                                                    @*<div class="d-flex justify-content-between align-items-center experience">Contact Informaton<span></span><span></span></div><br>*@
+                                                    <!--<div class="col-md-12"><label class="labels">Personal Bio :</label> <span>@Model.personalbiography</span></div>
+                                                    <br>
+                                                    <div class="col-md-12"><label class="labels">Mobile No :</label> <span>@Model.phone1</span></div>
+                                                    <div class="col-md-12"><label class="labels">Email :</label> <span>@Model.MainEmailType</span></div>
+                                                    <div class="col-md-12"><label class="labels">Skype Address :</label> <span>@Model.skypeaddress</span></div>
+                                                    <div class="col-md-12"><label class="labels">Linked IN :</label>  <span>@Model.linkedinURL</span></div>
+                                                    <div class="col-md-12"><label class="labels">Organization :</label> <span>@Model.organization</span></div>
+                                                    <div class="col-md-12"><label class="labels">Degree & Certificate :</label> <span>@Model.degreesandcertifications</span></div>
+                                                    <div class="col-md-12"><label class="labels">Website :</label>  <span>@Model.website</span></div>
+                                                </div>
+                                            </div>-->
+                                        </div>
+                                    </div>
+                   
+                </div>
+
+	   
+            </div>
+        </div>
+    </form>
+
+
+</body>
+

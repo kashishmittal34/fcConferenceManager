@@ -1,0 +1,341 @@
+﻿
+@{
+    ViewBag.Title = "FdaGcp";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script>
+    function OpneNewTab(pkey, e) {
+        window.open("/FdaGcpRecords?Pkey=" + pkey);
+        e.preventDefault();
+    }
+</script>
+<style>
+    .SectionTitle
+    {
+        color: #00008b;
+        font-weight: bold;
+    }
+
+    .lblTitle
+    {
+        font-size: 18pt;
+        color: Navy;
+        background-color: transparent;
+    }
+
+    .btnSmall
+    {
+        background-color: #fff;
+        border: 1px solid black;
+        border-radius: 2px;
+        font-size: 10pt;
+    }
+
+    .gridlink
+    {
+        cursor: pointer;
+        color: blue;
+        text-decoration: underline;
+    }
+
+    #tblfdaGcp
+    {
+        font-size: 10pt;
+        width: 100%;
+        display: table;
+        background-color: white;
+    }
+
+    #tblfdaGcp td
+    {
+        border: none;
+        padding: 5px;
+    }
+
+    #tblfdaGcp thead
+    {
+        display: none;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row pt-2">
+        <div class="col-md-8">
+            <label id="lblTitle" class="lblTitle magi-inline-block">FDA Good Clinical Practice (GCP) Q&A</label>
+        </div>
+        <div class="col-md-4">
+            <div class="justify-content-end d-flex flex-wrap me-2 mt-1">
+                <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 ">Return</a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-md-12  mt-2">
+            <div class="col-md-12  mt-2">
+                <label id="lblMsg" style="width:100%;height:40px;border:1px solid black; padding-top:5px; display:none"></label>
+                <label id="lblFdagcp">Search @ViewBag.FdaGcpCount FDA answers to questions about Good Clinical Practice, clinical research regulations, and guidelines <label id="yrs">yrs</label>. If you can't find an answer to your question, contact the FDA at gcp.questions@fda.hhs.gov.</label>
+                <br />
+            </div>
+            <div class="col-md-12  mt-2">
+                <div class="row gx-1">
+                    <div class="col-md-1">
+                        <label class="SectionTitle"> Search For:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input id="txtTitle" maxlength="150" title="Title" class="input-sm mb-1 mb-md-0" />
+                    </div>
+                    <div class="col-md-5">
+                        <button type="button" id="btnSrch" class="btn mb-1">Search</button>
+                        <button type="button" id="btnClear" class="btn mb-1">Clear</button>
+                        <a id="btnNotes" href="" class="ms-1" style="font-size:15px">Notes</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 align-items-center mt-2 gx-1 d-flex">
+                <div class="col-md-1">
+                    <label class="me-1">Answers Since:</label>
+                </div>
+                <select id="ddAnswr" style="width:80px">
+                    <option value="2002" selected>2002</option>
+                    <option value="2003">2003</option>
+                    <option value="2004">2004</option>
+                    <option value="2005">2005</option>
+                    <option value="2006">2006</option>
+                    <option value="2007">2007</option>
+                    <option value="2008">2008</option>
+                    <option value="2009">2009</option>
+                    <option value="2010">2010</option>
+                    <option value="2011">2011</option>
+                    <option value="2012">2012</option>
+                    <option value="2013">2013</option>
+                    <option value="2014">2014</option>
+                    <option value="2015">2015</option>
+                    <option value="2016">2016</option>
+                    <option value="2017">2017</option>
+                    <option value="2018">2018</option>
+                    <option value="2019">2019</option>
+                </select>
+                <div style="display:none"><input type="checkbox" id="ckPuncuation" /><label for="ckPuncuation">Puncuation is significant</label></div>
+            </div>
+            <div class="col-md-12 mt-2">
+                <div class="d-md-flex align-items-center gx-1">
+                    <label class="col-md-1" style="line-height:1">Sort by:</label>
+                    <div class="me-2">
+                        <input type="radio" name="rdSort" id="rd0" value="0" checked class="mx-1" /><label for="rd0">Relevance</label>
+                    </div>
+                    <div class="me-2">
+                        <input type="radio" name="rdSort" id="rd1" value="1" class="mx-1" /><label for="rd1">Most Recent</label>
+                    </div>
+                    <div class="me-2">
+                        <input type="radio" name="rdSort" id="rd2" value="2" class="mx-1" /><label for="rd2">Alphabetical</label>
+                    </div>
+                </div>
+                <div style="display:inline; visibility: hidden" id="dvCurrentSearch">
+                    <input type="checkbox" id="ckCurrentSrch" class="mx-1" /><label for="ckCurrentSrch"> Search within results below</label>
+                </div>
+                <input type="hidden" id="txtLastSearch" value="" />
+            </div>
+            <div class="col-md-12 mt-2">
+                <label class="SectionTitle">Results for</label>
+                <label class="SectionTitle" id="lblResult"></label>
+                <a onclick=""></a>
+            </div>
+            <div class="col-md-12 mt-2">
+                <table id="tblfdaGcp" data-page-length="25" cellspacing="0" style=" border: solid 1px lightgray;" width="100%"></table>
+            </div>
+        </div>
+
+        <div class="modal fade" id="rwPopNotes" tabindex="-1" aria-labelledby="rwPopNotes" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width:800px;">
+                <div class="modal-content">
+                    <div class="modal-header modalBlueHeader">
+                        <h5 class="lblTitle">FDA GCP Notes</h5>
+                        <div>
+                            <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                        </div>
+                    </div>
+                    <div class="modal-body p-1">
+                        <div class="row p-2">
+                            <div class="modal-body p-2" style="max-height:650px; height:600px; overflow:auto;">
+                                <div class="row col-md-12 p-2">
+                                    Search Options:
+                                    <table cellspacing="5" cellpadding="0">
+                                        @*style="margin-left: 0.25in"*@
+                                        <tbody>
+                                            <tr valign="top">
+                                                <td>Category</td>
+                                                <td class="ps-5">Select one category or all categories.</td>
+                                            </tr>
+
+                                            <tr valign="top">
+                                                <td>Word or phrase</td>
+                                                <td class="ps-5">Search on a word such as "adverse" or a phrase such as "adverse event".</td>
+                                            </tr>
+
+                                            <tr valign="top">
+                                                <td>Beginning of word </td>
+                                                <td class="ps-5">Search on the beginning of a word. For example, searching on "investigat" finds "investigator" and "investigational", but not "subinvestigator". </td>
+                                            </tr>
+
+                                            <tr valign="top">
+                                                <td>Any text  </td>
+                                                <td class="ps-5">Search on text that may occur in the middle of a word or across words. For example, searching on "investigator" finds "subinvestigators"; searching on “to cha” finds “to chance”.  </td>
+                                            </tr>
+
+                                            <tr valign="top">
+                                                <td>Punctuation is significant</td>
+                                                <td class="ps-5">Limit results based on the presence or absence of punctuation. For example, searching on "FDA-approved" finds only "FDA-approved", while searching on "FDA approved" finds only "FDA approved". With this option unselected, searching on "crossover" will find both "crossover" and "cross-over". </td>
+                                            </tr>
+
+                                            <tr valign="top">
+                                                <td>Search within results below  </td>
+                                                <td class="ps-5">If your initial search returns too many results, this option allows you to search only amongst the results previously found. </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <br />
+                                    Tips:
+                                    <ul style="margin-top: 0px" class="m-2 bulletpara">
+                                        <li>Searches only find instances where the exact text in the search box is found. For example, searching for “event adverse” finds no results. </li>
+                                        <li>Results are displayed based on the number of times the search term is found in the document. </li>
+                                        <li>Surrounding a search phrase with quotation marks has no effect, unless you select "Punctuation is significant".</li>
+                                        <li>Words such as “and” and “or” are interpreted as part of the search phrase. </li>
+                                        <li>Red underlining indicates where the search term has been found in the title.  Searches in the body of the article are not shown. </li>
+                                        <li>Search terms that are singular and present-case with U.S. English spelling are more likely to find results. </li>
+
+                                    </ul>
+                                    <br />
+                                    <span>
+                                        <a target="_top" href="mailto:gcp.questions@fda.hhs.gov?subject=GCP question about ">Submit</a> a GCP question to the FDA.
+                                    </span>
+
+                                </div>
+                                <div style="padding: 20px 10px 10px 10px">
+                                    <label id="lblPopText" style="font-size:9pt"></label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        var val1 = $('#ddAnswr option:first').val();
+        var val2 = $('#ddAnswr option:last').val();
+        var yrs = "(years " + val1 + "-" + val2 + ")";
+        document.getElementById("yrs").innerHTML = yrs;
+        $('#btnNotes').on('click', function (e) {
+            $('#rwPopNotes').modal('show');
+            e.preventDefault();
+        });
+        RefreshFdaGcpTable();
+        function RefreshFdaGcpTable() {
+
+            var DataSet = null;
+            var ddindexvalue = $("#ddAnswr").prop('selectedIndex');
+            var ddtext = $("#ddAnswr option:selected").text();
+            var rdvalue = $('input[type=radio][name=rdSort]:checked').val();
+            var txt = $('#txtTitle').val().toString();
+            //if (txt != "") {
+            //    document.getElementById("lblResult").innerHTML = '"' + txt + '"';
+            //}
+            var CkCurrent = false;
+            if ($('#ckCurrentSrch').is(":checked")) {
+                CkCurrent = true;
+            }
+            var lastSearchText = $('#txtLastSearch').val().toString();
+            var data = {
+                txtTitle: txt,
+                ddAnswrIndex: ddindexvalue,
+                ddAnswrText: ddtext,
+                ckCurrentSrch: CkCurrent,
+                rdSor1: rdvalue,
+                ckPuncuation: false,
+                previousSearch: lastSearchText
+
+            }
+            var result = CommonFunctions.AjaxCall('Get', '/Resources/RefreshFdaGcp', data, '', 'Error While Fetching Data.');
+            if (result !== null || result !== "ERROR") {
+                if (result.msg === "OK")
+                    DataSet = JSON.parse(result.Source);
+
+                document.getElementById("dvCurrentSearch").style.visibility = (DataSet.length === 0) ? "hidden" : "visible";
+                $("#ckCurrentSrch").prop('checked', false);
+            }
+
+            $('#tblfdaGcp').dataTable({
+                paging: true, bPaginate: false, bInfo: false, bLengthChange: false, bFilter: false, rowsPerPageOptions: false, ordering: false, sorting: false, searching: false, "order": [[0, "desc"]],
+                bDestroy: true,
+                fixedHeader: true,
+                data: DataSet,
+                columns: [
+                    {
+                        title: "",
+                        data: "dts",
+                        outerWidth: "100px",
+
+                    },
+                    {
+                        title: "",
+                        data: { pKey: "pKey", Title: "Title", Occur: "Occur" },
+                        render: function (data) {
+                            var lbltext = "";
+                            lbltext = (data.Occur == "" ? data.Occur : '(' + data.Occur + ')');
+                            return `<a class="gridlink" onclick="OpneNewTab(${data.pKey})" ><label style="font-size:10pt;">${data.Title}</label></a>
+                                            <label style="font-size:10pt;">${lbltext}</label>`
+                        }
+                    }
+
+                ],
+
+            });
+
+        }
+
+        $('input[type=radio][name=rdSort]').change(function () {
+            RefreshFdaGcpTable();
+        });
+
+        $('#ddAnswr').change(function () {
+            RefreshFdaGcpTable();
+        });
+
+        $('#btnSrch').on('click', function () {
+
+            var txt = $('#txtTitle').val().toString();
+            var lastSearchText = $('#txtLastSearch').val().toString();
+            var labelResult = $('#lblResult').html().toString().replace('"', '').replace('"', '');
+            if (txt != "" && lastSearchText == "") {
+                document.getElementById("txtLastSearch").value = txt;
+            }
+
+            if (txt != "" && lastSearchText != "" && ($('#ckCurrentSrch').is(":checked"))) {
+                document.getElementById("lblResult").innerHTML = '"' + labelResult + '+' + txt + '"';
+                document.getElementById("txtLastSearch").value = lastSearchText + "/" + txt;
+            } else if (txt != "" && !($('#ckCurrentSrch').is(":checked"))) {
+                document.getElementById("lblResult").innerHTML = '"' + txt + '"';
+                document.getElementById("txtLastSearch").value = txt;
+            }
+            RefreshFdaGcpTable();
+
+
+        });
+        $('#btnClear').on('click', function () {
+
+            document.getElementById("txtTitle").value = "";
+            $('rd0').prop("checked", true);
+            $("ddAnswr").prop('selectedIndex', '0');
+            document.getElementById("lblResult").innerHTML = "";
+            RefreshFdaGcpTable();
+        });
+    });
+</script>

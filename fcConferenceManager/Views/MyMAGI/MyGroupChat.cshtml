@@ -1,0 +1,474 @@
+﻿@using fcConferenceManager.Models
+@model MyGroupChat
+@{
+    ViewBag.Title = "GroupChat";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .popuptext
+    {
+        display: none;
+        background-color: #ffffff;
+        border: 2px solid #707070;
+        border-radius: 6px;
+        position: absolute;
+        z-index: 9999999;
+        width: auto;
+        padding: 10px;
+    }
+
+    .popuptext p
+    {
+        margin:0;
+    }
+
+    .popuptext h4
+    {
+        font-size:16px;
+    }
+
+    #myPopup
+    {
+        max-width: 380px;
+        width: 380px;
+    }
+
+    #titleParentDiv
+    {
+        background-color: #1e90ff !important;
+        border-left-color: #1e90ff !important;
+        min-width: 300px;
+    }
+
+    #txtTitle
+    {
+        margin: 5px;
+        color: white;
+    }
+    a.JoinThisGroup
+    {
+        background: lightseagreen;
+        display: inline-block;
+        width: 50px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    a.LeaveThisGroup
+    {
+        background: darkgray;
+        display: inline-block;
+        width: 50px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    a.JoinThisGroup span, a.LeaveThisGroup span
+    {
+        padding: 0;
+        margin: 0;
+        float: left;
+        width: 100%;
+        text-align: center;
+        font-size: 12px;
+    }
+
+    a.JoinThisGroup span:first-child, a.LeaveThisGroup span:first-child
+    {
+        padding: 4px 0 0 0;
+    }
+
+    a.JoinThisGroup span:nth-child(2), a.LeaveThisGroup span:nth-child(2)
+    {
+        padding-bottom: 5px;
+    }
+
+    .clsFullBlock.parentJoinThesePeople a
+    {
+        margin: 2px;
+    }
+
+    .clsFullBlock
+    {
+        display: inline-block;
+        width: 100%;
+    }
+
+    .parentJoinThesePeople a
+    {
+        display: inline-block;
+        background: lightseagreen;
+        float: left;
+        padding: 5px;
+        margin: 0 5px;
+        border-radius: 2px;
+        cursor: pointer;
+    }
+
+    .parentJoinThesePeople span
+    {
+        color: black;
+    }
+
+    .parentJoinThesePeople
+    {
+        display:none;
+    }
+
+    .customleftPanelSection
+    {
+        max-width: 270px;
+    }
+
+    div[id*="rdListWindow"].RadWindow.rwShadow
+    {
+        z-index: 9999999999 !important;
+    }
+
+    @@media(max-width:767px)
+    {
+        .customleftPanelSection
+        {
+            max-width: 100%;
+        }
+    }
+
+    .block-for-onlinePeople
+    {
+        width: 10px;
+        height: 10px;
+        background-color: #34fc07;
+        border-radius: 100%;
+        float: left;
+        margin: 5px 5px 0px 2px;
+    }
+
+    #TableGroupList tbody tr:nth-child(odd)
+    {
+        background-color: #f2f2f2
+    }
+
+    #TableGroupList thead th
+    {
+        font-weight: 400;
+        padding: 0 5px;
+    }
+</style>
+
+<div class="popuptext isEmpty" id="myPopup">
+    <div id="titleParentDiv" style="display:block; width: 100%;">
+        <h4 id="txtTitle" class="isEmpty" style="font-weight: 400;"></h4>
+    </div>
+    <table width="100%">
+        <tbody>
+            <tr>
+                <td style="padding-right: 10px; vertical-align: top; padding-top: 10px; width: 100px">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td style="position: relative;">
+                                    <img id='imgProfilePic' width="100px" height="100px" style="object-fit: cover" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td style="vertical-align: top; padding-top: 10px;">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <p id='txtName'></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p id='txtJob'></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p id='txtDept'></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p id='txtOrg'></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p id='txtTempBio'></p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="container-fluid  mt-3">
+    <div class="row">
+        <div class='magiSidebarWrapper pe-md-0 mb-3 mb-md-0'>
+            @if (ViewBag.leftPanel_Visible == true)
+            {
+                Html.RenderAction("_PartialLeftPanel", "MyMagi");
+            }
+            @{
+                Html.RenderAction("ChatPanelAction", "MyMagi");
+            }
+        </div>
+        <div class="col-md-8 col-lg-9 flex-grow-1">
+            <div class="row" style="padding:0 10px">
+                <div class="col-md-8">
+                    <h2>@ViewBag.TitleOfPage</h2>
+                </div>
+
+                <table id="TableGroupList" width="100%">
+                    <thead>
+                        <tr style="background-color:#0094ff ;color:white;">
+                            <th width="100px">Chat Group</th>
+                            <th>Group Members</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.GroupChatList.Rows.Count > 0)
+                        {
+                            foreach (System.Data.DataRow dr in Model.GroupChatList.Rows)
+                            {
+                                <tr>
+                                    <td style="vertical-align:top">
+                                        <div>@dr["strText"]</div>
+                                    </td>
+                                    <td style="vertical-align:top ;">
+                                        <div class="clsFullBlock parentJoinThesePeople">
+                                            <span class="joinThesePeople">@dr["cnt"]</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="2">
+                                    No records to display
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var colorsMyGroup =
+        [
+            { c: '#fe0000', a: 0 },
+            { c: '#FF8CA9', a: 0 },
+            { c: '#FFEFBQ', a: 0 },
+            { c: '#f36523', a: 0 },
+            { c: '#4cbb17', a: 0 },
+            { c: '#fe0000', a: 0 },
+            { c: '#f36523', a: 0 },
+            { c: '#FF8CA9', a: 0 },
+            { c: '#FFEFBQ', a: 0 },
+            { c: '#95FF41', a: 0 },
+            { c: '#f36523', a: 0 },
+            { c: '#fe0000', a: 0 },
+            { c: '#4cbb17', a: 0 },
+            { c: '#fe0000', a: 0 },
+            { c: '#95FF41', a: 0 }
+        ];
+
+    function getRandomColorForMyGroup()
+    {
+        var color = "";
+        for (var i = 0; i < 15; i++)
+        {
+            if (colorsMyGroup[i].a == 0)
+            {
+                color = colorsMyGroup[i].c;
+                colorsMyGroup[i].a = 1;
+
+                if (i == 14)
+                    resetColorMyGroup();
+                else
+                {
+                    break;
+                }
+            }
+        }
+        return color;
+    }
+
+    function resetColorMyGroup()
+    {
+        for (var i = 0; i < 15; i++)
+        {
+            colorsMyGroup[i].a = 0;
+        }
+    }
+
+    function showGroupsForChat()
+    {
+        try
+        {
+            $('.joinThesePeople').each(function ()
+            {
+                var parentWrapper = $(this).closest(".parentJoinThesePeople");
+                var dataInsideThisBlock = $(this).text();
+                if (dataInsideThisBlock != '')
+                {
+                    $(this).html("");
+                    var eachPerson = dataInsideThisBlock.split('||');
+                    $(eachPerson).each(function ()
+                    {
+                        if (this != "")
+                        {
+                            var oSplit = this.split('^');
+                            var id = (oSplit[0]);
+                            var name = (oSplit[1]);
+
+                            var jobTitle = (oSplit[2]);
+                            var department = (oSplit[3]);
+                            var org = (oSplit[4]);
+                            var bio = (oSplit[5]);
+                            var imageForProfile = (oSplit[6]);
+                            var Initials = (oSplit[7]);
+                            var IsOnline = (oSplit[8]);
+
+                            if (imageForProfile !== undefined && imageForProfile != null && imageForProfile != '')
+                                imageForProfile = imageForProfile.trim();
+
+                            var joinLink = '<a style="background:' + getRandomColorForMyGroup() + ';" dataForId="' + id + '" imageForProfile="' + imageForProfile + '" jobTitle="' + jobTitle +
+                                '" department="' + department +
+                                '" org="' + org +
+                                '" bio="' + bio +
+                                '" name="' + name +
+                                '" isonline="' + IsOnline.trim() +
+                                '"><span>' + Initials + '</span>' +
+                                (IsOnline.trim() == "1" ? '<span class="block-for-onlinePeople"></span>' : '') +
+                                '</a>';
+
+                            $(parentWrapper).append(joinLink);
+                        }
+                    });
+                }
+            });
+
+            $('.parentJoinThesePeople').slideDown(500);
+            ////////////////////////////////////////////
+            $('.parentJoinThesePeople a').off('mouseenter');
+            $('.parentJoinThesePeople a').on('mouseenter', function (event)
+            {
+                try
+                {
+                    var ID = $(this).attr('dataForId');
+                    var name = $(this).attr('name');
+                    var jobTitle = $(this).attr('jobTitle');
+                    var department = $(this).attr('department');
+                    var org = $(this).attr('org');
+                    var bio = $(this).attr('bio');
+                    var imageForProfile = $(this).attr('imageForProfile');
+
+                    /////////////////////////////////////////
+                    $('#txtTitle').html(name);
+                    $('#txtJob').html(jobTitle);
+                    $('#txtDept').html(department);
+                    $('#txtOrg').html(org);
+                    $('#txtTempBio').html(isNotNullOrEmpty(bio) ? bio : 'No bio available');
+                    $('#imgProfilePic').prop('src', '').prop('src', '/accountimages/' + ID + '_img.jpg?' + new Date().getTime());
+
+                    $('#imgProfilePic').attr("onerror", "this.onerror=null;this.src='" + (imageForProfile != null ? imageForProfile.replace('~', '') : '') + "?" + new Date().getTime() + "';");
+
+                    /////////////////////////////////////////
+
+                    $('#connectRow').css('display', 'none');
+                    $('#btnUploadHS').css('display', 'none');
+                    $('#titleParentDiv').css('display', 'inline-block');
+
+                    $('#myPopup').css(
+                        {
+                            'display': 'inline-block', 'top':
+                                (
+                                    ((event.pageY + 10 + $(this).height()) > $(window).height()) ?
+                                        (event.pageY - $(this).height() - 10) : (event.pageY + 10)
+                                ),
+                            'left':
+                                (
+                                    ((event.pageX + 400 + $(this).width()) > $(window).width()) ?
+                                        (event.pageX - $(this).width() - 250) : (event.pageX + 20)
+                                ),
+                            'position': 'absolute'
+                        });
+                }
+                catch (ex)
+                {
+                    console.log(ex);
+                }
+            });
+
+            $('.parentJoinThesePeople a').off('mouseleave');
+            $('.parentJoinThesePeople a').on('mouseleave', function ()
+            {
+                $('#myPopup').css('display', 'none');
+            });
+
+            addEventListenersOnJoin();
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function addEventListenersOnJoin()
+    {
+        try
+        {
+            $('.parentJoinThesePeople a').off('click');
+            $('.parentJoinThesePeople a').on('click', function ()
+            {
+                var id = $(this).attr('dataForId');
+                var name = $(this).find('span');
+                var IsOnline = $(this).attr('isonline');
+
+                if (IsOnline == "1")
+                {
+                    OpenChat(id, name, 1);
+                }
+                else
+                {
+                    sendMessage(id);
+                }
+            });
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function sendMessage(uid)
+    {
+        try
+        {
+            var URLString = "/frmEmailPopup.aspx?Account_pkey=" + uid + '&Event_pkey='+@ViewBag.EventPkey+'&Page_pkey=3';
+            window.open(URLString);
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    $(window).on('load',function ()
+    {
+        showGroupsForChat();
+    });
+</script>

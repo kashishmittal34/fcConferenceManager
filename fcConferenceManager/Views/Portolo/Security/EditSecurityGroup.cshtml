@@ -1,0 +1,226 @@
+﻿
+@model Elimar.Models.SecurityGroup
+@{
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+}
+<style>
+    textarea, input {
+        max-width: none;
+    }
+    a{
+        color:black;
+    }
+    i {
+        display: inline-block;
+        border-radius: 60px;
+        box-shadow: 0 0 2px #888;
+        padding: 0.5em 0.6em;
+        margin: 4px;
+        background-color: cornflowerblue;
+    }
+    i,a:hover{
+        cursor:pointer;
+    }
+
+    td, tr {
+        border: none;
+    }
+</style>
+<script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+<script type="text/javascript" language="javascript">
+
+    $(document).ready(function () {
+        $("#add").click(function () {
+            $("#frame").show();
+        })
+        $("#remove").click(function () {
+            var array = [];
+            var PK = @Model.SecurtiyGroupPkey;
+            debugger;
+            $("#members input:checkbox:checked").each(function () {
+                array.push($(this).val());
+                debugger;
+            });
+            if (array.length == 0) {
+                alert("please select members to remove");
+                return false;
+            }
+            else {
+                $.ajax({
+                    url: "/Security/RemoveMember",
+                    traditional: true,
+                    data: { 'members': array, 'PK': PK },
+                    success: function (response) {
+                        debugger;
+                        window.top.location.reload();
+                    }
+                });
+            }
+        });
+        $("#save").click(function () {
+            var array = [];
+            var PK = @Model.SecurtiyGroupPkey;
+            $("#component input:checkbox:checked").each(function () {
+                array.push($(this).val());
+                debugger;
+            });
+            $.ajax({
+                url: "/Security/ChangeComponent",
+                traditional: true,
+                data: { 'components': array, 'PK': PK },
+                success: function (response) {
+                    debugger;
+                    window.top.location.reload();
+                }
+            });
+        });
+
+        $("#apply").click(function () {
+            var array = [];
+            var PK = @Model.SecurtiyGroupPkey;
+            $("#component input:checkbox:checked").each(function () {
+                array.push($(this).val());
+                debugger;
+            });
+            $.ajax({
+                url: "/Security/ChangeComponent",
+                traditional: true,
+                data: { 'components': array, 'PK': PK },
+                success: function (response) {
+                    debugger;
+                    window.top.location.reload();
+                }
+            });
+        });
+        $("#export").click(function () {
+            debugger;
+            $("#members").table2excel({
+                name: "securit Group Members",
+                filename: "Members", //do not include extension
+                fileext: ".xls" // file extension
+            });
+        });
+    })
+
+</script>
+
+
+<div>
+    <iframe id="frame" style="position: absolute; left: 10%; top: 23%; height: 70%; width: 83%; display: none; border: 2px solid cornflowerblue" src="~/Security/AddMember?PK=@Model.SecurtiyGroupPkey"></iframe>
+</div>
+<div class="container-fluid">
+    <div class="row" style="background-color:lightskyblue;">
+        <div class="col-12">
+            <span style="font-size:30px;color:darkblue">Security Group : @Model.Name</span>
+            <div style="float:right; align-content:center ">
+                <input id="apply" type="button" style="width: 70px; padding: 2px; background-color: white;" class="btn btn-outline-warning" value="Apply" />
+                <input id="save" type="submit" style="width: 70px; padding: 2px; background-color: white; " class="btn btn-outline-warning" value="Save" />
+                <input id="cancel" type="button" style="width: 70px; padding:2px; background-color: white; " class="btn btn-outline-warning" value="cancel" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <span style="color:blue; font-size:20px;">Description</span><br />
+            <label style="font-size:12px">Name</label><br />
+            <input style="border-left:5px solid blue ; width:500px;" class="form-control" value="@Model.Name" readonly />
+            <label style="font-size:12px">Description</label><br />
+            <textarea class="form-control" style="width: 500px; resize:none;height:100px;">@Model.Description</textarea><br />
+            <label class="form-control" style="background-color:cornflowerblue; width:300px; color:white">Members</label>
+            <div class="row">
+                <div class="col">
+                    <a href="#" id="add"><i class="fa-solid fa-plus"></i></a>
+                    <a href="#" id="remove"><i class="fa-solid fa-minus"></i></a>
+                    <a href="#" id="export"><i class="fa-solid fa-file-excel"></i></a>
+                </div>
+            </div>
+            <table id="members" class="table table-striped">
+                <thead>
+                    <tr style="background-color:cornflowerblue; color:white;">
+                        <td style="width:50px"><input class="form-check-input" type="checkbox" disabled/></td>
+                        <td style="width:100px"><lable>ID</lable></td>
+                        <td style="width:300px"><lable>Name</lable></td>
+                        <td style="width:100px"><lable>Activated</lable></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.members)
+                    {
+                        <tr>
+                            <td><input value="@item.AccountID" class="form-check-input" type="checkbox" /></td>
+                            <td>@item.AccountID</td>
+                            <td>@item.AccountName</td>
+                            <td>@item.Activated</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-1">
+
+        </div>
+        <div class="col-4">
+            <span style="color:darkblue;font-size:20px;">Components rights</span>
+            <table id="component" style="border: 1px solid cornflowerblue; " class="table table-striped">
+                <thead>
+                    <tr>
+                        <th style="background-color:cornflowerblue; color:white">Component</th>
+                        <th style="background-color:cornflowerblue; color:white">View</th>
+                        <th style="background-color:cornflowerblue; color:white">Add</th>
+                        <th style="background-color:cornflowerblue; color:white">Edit</th>
+                        <th style="background-color:cornflowerblue; color:white">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{foreach (var item in Model.ComponentList)
+                        {
+                            <tr>
+                                <td>@item.ComponentName</td>
+                                @if (item.AllowView)
+                                {
+                                    <td><input value="@item.ComponentName+AllowView" class="form-check-input" type="checkbox" checked /></td>
+                                }
+                                else
+                                {
+                                    <td><input value="@item.ComponentName+AllowView" class="form-check-input" type="checkbox" /></td>
+                                }
+                                @if (item.AllowAdd)
+                                {
+                                    <td><input value="@item.ComponentName+AllowAdd" class="form-check-input" type="checkbox" checked /></td>
+                                }
+                                else
+                                {
+                                    <td><input value="@item.ComponentName+AllowAdd" class="form-check-input" type="checkbox" /></td>
+                                }
+                                @if (item.AllowEdit)
+                                {
+                                    <td><input value="@item.ComponentName+AllowEdit" class="form-check-input" type="checkbox" checked /></td>
+                                }
+                                else
+                                {
+                                    <td><input value="@item.ComponentName+AllowEdit" class="form-check-input" type="checkbox" /></td>
+                                }
+                                @if (item.AllowDelete)
+                                {
+                                    <td><input value="@item.ComponentName+AllowDelete" class="form-check-input" type="checkbox" checked /></td>
+                                }
+                                else
+                                {
+                                    <td><input value="@item.ComponentName+AllowDelete" class="form-check-input" type="checkbox" /></td>
+                                }
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+

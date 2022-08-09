@@ -1,0 +1,494 @@
+﻿@model IEnumerable<Elimar.Models.UserResponse>
+@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+
+
+}
+
+<p style="margin: 9px 0 10px !important;">
+    <h3>MAGI Users  @Html.ActionLink("Join MAGI", "Registration")</h3> 
+   
+</p>
+
+
+
+																	  
+		
+
+
+<body>
+    @*<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>*@
+    <script type="text/javascript">
+    function portoloajax(e) {
+        //$("#portolodropdown").click(function (e) {
+        //var val = $('select#portolodropdown option:selected').val()
+          var val = $("option:selected").val();
+        //alert($(this).val());
+            alert(val);
+            $.ajax({
+                type: "POST",
+                url: "@ViewBag.Baseurl/Registration/updateportolo/",
+                data: {
+                    // < note use of 'this' here
+
+                },
+                success: function (result) {
+                    checkidsarray.length = 0;
+                    alert('Copied');
+                    location.reload();
+
+                },
+
+                error: function (result) {
+                    alert('error');
+                }
+            });
+        //});
+    }
+    function Checkboxchange(e) {
+        $('#select-all').click(function (event) {
+            if (this.checked) {
+                checkidsarray.length = 0;
+                // Iterate each checkbox
+                $(':checkbox').each(function () {
+                    this.checked = true;
+                    if (this.value != "on") {
+                        checkidsarray.push(this.value);
+                    }
+                });
+            } else {
+                $(':checkbox').each(function () {
+                    this.checked = false;
+                });
+            }
+        });
+    }
+   
+    const checkidsarray = [];
+     function callAjax(e) {
+         $("#updateuserlist").click(function (e) {
+                if (checkidsarray.length == 0) {
+                    checkidsarray.length = 0;
+                    $(':checkbox').each(function () {
+                        $(":checkbox:checked").each(function () {
+                            if (!checkidsarray.includes(this.value)) {
+                                if (this.value != "on") {
+                                    checkidsarray.push(this.value);
+                                }
+                            }
+                        });
+
+                    });
+                }
+             if ($('#portoloajaxForupdate').val() == 0) {
+                 alert('Please Select Status');
+                 return false;
+             }
+                if (checkidsarray.length == 0) {
+                    alert('Select Rows To Update');
+                    return false;
+                }
+                else {
+                    if (confirm("Do you want to Update select Rows")) {
+                        // do stuff
+                    } else {
+                        checkidsarray.length = 0;
+                        return false;
+                    }
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "@ViewBag.Baseurl/Registration/UpdatePortoloStatus/",
+
+                    data: {
+                        primarykey: checkidsarray.toString(), // < note use of 'this' here
+                        PortoloID: $('#portoloajaxForupdate').val()
+                    },
+                    success: function (result) {
+                        alert("updated");
+                        checkidsarray.length = 0;
+                        location.reload();
+                    },
+                    error: function (result) {
+                        alert('error');
+
+                    }
+                });
+            });
+        }
+    function portoloajaxfilter(e) {
+				 
+													
+        var val = $('select#portoloajaxid option:selected').val();
+											   
+							   
+        alert(val);
+        $.ajax({
+            type: "POST",
+            url: "@ViewBag.Baseurl/Registration/Users/",
+            data: {
+                id:0,
+                PortoloKey: val  // < note use of 'this' here
+
+            },
+			
+
+
+            error: function (result) {
+                alert('error');
+            }
+        });
+        //});
+    }
+		 
+	   
+		
+									 
+																   
+											  
+												   
+													
+													 
+														 
+
+         function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("myTable");
+            switching = true;
+            dir = "asc";          
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+               for (i = 1; i < (rows.length - 1); i++) {
+                     shouldSwitch = false;
+                     x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                     if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                             shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                             shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {                    
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;                    
+                    switchcount++;
+                } else {
+                     if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+          function excellsheet() {
+            $.ajax({
+                type: "POST",
+                url: "@ViewBag.Baseurl/Registration/DownloadExcel/",
+                success: function (response) {
+                    var blob = new Blob([response], { type: 'application/vnd.ms-excel' });
+                    var downloadUrl = URL.createObjectURL(blob);
+                    var a = document.createElement("a");
+                    a.href = downloadUrl;
+                    // a.download = "downloadFile.xlsx";
+                    a.download = "PublicTasks_{0:yyMMdd_HH.mm}";
+                    document.body.appendChild(a);
+                    a.click();
+                },
+                error: function (result) {
+                    alert('error');
+                }
+            });
+        }
+    </script>
+    <style>
+        table.dataTable thead .sorting:after,
+        table.dataTable thead .sorting:before,
+        table.dataTable thead .sorting_asc:after,
+        table.dataTable thead .sorting_asc:before,
+        table.dataTable thead .sorting_asc_disabled:after,
+        table.dataTable thead .sorting_asc_disabled:before,
+        table.dataTable thead .sorting_desc:after,
+        table.dataTable thead .sorting_desc:before,
+        table.dataTable thead .sorting_desc_disabled:after,
+        table.dataTable thead .sorting_desc_disabled:before {
+            bottom: .5em;
+        }
+
+        table.cedvel th {
+            background-color: #c3dde0;
+            background-image: url(../Content/SiteImages/1.png);
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #a9c6c9;
+        }
+
+            table.cedvel th:hover {
+                background-color: lightcyan;
+            }
+    </style>
+    <div style="text-align: right; vertical-align: top; color:orange">
+        <a class="brdr-1 " style="background-color:#eee;" href="@ViewBag.Baseurl/Registration/DownloadExcel">Download</a>
+    </div>
+    <table>
+
+        <tr>
+            <td style="text-align:right">
+                <select style=" height:25px" id="portoloajaxForupdate">
+                    <option value="0">All</option>
+                    <option value="1"> Contact</option>
+                    <option value="2">Contacted</option>
+                    <option value="3">Supportive</option>
+                    <option value="4"> No Supportive</option>
+
+				
+																				  
+														  
+																									 
+																										  
+																										   
+																											
+																												
+                </select>
+                <button onclick="callAjax(this)" style=" width: 62px; color: orange; border-bottom-width: thin; border-top-width: thin; border-left-width: thin; border-right-width: thin;" id="updateuserlist">Update</button>
+            </td>
+
+
+        </tr>
+
+    </table>
+    <br />
+    <form action="/Registration/Users" method="post" enctype="multipart/form-data" onsubmit="callAjax(e);">
+
+																			   
+																						 
+				
+									 
+
+																												
+															   
+					 
+					
+						  
+					 
+					
+						   
+					 
+
+					
+							  
+					 
+					
+							  
+					 
+					
+							   
+					 
+					
+							 
+					 
+					
+							  
+					 
+					
+						   
+					 
+					
+							 
+					 
+					
+							  
+					 
+					
+								
+					 
+
+       
+        <table>
+					 
+
+            <tr>
+								  
+					 
+
+                <td>
+                    <select id="portoloajaxid" style=" height:25px" name="PortoloKey">
+                        <option value="0" @(ViewBag.DropdownSelected == 0 ? "selected" : "")>All</option>
+                        <option value="1" @(ViewBag.DropdownSelected == 1 ? "selected" : "")> Contact</option>
+                        <option value="2" @(ViewBag.DropdownSelected == 2 ? "selected" : "")>Contacted</option>
+                        <option value="3" @(ViewBag.DropdownSelected == 3 ? "selected" : "")>Supportive</option>
+                        <option value="4" @(ViewBag.DropdownSelected == 4 ? "selected" : "")> No Supportive</option>
+                    </select>
+                    <button type="submit" style="width: 62px; color: orange; border-bottom-width: thin; border-top-width: thin; border-left-width: thin; border-right-width: thin;" id="updateuserlist">Filter</button>
+                </td>
+            </tr>
+        </table>
+
+										
+			 
+					
+						
+																													  
+						 
+						
+																									   
+																						  
+																						
+																			 
+
+        <div style="height: 16px; width: 50%;"> </div>   
+            <div class="container" style="height: 400px;width:1214px; overflow: auto;">
+                <table id="myTable" class="cedvel table table-striped table-bordered table-sm" style="width: 100% !important; max-width: 400% !important">
+                    <tr>
+                        <th class="rgHeader">
+
+                            <input type="checkbox" name="select-all" onchange="Checkboxchange(this);" id="select-all" />
+                            <label style="visibility:hidden">Sp</label>
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Profile
+                        </th>
+                        <th>
+                            Salutation
+                        </th>
+                        <th onclick="sortTable(4)">
+                            First Name
+                        </th>
+                        <th>
+                            Middle Name
+                        </th>
+                        <th>
+                            Last Name
+                        </th>
+                        <th>
+                            Main Email
+                        </th>
+                        <th>
+                            Country
+                        </th>
+                        <th onclick="sortTable(9)">
+                            Job Title
+                        </th>
+                        <th>
+                            Department
+                        </th>
+                        <th onclick="sortTable(11)">
+                            Organization
+                        </th>
+
+                        <th>
+                            Personal Biography
+                        </th>
+
+						 
+						
+																	   
+						 
+                        <th>
+                            Portolo Status
+						 
+						
+																	  
+                        </th>
+						
+																	
+						 
+
+						
+																	 
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <input type="checkbox" value="@item.ID" class="ItemsCheckboxForAllRegistrations" id="check" />
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Registration", new { userID = @item.ID, PortoloKey = 0 })
+                                @*| @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.ID })*@
+                                @*cmd.Parameters.AddWithValue("@ID", request.id=0);*@
+
+						
+																	
+                            </td>
+
+						
+																	  
+                            <td>
+
+                                <img alt="" src="@Url.Content(item.Uimg)" style="display: inline; margin-right: 5px;" height="100" width="150" />
+
+						 
+						
+																			 
+						 
+						
+														 
+						 
+																			 
+						 
+                            </td>
+                            <td>
+			 
+
+                                @Html.DisplayFor(modelItem => item.salutation1)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.firstname)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.middlename)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.lastname)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.mainemail)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.country)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.jobTitle)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.department)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.organization)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.personalbiography)
+                            </td>
+                            <td>
+                                @if (item.portoloStatus != "All")
+                                {
+                                    @Html.DisplayFor(modelItem => item.portoloStatus)
+                                }
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+    </form>
+
+
+</body>

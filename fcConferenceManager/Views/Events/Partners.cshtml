@@ -1,0 +1,273 @@
+@using System.Collections.Generic
+@{
+    ViewBag.Title = "Partners";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    #tblSpnsors /*table*/
+    {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    #tblSpnsors td
+    {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        border-bottom-color: blue;
+    }
+
+    #tblSpnsors th
+    {
+        background-color: lightgray;
+        color: navy;
+        height: 40px;
+        font-size: 14pt;
+        margin-bottom: 10px;
+        font-weight: normal;
+        margin-top: 20px;
+    }
+
+    .levelline
+    {
+        display: inline-grid;
+        margin-bottom: 10px;
+    }
+
+    @@media(max-width:767px)
+    {
+        table #tblSpnsors tr
+        {
+            display: block;
+        }
+
+        table#tblSpnsors tr td, table#tblSpnsors tr th
+        {
+            display: block;
+            width: 100% !important;
+        }
+
+        table#tblSpnsors tr th[colspan="2"] + th
+        {
+            display: none;
+        }
+
+        #tblSpnsors th
+        {
+            padding: 3px;
+            height: auto;
+        }
+    }
+</style>
+@{
+    List<SelectListItem> list = ((System.Collections.Generic.List<SelectListItem>)ViewBag.level);
+
+    List<SelectListItem> AudienceList = new List<SelectListItem>();
+    if(ViewBag.AudienceList != null)
+    {
+        AudienceList = ((System.Collections.Generic.List<SelectListItem>)ViewBag.AudienceList);
+    }
+
+    List<SelectListItem> SolutionList = new List<SelectListItem>();
+    if(ViewBag.SolutionList != null)
+    {
+        SolutionList = ((System.Collections.Generic.List<SelectListItem>)ViewBag.SolutionList);
+    }
+}
+
+<div class="magiMySessionMainWrapper mt-3">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+            <div class="col-md-8 col-lg-9 flex-grow-1 ">
+               <div class="col-md-12">
+                    <div class="row  pt-2">
+                        <div class="col-md-8">
+                            <h2 id="lblTitle" class="lblTitle">@ViewBag.PageTitle</h2>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex justify-content-end justify-md-content-end">
+
+                                <div class="me-1 flex-grow-1 flex-md-grow-0">@Html.DropDownList("OverViewDropDown", null, new { @class = "bg-light mb-1 ", id = "OverViewDropDown" })</div>
+                                <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 ">Return</a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (ViewBag.bShowPartner)
+                    {
+                        <div class="col-md-12">
+                            <div>
+                                <input type="hidden" value="@ViewBag.levelId" id="selectedLevel" />
+                                <input type="hidden" value="@ViewBag.AudienceId" id="hdnSelectedAud" />
+                                <input type="hidden" value="@ViewBag.SolutionId" id="hdnSelectedSol" />
+
+                                 <div class="d-flex flex-wrap mb-4 align-items-center">
+                                   <div class="me-md-3">
+                                        <span>Level :</span>
+                                        @Html.DropDownList("level", list, "ALL", new { @class = "bg-light ms-md-2 d-inline", id = "level" })
+                                    </div>
+                                    
+                                   @if(ViewBag.AudienceList != null)
+                                    {
+                                        <div class="me-md-3">
+                                            <span>Primary Audience Types :</span>
+                                            @Html.DropDownList("AudTypes", AudienceList, "ALL", new { @class = "bg-light ms-md-2 d-inline", id = "ddlAudTypes" })
+                                        </div>
+                                    }
+
+                                    @if(ViewBag.SolutionList != null)
+                                    {
+                                        <div>
+                                            <span>Solution Types :</span>
+                                            @Html.DropDownList("SolTypes", SolutionList, "ALL", new { @class = "bg-light ms-md-2 d-inline", id = "ddlSolTypes" })
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <table id="tblSpnsors">
+                                @if (!string.IsNullOrEmpty(ViewBag.levelName) && ViewBag.levelName != "ALL")
+                                {
+                                    <tr>
+                                        <th colspan="2">@ViewBag.levelName Event Sponsors</th>
+                                        <th></th>
+                                    </tr>
+                                    foreach (var item in Model)
+                                    {
+
+                                        if (item.ParticipationLevel_pkey == ViewBag.levelId.ToString())
+                                        {
+                                            <tr>
+                                                <td style="width:252px;">
+                                                    @if (item.ImageExist)
+                                                    {
+                                                        <img src="~/OrganizationDocuments/@item.imgpath" style="max-width: 250px; max-height: 100px;" />
+                                                    }
+                                                </td>
+                                                <td>@Html.Raw(@item.Profile)</td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                                else if (Model.Count > 0)
+                                {
+
+                                    foreach (var level in list)
+                                    {
+                                        <tr>
+                                            <th colspan="2">@level.Text Event Sponsors</th>
+                                            <th></th>
+                                        </tr>
+
+                                        foreach (var item in Model)
+                                        {
+                                            if (item.ParticipationLevel_pkey == level.Value)
+                                            {
+                                                <tr>
+                                                    <td style="width:252px;">
+                                                        @if (item.ImageExist)
+                                                        {
+                                                            <img src="~/OrganizationDocuments/@item.imgpath" style="max-width: 250px; max-height: 100px;" />
+                                                        }
+                                                    </td>
+                                                    <td style="vertical-align:top;">@Html.Raw(@item.Profile)</td>
+                                                </tr>
+                                            }
+                                            <tr></tr>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <tr><td style=" border: none; text-align: center; font-weight: 500;">No result found.</td></tr>
+                                }
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-md-12" style="background-color: beige; padding: 10px;padding-left:10px !important;display: block; border-radius: 3px;box-shadow: 1px 2px 3px #cccccc4f;">
+                            <label class="">@ViewBag.lblInfo</label>
+                        </div>
+                    }
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<input type="hidden" value="@ViewBag.OverViewDropDownSelected" id="DropdownSelected" />
+<script>
+    $(document).ready(function () {
+
+        if ($('#selectedLevel') !== undefined && $('#selectedLevel').val() !== "0")
+            $('#level').val($('#selectedLevel').val());
+
+        if ($('#hdnSelectedAud') !== undefined && $('#hdnSelectedAud').val() !== "0")
+            $('#ddlAudTypes').val($('#hdnSelectedAud').val());
+
+        if ($('#hdnSelectedSol') !== undefined && $('#hdnSelectedSol').val() !== "0")
+            $('#ddlSolTypes').val($('#hdnSelectedSol').val());
+
+        $("#level,#ddlAudTypes,#ddlSolTypes").change(function ()
+        {
+            applyFilters();
+        });
+
+        $('#OverViewDropDown').change(function () {
+            var Data = { DropDownValue: $('#OverViewDropDown').val() };
+            var result = CommonFunctions.AjaxCall('Post', '/MAGI/OverViewDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+            if (result.ActionType === "Redirect")
+                window.location.href = result.RedirectionUrl;
+        });
+        $('#OverViewDropDown').val($('#DropdownSelected').val());
+    });
+
+    function applyFilters()
+    {
+        var id = $("#level").val();
+        var text = $("#level :selected").text();
+
+        var aud = $('#ddlAudTypes').val();
+        var sol = $('#ddlSolTypes').val();
+
+        var qryString = '';
+
+        if (id !== '')
+            qryString += ("PostData1=" + id + "&PostData2=" + text);
+
+        if (aud !== '0')
+        {
+            if (qryString !== '')
+                qryString += "&aud=" + aud;
+            else
+                qryString += "aud=" + aud;
+        }
+            
+
+        if (sol !== '0')
+        {
+            if (qryString !== '')
+                qryString += "&sol=" + sol;
+            else
+                qryString += "sol=" + sol;
+        }
+
+        window.location.href = "/Events/EventSponsors?" + qryString;
+    }
+
+    const params = new Proxy
+    (new URLSearchParams(window.location.search),
+    {
+        get: (searchParams, prop) => searchParams.get(prop),
+    });
+</script>

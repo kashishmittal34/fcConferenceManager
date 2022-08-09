@@ -1,0 +1,1050 @@
+<header class="siteHeader clearfix">
+
+    <table id="tblimage" style="width: 100%" cellspacing="0" cellpadding="0" border="0">
+        <tbody>
+            <tr>
+                <td style="vertical-align: top;" class="magi-mobile-text-center" style="display:@(ViewBag.tblimageVisible? "" : "none");">
+                    <a href="@ViewBag.bannkerLinkNavigateUrl" id="link" style="pointer-events:@(ViewBag.enableLink? "auto":"none");">
+                        <img src="@ViewBag.imgLeftSrc" id="leftimg" style="height: 75px;max-width: unset;">
+                    </a>
+                    <div id="dvEventInFo" class="EventInfo" style="display:@(ViewBag.EventInfoVisible? "":"none");">
+                        <span id="lblcnfName" style="font-size:25px;">@ViewBag.lblcnfName</span>
+                        <br>
+                        <span style="margin: 0; text-shadow: 1px 1px 5px #000;">
+                            <span id="lblcnfLocation">@ViewBag.lblcnfLocation</span>
+                            <br>
+                            <span id="lblcnfDate">@ViewBag.lblcnfDate</span>
+                        </span>
+                    </div>
+                </td>
+                <td style="width: 100%;vertical-align: top;">
+                    <img src="@ViewBag.imgMiddleSrc" id="imgMiddle" style="width: 100%;height: 75px;max-width: unset;">
+                </td>
+                <td style="vertical-align: top;">
+                    <img id="@ViewBag.imgRightSrc" src="/images/Homepage/RightBlock.jpg" style="height: 75px; display:@(ViewBag.imgRightVisible ? "":"none" );" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="MenuSection clearfix">
+        <div class="container-fluid">
+            <div style="padding-left: 1px; padding-top: 1px !important;" class="row pt-md-1 align-items-end">
+                <div id="main-logo-header" class="col-lg-3 col-md-4 @ViewBag.ColorLogoBG p-0 pl-md-2 position-relative">
+                    <div class="clickmenu" onclick="openNav()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <a href="/Home/Index"><img id="mainLogo" src="@ViewBag.imgLogo" class="img-fluid @ViewBag.ColorBG w-100" alt=""></a>
+                </div>
+                <div id="main-rest-header" class="col-lg-9  col-md-8 magiMobileMenu">
+                    <div class="magiMobilelogoWrapper d-md-none">
+                        <img id="mainLogo2" src="@ViewBag.imgLogo" class="img-fluid" width="250" alt="magi world">
+                        <div class="magiMobileMenuClose" onclick="closeNav()">
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6 col-lg-4 align-self-end pr-md-2 order-md-2 magiLoginRightSection">
+                            <ul class="rightNav w-100 d-md-flex justify-content-md-end">
+                                <li>
+                                    <a href="/Home/Index" title="Home">
+                                        <img src="/images/icons/Home_icon.png" alt="Home" />
+                                    </a>
+                                </li>
+                                @if (ViewBag != null && ViewBag.ID > 0)
+                                {
+                                    <li>
+                                        <a href="/ViewAccount?PType=Self" title="My Profile">
+                                            <img src="/images/icons/profile_icon.png" alt="My Profile" />
+                                        </a>
+                                    </li>
+                                }
+                                <li>
+                                    <a href="/Events/EventContact" title="Help">
+                                        <img src="/images/icons/Info_icon.png" alt="Help" />
+                                    </a>
+                                </li>
+                                @if (ViewBag != null && ViewBag.ID > 0)
+                                {
+                                    <li><a href="/Home/Logout" type="button" class="btn btnOrange">Sign out</a></li>
+                                }
+                                else
+                                {
+                                    <li><a href="/Home/Login" type="button" class="btn btnOrange">Sign in</a></li>
+
+
+
+                                    <li><a href="/WizardJoin?BA=1" type="button" Class="btn btnJoin" style="min-width:80px">Join MAGI</a></li>
+                                }
+                            </ul>
+                            <ul Class="rightNav w-100 d-md-flex  justify-content-md-end">
+                                <li>
+                                    @if (ViewBag != null && ViewBag.ID > 0)
+                                    {
+                                        <a href="/ViewAccount?PType=Self" class="magiUserName">@ViewBag.FullName</a>
+                                    }
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-lg-8 pl-2  align-self-end order-md-1 magiNavMenuWrapper">
+                            <nav class="navMenu">
+                                <ul class="clearfix m-0 main-ul-wrapper adminLinks mb-2">
+                                    @if (ViewBag.SystemMenu)
+                                    {
+                                        <li>
+                                            <span> System <span class="submenu-trigger d-md-none"></span> </span>
+                                            <div class="drop_menu">
+                                                <div class="drop_menu_Title d-none d-md-block"> System </div>
+                                                <div class="row border-bottom pl-2  m-0">
+                                                    @if (ViewBag.ConfigSection)
+                                                    {
+                                                        <div class="m-headSection col-md-4" style="min-height:28px;"> Configuration </div>
+                                                    }
+                                                    @if (ViewBag.SupportSection)
+                                                    {
+                                                        <div class="m-headSection col-md-4" style="min-height:28px;"> Support </div>
+                                                    }
+                                                    @if (ViewBag.LibrariesSection)
+                                                    {
+                                                        <div class="m-headSection col-md-4" style="min-height:28px;">Libraries</div>
+                                                    }
+                                                </div>
+                                                <div class="row  pb-2 pl-2">
+                                                    <div class="col-12 d-md-none">
+                                                        <ul class="submenu">
+                                                            <li class="back-tigger"><span>Back</span></li>
+                                                        </ul>
+                                                    </div>
+                                                    @if (ViewBag.ConfigSection)
+                                                    {
+                                                        <div class="col-md-4 col-lg-4 pl-0">
+                                                            <ul class="submenu">
+                                                                <li class="d-md-none"><a href="javascript:void(0)" class="mobile-menu-title">Configuration</a></li>
+                                                                @if (ViewBag.PAGE_Configuration != null && ViewBag.PAGE_Configuration)
+                                                                {
+                                                                    <li><a href="/GlobalSettings">Configuration</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_SecurityGroups !=  null && ViewBag.PAGE_SecurityGroups)
+                                                                {
+                                                                    <li><a href="/SecurityGroups">Security groups</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_Exams != null &&  ViewBag.PAGE_Exams)
+                                                                {
+                                                                    <li><a href="/ExamList">Exams</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_Equipment != null &&   ViewBag.PAGE_Equipment)
+                                                                {
+                                                                    <li><a href="/EquipmentList">Equipment</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_TestimonialsList !=  null && ViewBag.PAGE_TestimonialsList)
+                                                                {
+                                                                    <li><a href="/TestimonialsList">Testimonials</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_BadgeDesign !=  null &&  ViewBag.PAGE_BadgeDesign)
+                                                                {
+                                                                    <li><a href="/BadgeDesignList">Badge designs</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_BadgeRules !=  null &&  ViewBag.PAGE_BadgeRules)
+                                                                {
+                                                                    <li><a href="/BadgeRules">Badge rules</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_AttMetrics !=  null &&  ViewBag.PAGE_AttMetrics)
+                                                                {
+                                                                    <li><a href="/Metrics">Feedback metrics</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_MobileSettings !=  null &&  ViewBag.Page_MobileSettings)
+                                                                {
+                                                                    <li><a href="/MobileSettings">Mobile admin</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_ReminderManagement !=  null &&  ViewBag.Page_ReminderManagement)
+                                                                {
+                                                                    <li><a href="/ReminderManagement">Reminder management</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_Sentinels !=  null &&  ViewBag.PAGE_Sentinels)
+                                                                {
+                                                                    <li><a href="/Sentinels">Sentinels</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_ReviewTooltipText !=  null &&  ViewBag.Page_ReviewTooltipText)
+                                                                {
+                                                                    <li><a href="/ReviewTooltips">Tooltips & messages</a></li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    }
+                                                    @if (ViewBag.SupportSection)
+                                                    {
+                                                        <div class="col-md-4 col-lg-4 pl-0">
+                                                            <ul class="submenu">
+                                                                <li class="d-md-none"><a href="javascript:void(0)" class="mobile-menu-title">Support</a></li>
+                                                                @if (ViewBag.PAGE_Issues != null && ViewBag.PAGE_Issues)
+                                                                {
+                                                                    <li><a href="/IssueList">Issue tracker</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_SendGridList != null && ViewBag.PAGE_SendGridList)
+                                                                {
+                                                                    <li><a href="/EmailList">Emails sent log</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_ChatLog != null && ViewBag.Page_ChatLog)
+                                                                {
+                                                                    <li><a href="/ChatList">Chat log</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_SMSLog != null && ViewBag.Page_SMSLog)
+                                                                {
+                                                                    <li><a href="/SMSList">SMS log</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_SendGridList != null && ViewBag.PAGE_SendGridList)
+                                                                {
+                                                                    <li><a href="/JobList">Jobs</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_ErrorLog != null && ViewBag.PAGE_ErrorLog)
+                                                                {
+                                                                    <li><a href="/ErrorLog">Error log</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_WebSiteMonitoring != null && ViewBag.PAGE_WebSiteMonitoring)
+                                                                {
+                                                                    <li><a href="/PageMonitoring">Website activity</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_Audit != null && ViewBag.PAGE_Audit)
+                                                                {
+                                                                    <li><a href="/AuditLog">Audit trail</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_FAQs != null && ViewBag.PAGE_FAQs)
+                                                                {
+                                                                    <li><a href="/FAQs">FAQs</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_NotificationSetting != null && ViewBag.PAGE_NotificationSetting)
+                                                                {
+                                                                    <li><a href="/NotificationRule">Notifications</a></li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    }
+                                                    @if (ViewBag.LibrariesSection)
+                                                    {
+                                                        <div class="col-md-4 col-lg-4 pl-0">
+                                                            <ul class="submenu">
+                                                                <li class="d-md-none"><a href="javascript:void(0)" class="mobile-menu-title">Libraries</a></li>
+                                                                @if (ViewBag.PAGE_SessionList != null && ViewBag.PAGE_SessionList)
+                                                                {
+                                                                    <li><a href="/SessionList">Activities</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_Announcements != null && ViewBag.PAGE_Announcements)
+                                                                {
+                                                                    <li><a href="/AnnouncementList">Announcements</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_Certifications != null && ViewBag.PAGE_Certifications)
+                                                                {
+                                                                    <li><a href="/CertificationList">Certificates</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_ExhFeedback != null && ViewBag.PAGE_ExhFeedback)
+                                                                {
+                                                                    <li><a href="/FeedbackForms">Questionnaires</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_GamesAndRides != null && ViewBag.Page_GamesAndRides)
+                                                                {
+                                                                    <li><a href="/GamesAndRides">Games and rides</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_GeoTags != null && ViewBag.PAGE_GeoTags)
+                                                                {
+                                                                    <li><a href="/GeoTagList">Geo tags</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_AppHelp != null && ViewBag.PAGE_AppHelp)
+                                                                {
+                                                                    <li><a href="/EditHelp">Help Q&As</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_UploadImages != null && ViewBag.PAGE_UploadImages)
+                                                                {
+                                                                    <li><a href="/UploadImages">Images</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_UrlRedirect != null && ViewBag.PAGE_UrlRedirect)
+                                                                {
+                                                                    <li><a href="/RedirectList">Redirects</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_SendGridList != null && ViewBag.PAGE_SendGridList)
+                                                                {
+                                                                    <li><a href="/Snippet">Snippets</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_ArticleLibrary != null && ViewBag.Page_ArticleLibrary)
+                                                                {
+                                                                    <li><a href="/FileLibrary">Standard files</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_TopicLibrary != null && ViewBag.Page_TopicLibrary)
+                                                                {
+                                                                    <li><a href="/ProfInterest">Topics</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_Venues != null && ViewBag.PAGE_Venues)
+                                                                {
+                                                                    <li><a href="/VenueList">Venues</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_SessionRecordings != null && ViewBag.Page_SessionRecordings)
+                                                                {
+                                                                    <li><a href="/SessionRecordings">Session Recordings</a></li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (ViewBag.FinanceMenu)
+                                    {
+                                        <li>
+                                            <span> Finances <span class="submenu-trigger d-md-none"></span> </span>
+                                            <div class="drop_menu">
+                                                <div class="drop_menu_Title d-none d-md-block"> Finances </div>
+                                                <div class="row border-bottom pl-2  m-0">
+                                                    @if (ViewBag.AccountsSection)
+                                                    {
+                                                        <div class="m-headSection col-md-4" style="min-height:28px;"> Accounts </div>
+                                                    }
+                                                    @if (ViewBag.DiscountsSection)
+                                                    {
+                                                        <div class="m-headSection col-md-4" style="min-height:28px;"> Discounts & Vouchers </div>
+                                                    }
+                                                    @if (ViewBag.PartnersSection)
+                                                    {
+                                                        <div class="m-headSection col-md-4" style="min-height:28px;">Partners</div>
+                                                    }
+                                                </div>
+                                                <div class="row  pb-2 pl-2  mx-md-0">
+                                                    <div class="col-12 d-md-none">
+                                                        <ul class="submenu">
+                                                            <li class="back-tigger"><span>Back</span></li>
+                                                        </ul>
+                                                    </div>
+                                                    @if (ViewBag.AccountsSection)
+                                                    {
+                                                        <div class="col-md-4 col-lg-4 pl-0">
+                                                            <ul class="submenu">
+                                                                <li class="d-md-none"><a href="javascript:void(0)" class="mobile-menu-title">Accounts</a></li>
+                                                                @if (ViewBag.PAGE_Ledger != null && ViewBag.PAGE_Ledger)
+                                                                {
+                                                                    <li><a href="/GeneralLedger">Payments received</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_PendingPayments != null && ViewBag.Page_PendingPayments)
+                                                                {
+                                                                    <li><a href="/PendingPayment">Payments due</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_LedgerByAcct != null && ViewBag.PAGE_LedgerByAcct)
+                                                                {
+                                                                    <li><a href="/GeneralLedgerByAcct">Account ledger</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_MiscellaneousPayments != null && ViewBag.Page_MiscellaneousPayments)
+                                                                {
+                                                                    <li><a href="/MiscellaneousPayments">Payments</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_DeferredRevenue != null && ViewBag.Page_DeferredRevenue)
+                                                                {
+                                                                    <li><a href="/DeferredRevenue">Deferred revenue</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_PastDue != null && ViewBag.PAGE_PastDue)
+                                                                {
+                                                                    <li><a href="/EventBalanceDue">Attendee balances</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_AcctReceipt != null && ViewBag.PAGE_AcctReceipt)
+                                                                {
+                                                                    <li><a href="/Receipt">Invoices & receipts</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_W9Requests != null && ViewBag.PAGE_W9Requests)
+                                                                {
+                                                                    <li><a href="/W9List">W9 requests</a></li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    }
+                                                    @if (ViewBag.DiscountsSection)
+                                                    {
+                                                        <div class="col-md-4 col-lg-4 pl-0">
+                                                            <ul class="submenu">
+                                                                <li class="d-md-none"><a href="javascript:void(0)" class="mobile-menu-title">Discounts & Vouchers</a></li>
+                                                                @if (ViewBag.PAGE_Discounts != null && ViewBag.PAGE_Discounts)
+                                                                {
+                                                                    <li><a href="/DiscountList">Discount codes</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_AcctDiscounts != null && ViewBag.PAGE_AcctDiscounts)
+                                                                {
+                                                                    <li><a href="/EventDiscounts">Discount code usage</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_VoucherList != null && ViewBag.PAGE_VoucherList)
+                                                                {
+                                                                    <li><a href="/AccountVouchers">Vouchers</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_RegDiscountAuditor != null && ViewBag.Page_RegDiscountAuditor)
+                                                                {
+                                                                    <li><a href="/RegistrationDiscountAuditor">Registration discounts</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_Passes != null && ViewBag.Page_Passes)
+                                                                {
+                                                                    <li><a href="/Passes">Attendee passes</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_Points != null && ViewBag.Page_Points)
+                                                                {
+                                                                    <li><a href="/AmazonGiftCard">Points</a></li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    }
+                                                    @if (ViewBag.PartnersSection)
+                                                    {
+                                                        <div class="col-md-4 col-lg-4 pl-0">
+                                                            <ul class="submenu">
+                                                                <li class="d-md-none"><a href="javascript:void(0)" class="mobile-menu-title">Partners</a></li>
+                                                                @if (ViewBag.PAGE_PartnerPaymentSchedule != null && ViewBag.PAGE_PartnerPaymentSchedule)
+                                                                {
+                                                                    <li><a href="/PartnerPaymentSchedules">Partner payment schedules</a></li>
+                                                                }
+                                                                @if (ViewBag.page_OrganizationLedger != null && ViewBag.page_OrganizationLedger)
+                                                                {
+                                                                    <li><a href="/OrganizationLedger">Partner payments</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_GeneralLedgerByOrg != null && ViewBag.Page_GeneralLedgerByOrg)
+                                                                {
+                                                                    <li><a href="/GeneralLedgerByOrg">Partner ledger</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_EventOrgBalanceDue != null && ViewBag.Page_EventOrgBalanceDue)
+                                                                {
+                                                                    <li><a href="/EventOrgBalanceDue">Partner balances</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_PartnerPaymentSchedule != null && ViewBag.PAGE_PartnerPaymentSchedule)
+                                                                {
+                                                                    <li><a href="/PartnerEventParticipation">Partner history</a></li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                    @if (ViewBag.OperationsMenu)
+                                    {
+                                        <li>
+                                            <span> Operations <span class="submenu-trigger d-md-none"></span> </span>
+                                            <div class="drop_menu">
+                                                <div class="drop_menu_Title d-none d-md-block"> Operations </div>
+                                                <div class="row border-bottom pl-2  mx-md-0">
+                                                    @if (ViewBag.AccountsOpSection)
+                                                    {
+                                                        <div class="m-headSection col-md-4" style="min-height:28px;"> Accounts </div>
+                                                    }
+                                                    @if (ViewBag.ProgramSection)
+                                                    {
+                                                        <div class="m-headSection col-md-4" style="min-height:28px;"> Program and Faculty </div>
+                                                    }
+                                                    @if (ViewBag.OtherSection)
+                                                    {
+                                                        <div class="m-headSection col-md-4" style="min-height:28px;">Other</div>
+                                                    }
+                                                </div>
+                                                <div class="row  pb-2 pl-2">
+                                                    <div class="col-12 d-md-none">
+                                                        <ul class="submenu">
+                                                            <li class="back-tigger"><span>Back</span></li>
+                                                        </ul>
+                                                    </div>
+                                                    @if (ViewBag.AccountsOpSection)
+                                                    {
+                                                        <div class="col-md-4 col-lg-4 pl-0">
+                                                            <ul class="submenu">
+                                                                <li class="d-md-none"><a href="javascript:void(0)" class="mobile-menu-title">Accounts</a></li>
+                                                                @if (ViewBag.PAGE_EventAttendees != null && ViewBag.PAGE_EventAttendees)
+                                                                {
+                                                                    <li><a href="/EventAttendees">Participants</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_AccountList != null && ViewBag.PAGE_AccountList)
+                                                                {
+                                                                    <li><a href="/AccountList">Accounts</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_UserPhones != null && ViewBag.Page_UserPhones)
+                                                                {
+                                                                    <li><a href="/UserPhones">User phones</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_AccountGroups != null && ViewBag.PAGE_AccountGroups)
+                                                                {
+                                                                    <li><a href="/MailingLists">Account groups</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_OrganizationList != null && ViewBag.PAGE_OrganizationList)
+                                                                {
+                                                                    <li><a href="/OrganizationList">Organizations</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_Invitations != null && ViewBag.PAGE_Invitations)
+                                                                {
+                                                                    <li><a href="/EventInvitations">Referrals</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_EventCommunications != null && ViewBag.PAGE_EventCommunications)
+                                                                {
+                                                                    <li><a href="/EventCommunications">Communications</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_PartialRegistration != null && ViewBag.Page_PartialRegistration)
+                                                                {
+                                                                    <li><a href="/PartialRegistration">Partial registrations</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_Data_Quality != null && ViewBag.PAGE_Data_Quality)
+                                                                {
+                                                                    <li><a href="/DataQuality">Data quality</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_InterestedWritingArticle != null && ViewBag.Page_InterestedWritingArticle)
+                                                                {
+                                                                    <li><a href="/InterestedWritingArticle">Authors</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_ReviewHeadshots != null && ViewBag.Page_ReviewHeadshots)
+                                                                {
+                                                                    <li><a href="/ReviewPhoto">Headshots & bios</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_ReviewAccountPhoto != null && ViewBag.Page_ReviewAccountPhoto)
+                                                                {
+                                                                    <li><a href="/ReviewAccountPhoto">Review account photos</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_HeadshotSubstitueImages != null && ViewBag.Page_HeadshotSubstitueImages)
+                                                                {
+                                                                    <li><a href="/picturegallery">Headshot substitute images</a></li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    }
+                                                    @if (ViewBag.ProgramSection)
+                                                    {
+                                                        <div class="col-md-4 col-lg-4 pl-0">
+                                                            <ul class="submenu">
+                                                                <li class="d-md-none"><a href="javascript:void(0)" class="mobile-menu-title">Program and Faculty</a></li>
+                                                                @if (ViewBag.PAGE_EventList != null && ViewBag.PAGE_EventList)
+                                                                {
+                                                                    <li><a href="/ViewEvent?CE=1">Event specifications</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_EventList != null && ViewBag.PAGE_EventList)
+                                                                {
+                                                                    <li><a href="/EventList">Events</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_EventSeries != null && ViewBag.Page_EventSeries)
+                                                                {
+                                                                    <li><a href="/EventSeries">Event series</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_EventProgram != null && ViewBag.PAGE_EventProgram)
+                                                                {
+                                                                    <li><a href="/EventSessions">Program</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_SpeakerList != null && ViewBag.PAGE_SpeakerList)
+                                                                {
+                                                                    <li><a href="/EventSpeakers">Faculty</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_EventStaff != null && ViewBag.Page_EventStaff)
+                                                                {
+                                                                    <li><a href="/EventStaff">Event staff</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_EventURLs != null && ViewBag.Page_EventURLs)
+                                                                {
+                                                                    <li><a href="/EventUrls">Event URLs</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_SpeakerMgt != null && ViewBag.PAGE_SpeakerMgt)
+                                                                {
+                                                                    <li><a href="/SpeakerManagement">Speaker management</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_SessionChairs != null && ViewBag.PAGE_SessionChairs)
+                                                                {
+                                                                    <li><a href="/EventChairs">Session chairs</a></li>
+                                                                }
+                                                                @if (ViewBag.AdvancedSearch != null && ViewBag.AdvancedSearch)
+                                                                {
+                                                                    <li><a href="/FilterQueryLists">Advanced searches</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_OtherLinks != null && ViewBag.PAGE_OtherLinks)
+                                                                {
+                                                                    <li><a href="/OtherLinks">Quick links</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_UserReports != null && ViewBag.Page_UserReports)
+                                                                {
+                                                                    <li><a href="/AllowReports">Allow reports</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_ActivityQuestions != null && ViewBag.Page_ActivityQuestions)
+                                                                {
+                                                                    <li><a href="/FeedbackFormsActivity">Polling questions</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_RTDiscussion != null && ViewBag.Page_RTDiscussion)
+                                                                {
+                                                                    <li><a href="/RoundTableDiscussion">Public events</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_Configuration != null && ViewBag.PAGE_Configuration)
+                                                                {
+                                                                    <li><a href="/ExhibitorSurvey">Exhibitor survey</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_StaffSupport != null && ViewBag.Page_StaffSupport)
+                                                                {
+                                                                    <li><a href="/StaffSupport">Help desk</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_EventToteBag != null && ViewBag.Page_EventToteBag)
+                                                                {
+                                                                    <li><a href="/ToteBag">Tote bag</a></li>
+                                                                }
+                                                                @if (ViewBag.PRIV_ManageTeams != null && ViewBag.PRIV_ManageTeams)
+                                                                {
+                                                                    <li><a href="/CreateGroup">Manage interest groups</a></li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    }
+                                                    @if (ViewBag.OtherSection)
+                                                    {
+                                                        <div class="col-md-4 col-lg-4 pl-0">
+                                                            <ul class="submenu">
+                                                                <li class="d-md-none"><a href="javascript:void(0)" class="mobile-menu-title">Other</a></li>
+                                                                @if (ViewBag.PAGE_Partners != null && ViewBag.PAGE_Partners)
+                                                                {
+                                                                    <li><a href="/EventExhibitors">Partner management</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_TreasureHunt != null && ViewBag.PAGE_TreasureHunt)
+                                                                {
+                                                                    <li><a href="/EventTreasure">Treasure hunt</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_TaskList != null && ViewBag.PAGE_TaskList)
+                                                                {
+                                                                    <li><a href="/EventTasks">Tasks</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_Badges != null && ViewBag.PAGE_Badges)
+                                                                {
+                                                                    <li><a href="/EventBadges">Badges</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_Food_and_Beverage != null && ViewBag.Page_Food_and_Beverage)
+                                                                {
+                                                                    <li><a href="/EventFood">Food & beverage</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_Feedback != null && ViewBag.PAGE_Feedback)
+                                                                {
+                                                                    <li><a href="/EventFeedback">Attendance & feedback</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_Certifier != null && ViewBag.PAGE_Certifier)
+                                                                {
+                                                                    <li><a href="/Certifier">Certifications</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_CRCP != null && ViewBag.PAGE_CRCP)
+                                                                {
+                                                                    <li><a href="/CRCPExams">CRCP certifications</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_AV != null && ViewBag.PAGE_AV)
+                                                                {
+                                                                    <li><a href="/AV">Audiovisual</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_Reports != null && ViewBag.PAGE_Reports)
+                                                                {
+                                                                    <li><a href="/Reports">Reports</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_StaffFiles != null && ViewBag.Page_StaffFiles)
+                                                                {
+                                                                    <li><a href="/DocumentLibrariesList">Staff files</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_Recording != null && ViewBag.Page_Recording)
+                                                                {
+                                                                    <li><a href="/EventRecording">Event recordings</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_Recording != null && ViewBag.Page_Recording)
+                                                                {
+                                                                    <li><a href="/OnlineActivities">Online activities</a></li>
+                                                                }
+                                                                @if (ViewBag.PAGE_Configuration != null && ViewBag.PAGE_Configuration)
+                                                                {
+                                                                    <li><a href="/EventURLs">Event URLs</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_CommunityShowcase != null && ViewBag.Page_CommunityShowcase)
+                                                                {
+                                                                    <li><a href="/CommunityShowcaseAdmin">Community showcase</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_TrainingResources != null && ViewBag.Page_TrainingResources)
+                                                                {
+                                                                    <li><a href="/TrainingResourceList">Training resources</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_EventPlan != null && ViewBag.Page_EventPlan)
+                                                                {
+                                                                    <li><a href="/EventPlan">Event plan</a></li>
+                                                                }
+                                                                @if (ViewBag.Page_ChatModerator != null && ViewBag.Page_ChatModerator)
+                                                                {
+                                                                    <li><a href="/ChatModerator">Chat moderator</a></li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                                <ul class="clearfix m-0 main-ul-wrapper">
+                                    <li>
+                                        <span> MAGI <span class="submenu-trigger d-md-none"></span> </span>
+                                        <div class="drop_menu">
+                                            <div class="drop_menu_Title d-none d-md-block">
+                                                Magi
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3 col-lg-3 d-none d-md-block"> <img id="imgMagiData" src="@ViewBag.MagiMenuImage" class="m-img" alt=""> </div>
+                                                <div class="col-md-9 col-lg-9 pl-0">
+                                                    <ul class="submenu">
+                                                        <li class="back-tigger d-md-none"><span>Back</span></li>
+                                                        <li><a href="/Home/Index">Home</a></li>
+                                                        <li><a href="/MAGI/Overview">Overview</a></li>
+                                                        <li><a href="/WizardJoin">Join MAGI</a></li>
+                                                        <li><a href="/MAGI/Certification">CRCP Certification</a></li>
+                                                        <li><a href="/MAGI/Contact">Contact MAGI</a></li>
+                                                        <li><a href="/MAGI/UserIssue">Report an Issue</a></li>
+                                                        <li><a href="/MAGI/TermsOfUse">Website term of use</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span> Events <span class="submenu-trigger d-md-none"></span></span>
+                                        <div class="drop_menu">
+                                            <div class="drop_menu_Title d-none d-md-block"> Events </div>
+                                            <div class="row mx-md-0">
+                                                <div class="col-md-3 col-lg-3 d-none d-md-block"> <img id="imgEventData" src="@ViewBag.EventMenuImage" class="m-img" alt=""> </div>
+                                                <div class="col-md-9 col-lg-9">
+                                                    <div class="row border-bottom pb-2">
+                                                        <div class="m-headSection col-md-6 p-0">
+                                                            <div class="align-items-center col-md-12 d-flex p-0">
+                                                                <div class="d-none d-md-inline-block me-2"> <label id="lblEvent">Event</label> </div>
+                                                                <div class="d-inline-block position-relative" id="FillEventDropDown"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="m-headSection col-md-6 d-none d-md-block " style="min-height:28px;">More Information</div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6 col-lg-6 pl-0">
+                                                            <ul class="submenu">
+                                                                <li class="back-tigger d-md-none"><span>Back</span></li>
+                                                                <li><a href="/Events/EventInfo">Overview</a></li>
+                                                                <li><a href="/Events/Program">Program/Agenda</a></li>
+                                                                <li><a href="/Events/Speakers">Speakers</a></li>
+                                                                <li><a href="/Events/BeASpeaker">Become a Speaker</a></li>
+                                                                <li><a href="/Events/EventSponsors">Event sponsor</a></li>
+                                                                <li><a href="/Events/BecomeSponsor">Become an event sponsor</a></li>
+                                                                <li><a href="/Events/VenueInfo">Venue and Lodging</a></li>
+                                                                <li><a href="/Events/Participating">Participating Organizations</a></li>
+                                                                <li><a href="/Registration">Pricing &amp; Registration</a></li>
+                                                                @if(!ViewBag.LoggedIn)
+                                                                {
+                                                                    <li><a href="/Home/Login">Sign into Event</a></li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                        <div class="col-md-6 col-lg-6 pl-0">
+                                                            <ul class="submenu">
+                                                                <li><a href="/Events/ContinueEducation">Continuing Education Hours</a></li> @*  Overview?M=32  *@
+                                                                <li><a href="/Events/Certification">CRCP Certification</a></li>
+                                                                <li><a href="/Events/IsMAGIRightForYou">Is MAGI Right for You?</a></li>
+                                                                <li><a href="/Events/EventTermsandConditions">Event Terms & Conditions</a></li>
+                                                                <li><a href="/Events/Advisory">Advisory Board</a></li>
+                                                                <li><a href="/Events/Testimonials">Testimonials</a></li>
+                                                                <li><a href="/Events/UpcomingEvent">Upcoming Events</a></li>
+                                                                <li><a href="/Events/EventContact">Contact MAGI</a></li>
+                                                                <li><a href="/Events/FAQs">Have a Question?</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span> Resources <span class="submenu-trigger d-md-none"></span> </span>
+                                        <div class="drop_menu">
+                                            <div class="drop_menu_Title d-none d-md-block"> Resources </div>
+                                            <div class="row mx-md-0">
+                                                <div class="col-md-3 col-lg-3 d-none d-md-block"> <img id="imgResourceData" src="@ViewBag.ResourcesMenuImage" class="m-img" alt=""> </div>
+                                                <div class="col-md-9 col-lg-9 pl-0">
+                                                    <div class="row border-bottom pl-2">
+                                                        <div class="m-headSection col-md-6 d-none d-md-block" style="min-height:28px;"> Resources </div>
+                                                        @if (ViewBag.ResourceSM_Menu)
+                                                        {
+                                                            <div class="m-headSection col-md-6 d-none d-md-block" style="min-height:28px;"> Administration </div>
+                                                        }
+                                                    </div>
+                                                    <div class="row  pb-2 pl-2">
+                                                        <div class="col-md-6 col-lg-6 pl-0">
+                                                            <ul class="submenu">
+                                                                <li class="back-tigger d-md-none"><span>Back</span></li>
+                                                                <li><a href="/Resources/Journal">Journal of Clinical Research Best Practices</a></li>
+                                                                <li><a href="/Resources/Standards">MAGI best practice standards</a></li>
+                                                                <li><a href="/Resources/Directories">Directories</a></li>
+                                                                <li><a href="/Resources/RegDocs">Laws, regulations &amp; guidelines</a></li>
+                                                                <li><a href="/Resources/FdaGcp">FDA good clinical practice Q&A</a></li>
+                                                                <li><a href="/Resources/Glossary">Glossary for clinical research</a></li>
+                                                                <li><a href="/Resources/lcfGlossary">Glossary for informed consent</a></li>
+                                                                <li><a href="/Resources/Milestones">Clinical research milestones</a></li>
+                                                                <li><a href="/Resources/MagiNewsList">MAGI news</a></li>
+                                                            </ul>
+                                                        </div>
+                                                        @if (ViewBag.ResourceSM_Menu)
+                                                        {
+                                                            <div class="col-md-6 col-lg-6 pl-0">
+                                                                <ul class="submenu">
+                                                                    <li class="d-md-none"><a href="javascript:void(0)" class="mobile-menu-title">Administration</a></li>
+                                                                    @if (ViewBag.Page_Journal != null && ViewBag.Page_Journal)
+                                                                    {
+                                                                        <li><a href="/JournalList">Journal of Clinical Research Best Practices</a></li>
+                                                                    }
+                                                                    @if (ViewBag.PAGE_Standards != null && ViewBag.PAGE_Standards)
+                                                                    {
+                                                                        <li><a href="/StandardsList">MAGI best practice standards</a></li>
+                                                                    }
+                                                                    @if (ViewBag.Page_FCRDirectories != null && ViewBag.Page_FCRDirectories)
+                                                                    {
+                                                                        <li><a href="/DirectoriesList">Directories</a></li>
+                                                                    }
+                                                                    @if (ViewBag.Page_RegDoc != null && ViewBag.Page_RegDoc)
+                                                                    {
+                                                                        <li><a href="/RegDocList">Laws, regulations & guidelines</a></li>
+                                                                    }
+                                                                    @if (ViewBag.Page_FdaGcp != null && ViewBag.Page_FdaGcp)
+                                                                    {
+                                                                        <li><a href="/FdaGcpList">FDA good clinical practice Q&A</a></li>
+                                                                    }
+                                                                    @if (ViewBag.Page_Glossary != null && ViewBag.Page_Glossary)
+                                                                    {
+                                                                        <li><a href="/GlossaryList">Glossary for clinical research</a></li>
+                                                                    }
+                                                                    @if (ViewBag.Page_IcfGlossary != null && ViewBag.Page_IcfGlossary)
+                                                                    {
+                                                                        <li><a href="/IcfGlossaryList">Glossary for informed consent</a></li>
+                                                                    }
+                                                                    @if (ViewBag.Page_Milestones != null && ViewBag.Page_Milestones)
+                                                                    {
+                                                                        <li><a href="/MilestoneList">Clinical research milestones</a></li>
+                                                                    }
+                                                                    @if (ViewBag.Page_MagiNews != null && ViewBag.Page_MagiNews)
+                                                                    {
+                                                                        <li><a href="/MagiNews">MAGI news</a></li>
+                                                                    }
+                                                                </ul>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    @if (ViewBag != null && ViewBag.ID > 0)
+                                    {
+                                        <li>
+                                            <span> My MAGI <span class="submenu-trigger d-md-none"></span> </span>
+                                            <div class="drop_menu">
+                                                <div class="drop_menu_Title d-none d-md-block"> My MAGI </div>
+                                                <div class="mx-md-0 row">
+                                                    <div class="align-items-end col-lg-3 col-md-3 d-md-flex d-none"> <img id="imgMyMAGIData" src="@ViewBag.MyMagiMenuImage" class="m-img" alt=""> </div>
+                                                    <div class="col-md-9 col-lg-9">
+                                                        <div class="row border-bottom pb-2">
+                                                            <div class="m-headSection col-md-4 d-none d-md-block" style="min-height:28px;">
+                                                                My Account
+                                                            </div>
+                                                            @if (ViewBag.MyEventSection)
+                                                            {
+                                                                <div class="align-items-center col-md-8 d-block d-md-flex m-headSection p-0" style="min-height:28px;">
+                                                                    <div class="d-md-inline-block me-2  d-none"> <label id="lblMyEvent" class="me-1">My Event</label> </div>
+                                                                    <div class="d-md-block d-md-inline-block position-relative" id="FillMyEventDropDown"></div>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-5 pl-0">
+                                                                <ul class="submenu">
+                                                                    <li class="back-tigger d-md-none"><span>Back</span></li>
+                                                                    <li><a href="/ViewAccount?PType=Self">My profile</a></li>
+                                                                    <li><a href="/MyMAGI/MyOrganization">My organization</a></li>
+                                                                    <li><a href="/ViewAccount?Spk=Self">My speaking interests</a></li>
+                                                                    <li><a href="/MyMAGI/MyHistory">My history</a></li>
+                                                                    <li><a href="/MyMAGI/MyPayments">My charges & payments</a></li>
+                                                                    @if (ViewBag.MyPartnerChargesPayments != null && ViewBag.MyPartnerChargesPayments)
+                                                                    {
+                                                                        <li><a href="/MyPartnerPayments">My partner charges & payments</a></li>
+                                                                    }
+                                                                    @if (ViewBag.MyPartnerPaymentsDue != null && ViewBag.MyPartnerPaymentsDue)
+                                                                    {
+                                                                        <li><a href="/PartnerRegistration">My partner payments due</a></li>
+                                                                    }
+                                                                    @if (ViewBag.MyPartnerAgreement != null && ViewBag.MyPartnerAgreement)
+                                                                    {
+                                                                        <li><a href="/MyPartnerAgreement">My partner agreement</a></li>
+                                                                    }
+                                                                    @if (ViewBag.MyPartnerOrganizationRole != null && ViewBag.MyPartnerOrganizationRole)
+                                                                    {
+                                                                        <li><a href="/MyPartnerRoles">My partner organization's roles</a></li>
+                                                                    }
+                                                                    <li><a href="/MyMAGI/MyCertificate">My certificates</a></li>
+                                                                </ul>
+
+                                                                <div class="row pb-1 mt-3">
+                                                                    <div class="m-headSection border-bottom col-md-12 d-md-block  d-none"> Help Desk </div>
+                                                                </div>
+                                                                <div class="col-md-4 pl-0">
+                                                                    <ul class="submenu">
+                                                                        <li class="d-md-none"><a href="javascript:void(0)" class="mobile-menu-title">Help Desk</a></li>
+                                                                        <li><a href="/MAGI/Contact">Contact MAGI</a></li>
+                                                                        <li><a href="/Events/FAQs">Frequently asked questions</a></li>
+                                                                        @if (ViewBag.FacultyResourceCenter != null && ViewBag.FacultyResourceCenter)
+                                                                        {
+                                                                            <li><a href="/FacultyResource">Faculty resource center</a></li>
+                                                                        }
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-7 pl-0">
+                                                                @if (ViewBag.MyEventSection)
+                                                                {
+                                                                    <ul class="submenu">
+                                                                        <li class="d-md-none"><a href="javascript:void(0)" class="mobile-menu-title">My Event</a></li>
+                                                                        @if (ViewBag.EnterMyEvent != null && ViewBag.EnterMyEvent)
+                                                                        {
+                                                                            <li><a id="EnterEventLink" href="javascript:OpenGoToEvent();" style="pointer-events:@((ViewBag.EnterMyEventEnable != null && !ViewBag.EnterMyEventEnable)? "none;":"" );">Enter my event</a></li>
+                                                                        }
+                                                                        @if (ViewBag.MyScheduleNextSpeakingInfo != null && ViewBag.MyScheduleNextSpeakingInfo)
+                                                                        {
+                                                                            <li id="MyScheduleNextSpeakingInfo" class="upcomingSessions">
+                                                                                <label id="lblMyNextSpeakingSpot" style="word-break: break-word; color: black !important;">@Html.Raw(ViewBag.lblMyScheduleNextSpeakingSpot)</label>
+                                                                            </li>
+                                                                        }
+                                                                        @if (ViewBag.MyStaffConsole != null && ViewBag.MyStaffConsole)
+                                                                        {
+                                                                            <li><a href="/MyMAGI/MyStaffPage">My staff console</a></li>
+                                                                        }
+                                                                        @if (ViewBag.MYConsole != null && ViewBag.MYConsole)
+                                                                        {
+                                                                            <li><a href="@ViewBag.MyBoothURL">@ViewBag.MyBoothText</a></li>
+                                                                        }
+                                                                        @if (ViewBag.MyEventSummary != null && ViewBag.MyEventSummary)
+                                                                        {
+                                                                            <li><a href="/MyMAGI/MyConference">My event summary</a></li>
+                                                                        }
+                                                                        @if (ViewBag.MyEventOptions != null && ViewBag.MyEventOptions)
+                                                                        {
+                                                                            <li><a href="/MyMAGI/MyOptions">My event options</a></li>
+                                                                        }
+                                                                        @if (ViewBag.MyReminders != null && ViewBag.MyReminders)
+                                                                        {
+                                                                            <li><a href="/MyReminders">My reminders</a></li>
+                                                                        }
+                                                                        @if (ViewBag.MyScheduleNextSessionInfo != null && ViewBag.MyScheduleNextSessionInfo)
+                                                                        {
+                                                                            <li id="MyScheduleNextSessionInfo" class="upcomingSessions">
+                                                                                <label id="lblMyScheduleNextSessionInfo" style="word-break: break-word; color: black !important;">@Html.Raw(ViewBag.lblMyScheduleNextSessionInfo)</label>
+                                                                            </li>
+                                                                        }
+                                                                        @if (ViewBag.MySchedule != null && ViewBag.MySchedule)
+                                                                        {
+                                                                            <li><a href="/MyMAGI/MySchedule">My schedule</a></li>
+                                                                        }
+                                                                        @*@if (ViewBag.MySessions != null && ViewBag.MySessions)
+                                                                        {
+                                                                            <li><a href="/MyMAGI/MySession">My session(s)</a></li>
+                                                                        }*@
+                                                                        @if (ViewBag.MyBookMaterials != null && ViewBag.MyBookMaterials)
+                                                                        {
+                                                                            <li><a href="/MyMAGI/MyConferenceBook">My book & materials </a></li>
+                                                                        }
+                                                                        @if (ViewBag.MyNetwork != null && ViewBag.MyNetwork)
+                                                                        {
+                                                                            <li><a href="/MyNetworking">My network </a></li>
+                                                                        }
+                                                                        @if (ViewBag.MyInterestGroup != null && ViewBag.MyInterestGroup)
+                                                                        {
+                                                                            <li style="display: list-item" shown="1"><a href="/MyMAGI/MyGroupChat">My interest group</a></li>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <li style="display:none" shown="0"><a href="/MyMAGI/MyGroupChat">My interest group</a></li>
+                                                                        }
+                                                                        <li><a onclick="return OpenChatWindow();">My chats</a></li>
+                                                                        @*<telerik:RadSiteMapNode NavigateUrl="/ExchangeInformation" Text="My contacts" Visible="false" />*@
+                                                                        @*
+                                                                            @if (ViewBag.MyMeetings != null && ViewBag.MyMeetings)
+                                                                                                {
+                                                                                                    <li><a href="/MeetingPlanner">My meetings</a></li>
+                                                                                        }
+                                                                        *@
+                                                                        @if (ViewBag.MySessions != null && ViewBag.MySessions)
+                                                                        {
+                                                                            <li><a href="/SingleSession">My session(s)</a></li>
+                                                                        }
+                                                                        @if (ViewBag.Myspeakerdinner != null && ViewBag.Myspeakerdinner)
+                                                                        {
+                                                                            <li><a href="/MySpeakerDinner">My speaker dinner</a></li>
+                                                                        }
+                                                                        @if (ViewBag.MYFAQs != null && ViewBag.MYFAQs)
+                                                                        {
+                                                                            <li><a href="/MyMAGI/MyFAQs">My FAQs</a></li>
+                                                                        }
+                                                                    </ul>
+                                                                }
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="container-fluid m-0 p-0">
+    @if (ViewBag.PhStaff)
+    {
+        <div id="divMargin" style="background-color: gainsboro;">
+            <div id="phStaff">
+                <label class="font12 fw-bold me-2">Staff Only</label>
+                <label class="Font10 me-2">Event:</label>
+                <a href="@ViewBag.CurrEventURL" class="btn-link me-2 Font10" id="cmdCurEvent">@ViewBag.cmdCurEvent</a>
+                @if (ViewBag.cmdSwitchEvent != null && ViewBag.cmdSwitchEvent)
+                {
+                    <a href="/Home/Switch?URLInfo=@Request.Url.PathAndQuery" class="btn-link Font10 me-2" id="cmdSwitchEvent" title="Switch Event">Switch</a>
+                }
+                <label class="Font10 me-2">Role(s):</label>
+                <label class="Font10 me-2" id="lblCurRoles">@ViewBag.lblCurRoles</label>
+                @if (ViewBag.cmdSurrVisible != null && ViewBag.cmdSurrVisible)
+                {
+                    <a href="/Home/LogoutCurrogate" class="btn-link me-2 Font10" id="cmdSur">@ViewBag.cmdSurrText</a>
+                }
+            </div>
+        </div>
+    }
+
+    @if (ViewBag.VisibleRepTrail)
+    {
+        System.Data.DataTable dt = (System.Data.DataTable)ViewBag.RepTrailList;
+        if (dt!= null && dt.Rows.Count>0)
+        {
+            <div id="divMargin_secondary" class="mt-1 breadcrumb magiSrollbar">
+                @{
+                    string html = "";
+                    foreach (System.Data.DataRow dr in dt.Rows)
+                    {
+                        html +="<a href='"+dr["URL"]+"' class='lblSmall'>" + dr["Text"] + "</a> " + " > ";
+                    }
+                }
+                @Html.Raw(html.Trim().Trim('>'))
+            </div>
+        }
+    }
+</div>
+
+<script>
+    window.addEventListener('beforeunload', function (e) {
+        e.preventDefault();
+        closewindow();
+    });
+    function closewindow() {
+        var data = "@ViewBag.LogoutAccount";
+        var expire = new Date();
+        expire.setDate(expire.getDate() + 15);
+        document.cookie = "Accountpkey=" + escape(data) + ";expires=" + expire.toGMTString() + "; path=/";
+    }
+
+</script>

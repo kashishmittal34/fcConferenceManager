@@ -1,0 +1,492 @@
+@{
+    ViewBag.Title = "Journal";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .lblTitle
+    {
+        font-size: 18pt;
+        color: Navy;
+        background-color: transparent;
+    }
+
+    #journeltable
+    {
+        font-size: 9pt;
+        width: 100% !important;
+        display: table;
+        background-color: white;
+        border: 3px double #ccc !important;
+        box-sizing: border-box;
+    }
+
+    #journeltable td
+    {
+        border: none;
+        padding: 1px;
+    }
+
+    #journeltable thead
+    {
+        display: none;
+    }
+
+    .pbody
+    {
+        padding: 1px 10px 3px 8px;
+    }
+
+    .lightbluebackground
+    {
+        background-color: #D7F6F9;
+    }
+
+    #journeltable td img[src*="eye.gif"]
+    {
+        margin-right: 5px;
+    }
+    .highlight
+    {
+        color: red;
+        text-decoration: underline;
+    }
+</style>
+
+@*<input type="hidden" value="@ViewBag.ddMonthSelectedIndex" id="mnthSelected" />
+    <input type="hidden" value="@ViewBag.ddYearSelectedIndex" id="yearSelected" />*@
+<input type="hidden" value="@ViewBag.apppath" id="sourcePath" />
+
+<div class="container-fluid">
+    <div class="row pt-2">
+        <div class="col-md-8">
+            <label id="lblTitle" class="lblTitle magi-inline-block">Journal of Clinical Research Best Practices</label>
+        </div>
+        <div class="col-md-4">
+            <div class="d-md-flex flex-column flex-wrap justify-content-md-end mt-1 align-items-end">
+                @if (ViewBag.lblSubLinkVisible)
+                {
+                    <label id="lblSubLink" style="display:none">@ViewBag.lblSubLink </label>
+                }
+                <a id="btnSubLink" href="">@ViewBag.btnSubLink</a>
+                <label class="lblSmall text-md-end">Email notification when new issues of <br>the Journal become available</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label id="lblJournalCount" style="display:inline">Read @ViewBag.Count practical and insightful articles, book reviews, and columns about clinical research.<br> To view the PDF files, download a free copy of </label>
+            <a href="http://www.adobe.com/products/acrobat/readstep2.html" target="_blank">Acrobat Reader</a>.
+        </div>
+        <div class="col-md-12 lightbluebackground py-1 my-1">
+            <div class="row gx-1 mb-1">
+                <div style="width:70px;">
+                    <label style="padding-right:8px;">Issue: </label>
+                </div>
+                <div class="col-md-11">
+                    <div class="d-flex align-items-center flex-wrap">
+                        <select id="ddMonth" class="me-md-1 mb-md-0 mb-1">
+                            <option value="0">All</option>
+                            @foreach (var mindex in ViewBag.ddMonth)
+                            {
+                                <option value="@mindex.Value" @(mindex.Selected ? "selected" : "")>@mindex.Text</option>
+                            }
+                        </select>
+                        <select id="ddYear">
+                            <option value="0">All</option>
+                            @foreach (var yindex in ViewBag.ddYear)
+                            {
+                                <option value="@yindex.Value" @(yindex.Selected ? "selected" : "")>@yindex.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row gx-1">
+                <div style="width:70px;">
+                    <label style="padding-right:5px;">Search:</label>
+                </div>
+                <div class="col-md-11">
+                    <div class="d-flex align-items-center flex-wrap">
+                        <input type="text" id="txtTitle" value="@ViewBag.TitleText" class="input-sm mb-1 me-md-1 mb-md-0" style="max-width:450px" />
+                        <button type="button" id="btnSearchAmongThese" class="btn me-1">Search This Issue</button>
+                        <button type="button" id="btnSearchAll" class="btn me-1">Search All Issues</button>
+                        <button type="button" id="btnClear" class="btn me-1">Clear</button>
+                        <a id="txtCopyLink" style="display:none;background-color: transparent; border: none; text-decoration: underline; cursor: pointer; color: darkblue">Copy Link</a>
+                        <br />
+                        <label id="lblMinChar" class="Font11" 
+                               style="color: red; font-weight: bold; display: block;margin-left: 10px;">
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row gx-1 mt-1">
+                <div style="width:70px;">
+                    <label id="lblsort" style="padding-right:1px;width: 55px;">Sort by:</label>
+                </div>
+                <div class="col-md-11">
+                    <div class="d-flex align-items-center">
+                        <input type="radio" name="rdSort" class="sortRadio" id="rdrelevance" value="0" checked style="font-size:10pt;" /><label for="rdrelevance" class="ms-1 me-2 sortRadio">Relevance</label>
+                        <input type="radio" name="rdSort" class="sortRadio" id="rddate" value="1" style="font-size:10pt;" /><label for="rddate" class="ms-1 me-2 sortRadio">Date</label>
+                        <input type="checkbox" id="cbCurrentSrch" value="" @((Convert.ToBoolean(ViewBag.bckCrrntSrch)) ? "checked" : "") class="currSearch" style="font-size:10pt;" /><label for="cbCurrentSrch" class="ms-1 currSearch">Search within results below</label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-12 lightbluebackground" style="display:none;">
+            <table class="magi-mobile-fluid">
+                <tr>
+                    <td style="padding-left: 5px; padding-right: 5px;">
+                        <table style="width: 100%">
+                            <tr class="magi-mobile-flex magi-mobile-left-p0">
+                                <td style="width: 55px; vertical-align: top;padding-right:3px;" class="magi-mobile-flex-item magi-mobile-right-space">
+                                    <label>Status:</label>
+                                </td>
+                                <td style="width: 150px; vertical-align: top" class="magi-mobile-flex-item">
+                                    <select id="selstatus">
+                                        <option value="-1">All</option>
+                                        <option value="1">Active</option>
+                                        <option value="0">InActive</option>
+                                    </select>
+                                </td>
+                                <td class="magi-mobile-flex-item">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-12">
+            <label class="SearchResultInfo mt-1 mb-1" id="SearchResultInfo" style="color: #00008b;"></label>
+            <br />
+            <div class="table-responisve">
+                <table id="journeltable" data-page-length="25" cellspacing="0" style="max-height: 400px; border-style: double; "></table>
+            </div>
+            <label id="lblJournalInst">@Html.Raw(ViewBag.lblJournalInst)</label>
+        </div>
+    </div>
+</div>
+<link href="~/Css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script>
+
+    var setByMonth = false;
+    var setByYear = false;
+
+    function copyTextToClipboard(text)
+    {
+        if (!navigator.clipboard)
+        {
+            fallbackCopyTextToClipboard(text);
+            return;
+        }
+        navigator.clipboard.writeText(text).then(function ()
+        {
+            console.log('Async: Copying to clipboard was successful!');
+        }, function (err)
+        {
+            console.error('Async: Could not copy text: ', err);
+        });
+        CommonFunctions.Alert("Link Copied")
+    }
+
+    function fallbackCopyTextToClipboard(text)
+    {
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try
+        {
+            var successful = document.execCommand('copy');
+            var msg = successful ? 'successful' : 'unsuccessful';
+            console.log('Fallback: Copying text command was ' + msg);
+
+        } catch (err)
+        {
+            console.error('Fallback: Oops, unable to copy', err);
+        }
+
+        document.body.removeChild(textArea);
+    }
+
+    function RefreshJornalTable(searchAmongAll = false)
+    {
+        var DataSet = null;
+        var cbChecked = document.getElementById("cbCurrentSrch").checked;
+        var dyear = $('#ddYear :selected').text();
+        var dmonth = $('#ddMonth :selected').text();
+        var statusval = $('#selstatus :selected').val();
+        var sindexvalue = $("#selstatus").prop('selectedIndex');
+        
+        if (dyear == "") {
+            dyear = "All";
+            $('#ddMonth option[value=0]').prop('selected', true);
+        }
+           
+        if (dmonth == "") {
+            $('#ddYear option[value=0]').prop('selected', true);
+            dmonth = "All";
+        }
+
+        if (statusval === undefined) {
+            statusval = 0;
+        }
+           
+
+        var rdselc = document.querySelector('input[name="rdSort"]:checked').value;
+        var data = { txtTitle: $('#txtTitle').val(), ddYear: dyear, ddMonth: dmonth, bckCurrentSrch: cbChecked, rdSort: rdselc, SelInedx: sindexvalue, Statusvalue: statusval, needSearchAmongAll: searchAmongAll }
+
+        var result = CommonFunctions.AjaxCall('Get', '/Resources/RefreshJornaltable', data, '', 'Error While Fetching Data.');
+
+        if (result !== null || result !== "ERROR")
+        {
+            if (result.msg === "OK")
+                DataSet = JSON.parse(result.Source);
+        }
+        $('.sortRadio').attr('disabled', ($('#txtTitle').val() === ""));
+        var count = DataSet.length;
+        $('#txtCopyLink,.currSearch,.SearchResultInfo').hide();
+        $('.SearchResultInfo').text('');
+        if ($('#txtTitle').val() !== "")
+        {
+            $('#txtCopyLink').show();
+            $('.sortRadio').attr('disabled', false);
+            console.log((count > 0));
+            if (count > 0)
+            {
+                $('.currSearch').show();
+                $('.SearchResultInfo').text(`${count} search results for "${$('#txtTitle').val()}":`);
+                $('.SearchResultInfo').show();
+               
+            }
+        }
+        $('#journeltable').dataTable({
+            paging: true, bPaginate: false, bInfo: false, bLengthChange: false, bFilter: false, rowsPerPageOptions: false, ordering: false, sorting: false, searching: false, "order": [[0, "desc"]],
+            bDestroy: true,
+            fixedHeader: true,
+            data: DataSet,
+            stateSave: true,
+            columns: [
+                {
+                    title: "",
+                    data: "mnth"
+                },
+                {
+                    title: "",
+                    data: { pUrl: "pUrl", Title: "Title" },
+                    render: function (data)
+                    {
+                        var urltext = (data.pUrl == "" ? "javascript:void(0);" : data.pUrl);
+                        return `<a href="${urltext}" target='_blank'><img src="/images/icons/eye.gif" style="font-size :10pt" title ="Download pdf"/><label style="color:black">${data.Title.replaceAll($('#txtTitle').val().trim(), '<span class="highlight">' + $('#txtTitle').val().trim() +'</span>')}</label></a>`
+                    }
+                },
+                {
+                    title: "",
+                    data: "blurb"
+                },
+                {
+                    title: "",
+                    data: "CopyToClip",
+                    render: function (data)
+                    {
+                        return `<input type="button" onclick="copyTextToClipboard('${data}')" value="Copy Link" style="background-color: transparent; border: none; text-decoration: underline; cursor: pointer; color: darkblue"/>`
+                    }
+                },
+
+            ]
+        });
+    }
+
+    $(document).ready(function ()
+    {
+        //document.getElementById("ddMonth").selectedIndex=$('#mnthSelected').val();
+        //document.getElementById("ddYear").selectedIndex=$('#yearSelected').val();
+        RefreshJornalTable();
+
+        $('#btnSearchAll').on('click', function ()
+        {
+            $('#lblMinChar').html('');
+            var inputVal = $('#txtTitle').val();
+            if (inputVal == null || inputVal == '' || inputVal.length < 3)
+            {
+                $('#lblMinChar').html('Search on at least 3 characters');
+            }
+            else
+                RefreshJornalTable(true);
+        });
+
+        $('#btnSearchAmongThese').on('click', function ()
+        {
+            $('#lblMinChar').html('');
+            var inputVal = $('#txtTitle').val();
+            if (inputVal == null || inputVal == '' || inputVal.length < 3)
+            {
+                $('#lblMinChar').html('Search on at least 3 characters');
+            }
+            else
+                RefreshJornalTable();
+        });
+
+        $('#btnClear').on('click', function ()
+        {
+            $("#cbCurrentSrch").prop("checked", false);
+            $("#rdrelevance").prop('checked', true);
+            $('#txtTitle').val('');
+            $('#journeltable').DataTable().clear().destroy();
+            $('#ddMonth option[value=0]').prop('selected', true);
+
+            if ($('#ddYear option[selected]').length > 0)
+            {
+                $('#ddYear option[selected]').prop('selected', true);
+            }
+            else
+            {
+                $('#ddYear option[value=0]').prop('selected', true);
+            }
+
+            RefreshJornalTable();
+        });
+
+        document.execCommand("copy");
+
+        $('.copylinkBtn').on('click', function (e)
+        {
+            var copyText = $('#sourcePath').val() + $(this)[0].dataset.id;
+            navigator.clipboard.writeText(copyText);
+            CommonFunctions.Alert("Link Copied");
+            e.preventDefault();
+        });
+
+        $('input[type=radio][name=rdSort]').change(function ()
+        {
+            $('#journeltable').DataTable().clear().destroy();
+            RefreshJornalTable();
+        });
+
+        $('#btnSubLink').on('click', function (e)
+        {
+            var result = CommonFunctions.AjaxCall('Get', '/Resources/SuscribeJournal', '', 'Error While Processing.');
+            if (result !== null && result !== "Error")
+            {
+                if (result.result == "Redirect")
+                    window.location.href = result.link;
+                else
+                {
+                    if (result.res == "OK")
+                        CommonFunctions.Alert(result.msg);
+
+                    window.location.reload();
+                }
+            }
+            e.preventDefault();
+        });
+
+        $('#txtCopyLink').click(function ()
+        {
+            //var cbChecked=document.getElementById("cbCurrentSrch").checked;
+            var searchPath = $('#sourcePath').val() + "/Resources/Journal?search=" + $('#txtTitle').val();
+            copyTextToClipboard(searchPath);
+        });
+
+        $('#ddMonth').on('change', function ()
+        {
+            if (!setByYear)
+            {
+                SetSearchCriteria(1);
+            }
+            setByYear = false;
+        });
+
+        $('#ddYear').on('change', function ()
+        {
+            if (!setByMonth)
+            {
+                SetSearchCriteria(2);
+            }
+            setByMonth = false;
+        });
+    });
+
+    function SetSearchCriteria(ocurredOn)
+    {
+        try
+        {
+            var yearTxt = $('#ddYear :selected').text();
+            var monthTxt = $('#ddMonth :selected').val();
+            var searchedText = $('#txtTitle').val();
+
+            if (searchedText != '' && monthTxt.toString() != '0' && ocurredOn == 1)
+            {
+                setByMonth = true;
+                var currentYear = new Date().getFullYear();
+                
+                if (yearTxt == 'All' && currentYear != null && currentYear != undefined)
+                {
+                    $('#ddYear option:contains("' + currentYear.toString() + '")').prop('selected', true);
+                }
+            }
+            else if (searchedText != '' && yearTxt != 'All' && ocurredOn == 2)
+            {
+                var currMonth = (new Date().getMonth() + 1).toString();
+                if (monthTxt.toString() == currMonth)
+                {
+                    setByYear = true;
+                    $('#ddMonth option[value=0]').prop('selected', true);
+                }
+            }
+            else if (searchedText == '')
+            {
+                RefreshJornalTable();
+            }
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function copyTextToClipboard(text)
+    {
+        if (!navigator.clipboard)
+        {
+            fallbackCopyTextToClipboard(text);
+            return;
+        }
+        navigator.clipboard.writeText(text).then(function ()
+        {
+            console.log('Async: Copying to clipboard was successful!');
+        }, function (err)
+        {
+            console.error('Async: Could not copy text: ', err);
+        });
+        CommonFunctions.Alert("Link Copied")
+    }
+
+    function fallbackCopyTextToClipboard(text)
+    {
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try
+        {
+            var successful = document.execCommand('copy');
+            var msg = successful ? 'successful' : 'unsuccessful';
+            console.log('Fallback: Copying text command was ' + msg);
+
+        }
+        catch (err)
+        {
+            console.error('Fallback: Oops, unable to copy', err);
+        }
+
+        document.body.removeChild(textArea);
+    }
+</script>

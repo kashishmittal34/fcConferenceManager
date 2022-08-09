@@ -1,0 +1,79 @@
+﻿@using System.Data
+@model  DataTable
+<style>
+    .disabledrow
+    {
+        color: gray !important;
+        cursor: text !important;
+        pointer-events: none !important;
+        filter: grayscale(100%) !important;
+    }
+
+    table#questionsGrid td
+    {
+        vertical-align: middle;
+    }
+</style>
+@{
+    WebGrid webGrid = new WebGrid(source: (Model.AsEnumerable().Select(p => new
+    {
+        EventDay = p.Field<string>("EventDay"),
+        EventDate = p.Field<string>("EventDate"),
+        Time = p.Field<string>("Time"),
+        Type = p.Field<string>("Type"),
+        Host = p.Field<string>("Host"),
+        title = p.Field<string>("title"),
+        shortOrder = p.Field<int>("shortOrder"),
+        Description = p.Field<string>("Description"),
+        ScheduleType = p.Field<int>("ScheduleType"),
+        RoundTableSchedule_pkeys = p.Field<int>("RoundTableSchedule_pkeys"),
+        StartDate = p.Field<DateTime>("StartDate"),
+        EndTime = p.Field<DateTime>("EndTime"),
+        Editable = p.Field<int>("Editable"),
+        Link = p.Field<string>("Link"),
+        IsConfirm = p.Field<int>("IsConfirm"),
+        pkey = p.Field<int>("pkey"),
+        Account_pKey = p.Field<int>("Account_pKey"),
+        Sponsorname = p.Field<string>("Sponsorname"),
+        IsDisabled = p.Field<int>("IsDisabled")
+    })), canPage: false, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent", canSort: false);
+}
+<div class="table-responsive">
+    @webGrid.GetHtml(tableStyle: "table table-hover", headerStyle: "table-default", mode: WebGridPagerModes.All,
+    htmlAttributes: new { @id = "questionsGrid", @class = "Grid" },
+    columns: webGrid.Columns(
+        webGrid.Column("Event", format: @<text>
+                @{
+                    <span class="@((item.IsDisabled==1)? "disabledrow":"")"> @item.title </span>
+                }
+        </text>),
+webGrid.Column("Description", format: @<text>
+            @{
+                <span class="@((item.IsDisabled==1)? "disabledrow":"")"> @item.Description </span>
+            }
+</text>),
+webGrid.Column("Date", format: @<text>
+        @{
+            <span class="@((item.IsDisabled==1)? "disabledrow":"")"> @String.Format("{0:D}", item.StartDate) </span>
+        }
+</text>),
+webGrid.Column("Time", format: @<text>
+            @{
+                <span class="@((item.IsDisabled==1)? "disabledrow":"")"> @String.Format("{0:D}", item.Time) </span>
+            }
+</text>),
+webGrid.Column("Actions", format: @<text>
+            @{
+                            if (item.IsConfirm == 1)
+                            {
+                    <a href='javascript:void(0)' data-id="@item.pKey" data-infoid="@item.RoundTableSchedule_pkeys" data-sponsor="@item.Sponsorname" data-account="@item.Account_pKey" data-type="@item.Type"
+                       class='me-2 cmdCancelSchedule2 @((item.IsDisabled==1)? "disabledrow":"")' title='Cancel'><img src='/images/icons/Trash.png' width='32' alt='Cancel' /></a>
+                            }
+                            if (item.Editable == 1 && item.IsConfirm == 0)
+                            {
+                    <a href='javascript:void(0)' data-id="@item.pKey" class='me-2 cmdDeleteSchedule @((item.IsDisabled==1)? "disabledrow":"") ' title='Cancel'><img src='/images/icons/Trash.png' width='16' alt='Cancel' /></a>
+                    <a href='javascript:void(0)' data-id="@item.pKey" class='me-2 cmdEditSchedule @((item.IsDisabled==1)? "disabledrow":"")' title='Edit'><img src='/images/icons/gridgray.png' width='16' alt='Edit' /></a>
+                            }
+            }
+</text>)))
+</div>

@@ -1,0 +1,41 @@
+﻿@using fcConferenceManager.Models
+@{
+    bool answersAvailable = false;
+    System.Data.DataTable dtAnswer = new System.Data.DataTable();
+    System.Data.DataRow[] subdt = null;
+    if (ViewBag.QuesAnswer!= null)
+    {
+        dtAnswer = (System.Data.DataTable)ViewBag.QuesAnswer;
+        if (dtAnswer.Rows.Count>0)
+        {
+            answersAvailable = true;
+        }
+    }
+}
+<table id="tablef" width="100%">
+    @if (Model != null && Model.Rows.Count>0)
+    {
+        foreach (System.Data.DataRow i in Model.Rows)
+        {
+            <tr>
+                <td>
+                    <details id="@("CategoryList_" + i["FAQCategory_pKey"].ToString())" class="CategoryList" style="color: black;">
+                        <summary class="FAQCategory" id="@i["FAQCategory_pKey"]">@i["FAQCategoryID"]</summary>
+                        <div style="margin-left:20px;background-color:whitesmoke;color:black;">
+                            <table id="FAQstable+@i["FAQCategory_pKey"]" style="padding-left:20px" width="100%">
+                                @if (answersAvailable)
+                                {
+                                    subdt = dtAnswer.Select("FAQCategory_pKey =" + i["FAQCategory_pKey"]);
+                                    if (subdt != null && subdt.Length>0)
+                                    {
+                                        @Html.Raw(string.Join(" ", subdt.AsEnumerable().Select(r => "<tr><td>"+ r["Elem"] + "</td></tr>").ToList()))
+                                    }
+                                }
+                            </table>
+                        </div>
+                    </details>
+                </td>
+            </tr>
+        }
+    }
+</table>

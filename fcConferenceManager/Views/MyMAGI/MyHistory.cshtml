@@ -1,0 +1,173 @@
+﻿@model IEnumerable<fcConferenceManager.Models.My_History>
+@{
+    ViewBag.Title = "MyHistory";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="/Css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="/Scripts/jquery.dataTables.min.js"></script>
+<style>
+    .inline
+    {
+        display: inline-block;
+    }
+</style>
+
+<div class="magiMySessionMainWrapper mt-3" id="refdiv">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+            <div class="col-md-8 col-lg-9 flex-grow-1">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="d-flex">
+                            <h2 class="ms-1">My History</h2>
+                            <input class="ms-1" type="image" id="btnRefresh" value="Refresh" title="Refresh Page" src="/images/icons/undo.png" style="height: 32px; margin-left: 5px;  display: inline-block" />
+                            <input class="ms-1" type="image" id="btnMain_imgSearch" title="Search" src="/images/icons/redo.png" style="height: 32px;  display: inline-block " />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <a id="cmdReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 pull-right">Return</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="d-md-flex align-items-end flex-wrap p-1 lighskyBlueBg mb-2">
+                            <div class="me-md-1 mb-2 mb-md-1">
+                                <label id="cphMain_Label1" class="lblSmall">
+                                    Activity Date:
+                                </label>
+                                <select name="Days" id="_activityDate" style="min-width:100px;">
+                                    <option value="0">All</option>
+                                    <option value="1">Past Day</option>
+                                    <option value="2" selected>Past Week</option>
+                                    <option value="4">Past Month</option>
+                                    <option value="5">Past Year</option>
+                                    <option value="3">Other</option>
+                                </select>
+                            </div>
+                            <div class="me-md-1 mb-2 mb-md-1">
+                                <label id="cphMain_Label1" class="lblSmall">
+                                    From:
+                                </label><br>
+                                <input type="date" id="datePickerFrom" name="From">
+                            </div>
+                            <div class="me-md-1 mb-2 mb-md-1">
+                                <label id="cphMain_Label3" class="lblSmall">To:</label><br>
+                                <input type="date" id="datePickerTo" name="To">
+                            </div>
+                            <div class="me-md-1 mb-2 mb-md-1">
+                                <label id="cphMain_Label4" class="lblSmall">Action Like:</label><br>
+                                <input type="text" id="_ActionLike" name="_ActionLike" size="20" maxlength="10" style="max-width:100px;" />
+                            </div>
+                            <div class="me-md-1 mb-2 mb-md-1">
+                                <label id="cphMain_Label5" class="lblSmall">Entity Name:</label><br>
+                                <input type="text" id="_EntityName" name="_EntityName" size="20" maxlength="10" style="max-width: 100px;" />
+                            </div>
+                            <div class="me-md-1 mb-2 mb-md-1">
+                                <label id="cphMain_Label6" class="lblSmall">Page:</label><br>
+                                <select id="PageList" name="PageList" style="width:100%;">
+                                    <option value="">All</option>
+                                    @if (ViewBag.PageList != null)
+                                    {
+                                        foreach (System.Data.DataRow dr in ((System.Data.DataTable)ViewBag.PageList).Rows)
+                                        {
+                                            <option value="@dr["pKey"]">@dr["strText"] </option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="partialdiv" style="margin-top:10px; margin-bottom:10px;border:solid; border-width :1px; color :lightgray ;height:auto ;min-height:500px ;">
+                    @{ Html.RenderPartial("_PartialMyHistory", null); }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    Date.prototype.toDateInputValue = (function ()
+    {
+        var local = new Date(this);
+        local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+        return local.toJSON().slice(0, 10);
+    });
+    $(document).ready(function ()
+    {
+
+        $('#datePickerTo').val(new Date().toDateInputValue());
+
+        $('#datePickerFrom').val(new Date().toDateInputValue());
+
+        $("#_activityDate").change(function ()
+        {
+            var id = $(this).val();
+            if (id != 3)
+            {
+                document.getElementById("datePickerFrom").readOnly = true;
+                document.getElementById("datePickerFrom").style.opacity = 0.6;
+                document.getElementById("datePickerTo").readOnly = true;
+                document.getElementById("datePickerTo").style.opacity = 0.6;
+            } else
+            {
+                document.getElementById("datePickerFrom").readOnly = false;
+                document.getElementById("datePickerFrom").style.opacity = 1;
+                document.getElementById("datePickerTo").readOnly = false;
+                document.getElementById("datePickerTo").style.opacity = 1;
+            }
+        });
+
+        var FilterData = { ViewType: "Calendar" };
+        $('#PartialView_Container').load('_PartialMySchedule', FilterData);
+
+
+        function LoadFilterData()
+        {
+            var _Days = $('#_activityDate').val();
+            if (_Days === undefined) { _Days = ""; }
+
+            var _PageList = $('#PageList').val();
+            if (_PageList === undefined) { _PageList = ""; }
+
+            var FilterData =
+            {
+                Days: _Days.toString(),
+                From: $('#datePickerFrom').val().toString(),
+                To: $('#datePickerTo').val().toString(),
+                ActionLike: $('#_ActionLike').val().toString(),
+                EntityName: $('#_EntityName').val().toString(),
+                PageList: _PageList.toString()
+            };
+
+            $('#partialdiv').load('_PartialMyHistory', FilterData);
+        }
+
+        $("#btnMain_imgSearch").click(function ()
+        {
+            LoadFilterData();
+        });
+
+        $("#btnRefresh").click(function ()
+        {
+            $('#PageList,#_ActionLike,#_EntityName').val("");
+            $("#_activityDate").val("2");
+            document.getElementById("datePickerFrom").readOnly = true;
+            document.getElementById("datePickerFrom").style.opacity = 0.6;
+            document.getElementById("datePickerTo").readOnly = true;
+            document.getElementById("datePickerTo").style.opacity = 0.6;
+            $('#datePickerTo').val(new Date().toDateInputValue());
+            $('#datePickerFrom').val(new Date().toDateInputValue());
+            LoadFilterData();
+        });
+    });
+
+
+
+
+
+</script>
+

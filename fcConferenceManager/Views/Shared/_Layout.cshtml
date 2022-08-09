@@ -1,0 +1,174 @@
+﻿@{
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="~/css/font-awesome.min.css" />
+    <script type="text/javascript" src="~/scripts/alertify.min.js"></script>
+    <script type="text/javascript" src="~/scripts/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/CustomScript/_common.js"></script>
+    <style>
+        .EventInfo
+        {
+            position: absolute;
+            color: white;
+            margin: 0;
+            text-shadow: 1px 1px 5px #000;
+            top: 4px;
+            left: 420px;
+            line-height: 21px;
+        }
+
+        @@media (max-width:767px)
+        {
+            #tblimage
+            {
+                height: auto;
+                flex-direction: column;
+            }
+
+            .EventInfo
+            {
+                top: 4px;
+                left: 0;
+                right: 0;
+                text-align: center;
+            }
+        }
+
+        ul.submenu li
+        {
+            cursor:pointer;
+        }
+    </style>
+    <script>
+        @functions{
+            public string GetAntiForgeryToken()
+            {
+                string cookieToken, formToken;
+                AntiForgery.GetTokens(null, out cookieToken, out formToken);
+                return cookieToken + "," + formToken;
+            }
+         }
+    </script>
+</head>
+<body>
+    <input type="hidden" id="forgeryToken" value="@GetAntiForgeryToken()" />
+    @{
+        Html.RenderAction("GetMyChat", "MyMagi");
+    }
+    @{
+        Html.RenderAction("_PageHeader", "Home");
+    }
+    @RenderBody()
+    <footer Class="footerSec">
+        <div Class="container-fluid clearfix">
+            <div Class="row">
+                <ul>
+                    <li> <span>© @(DateTime.Now.Year) by WCG Events. All Rights Reserved.</span></li>
+                    <li> <a href="/MAGI/TermsOfUse"> Terms Of Use</a></li>
+                    <li> <a href="">WCG Privacy Policy</a></li>
+                    <li> <a href=""> Site Map</a></li>
+                    <li> <a href=""> Ver : 1.1.0.50</a></li>
+                </ul>
+            </div>
+        </div>
+
+    </footer>
+    <div id="ajaxloader" class="magi-loader-wrapper" style="display:none;">
+        <div class="magi-loader-img">
+            <img src="/images/icons/loading.gif" alt="">
+        </div>
+    </div>
+    <script src="~/Scripts/bootstrap.min.js" type="text/javascript"></script>
+    <Script type="text/javascript">
+
+        /* Set the width Of the side navigation To 250px And the left margin Of the page content To 250px And add a black background color To body */
+        function openNav() {
+            document.body.classList.add('active')
+        }
+        /* Set the width of the side navigation to 0 And the left margin of the page content to 0, And the background color of body to white */
+        function closeNav() {
+            document.body.classList.remove('active')
+        }
+
+        var i, acc = document.getElementsByClassName("accordion");
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var Panel = this.nextElementSibling;
+                if (Panel.Style.maxHeight)
+                    Panel.Style.maxHeight = null;
+                else
+                    Panel.Style.maxHeight = Panel.scrollHeight + "px";
+            });
+        }
+
+        $('.main-ul-wrapper .submenu-trigger').click(function () {
+            $(this).closest('.navMenu').addClass('active');
+            $(this).closest('li').children('.drop_menu').addClass('active');
+        });
+
+        $('.back-tigger span').click(function () {
+            $(this).closest('.navMenu').removeClass('active');
+            $(this).closest('.navMenu').find('.drop_menu').removeClass('active');
+        });
+
+        function UpdateEventDropDown(eventDropdown) {
+            var eventDval = (eventDropdown == 1) ? $('#ddMainEventDropDown').val() : $('#ddMainMyEventDropDown').val();
+            CommonFunctions.AjaxCall('POST', '/Home/EventChangeByDropDown', { EventValue: eventDval }, "Error While Updating Event");
+            window.location.href = "/Home/Index";
+        }
+
+        (function () { var date = new Date(); offset = date.getTimezoneOffset().toString(); CommonFunctions.SetCookie("yjnf", offset, 30); })();
+
+
+        function hideChatMenu(ischatVisible) {
+            if (!ischatVisible) {
+                $('a:contains("My chats")').parent().css('display', 'none');
+                //$('a:contains("My interest group")').parent().css('display', 'none');
+            }
+            else {
+                var myChatMenuItem = $('a:contains("My chats")');
+                myChatMenuItem.parent().css('display', 'list-item');
+                myChatMenuItem.attr('shown', '1');
+            }
+        }
+
+        function OpenChatWindow() {
+            try {
+                if (typeof opentheChat === 'function') {
+                    opentheChat();
+                }
+                else
+                    alertify.alert('Currently, Chat feature is disabled for you. Please contact MAGI.');
+            }
+            catch (ex) {
+                console.log(ex);
+            }
+            return false;
+        }
+
+        $(document).ready(function () {
+            $('#FillEventDropDown').load('/Home/_FillEventDropDown?EventDropdown=true');
+            $('#FillMyEventDropDown').load('/Home/_FillEventDropDown?MyEventDropDown=true');
+
+            var ElementsLength = $('.magiEventTimingWrapper,.magiReminderWrapper,.magi-Chatting-wrapper').length;
+            if (ElementsLength === 0)
+                $('.magiSidebarWrapper').toggleClass("magiSidebarWrapper");
+
+            setTimeout(function () {
+                $('#FillEventDropDown .custom-select-span').text($('#ddMainEventDropDown option:checked').data("id"));
+                $('#FillMyEventDropDown .custom-select-span').text($('#ddMainMyEventDropDown option:checked').data('id'));
+            }, 1000)
+        });
+    </Script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

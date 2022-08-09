@@ -1,0 +1,1174 @@
+﻿
+@{
+    ViewBag.Title = "MyStaffPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="/Scripts/Chart.min.js" type="text/javascript"></script>
+<style>
+    .modalBlueHeader
+    {
+        background-color: dodgerblue !important;
+        color: #fff !important;
+        font-size: 11pt;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+    }
+
+    #tbllinks tr:nth-child(odd)
+    {
+        background-color: #f2f2f2
+    }
+
+    .custompanelheight
+    {
+        height: 350px;
+        min-height: 350px;
+        box-shadow: 0 2px 6px #9f9f9f;
+    }
+
+    .custompanelheight > div:nth-child(2)
+    {
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    #btnToSendCrisis
+    {
+        padding: 0.6px 8px;
+        margin-right:10px;
+        float:right;
+    }
+
+    #showCharCountForCrisis
+    {
+        font-size: 8pt;
+        color: darkblue;
+        float: right;
+    }
+</style>
+<div class="container-fluid mt-3">
+    <div class="row">
+        @{
+            Html.RenderAction("_PartialEventInfo", "Home");
+        }
+        <div class="col-md-8 col-lg-9 flex-grow-1">
+
+            <div class="row">
+                <div class="col-md-10">
+                    <h2>@ViewBag.lblTitle</h2>
+                </div>
+                <div class="col-md-2 justify-content-lg-end align-items-center flex-wrap">
+                    <a id="cmdReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 pull-right">Return</a>
+                    @if (ViewBag.notificationsOfCrisis == true)
+                    {
+                        <input id="btnToSendCrisis" type="button" class="btnOrange" value="Crisis Alert" data-toggle="modal" data-bs-toggle="modal" data-bs-target="#CrisisWindow" />
+                    }
+                </div>
+            </div>
+            <div class="row ">
+                @*--------------------------Quick Links--------------------*@
+                @if (ViewBag.Recent)
+                {
+                    <div class="col-xxl-4 col-md-6 p-1" id="QuickLinks">
+                        <div class="card card-body custompanelheight m-1 p-0">
+                            <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                <label class="fw-bold Font8">Quick Links</label>
+                                <label id="closeVoucherPopup" for="QuickLinks" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                            </div>
+                            <div class="p-2">
+                                <div class="row gx-0 m-0" id="phOtherLink">
+                                    <table id="tbllinks">
+                                        @foreach (System.Data.DataRow dr in Model.RecentLinks.Rows)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <a href="/@dr["LinkURL"]">@dr["LinkText"]</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                        @if (Model.RecentLinks.Rows.Count == 0)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <label>No results Found</label>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @*--------------------------Tasks--------------------*@
+                @if (ViewBag.Task)
+                {
+                    <div class="col-xxl-4 col-md-6 p-1" id="Tasks">
+                        <div class="card card-body custompanelheight m-1 p-0">
+                            <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                <label class="fw-bold Font8">Tasks</label>
+                                <label id="closeVoucherPopup" for="Tasks" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                            </div>
+                            <div class="p-2">
+                                <div class="row gx-0 mx-0" id="dvtasks">
+                                    <div class="col-md-12 d-flex mt-2">
+                                        <label class="flex-grow-1">Total assigned tasks:</label>
+                                        <label id="lblTotal"><b>@ViewBag.lblTotal</b></label>
+                                    </div>
+                                    <div class="col-md-12 d-flex mt-2">
+                                        <label class="flex-grow-1">Total tasks due:</label>
+                                        <label id="lblDue" style="color: @ViewBag.LblDueColor"><b>@ViewBag.lblDue</b></label>
+                                    </div>
+                                    <div class="col-md-12 mt-2">
+                                        <a id="btnTasks" href="/EventTasks">Go to Tasks page</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @*--------------------------Activity Chairs--------------------*@
+                @if (ViewBag.SessionChair)
+                {
+                    <div class="col-xxl-4 col-md-6 p-1" id="ActiveChairs">
+                        <div class="card card-body custompanelheight m-1 p-0">
+                            <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                <label class="fw-bold Font8">Activity Chairs</label>
+                                <label id="closeVoucherPopup" for="ActiveChairs" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                            </div>
+                            <div class="p-2">
+                                <div class="row gx-0 mx-0" id="dvChairs">
+                                    <div class="col-md-12 d-flex mt-2">
+                                        <label class="flex-grow-1">Chairs planned:</label>
+                                        <label id="lblChairPlan"><b>@ViewBag.lblChairPlan</b></label>
+                                    </div>
+                                    <div class="col-md-12 d-flex mt-2">
+                                        <label class="flex-grow-1">Chairs assigned:</label>
+                                        <label id="lblChairAss"><b>@ViewBag.lblChairAss</b></label>
+                                    </div>
+                                    <div class="col-md-12 d-flex mt-2">
+                                        <label class="flex-grow-1">Chairs needed:</label>
+                                        <label id="lblChairNeed" style="color: @ViewBag.lblChairneedcolor"><b>@ViewBag.lblChairNeed</b></label>
+                                    </div>
+                                    <div class="col-md-12 mt-2">
+                                        <a id="btnChairs" href="/EventChairs">Go to Session Chairs page</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @*--------------------------W9 Request--------------------*@
+                @if (ViewBag.w9Request)
+                {
+                    <div class="col-xxl-4 col-md-6 p-1" id="W9Request">
+                        <div class="card card-body custompanelheight m-1 p-0">
+                            <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                <label class="fw-bold Font8">W9 Requests</label>
+                                <label id="closeVoucherPopup" for="W9Request" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                            </div>
+                            <div class="p-2">
+                                <div class="row gx-0 mx-0" id="dvW9">
+                                    <div class="col-md-12 d-flex mt-2">
+                                        <label class="flex-grow-1">Pending Requests:</label>
+                                        <label id="lblw9Pending" style="color: @ViewBag.lblw9PendingColor"><b>@ViewBag.lblw9Pending</b></label>
+                                    </div>
+                                    <div class="col-md-12 mt-2">
+                                        <a id="btnW9" href="/W9List">Go to W9 Requests page</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+                @*-------------------------- My Notes --------------------*@
+                @if (ViewBag.Notes)
+                {
+                    <div class="col-xxl-4 col-md-6 p-1" id="DockMyNotes">
+                        <div class="card card-body custompanelheight m-1 p-0">
+                            <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                <label class="fw-bold Font8">My Notes</label>
+                                <label id="closeVoucherPopup" for="DockMyNotes" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                            </div>
+                            <div class="p-2">
+                                <div class="row gx-0 mx-0" id="dvNotes">
+                                    <div class="col-md-12 mt-2">
+                                        <textarea id="txtMyNote" style="height: 170px;">@ViewBag.txtMyNote</textarea>
+                                    </div>
+                                    <div class="col-md-12 mt-2">
+                                        <a id="btnSaveNote" href="">Save</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @*-------------------------- Badges  --------------------*@
+                @if (ViewBag.Badges)
+                {
+                    <div class="col-xxl-4 col-md-6 p-1" id="DockBadges">
+                        <div class="card card-body custompanelheight m-1 p-0">
+                            <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                <label class="fw-bold Font8">Badges</label>
+                                <label id="closeVoucherPopup" for="DockBadges" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                            </div>
+                            <div class="p-2">
+                                <div class="row gx-0 mx-0" id="dvbadges">
+                                    <div class="col-md-12 d-flex mt-2">
+                                        <label class="flex-grow-1">Total attendee badges:</label>
+                                        <label id="lblBTotal"><b>@ViewBag.lblBTotal</b></label>
+                                    </div>
+                                    <div class="col-md-12 d-flex mt-2">
+                                        <label class="flex-grow-1">Not approved:</label>
+                                        <label id="lblBAwait" style="color: @ViewBag.lblBAwaitColor"><b>@ViewBag.lblBAwait</b></label>
+                                    </div>
+                                    <div class="col-md-12 d-flex mt-2">
+                                        <label class="flex-grow-1">Profile changed after approval:</label>
+                                        <label id="lblBChanged" style="color: @ViewBag.lblBChangedColor"><b>@ViewBag.lblBChanged</b></label>
+                                    </div>
+                                    <div class="col-md-12 d-flex mt-2">
+                                        <label class="flex-grow-1">Need review:</label>
+                                        <label id="lblBReview" style="color: @ViewBag.lblBReviewColor"><b>@ViewBag.lblBReview</b></label>
+                                    </div>
+                                    <div class="col-md-12 d-flex mt-2">
+                                        <a id="btnBadges" href="/EventBadges">Go to Badges page</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @*-------------------------- Conflicts of Interest  --------------------*@
+                @if (ViewBag.COI)
+                {
+                    <div class="col-xxl-4 col-md-6 p-1" id="DockCOI">
+                        <div class="card card-body custompanelheight m-1 p-0">
+                            <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                <label class="fw-bold Font8">Conflicts of Interest</label>
+                                <label id="closeVoucherPopup" for="DockCOI" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                            </div>
+                            <div class="p-2">
+                                <div class="row gx-0 mx-0" id="dvCOI">
+                                    <div class="col-md-12 d-flex mt-2">
+                                        <label class="flex-grow-1">Speakers:</label>
+                                        <label id="lblConTotal"><b>@ViewBag.lblConTotal</b></label>
+                                    </div>
+                                    <div class="col-md-12 d-flex  mt-2">
+                                        <label class="flex-grow-1">No conflict:</label>
+                                        <label id="lblConNone"><b>@ViewBag.lblConNone</b></label>
+                                    </div>
+                                    <div class="col-md-12 d-flex  mt-2">
+                                        <label class="flex-grow-1">Conflict:</label>
+                                        <label id="lblConWith" style="color: @ViewBag.lblConWithColor"><b>@ViewBag.lblConWith</b></label>
+                                    </div>
+                                    <div class="col-md-12 d-flex  mt-2">
+                                        <label class="flex-grow-1">Not Reviewed:</label>
+                                        <label id="lblConWithByDefault" style="color: @ViewBag.lblConWithByDefaultColor"><b>@ViewBag.lblConWithByDefault</b></label>
+                                    </div>
+                                    <div class="col-md-12 d-flex  mt-2">
+                                        <label class="flex-grow-1">Not entered:</label>
+                                        <label id="lblNotEntered" style="color: red"><b>@ViewBag.lblNotEntered</b></label>
+                                    </div>
+                                    <div class="col-md-12 d-flex  mt-2">
+                                        <label class="flex-grow-1">Not yet reported:</label>
+                                        <label id="lblConLate" style="color: @ViewBag.lblConLateColor"><b>@ViewBag.lblConLate</b></label>
+                                    </div>
+                                    <div class="col-md-12 mt-2">
+                                        <a id="btnFaculty" href="/EventSpeakers">Go to Faculty page</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @*----------- Travel and Lodging ---------------*@
+                @if (ViewBag.Travel)
+                {
+                    <div class="col-xxl-4 col-md-6 p-1" id="DockAtt">
+                        <div class="card card-body custompanelheight m-1 p-0">
+                            <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                <label class="fw-bold Font8">Travel and Lodging</label>
+                                <label id="closeVoucherPopup" for="DockAtt" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                            </div>
+                            <div class="p-2">
+                                <div class="row gx-0 pt-2 m-0">
+                                    <div class="row gx-0">
+                                        <label class="lblSmall">Expected Attendance:</label>
+
+                                        <div class="col-md-12 p-0">
+                                            <div class="d-flex">
+                                                <input type="date" id="dpAttStart" value="@ViewBag.dpAttStart" class="input-sm p-0 me-2" />
+                                                <span>to</span>
+                                                <input type="date" id="dpAttEnd" value="@ViewBag.dpAttEnd" class="input-sm p-0 ms-2" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row gx-0">
+                                        <div class="col-md-6 p-md-0 pe-md-2">
+                                            <label class="lblSmall">Travel Status:</label>
+                                            <select id="ddTravel" class="Font11 w-100">
+                                                <option value="0">Not Specified</option>
+                                                @foreach (var item in ViewBag.ddtravel)
+                                                {
+                                                    if (@item.Value == ViewBag.ddTravelSelectedValue)
+                                                    {
+                                                        <option value="@item.Value" selected>@item.Text</option>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 p-md-0">
+                                            <label class="lblSmall">Travel Details:</label><br />
+                                            <input id="txtTravel" class="input-sm Font11 col-md-12" value="@ViewBag.txtTravel" placeholder="Travel plans" maxlength="100" />
+                                        </div>
+                                    </div>
+                                    <div class="row gx-0">
+                                        <div class="col-md-6 p-md-0 pe-md-2">
+                                            <label class="lblSmall">Lodging Status:</label>
+                                            <select id="ddLodging" class="Font11 w-100">
+                                                <option value="0">Not Specified</option>
+                                                @foreach (var item in ViewBag.ddLodging)
+                                                {
+                                                    if (@item.Value == ViewBag.ddLodgingSelectedValue)
+                                                    {
+                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 p-md-0">
+                                            <label class="lblSmall">Lodging Details:</label>
+                                            <input id="txtLodging" class="input-sm Font11 col-md-12" value="@ViewBag.txtLodging" placeholder="Lodging plans" maxlength="100" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row col-md-12 p-0 pt-2 m-0">
+                                        <div class="d-flex p-0">
+                                            <input type="hidden" id="hdnRegistrationLevel_pKey" value="@ViewBag.intRegistrationLevel_pKey" />
+                                            <a id="btnTravel" href="javascript://">Save updates</a>
+                                            &nbsp;<a id="btnTravelReset" href="javascript://">Reset plan</a>
+                                            <label>&nbsp;</label>
+                                            <a id="btnGotoQuestion" href="" style="display:none">Event planning questions</a>
+                                            &nbsp; <a id="btnCancelPlan" href="javascript://" style="display:none;">Can't join us?</a>
+                                            &nbsp;<a id="lnkTransfer" href="javascript://" style="display:none;">Transfer registration</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @*-------------------------- Communicator --------------------*@
+                @if (ViewBag.Communicator)
+                {
+                    <div class="col-xxl-4 col-md-6 p-1" id="dvCommunicator">
+                        <div class="card card-body custompanelheight m-1 p-0">
+                            <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                <label class="fw-bold Font8">Communicator</label>
+                                <label id="closeVoucherPopup" for="dvCommunicator" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                            </div>
+                            <div class="p-2">
+                                <div class="row mx-0 gx-0" id="dvComm">
+                                    <div class="col-md-12 d-flex mt-2">
+                                        <label class="flex-grow-1">Contacts today:</label>
+                                        <label id="lblComToday"><b>@ViewBag.lblComToday</b></label>
+                                    </div>
+                                    <div class="col-md-12 d-flex mt-2">
+                                        <label class="flex-grow-1">Speakers:</label>
+                                        <label id="lblComSpk"><b>@ViewBag.lblComSpk</b></label>
+                                    </div>
+                                    <div class="col-md-12 d-flex mt-2">
+                                        <label class="flex-grow-1">Attendees:</label>
+                                        <label id="lblComAtt"><b>@ViewBag.lblComAtt</b></label>
+                                    </div>
+                                    <div class="col-md-12 d-flex mt-2">
+                                        <label class="flex-grow-1">Calls past due:</label>
+                                        <label id="lblCommNeed" style="color: @ViewBag.lblCommNeedColor"><b>@ViewBag.lblCommNeed</b></label>
+                                    </div>
+                                    <div class="col-md-12 d-flex mt-2">
+                                        <label class="flex-grow-1">Active on website:</label>
+                                        <label id="lblCountUser"><b>@ViewBag.lblCountUser</b></label>
+                                    </div>
+                                    <div class="col-md-12 d-flex mt-2">
+                                        <label class="flex-grow-1">Active in event:</label>
+                                        <label id="lblCountEventUser"><b>@ViewBag.lblCountEventUser</b></label>
+                                    </div>
+                                    <div class="col-md-12 mt-2">
+                                        <a id="btnComm" href="/EventCommunications">Go to Communicator page</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+                @*-------------------------- Attendee Registrations by Day --------------------*@
+                @if (ViewBag.RegAggregate)
+                {
+                    <div class="col-xxl-4 col-md-6 p-1" id="dvAttRegByDay">
+                        <div class="card card-body custompanelheight m-1 p-0">
+                            <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                <label class="fw-bold Font8">Attendee Registrations by Day</label>
+                                <label id="closeVoucherPopup" for="dvAttRegByDay" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                            </div>
+                            <div class="p-2">
+                                <div class="row col-md-12 p-0 pt-3 m-0" id="dvAttRegistrationByDay">
+                                    <canvas id="chrtReg" class="p-0"></canvas>
+                                    <a id="btnAccts" href="/EventAttendees">Go to Participants page </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @*-------------------------- Cumulative Attendee Registrations --------------------*@
+                @if (ViewBag.RegCumulative)
+                {
+                    <div class="col-xxl-4 col-md-6 p-1" id="dvCommReg">
+                        <div class="card card-body custompanelheight m-1 p-0">
+                            <div class="modalBlueHeader d-flex justify-content-between align-items-center p-0 px-2">
+                                <label class="fw-bold Font8">Cumulative Participants</label>
+                                <label id="closeVoucherPopup" for="dvCommReg" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                            </div>
+                            <div class="p-2">
+                                <div class="row col-md-12 p-0 pt-3 m-0" id="dvAttRegistration">
+                                    <canvas id="chartContainer" class="p-0"></canvas>
+                                    <div class="d-flex p-0">
+                                        <a id="btnAccts2" href="/EventAttendees">Go to Participants page </a> &nbsp;
+                                        <a id="btnRegLog" href="/Reports?A=1"> Go to Registration Log report</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @*-------------------------- Cumulative Speaker Status --------------------*@
+                @if (ViewBag.SpeakerAssignments)
+                {
+                    <div class="col-xxl-4 col-md-6 p-1" id="dvCommSpk">
+                        <div class="card card-body custompanelheight m-1 p-0">
+                            <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                <label class="fw-bold Font8">Cumulative Faculty</label>
+                                <label id="closeVoucherPopup" for="dvCommSpk" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                            </div>
+                            <div class="p-2">
+
+                                <div class="row col-md-12 p-0 pt-3 m-0" id="dvSpeakerStatus">
+                                    <canvas id="chrtSpeak" class="p-0"></canvas>
+                                    <a id="btnSpeakers" href="/SpeakerManagement">Go to Speaker Management page</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @*-------------------------- Speaker Dinner --------------------*@
+                @if (ViewBag.SpeakerDinner)
+                {
+                    <div class="col-xxl-4 col-md-6 p-1" id="dvDinnerSpk">
+                        <div class="card card-body custompanelheight m-1 p-0">
+                            <div class="modalBlueHeader d-flex justify-content-between  align-items-center p-0 px-2">
+                                <label class="fw-bold Font8">Speaker Dinner</label>
+                                <label id="closeVoucherPopup" for="dvDinnerSpk" class="closeVoucherPopup" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+                            </div>
+                            <div class="p-2">
+                                <div class="row col-md-12 p-0 pt-3 m-0" id="dvSpeakerDinner">
+                                    <canvas id="chrtSpeakDinner" class="p-0"></canvas>
+                                    <a id="btnSpeakers" href="/EventSpeakers">Go to Faculty page</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (ViewBag.placeHolderForCrisisWIndow == true)
+{
+    <div class="modal fade" id="CrisisWindow" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0" style="background-color: #fff !important;padding: 0px !important;align-self: self-end;">
+                    <label id="btnCloseCrisisWindow" class="mb-2" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;align-self: self-end;"><i class="fa fa-close"></i></label>
+                </div>
+                <div class="modal-header modalBlueHeader rounded-0">
+                    <h5 class="modal-title" style="color:black">Crisis Alert</h5>
+                    <div>
+                        <input type="button" value="Send Alert" class="btnOrange" onclick="SendAlertForCrisis();" />
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 mt-2">
+                            <span class="lblSmall">Title:</span>
+                            <input id="txtCrisisTitle" class="input-sm txtRequired Font11" type="text" title="Entry required" />
+                        </div>
+
+                        <div class="col-md-12 mt-2">
+                            <span class="lblSmall">Text:</span>
+                            <textarea id="txtBroardCastCrisis" class="txtRequired Font11" onkeyup="cnt(this);" onkeydown="cnt(this);"
+                                      rows="4" type="text" min="0" maxlength="1000"></textarea>
+                            <label id="showCharCountForCrisis"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+    </div>
+}
+
+<input type="hidden" value="@ViewBag.dpAttStart" id="dtAtStart" />
+<input type="hidden" value="@ViewBag.dpAttEnd" id="dtAtEnd" />
+<script>
+    $(document).ready(function () {
+
+        $('#btnSaveNote').on('click', function (e)
+        {
+            e.preventDefault();
+              var result=CommonFunctions.AjaxCall('POST', '/MyMagi/SaveMyNote', { textnote: $('#txtMyNote').val() }, 'Error While Saving.');
+            if (result!=null&&result!=="ERROR")
+              {
+                  CommonFunctions.Alert(result.msg);
+              }
+              else
+                CommonFunctions.Alert("Error While Saving Note");
+        });
+
+        if (document.getElementById('dpAttStart')!==null)
+            document.getElementById('dpAttStart').value = $('#dtAtStart').val();
+
+        if (document.getElementById('dpAttEnd')!== null)
+            document.getElementById('dpAttEnd').value=$('#dtAtEnd').val();
+
+        $('.closeVoucherPopup').on('click', function ()
+        {
+            var t = $(this).attr('id');
+            var parentDiv = this.htmlFor;
+            var div = document.getElementById(parentDiv);
+            if (div.style.display !== "none") {
+                div.style.display = "none";
+            }
+        });
+        $('#btnTravel , #btnTravelReset').on('click', function (e)
+        {
+            e.preventDefault();
+                var dpAttStart = $('#dpAttStart').val();
+                var dpAttEnd = $('#dpAttEnd').val();
+                var ddTravel = $('#ddTravel').val();
+                var txtTravel = $('#txtTravel').val();
+                var ddLodging = $('#ddLodging').val();
+                var txtLodging = $('#txtLodging').val();
+                var RegistrationLevel_pKey = $('#hdnRegistrationLevel_pKey').val();
+                var bReset = false;
+                if (e.target.id == 'btnTravelReset')
+                {
+                    bReset = true;
+                    document.getElementById('dpAttStart').value='';
+                    document.getElementById('dpAttEnd').value='';
+                    document.getElementById("ddTravel").selectedIndex = 0;
+                    document.getElementById("ddLodging").selectedIndex = 0;
+                    document.getElementById("txtTravel").value = "";
+                    document.getElementById("txtLodging").value = "";
+                }
+             var data={
+                 intRegistrationLevel_pKey: RegistrationLevel_pKey,
+                 dpAtStart: dpAttStart,
+                 dpAtEnd: dpAttEnd,
+                 ddTravel: ddTravel,
+                 ddLodging: ddLodging,
+                 txtTravel: txtTravel,
+                 txtLodging: txtLodging,
+                 bReset: bReset
+             };
+             var result=CommonFunctions.AjaxCall('POST', '/MyMagi/SaveTravel', data, 'Error While Saving.');
+            if (result!==null&&result!=="ERROR")
+             {
+                 if (result.msg==="OK")
+                     CommonFunctions.Alert(result.msg);
+                  else
+                     CommonFunctions.Alert(result.msg);
+            }
+            else
+                 CommonFunctions.Alert("Error While Updating Travel & Lodging");
+        });
+
+        if (document.getElementById('chrtReg')!==null)
+        LoadRegChart();
+
+        if (document.getElementById('chartContainer')!==null)
+        LoadCumulativeChart();
+
+        if (document.getElementById('chrtSpeak')!==null)
+        LoadCumulativeSpeakersChart();
+
+        if (document.getElementById('chrtSpeakDinner')!== null)
+        LoadSpeakerDinner();
+    });
+    function LoadRegChart()
+    {
+        var result=CommonFunctions.AjaxCall('Get', '/MyMagi/RefreshRegChart', null, 'Error While Fetching Registration Details.');
+        if (result!==null&&result!=="ERROR")
+        {
+            if (result.msg==="OK")
+            {
+                var labelDate=[], NumAccounts=[],SingleNumAccounts = [];
+                var regData=JSON.parse(result.data);
+                $.each(regData,function (i, val)
+                {
+                    labelDate.push(val.ResultID);
+                    NumAccounts.push(val.NumAccts);
+                    SingleNumAccounts.push(val.SingleNumAccounts);
+                });
+
+                var configRegChart={
+                    type: 'line',
+                    data: {
+                        labels: labelDate,
+                        datasets: [
+                        {
+                            data: NumAccounts,
+                            label: "Registered",
+                            borderColor: "#3e95cd",
+                            backgroundColor: "#3e95cd",
+                            pointStyle: 'rectRot',
+                            pointRadius: 3,
+                            fill: true
+                        },
+                        {
+                            data: SingleNumAccounts,
+                            label: "Single Session",
+                            borderColor: "#8e5ea2",
+                            backgroundColor: "#8e5ea2",
+                            pointStyle: 'rectRot',
+                            pointRadius: 3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { usePointStyle: true },
+                            generateLabels: function (data)
+                            {
+                                return data.text;
+                            }
+                        },
+                        tooltips: { mode: 'index', },
+                        responsive: true,
+                        maintainAspectRatio: true
+                    }
+                };
+                const CumChart=new Chart(document.getElementById('chrtReg'), configRegChart);
+            }
+            else
+                CommonFunctions.Alert(result.msg);
+        }
+        else
+            CommonFunctions.Alert("Error accessing registration date.");
+    }
+    function LoadCumulativeChart()
+    {
+        var result=CommonFunctions.AjaxCall('Get', '/MyMagi/CumLativeReg', null, 'Error accessing assignment date.');
+        if (result!==null&&result!=="ERROR")
+        {
+            if (result.msg==="OK")
+            {
+                var labelDate=[], NumAccounts=[], SingleNumAccounts=[],provNumAccounts=[], partNumAccounts=[], SpeakerNumAccounts=[],Target = [];
+                var regData=JSON.parse(result.data);
+                $.each(regData, function (i, val)
+                {
+                    labelDate.push(val.ResultID);
+                    NumAccounts.push(val.NumAccts);
+                    SingleNumAccounts.push((val.SingleNumAccounts===null? 0:val.SingleNumAccounts));
+                    provNumAccounts.push((val.provNumAccounts===null? 0:val.provNumAccounts));
+                    partNumAccounts.push((val.partNumAccounts===null? 0:val.partNumAccounts));
+                    SpeakerNumAccounts.push((val.SpeakerNumAccounts===null? 0:val.SpeakerNumAccounts));
+                    Target.push(val.Target);
+                });
+
+                var configRegChart={
+                    type: 'line',
+                    data: {
+                        labels: labelDate,
+                        datasets: [
+                            {
+                                data: Target,
+                                label: "Target",
+                                borderColor: "rgb(173, 216, 230)",
+                                backgroundColor: "rgb(173, 216, 230)",
+                                pointStyle: 'rectRot',
+                                pointRadius: 3,
+                                fill: false
+                            },
+                            {
+                                data: partNumAccounts,
+                                label: "Partial",
+                                borderColor: "rgb(147, 112, 219)",
+                                backgroundColor: "rgb(147, 112, 219)",
+                                pointStyle: 'rectRot',
+                                pointRadius: 3,
+                                fill: true
+                            },
+                            {
+                                data: provNumAccounts,
+                                label: "Provisional",
+                                borderColor: "rgb(255, 182, 193)",
+                                backgroundColor: "rgb(255, 182, 193)",
+                                pointStyle: 'rectRot',
+                                pointRadius: 3,
+                                fill: true
+                            },
+                            {
+                                data: SingleNumAccounts,
+                                label: "Single",
+                                borderColor: "rgb(70, 130, 180)",
+                                backgroundColor: "rgb(70, 130, 180)",
+                                pointStyle: 'rectRot',
+                                pointRadius: 3,
+                                fill: true
+                            },
+                            {
+                                data: SpeakerNumAccounts,
+                                label: "Speaker",
+                                borderColor: "rgb(205, 92, 92)",
+                                backgroundColor: "rgb(205, 92, 92)",
+                                pointStyle: 'rectRot',
+                                pointRadius: 3,
+                                fill: true
+                            },
+                            {
+                                data: NumAccounts,
+                                label: "Attendee",
+                                borderColor: "rgb(255, 255, 0)",
+                                backgroundColor: "rgb(255, 255, 0)",
+                                pointStyle: 'rectRot',
+                                pointRadius: 3,
+                                fill: true
+                            },
+                        ]
+                    },
+                    options: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { usePointStyle: true },
+                            generateLabels: function (data)
+                            {
+                                return data.text;
+                            }
+                        },
+                        tooltips: {  mode: 'index',  },
+                        responsive: true,
+                        maintainAspectRatio: true
+                    }
+                };
+                const cumChart=new Chart(document.getElementById('chartContainer'), configRegChart);
+            }
+            else
+                CommonFunctions.Alert(result.msg);
+        }
+        else
+            CommonFunctions.Alert("Error accessing assignment date.");
+    }
+    function LoadCumulativeSpeakersChart()
+    {
+        var result=CommonFunctions.AjaxCall('Get', '/MyMagi/CumLativeSpeaker', null, 'Error accessing assignment date.');
+        if (result!==null&&result!=="ERROR")
+        {
+            if (result.msg==="OK")
+            {
+                var labelDate=[], NumAccounts=[], launchedNumAccounts=[], FlaggedNumAccounts=[], openNumAccounts=[], Target=[];
+                var regData=JSON.parse(result.data);
+                $.each(regData, function (i, val)
+                {
+                    labelDate.push(val.ResultID);
+                    NumAccounts.push(val.NumAccts);
+                    launchedNumAccounts.push((val.launchedNumAccounts===null? 0:val.launchedNumAccounts));
+                    FlaggedNumAccounts.push((val.FlaggedNumAccounts===null? 0:val.FlaggedNumAccounts));
+                    openNumAccounts.push((val.openNumAccounts===null? 0:val.openNumAccounts));
+                    Target.push(val.Target);
+                });
+
+                var configSpeakChart={
+                    type: 'line',
+                    data: {
+                        labels: labelDate,
+                        datasets: [
+                            {
+                                data: Target,
+                                label: "Target",
+                                borderColor: "rgb(173, 216, 230)",
+                                backgroundColor: "rgb(173, 216, 230)",
+                                pointStyle: 'rectRot',
+                                pointRadius: 3,
+                                fill: false
+                            },
+                            {
+                                data: NumAccounts,
+                                label: "Assigned",
+                                borderColor: "rgb(112, 128, 144)",
+                                backgroundColor: "rgb(112, 128, 144)",
+                                pointStyle: 'rectRot',
+                                pointRadius: 3,
+                                fill: true
+                            },
+                            {
+                                data: FlaggedNumAccounts,
+                                label: "Flagged",
+                                borderColor: "rgb(64, 224, 208)",
+                                backgroundColor: "rgb(64, 224, 208)",
+                                pointStyle: 'rectRot',
+                                pointRadius: 3,
+                                fill: true
+                            },
+                            {
+                                data: launchedNumAccounts,
+                                label: "Launched",
+                                borderColor: "rgb(255, 69, 0)",
+                                backgroundColor: "rgb(255, 69, 0)",
+                                pointStyle: 'rectRot',
+                                pointRadius: 3,
+                                fill: true
+                            },
+                            {
+                                data: openNumAccounts,
+                                label: "Open",
+                                borderColor: "rgb(154, 205, 50)",
+                                backgroundColor: "rgb(154, 205, 50)",
+                                pointStyle: 'rectRot',
+                                pointRadius: 3,
+                                fill: true
+                            }
+                        ]
+                    },
+                    options: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { usePointStyle: true },
+                            generateLabels: function (data)
+                            {
+                                return data.text;
+                            }
+                        },
+                        tooltips: { mode: 'index', },
+                        responsive: true,
+                        maintainAspectRatio: true
+                    }
+                };
+                const chrtSpeak=new Chart(document.getElementById('chrtSpeak'), configSpeakChart);
+            }
+            else
+                CommonFunctions.Alert(result.msg);
+        }
+        else
+            CommonFunctions.Alert("Error accessing assignment date.");
+    }
+    function LoadSpeakerDinner()
+    {
+        var result=CommonFunctions.AjaxCall('Get', '/MyMagi/SpeakerDinnerData', null, 'Error accessing assignment date.');
+        if (result!==null&&result!=="ERROR")
+        {
+            if (result.msg==="OK")
+            {
+                var ChargeTypeID=[], NumSignedUp=[], ColorValue=[];
+                var regData=JSON.parse(result.data);
+                $.each(regData, function (i, val)
+                {
+                    ChargeTypeID.push(val.ChargeTypeID);
+                    NumSignedUp.push(val.NumSignedUp);
+                    ColorValue.push((val.ColorValue===null? 0:val.ColorValue));
+                });
+
+                var configSpeakDinner={
+                    type: 'horizontalBar',
+                    data: {
+                        labels: ChargeTypeID,
+                        datasets: [
+                            {
+                                data: NumSignedUp,
+                                borderColor: ColorValue,
+                                backgroundColor: ColorValue,
+                                pointStyle: 'rectRot',
+                                pointRadius: 3,
+                                label: "#",
+                                fill: false
+                            },
+                        ]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        elements: {
+                            bar: { borderWidth: 2, }
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: { usePointStyle: true },
+                            display: false,
+                        },
+                        tooltips: {
+                            mode: 'index',
+                            callbacks: {
+                                label: function (tti, data)
+                                {
+                                    return data.labels[tti.index]+": "+tti.xLabel;
+                                }
+                            }
+                        },
+                        responsive: true,
+                        maintainAspectRatio: true
+                    }
+                };
+                const chrtSpeakerDinner=new Chart(document.getElementById('chrtSpeakDinner'), configSpeakDinner);
+            }
+            else
+                CommonFunctions.Alert(result.msg);
+        }
+        else
+            CommonFunctions.Alert("Error accessing assignment date.");
+    }
+
+    @*window.onload = function ()
+    {
+          var DayNumAcc = @Html.Raw(ViewBag.DayNumAccts);
+        var dayNumAccts =[];
+        for (var i = 0; i < DayNumAcc.length; i++){
+            dayNumAccts.push({ x: new Date(DayNumAcc[i].Xaxis), y: DayNumAcc[i].Yaxis, toolTipContent: DayNumAcc[i].Tooltip });
+        }
+
+        var DaySingleNumAcc = @Html.Raw(ViewBag.DaySinglenumAccts);
+        var daySingleNumAccts =[];
+        for (var i = 0; i < DaySingleNumAcc.length; i++){
+            daySingleNumAccts.push({ x: new Date(DaySingleNumAcc[i].Xaxis), y: DaySingleNumAcc[i].Yaxis, toolTipContent: DaySingleNumAcc[i].Tooltip } );
+        }
+
+        var chartReg = new CanvasJS.Chart("chrtReg", {
+            height: 200,
+            axisX: {
+
+                labelFormatter: function () {
+                    return " ";
+                }
+            },
+            width: 465,
+            data: [
+                {
+                    type: "splineArea",
+                    dataPoints: dayNumAccts,
+                },
+                {
+                    type: "splineArea",
+                    dataPoints: daySingleNumAccts,
+                }] });
+        chartReg.render();
+
+
+         var resultTargets = @Html.Raw(ViewBag.Targets);
+        var DPTargets =[];
+        for (var i = 0; i < resultTargets.length; i++){
+            DPTargets.push({ x: new Date(resultTargets[i].Xaxis), y: resultTargets[i].Yaxis, toolTipContent: resultTargets[i].Tooltip });
+        }
+
+        var resultnumAcc = @Html.Raw(ViewBag.numAccounts);
+        var DPnumACC =[];
+        for (var i = 0; i < resultnumAcc.length; i++){
+            DPnumACC.push({ x: new Date(resultnumAcc[i].Xaxis), y: resultnumAcc[i].Yaxis, toolTipContent: resultnumAcc[i].Tooltip});
+        }
+
+        var resultpartAcc = @Html.Raw(ViewBag.partAccounts);
+        var DPpartAcc =[];
+        for (var i = 0; i < resultpartAcc.length; i++){
+            DPpartAcc.push({ x: new Date(resultpartAcc[i].Xaxis), y: resultpartAcc[i].Yaxis, toolTipContent: resultpartAcc[i].Tooltip});
+        }
+
+        var resultprovAcc = @Html.Raw(ViewBag.provAccounts);
+        var DPprovAcc =[];
+        for (var i = 0; i < resultprovAcc.length; i++){
+            DPprovAcc.push({ x: new Date(resultprovAcc[i].Xaxis), y: resultprovAcc[i].Yaxis, toolTipContent: resultprovAcc[i].Tooltip});
+        }
+
+        var resultSingleAcc = @Html.Raw(ViewBag.SingleAccounts);
+        var DPSingleAcc =[];
+        for (var i = 0; i < resultSingleAcc.length; i++){
+            DPSingleAcc.push({ x: new Date(resultSingleAcc[i].Xaxis), y: resultSingleAcc[i].Yaxis, toolTipContent: resultSingleAcc[i].Tooltip});
+        }
+        var resultSpeakerAcc = @Html.Raw(ViewBag.SpeakerAccounts);
+        var DPSpeakerAcc =[];
+        for (var i = 0; i < resultSpeakerAcc.length; i++){
+            DPSpeakerAcc.push({ x: new Date(resultSpeakerAcc[i].Xaxis), y: resultSpeakerAcc[i].Yaxis, toolTipContent: resultSpeakerAcc[i].Tooltip});
+         }
+
+        var chart = new CanvasJS.Chart("chartContainer", {
+            height: 200,
+            width: 465,
+            axisX: {
+
+                labelFormatter: function () {
+                    return " ";
+                }
+            },
+            data: [
+                {
+                    type: "area",
+                    dataPoints: DPTargets,
+                },
+                {
+                type: "area",
+                dataPoints: DPpartAcc,
+                },
+                {
+                    type: "area",
+                    dataPoints: DPprovAcc,
+                },
+                {
+                    type: "area",
+                    dataPoints: DPSingleAcc,
+                },
+                {
+                    type: "area",
+                    dataPoints: DPSpeakerAcc,
+                },
+                {
+                    type: "area",
+                    dataPoints: DPnumACC,
+                }]
+        });
+        chart.render();
+
+
+        var resSpkTarget = @Html.Raw(ViewBag.SpkTarget);
+        var DPSpkTarget =[];
+        for (var i = 0; i < resSpkTarget.length; i++){
+            DPSpkTarget.push({ x: new Date(resSpkTarget[i].Xaxis), y: resSpkTarget[i].Yaxis, toolTipContent: resSpkTarget[i].Tooltip });
+        }
+
+        var resSpkAccts = @Html.Raw(ViewBag.SpknumAccts);
+        var DPSpkAccts =[];
+        for (var i = 0; i < resSpkAccts.length; i++){
+            DPSpkAccts.push({ x: new Date(resSpkAccts[i].Xaxis), y: resSpkAccts[i].Yaxis, toolTipContent: resSpkAccts[i].Tooltip});
+        }
+
+        var resSpkLaunchedAccts = @Html.Raw(ViewBag.SpkLaunchednumAccts);
+        var DPSpkLaunched =[];
+        for (var i = 0; i < resSpkLaunchedAccts.length; i++){
+            DPSpkLaunched.push({ x: new Date(resSpkLaunchedAccts[i].Xaxis), y: resSpkLaunchedAccts[i].Yaxis, toolTipContent: resSpkLaunchedAccts[i].Tooltip});
+        }
+
+        var resSpkFlaggedAccts = @Html.Raw(ViewBag.SpkFlaggednumAccts);
+        var DPSpkFlagged =[];
+        for (var i = 0; i < resSpkFlaggedAccts.length; i++){
+            DPSpkFlagged.push({ x: new Date(resSpkFlaggedAccts[i].Xaxis), y: resSpkFlaggedAccts[i].Yaxis, toolTipContent: resSpkFlaggedAccts[i].Tooltip});
+        }
+        var resSpkOpenAccts = @Html.Raw(ViewBag.SpkOpennumAccts);
+        var DPSpkOpen =[];
+        for (var i = 0; i < resSpkOpenAccts.length; i++){
+            DPSpkOpen.push({ x: new Date(resSpkOpenAccts[i].Xaxis), y: resSpkOpenAccts[i].Yaxis, toolTipContent: resSpkOpenAccts[i].Tooltip});
+         }
+
+        var chartSpeaker = new CanvasJS.Chart("chrtSpeak", {
+            height: 200,
+            width: 465,
+            axisX: {
+
+                labelFormatter: function () {
+                    return " ";
+                }
+            },
+            data: [
+            {
+                type: "area",
+                    dataPoints: DPSpkTarget,
+                },
+                {
+                    type: "area",
+                    dataPoints: DPSpkAccts,
+                },
+                {
+                    type: "area",
+                    dataPoints: DPSpkLaunched,
+                },
+                {
+                    type: "area",
+                    dataPoints: DPSpkFlagged,
+                },
+                {
+                    type: "area",
+                    dataPoints: DPSpkOpen,
+                }]
+        });
+        chartSpeaker.render();
+
+    }*@
+</script>
+
+@if (ViewBag.scriptForCrisis == true)
+{
+    <script>
+        function SendAlertForCrisis()
+        {
+            try
+            {
+                if (typeof sendCrisis === 'function')
+                {
+                    var strTitle = $('#txtCrisisTitle').val();
+                    var strBody = $('#txtBroardCastCrisis').val();
+
+                    if (strTitle == null || strTitle == '')
+                    {
+                        alertify.alert('Enter title of crisis');
+                        return;
+                    }
+
+                    if (strBody == null || strBody == '')
+                    {
+                        alertify.alert('Enter text to send');
+                        return;
+                    }
+
+                    sendCrisis(strTitle, strBody, '', '', 0, '', 1);
+
+                    $('#txtCrisisTitle').val('');
+                    $('#txtBroardCastCrisis').val('');
+                    $('#showCharCountForCrisis').html('');
+                    alertify.alert('Crisis Alert Sent');
+
+                    var alertID = document.getElementById('alertify-ok');
+                    if (alertID)
+                    {
+                        setTimeout(function ()
+                        {
+                            alertID.click();
+                        }, 4000);
+                    }
+                    $('#btnCloseCrisisWindow').click();
+                }
+                else
+                    alertify.alert('Crisis feature not available right now');
+            }
+            catch (ex)
+            {
+                console.log(ex);
+            }
+        }
+
+        function cnt(txtControl)
+        {
+            var maxCharlimit = txtControl.maxLength;
+            var lbldisplay = document.getElementById('showCharCountForCrisis');
+            lbldisplay.innerHTML = (txtControl.value.length).toLocaleString() + ' of ' + maxCharlimit.toLocaleString() + ' Characters used';
+        }
+    </script>
+}

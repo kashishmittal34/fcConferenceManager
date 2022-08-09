@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <tools name="MainToolbar" enabled="true">
+    <tool name="AjaxSpellCheck" />
+    <tool name="Print" />
+    <tool name="FindAndReplace" />
+    <tool separator="true"/>
+    <tool name="Cut" shortcut="CTRL+X"/>
+    <tool name="Copy" shortcut="CTRL+C"/>
+    <tool name="Paste" shortcut="CTRL+V"/>
+    <tool name="PasteFromWord" />
+    <tool name="PasteFromWordNoFontsNoSizes" />
+    <tool name="PastePlainText" />
+    <tool name="PasteAsHtml"  />
+    <tool separator="true"/>
+    <tool name="InsertLink" shortcut="CTRL+K"/>
+    <tool name="Unlink" shortcut="CTRL+SHIFT+K"/>
+    <tool name="InsertSymbol" />
+    <tool separator="true"/>    
+    <tool name="Undo" shortcut="CTRL+Z"/>
+    <tool name="Redo" shortcut="CTRL+Y"/>
+  </tools>
+  <tools>
+    <tool name="FontName" />
+    <tool name="RealFontSize" />
+    <tool separator="true"/>
+    <tool name="ForeColor"/>
+    <tool name="BackColor"/>
+    <tool separator="true"/>    
+    <tool name="ConvertToUpper" />
+    <tool name="ConvertToLower" />
+    <tool separator="true"/>
+    <tool name="Bold" shortcut="CTRL+B"/>
+    <tool name="Italic" shortcut="CTRL+I"/>
+    <tool name="Underline" shortcut="CTRL+U"/>
+    <tool name="StrikeThrough" />
+    <tool name="Superscript" />
+    <tool name="Subscript" />
+  </tools>
+  <tools>
+    <tool name="JustifyLeft" />
+    <tool name="JustifyCenter" />
+    <tool name="JustifyRight" />
+    <tool name="JustifyFull" />
+    <tool name="JustifyNone" />
+    <tool name="InsertUnorderedList" />
+    <tool name="InsertOrderedList" />
+    <tool separator="true"/>
+    <tool name="FormatStripper" />
+    <tool name="Zoom" />
+    <tool separator="true"/>
+    <tool name="Help" shortcut="F1"/>
+  </tools>
+</root>

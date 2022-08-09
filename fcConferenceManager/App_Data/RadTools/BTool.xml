@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <tools name="MainToolbar" enabled="true"> 
+    <tool name="Bold" shortcut="CTRL+B"/>
+    <tool name="Italic" shortcut="CTRL+I"/>
+    <tool name="Underline" shortcut="CTRL+U"/>
+   <tool name="ForeColor"/>
+    <tool name="BackColor"/>
+  </tools>
+
+</root>

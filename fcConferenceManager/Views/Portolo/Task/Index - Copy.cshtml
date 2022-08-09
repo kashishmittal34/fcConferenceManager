@@ -1,0 +1,675 @@
+﻿@model Elimar.Models.TaskListRequest
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+}
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jQuery UI Datepicker - Format date</title>
+<!--<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<link href="~/Css/HtmlPage1.css" rel="stylesheet" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
+
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.js" data-modules="effect effect-bounce effect-blind effect-bounce effect-clip effect-drop effect-fold effect-slide"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.1.js"></script>-->
+<!-- ✅ Load CSS file for jQuery ui  -->
+<!--<link href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css"
+      rel="stylesheet" />-->
+<!-- ✅ load jQuery ✅ -->
+<!--<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>-->
+<!-- ✅ load jquery UI ✅ -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+        integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>-->
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+
+
+<link rel="stylesheet" href="jquery-3.6.0.min">
+<link rel="stylesheet" href="jquery-ui.min.cs">
+
+
+
+
+<script type="text/javascript" language="javascript">
+    $(document).ready(function () {
+        //$('#datepicker').datepicker({
+        //    format: "mm-dd-yy"
+        //});
+
+
+        $("#duedate").prop('disabled', true);
+        $("#forecastdate").prop('disabled', true);
+
+    });
+    var checkids = "";
+    const checkidsarray = [];
+    //$("#deletetask").click(function (e)
+    var model = {
+        pKey: "",
+        plandates: "",
+        forecast: "",
+        number: "",
+        title: "",
+        status: "",
+        category: "",
+        active: "",
+        reviewed: "",
+        tasklistrange: "",
+        repeat: ""
+
+    };
+    function callAjax(e) {
+        $("#deletetask").click(function (e) {
+            if (checkidsarray.length == 0) {
+                checkidsarray.length = 0;
+                $(':checkbox').each(function () {
+                    debugger;
+                    $(":checkbox:checked").each(function () {
+                        if (!checkidsarray.includes(this.value)) {
+                            if (this.value != "on") {
+                                checkidsarray.push(this.value);
+                            }
+                        }
+                    });
+
+                });
+
+            }
+
+
+            if (checkidsarray.length == 0) {
+
+                alert('Please select rows to delete');
+                return false;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "https://localhost:44377/Task/DeleteTask/",
+                data: {
+                    primarykey: checkidsarray.toString() // < note use of 'this' here
+
+                },
+                success: function (result) {
+                    checkidsarray.length = 0;
+                    location.reload();
+
+                    alert('Do you want to delete selected tasks');
+
+                },
+
+                error: function (result) {
+                    alert('error');
+                }
+            });
+        });
+    }
+
+
+    //$("#copytask").click(function (e)
+    function copyTaskcallAjax(e) {
+        $("#copytask").click(function (e) {
+            if (checkidsarray.length == 0) {
+                checkidsarray.length = 0;
+                $(':checkbox').each(function () {
+                    debugger;
+                    $(":checkbox:checked").each(function () {
+                        if (!checkidsarray.includes(this.value)) {
+                            if (this.value != "on") {
+                                checkidsarray.push(this.value);
+                            }
+                        }
+                    });
+                });
+            }
+            if (checkidsarray.length == 0) {
+
+                alert('Please select rows to copy');
+                return false;
+            }
+            $.ajax({
+                type: "POST",
+                url: "https://localhost:44377/Task/CopyTask/",
+                data: {
+                    primaryKey: checkidsarray.toString() // < note use of 'this' here
+
+                },
+                success: function (result) {
+                    checkidsarray.length = 0;
+                    location.reload();
+                    alert('Do you want to copy selected tasks');
+                },
+                error: function (result) {
+                    alert('error');
+                }
+            });
+        });
+    }
+    function getval(e) {
+
+        if (e.value != "3") {
+            $("#duedate").prop('disabled', true);
+            $("#forecastdate").prop('disabled', true);
+        }
+        else if (e.value == "3") {
+            $("#duedate").prop('disabled', false);
+            $("#forecastdate").prop('disabled', false);
+        }
+
+    }
+    function Checkboxchange(e) {
+        $('#select-all').click(function (event) {
+            if (this.checked) {
+                checkidsarray.length = 0;
+                // Iterate each checkbox
+                $(':checkbox').each(function () {
+                    debugger;
+                    this.checked = true;
+                    if (this.value != "on") {
+                        checkidsarray.push(this.value);
+                    }
+                    //$('input[name="select-all"]:checked').each(function () {
+                    //    console.log(this.value);
+                    //});
+                });
+            } else {
+                $(':checkbox').each(function () {
+                    this.checked = false;
+                });
+            }
+        });
+    }
+
+    function onclickajax() {
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: "https://localhost:44377/Task/addTask/",
+            data: {
+                //primaryKey: checkidsarray.toString() // < note use of 'this' here
+
+            },
+            success: function (result) {
+                //checkidsarray.length = 0;
+                /*////window.location.href = '';*/
+                //location.reload();
+                //alert('Do you want to copy selected tasks');
+            },
+            error: function (result) {
+                alert('error');
+            }
+        });
+    }
+
+    function excellsheet() {
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: "https://localhost:44377/Task/DownloadExcel/",
+            data: {
+                //primaryKey: checkidsarray.toString() // < note use of 'this' here
+
+            },
+            success: function (response) {
+                debugger;
+                console.log(response);
+                var blob = new Blob([response], { type: 'application/vnd.ms-excel' });
+                var downloadUrl = URL.createObjectURL(blob);
+                var a = document.createElement("a");
+                a.href = downloadUrl;
+                // a.download = "downloadFile.xlsx";
+                a.download = "PublicTasks_{0:yyMMdd_HH.mm}";
+                document.body.appendChild(a);
+                a.click();
+
+                //checkidsarray.length = 0;
+                /*////window.location.href = '';*/
+                //location.reload();
+                //alert('Do you want to copy selected tasks');
+            },
+            error: function (result) {
+                alert('error');
+            }
+        });
+    }
+
+
+
+    function DDMMYYYY(value, event) {
+        let newValue = value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');
+
+        const dayOrMonth = (index) => index % 2 === 1 && index < 4;
+
+        // on delete key.
+        if (!event.data) {
+            return value;
+        }
+
+        return newValue.split('').map((v, i) => dayOrMonth(i) ? v + '/' : v).join('');;
+    }
+
+
+
+
+    $(function forecast() {
+        debugger;
+        $("#datepicker1").datepicker({ dateFormat: "mm/dd/yy" }).val()
+    });
+
+
+    document.getElementById("date").value
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
+<script src="http://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.css" rel="stylesheet">
+
+
+<script type="text/javascript">
+    $(function () {
+        debugger;
+        $("#datepicker").datepicker({
+            dateFormat: "mm-dd-yy"
+        });
+    });
+</script>
+
+<style>
+
+    .lblTitle
+    {
+        font-size: 18pt;
+        color: Navy;
+        background-color: transparent;
+    }
+
+    .dropdown
+    {
+        padding-right: 50px;
+        border-width: 1px;
+        padding: 4px 25px 2px 5px;
+        border-width: -15px;
+        border-style: solid;
+        display: block;
+        position: relative;
+    }
+
+    .rgHeader
+    {
+        padding: 2px !important;
+        background-color: #1e90ff;
+        color: #fff !important;
+        height: 18px !important;
+        border-left-color: #1e90ff !important;
+    }
+</style>
+
+<form action="/Task/TaskList" method="post" enctype="multipart/form-data" onsubmit="validateInputs(e);">
+
+    @*<tbody>
+
+            <tr>
+                <td style="display:inline-block;">
+
+                        <span id="cphMain_lblTitle" class="lblTitle">Task Lists</span>
+                </td>
+                <td class="imgRefresh hide_print" style="display:inline-block;">
+            <input type="image" name="ctl00$cphMain$imgExport" id="cphMain_imgExport" title="Download Spreadsheet" src="images/icons/excel.png" style="height:32px;">
+            <input type="image" name="ctl00$cphMain$imgReset" id="cphMain_imgReset" title="Refresh Page" src="~/icons/undo.png" style="height:32px;">
+                    <input type="image" name="ctl00$cphMain$imgSearch" id="cphMain_imgSearch" title="Refresh the list" src="~/icons/redo.png" style="height:32px;">
+                </td>
+                <td style="text-align: right;">
+                    <button type="button" name="deletetasklist" value="Delete" id="deletetask" class="btnSmall" onclick="callAjax(this)">  Delete</button>
+                    <button type="button" name="copytasklist" value="Copy" id="copytask" class="btnSmall" onclick="copyTaskcallAjax(this)">  Copy</button>
+                    <button>@Html.ActionLink("Create New", "addtask", "task")</button>
+                </td>
+            </tr>
+
+        </tbody>*@
+    <table style="width: 100%">
+        <tbody>
+            <tr>
+                <td style="display:inline-block;">
+                    <span id="cphMain_lblTitle" class="lblTitle">Task Lists</span>
+                </td>
+                <td class="imgRefresh hide_print" style="display:inline-block;">
+                    @*<input type="image" id="cphMain_imgExport" title="Download Spreadsheet" src="~/icons/excel.png" onclick="excellsheet(this)" style="height:32px;">*@
+                    <input type="image" name="ctl00$cphMain$imgReset" id="cphMain_imgReset" title="Refresh Page" src="~/icons/undo.png" style="height:32px;">
+                    <input type="image" name="ctl00$cphMain$imgSearch" id="cphMain_imgSearch" title="Refresh the list" src="~/icons/redo.png" style="height:32px;">
+                    @*<button   >@Html.ActionLink("excelsheet", "DownloadExcel", "task")</button>*@
+                </td>
+                <td style="text-align: right;">
+                    <button type="button" name="deletetasklist" value="Delete" id="deletetask" class="btnSmall" onclick="callAjax(this)">  Delete</button>
+                    <button type="button" name="copytasklist" value="Copy" id="copytask" class="btnSmall" onclick="copyTaskcallAjax(this)">  Copy</button>
+                    <button>@Html.ActionLink("Create New", "addtask", "task")</button>
+                    <button>@Html.ActionLink("Download", "DownloadExcel", "task")</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div style="padding: 0 5px 5px 5px !important; background-color: #d7f6f9;">
+
+
+
+        <div>
+            @*<input type="submit" value="search" />*@
+
+
+            <table>
+                <tbody>
+                    <tr>
+                        <td style="padding-left: 5px">
+
+                            <span> Plan Dates:</span>
+                            <br>
+                            <select class="dropdown" name="plandates" id="plandates" onchange="getval(this);">
+                                <option value="0" @(ViewBag.Request.plandates == "0" ? "selected" : "")>All</option>
+                                <option value="1" @(ViewBag.Request.plandates == "1" ? "selected" : "")>Past Week</option>
+                                <option value="2" @(ViewBag.Request.plandates == "2" ? "selected" : "")>Next Week</option>
+                                <option value="3" @(ViewBag.Request.plandates == "3" ? "selected" : "")>Other</option>
+                            </select>
+
+                        </td>
+
+                        <td style="padding-left: 5px">
+                            <span></span>
+
+                            <br>
+                            <input type="date" id="duedate" value="" name="duedate" />
+
+                            @*<input type="date"
+                                value="2022-02-20"
+                                min="2022-02-20" max="2032-02-20">*@
+
+                            @*<input type="tel" maxlength="10" placeholder="mm/dd/yyyy"
+                                oninput="this.value = DDMMYYYY(this.value, event)" />*@
+                            @*@Html.EditorFor(model => model.duedate, new { htmlAttributes = new { @Value = @Model.duedate., @class = "form-control", placeholder = "Employee Date Of Birth" } })*@
+                            @*<input id="datepicker" type="text" >*@
+                        </td>
+
+                        <td style="padding-left: 5px">
+                            <span></span>
+
+                            <br>
+                            <input type="date" id="forecastdate" name="forecast">
+
+                            @*<input type="datetime" id="datepicker1" name="forecast" size="20">
+                                <input name="DueDate" type="date" id="datepicker" class="form-control" />*@
+
+                        </td>
+
+                        <td style="padding-left: 5px">
+                            <span>Number:</span>
+                            <br>
+                            <input tpye="text" value="@ViewBag.Request.number" name="number">
+
+                        </td>
+
+
+
+                        <td style="padding-left: 5px">
+                            <span>Title:</span>
+                            <br>
+                            <input tpye="text" value="@ViewBag.Request.title" name="title">
+
+                        </td>
+
+
+
+                        <td style="padding-left: 5px">
+
+                            <span>Status:</span>
+                            <br>
+
+                            @*<select id="ddlstatus" name="status" style="height: 25px;">
+                                    <option value="0">please select</option>
+                                    @foreach (var status in model.commondropdownlist.statusdropdowns)
+                                    {
+                                        <option value="@status.pkey">@status.taskstatusid</option>
+                                    }
+                                </select>*@
+                            @Html.DropDownListFor(n => n.status, new SelectList(Model.commondropdownlist.statusdropdowns,
+                 "pKey", "TaskStatusID", @ViewBag.Request.status), new { @class = "form-control", @style = "width:138px;height:28px", @onchange = "SelectedIndexChangedRepeat(this.value)" })
+
+                        </td>
+                        <td style="padding-left: 5px">
+
+                            <span class="slideright">Category:</span>
+                            <br>
+
+                            @*<select id="ddlcategory" name="category" style="height: 25px;">
+                                    <option value="0">Please select</option>
+                                    @foreach (var category in Model.commondropdownlist.categorydropdowns)
+                                    {
+                                        <option value="@category.pKey">@category.TaskCategoryID</option>
+                                    }
+                                </select>*@
+                            @Html.DropDownListFor(n => n.category, new SelectList(Model.commondropdownlist.categorydropdowns,
+                "pKey", "TaskCategoryID", @ViewBag.Request.category), new { @class = "form-control", @style = "width:138px;height:28px", @onchange = "SelectedIndexChangedRepeat(this.value)" })
+
+                        </td>
+
+
+
+
+                        <td style="padding-left: 5px">
+
+                            <span>Active:</span>
+                            <br>
+                            <select class="dropdown" name="active">
+                                <option value="" @(ViewBag.Request.active == "" ? "selected" : "")>All</option>
+                                <option value="true" @(ViewBag.Request.active == "true" ? "selected" : "")>Active</option>
+                                <option value="false" @(ViewBag.Request.active == "false" ? "selected" : "")>Inactive</option>
+                            </select>
+
+                        </td>
+
+
+
+
+                    </tr>
+                </tbody>
+
+            </table>
+
+
+            <div>
+
+            </div><table>
+
+                <tbody>
+                    <tr>
+                        <td style="padding-left: 5px">
+
+                            <span>Reviewed:</span>
+                            <br>
+                            <select class="dropdown" name="reviewed">
+                                <option value="" @(ViewBag.Request.reviewed == "" ? "selected" : "")>All</option>
+                                <option value="true" @(ViewBag.Request.reviewed == "true" ? "selected" : "")>Yes</option>
+                                <option value="false" @(ViewBag.Request.reviewed == "false" ? "selected" : "")>No</option>
+                            </select>
+
+                        </td>
+
+                        <td style="padding-left: 5px">
+                            <span>Task List Range:</span><br>
+
+                            <select class="dropdown" name="tasklistrange">
+                                <option value="0" @(ViewBag.Request.tasklistrange == "0" ? "selected" : "")>All</option>
+                                <option value="1" @(ViewBag.Request.tasklistrange == "1" ? "selected" : "")> Back 1 year</option>
+                                <option value="2" @(ViewBag.Request.tasklistrange == "2" ? "selected" : "")> Back 2 year</option>
+                                <option value="3" @(ViewBag.Request.tasklistrange == "3" ? "selected" : "")> Back 3 year</option>
+                            </select>
+
+                        </td>
+
+
+                        <td style="padding: 5px">
+                            <span style="padding: 5px">Repeat:</span><br>
+                            @*<select id="ddlrepeat" name="repeat" style="height: 25px;">
+                                    <option value="0">Please select</option>
+                                    @foreach (var repeat in Model.commondropdownlist.repeatdropdowns)
+                                    {
+                                        <option value="@repeat.pKey">@repeat.TaskRepeatID</option>
+                                    }
+                                </select>*@
+                            @Html.DropDownListFor(n => n.repeat, new SelectList(Model.commondropdownlist.repeatdropdowns,
+    "pKey", "TaskRepeatID", @ViewBag.Request.repeat), new { @class = "form-control", @style = "width:138px;height:28px", @onchange = "SelectedIndexChangedRepeat(this.value)" })
+
+                        </td>
+
+
+
+                    </tr>
+
+
+
+                </tbody>
+
+
+            </table>
+
+
+
+
+        </div>
+    </div>
+
+    <div style="margin-left: 16px;">
+        <table style="width: 100% !important; max-width: 400% !important">
+
+            <tr style="padding-left: 10px; background-color: #00008b ">
+                <th class="rgHeader">
+                    <input type="checkbox" name="select-all" onchange="Checkboxchange(this);" id="select-all" />
+                </th>
+                <th class="rgHeader">
+                    Number
+                </th>
+                <th class="rgHeader">
+                    Name
+                </th>
+
+                <th class="rgHeader">
+                    Title
+                </th>
+                <th class="rgHeader">
+                    Description
+                </th>
+                <th class="rgHeader">
+                    Plan
+                </th>
+                <th class="rgHeader">
+                    Due Date
+                </th>
+                <th class="rgHeader">
+                    Forecast
+                </th>
+                <th class="rgHeader">
+                    Category
+                </th>
+                <th class="rgHeader">
+                    Status
+                </th>
+                <th class="rgHeader">
+                    Most Recent Note
+                </th>
+
+
+            </tr>
+            @if (ViewBag.TaskListResponse != null)
+            {
+                foreach (var item in ViewBag.TaskListResponse)
+                {
+                    <tr>
+
+                        <td>
+                            <input type="checkbox" value="@item.pKey" class="ItemsCheckboxForAllTasks" id="check" />
+                        </td>
+                        <td valign="top">
+
+                            <a href="@Url.Action("EditTask", new { id = item.pKey })"> @item.number</a>
+                        </td>
+                        <td>
+                            @item.name
+                        </td>
+                        <td>
+                            @item.title
+                        </td>
+                        <td>
+                            @item.description
+                        </td>
+                        <td>
+
+                            @if (item.plan != null)
+                            {
+                                @item.plan.ToString("MM/dd/yy");
+                            }
+                        </td>
+                        <td>
+                            @if (item.duedate != null)
+                            {
+                                @item.duedate.ToString("MM/dd/yy");
+                            }
+                        </td>
+                        <td>
+                            @if (item.forecast != null)
+                            {
+                                @item.forecast.ToString("MM/dd/yy");
+                            }
+                        </td>
+                        <td>
+                            @item.TaskCategoryID
+                        </td>
+                        <td>
+                            @item.TaskStatusID
+                        </td>
+                        <td>
+                            @item.mostrecentnote
+                        </td>
+
+
+
+                    </tr>
+                }
+            }
+
+        </table>
+
+    </div>
+</form>
+
+

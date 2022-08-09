@@ -1,0 +1,70 @@
+﻿
+@{
+    ViewBag.Title = "Event";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .lblTitle
+    {
+        display: inline-block;
+        color: Navy;
+        background-color: transparent;
+        font-size: 18pt;
+    }
+
+    h3
+    {
+        display: block;
+        font-size: 1.17em;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        font-weight: bold;
+    }
+</style>
+
+<div class="magiMySessionMainWrapper mt-3">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+            <div class="col-md-8 col-lg-9 flex-grow-1">
+                <div class="row">
+                    <div class="col-md-6 col-lg-9">
+                        <h2 id="lblTitle">@ViewBag.PageTitle</h2>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="d-flex align-items-center justify-content-md-end justify-content-between">
+                            <div class="d-inline-block me-1 w-100">@Html.DropDownList("OverViewDropDown", null, new { @class = "bg-light mb-1 me-1 d-inline w-100", id = "OverViewDropDown" })</div>
+                            <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-2">Return</a>
+                        </div>
+                    </div>
+                </div>
+                <div>@Html.Raw(@ViewBag.FormText)</div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="@ViewBag.OverViewDropDownSelected" id="DropdownSelected" />
+<script type="text/javascript">
+    $(document).ready(function () {
+        document.getElementById("OverViewDropDown").selectedIndex = -1;
+        $('#OverViewDropDown').change(function () {
+            var Data = { DropDownValue: $('#OverViewDropDown').val() };
+            var result = CommonFunctions.AjaxCall('Post', '/MAGI/OverViewDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+            if (result.ActionType === "Redirect")
+                window.location.href = result.RedirectionUrl;
+        });
+        $('#OverViewDropDown').val($('#DropdownSelected').val());
+    });
+
+    function admin() {
+      var bGlobalAdmin = "@ViewBag.Admin";
+      window.location.href = (bGlobalAdmin === "True") ? "/SpeakingInterest" : "/EditAccount?Spkr=1" ;
+    }
+</script>
+
+

@@ -1,0 +1,192 @@
+﻿@using System.Data
+@model DataTable
+@{
+    ViewBag.Title = "MyCertificate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    bool bAvailable = false;
+    if (Model != null)
+    {
+        bAvailable = (Model.Rows.Count > 0);
+    }
+}
+
+<style>
+    html *
+    {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    #MyCertificates
+    {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    #MyCertificates
+    {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    #MyCertificates td, #MyCertificates th
+    {
+        text-align: left;
+        font-size: 10pt;
+    }
+
+    #MyCertificates tr
+    {
+        height: 10px;
+    }
+
+    #MyCertificates tr:nth-child(even)
+    {
+        background-color: #f2f2f2
+    }
+
+    #MyCertificates th
+    {
+        background-color: #00a1ff;
+        color: white;
+        font-size: 12px;
+    }
+</style>
+
+    <div class="magiMySessionMainWrapper mt-3" id="refdiv">
+        <div class="container-fluid">
+            <div class="row">
+                @{
+                    Html.RenderAction("_PartialEventInfo", "Home");
+                }
+                <div class="col-md-8 flex-grow-1">
+                    <div class="row">
+                        <div class="col-md-8 ">
+                            <h2>My Certificates</h2>
+                        </div>
+                        <div class="col-md-4 justify-content-end align-items-center flex-wrap">
+                            <a id="cmdReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1 pull-right">Return</a>
+                        </div>
+                    </div>
+                    <div class="table-responsive" height="700px" style="background-color:white">
+                        <table id="MyCertificates">
+                            <thead>
+                                <tr>
+                                    <th style="display:none"> Event_pKey </th>
+                                    <th style="display:none"> CertPKey </th>
+                                    <th style="display:none"> pKey </th>
+                                    <th style="min-width:70px;"> Event  </th>
+                                    <th style="min-width:70px;"> Date </th>
+                                    <th style="min-width:150px;"> Download Certificate </th>
+                                    <th style="min-width:150px;"> Download Schedule </th>
+                                    <th style="text-align:right;margin-right:10px;"> Hours </th>
+                                    <th> Status </th>
+                                    <th> Comment </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (bAvailable)
+                                {
+
+                                    foreach (DataRow dr in Model.Rows)
+                                    {
+                                        bool b = false;
+                                        int CertStatusPKey = 0, intType = 0;
+                                        if (dr["CertStatus_pkey"] != System.DBNull.Value)
+                                        {
+                                            CertStatusPKey = Convert.ToInt32(dr["CertStatus_pkey"].ToString());
+                                            b = (CertStatusPKey == clsCertification.CERTSTATUS_Issued);
+                                        }
+                                        if (dr["Type"] != System.DBNull.Value)
+                                        {
+                                            intType = Convert.ToInt32(dr["Type"].ToString());
+                                        }
+                                        <tr class="rgAltRow trPaddingOn" valign="top">
+                                            <td style="display:none">@dr["Event_pKey"]</td>
+                                            <td style="display:none">@dr["CertPKEy"]</td>
+                                            <td style="display:none">@dr["pkey"]</td>
+                                            <td class="paddingON">@dr["EventID"]</td>
+                                            <td class="paddingON">@((dr["CertDate"] == System.DBNull.Value) ? "" : Convert.ToDateTime(dr["CertDate"].ToString()).ToString("d") )</td>
+                                            <td class="paddingON">
+                                                <button data-certdate="@dr["CertDate"]" data-isupdatedby="@dr["IsUpdatedByUser"]" data-certabbr="@dr["CertAbbrev"]" data-type="@dr["Type"]" data-examcert="@dr["ExamCertificateText"]" data-examstatus="@dr["ExamStatus_pkey"]" data-lastcertdate="@dr["LatestCertDate"]" data-crcpexpdate="@dr["CRCPExpirationDate"]" class="DownlodCertificate" style="border:none; display:@((b) ? "initial;" : "none;")"><i class="fa fa-download" aria-hidden="true"></i></button>
+                                                @dr["CertName"]
+                                            </td>
+                                            <td class="paddingON"><button class="DownloadSchedule" style="border:none;display:@((intType == 0 || intType == 1) ? "initial;" : "none;")"><i class="fa fa-download" aria-hidden="true"></i></button></td>
+                                            <td class="paddingON" style="text-align: right;margin-right:10px;">@((dr["EarnedCEUs"] == System.DBNull.Value) ? "" : Convert.ToDouble(dr["EarnedCEUs"].ToString()).ToString("N1") )</td>
+                                            <td class="paddingON">@dr["CertStatusID"]</td>
+                                            <td class="paddingON">@Html.Raw(dr["PageLink"])</td>
+                                        </tr>
+                                    }
+
+
+                                }
+                                else
+                                {
+                                    <tr><td colspan="10" style="vertical-align:top">No results found</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function ()
+        {
+            $(".DownlodCertificate").click(function ()
+            {
+                var $row=$(this).closest("tr");    // Find the row
+                var $tds=$row.find("td");
+                var Event_pKey=($tds[0]).innerHTML;
+                var intCertPKey=($tds[1]).innerHTML;
+                var EarnedCEUs=($tds[7]).innerHTML;
+                var pkey=($tds[2]).innerHTML;
+                var typeFile=this.dataset["type"];
+                var ExamCertificate=this.dataset["examcert"];
+                var Exam_status=this.dataset["examstatus"];
+                var LastCertificationDate=this.dataset["lastcertdate"];
+                var CertificationDate=this.dataset["certdate"];
+                var CRCPExpiration=this.dataset["crcpexpdate"];
+                var CertAbb=this.dataset["certabbr"];
+                var IsUpdated=this.dataset["isupdatedby"];
+                var CertificaterData=
+                {
+                    Event_pKey: Event_pKey, CertAbbrev: CertAbb, CertPKey: intCertPKey, EarnedCEUs: EarnedCEUs, pKey: pkey, type: typeFile,
+                    ExamCertificateText: ExamCertificate, CertDate: CertificationDate, LatestCertDate: LastCertificationDate,
+                    CRCPExpirationDate: CRCPExpiration, ExamStatus_pkey: Exam_status, IsUpdatedBy: IsUpdated
+                };
+                var DocumentResult=CommonFunctions.AjaxCall('POST', '/MyMagi/ProcessCertificate', CertificaterData, 'Error While Updating Certificate.');
+                if (DocumentResult!=null)
+                {
+                    if (DocumentResult.msg==="OK")
+                        window.location.href="/MyMAGI/DownloadCertificateFile?Destination="+DocumentResult.Destination+"&FileName="+DocumentResult.FileName+"&DisplayName="+DocumentResult.DisplayName;
+                    else
+                        CommonFunctions.Alert(DocumentResult.msg);
+                }
+                else
+                    CommonFunctions.Alert("Error while processing certificate file");
+            });
+            $(".DownloadSchedule").click(function ()
+            {
+                var $row=$(this).closest("tr");
+                var $tds=$row.find("td");
+                var Event_pKey=($tds[0]).innerHTML;
+                var intCertPKey=($tds[1]).innerHTML;
+                var EventID=($tds[3]).innerHTML;
+                var pkey=($tds[2]).innerHTML;
+                var CertificaterData={ Event_Pkey: Event_pKey, strCertPkey: intCertPKey, strEventID: EventID, pKey: pkey };
+                var DocumentResult=CommonFunctions.AjaxCall('POST', '/MyMagi/DownloadSchedule', CertificaterData, 'Error While Updating Certificate.');
+                if (DocumentResult!=null)
+                {
+                    if (DocumentResult.msg==="OK")
+                        window.location.href="/MyMAGI/Download?filename="+DocumentResult.FileName;
+                    else
+                        CommonFunctions.Alert("Error while processing schedule file");
+                }
+                else
+                    CommonFunctions.Alert("Error while processing schedule file");
+            });
+        });
+    </script>

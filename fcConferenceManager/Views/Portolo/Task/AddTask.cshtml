@@ -1,0 +1,647 @@
+﻿@model Elimar.Models.TaskAdd
+
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+}
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap"
+      rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+@*<link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/Portolostyle.css">
+    <link rel="stylesheet" href="../css/responsive.css">*@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+
+<head>
+
+    <script type="text/javascript" language="javascript">
+
+        $("document").ready(function () {
+            $('#pKey').val('@Model.taskListResponse.TaskCategory_pKey');
+            $(function () {
+
+                $("#datepicker2").datepicker({
+                    dateFormat: "mm/dd/yy"
+                });
+            });
+        });
+
+        function validateInputs(e) {
+
+
+            var title = $.trim($('#title').val());
+            var description = $.trim($('#description').val());
+            if (title == "") {
+                $("#title").focus();
+
+                alert("Please enter the title of the task");
+                return false;
+            }
+            if (description == "") {
+                $("#description").focus();
+                alert("Please enter the description of the task");
+                return false;
+            }
+        }
+
+
+            function SelectedIndexChangedCategory(e) {
+                //Form post
+                $('#dropdownCategory').val(e);
+
+            }
+            function SelectedIndexChangedStatus(e) {
+                //Form post
+                $('#dropdownStatus').val(e);
+
+            }
+            function SelectedIndexChangedRepeat(e) {
+                //Form post
+                $('#dropdownRepeat').val(e);
+
+            }
+            function CompareDate() {
+
+
+                var CurrTime = $.datepicker.formatDate('mm/dd/yy', new Date());
+                var PlanDate = $("#datepicker2").val(); //Year, Month, Date ("#datepicker2").val()
+                var DueDate = $("#datepicker3").val();//Year, Month, Date
+                var ForecastDate = $("#datepicker4").val();
+
+                //if (DueDate != null && DueDate != "") {
+
+                //    if (CurrTime > DueDate) {
+                //        alert("Due date should be greater than today");
+                //        $("#datepicker3").val("");
+                //        return false;
+                //    }
+
+                //    if (PlanDate != null && DueDate <= PlanDate) {
+                //        alert("Due date should be greater than plan date");
+                //        $("#datepicker3").val("");
+                //        return false;
+                //    }
+                //}
+
+                //if (ForecastDate != null && ForecastDate != "") {
+                //    if (CurrTime > ForecastDate) {
+                //        alert("Forecast date should be greater than today");
+                //        $("#datepicker4").val("");
+                //        return false;
+                //    }
+
+                //    if (PlanDate != null && ForecastDate <= PlanDate) {
+                //        alert("Forecast date should be greater than Plan date");
+                //        $("#datepicker4").val("");
+                //        return false;
+                //    }
+
+                    //if (DueDate != null && ForecastDate <= DueDate) {
+                    //    alert("Forecast date should be greater than due date");
+                    //    $("#datepicker4").val("");
+                    //    return false;
+                    //}
+               // }
+            }
+    </script>
+    <script type="text/javascript">
+
+
+        $(function () {
+
+            $("#datepicker2").datepicker({
+                dateFormat: "mm/dd/y"
+            });
+        });
+
+        $(function () {
+
+            $("#datepicker3").datepicker({
+                dateFormat: "mm/dd/y"
+            });
+        });
+
+        $(function () {
+
+            $("#datepicker4").datepicker({
+                dateFormat: "mm/dd/y"
+            });
+        });
+    </script>
+</head>
+<body>
+
+
+    <section class="task-list-form">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <form action="/Task/Addtask" method="post" enctype="multipart/form-data" onsubmit="validateInputs(e);">
+                        <input type="text" style="visibility: hidden" name="editprimarykey" value="@Model.taskListResponse.pKey" />
+                        <div class="control-icons">
+                            <h2> @ViewBag.HeadingTitle </h2>
+                            <!-- <a href=""><i class="fa-solid fa-arrow-left"></i></a>
+                            <a href=""><i class="fa-solid fa-magnifying-glass"></i></a> -->
+                            <div class="controls">
+
+                                 <input type="submit" name="Apply" value="Apply" id="idApply" class="brdr-1 btn-sm" onclick="return validateInputs(event);">
+                                <input type="submit" name="Save" value="Save" id="idSave" class="brdr-1 btn-sm" onclick="return validateInputs(event);">
+                                @*<a href="~/Portolo/TaskList" class="brdr-1 btn-sm" style = "background-color:white;" >Cancel</a>*@
+                                @Html.ActionLink("Cancel", "TaskList", "Portolo", null, new { @class = "brdr-1 btn-sm" , style = "background-color:white;" })
+
+
+                                @*<input type="submit" name="Cancel" value="Cancel" id="idCancel" class="brdr-1 btn-sm">*@
+                                @*<button href="" class="brdr-1 btn-sm">Apply</button>
+                                    <button href="" class="brdr-1 btn-sm ">Save</button>
+                                    <button href="" class="brdr-1 btn-sm">Cancel</button>*@
+                                <!-- <button href="" class="brdr-1 btn-sm">Download</button> -->
+                            </div>
+
+                        </div>
+                        <div class="row">
+
+                            <div class="col-lg-12">
+                                <div class="form-box">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlTextarea1">Title</label>
+
+                                        <input type="text" class="form-control form-control-sm" value="@Model.taskListResponse.title" name="title" id="title" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleFormControlTextarea1">Description</label>
+
+                                        <textarea rows="5" cols="100" type="text" class="form-control" value="@Model.taskListResponse.description" name="description" id="description" maxlength="2000">@Model.taskListResponse.description</textarea>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-12 mt-5">
+
+                                <div class="dash-tabs">
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="planning-tab" data-toggle="tab" href="#planning" onclick="Planningshow();">Specifications</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="tips-tab" data-toggle="tab" href="#tips" onclick="TipsShow()">Tips</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="instruction-tab" data-toggle="tab" href="#instruction" onclick="instructionShow()">Instructions</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="notes-tab" data-toggle="tab" href="#notes" onclick="notesShow()">Notes</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="resources-tab" data-toggle="tab" href="#resources" onclick="resourcesShow()">Resources</a>
+                                        </li>
+                                        @*<li class="nav-item">
+                                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#specs">Specifications</a>
+                                            </li>*@
+                                    </ul>
+                                    <div class="tab-content" id="myTabContent">
+                                        <div class="tab-pane show active p-3" id="planning">
+                                            <div class="form-boxs">
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <div class="form-group">
+                                                            <label for="exampleFormControlSelect1">Plan Dates:</label>
+
+                                                            <input type="text" id="datepicker2" class="form-control form-control-sm" placeholder="mm/dd/yy" value="@String.Format("{0:MM\\/dd\\/yy}",Model.taskListResponse.plan)" name="plandate" onchange="CompareDate()" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <div class="form-group">
+                                                            <label for="exampleFormControlSelect1">Due Date:</label>
+                                                            @*<input type="date" >*@
+                                                            <input type="text" class="form-control form-control-sm" id="datepicker3" placeholder="mm/dd/yy" value="@String.Format("{0:MM\\/dd\\/yy}",Model.taskListResponse.duedate)" name="duedate" onchange="CompareDate()" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <div class="form-group">
+                                                            <label for="exampleFormControlSelect1">Forecast:</label>
+                                                            <input type="text" id="datepicker4" class="form-control form-control-sm" placeholder="mm/dd/yy" value="@String.Format("{0:MM\\/dd\\/yy}",Model.taskListResponse.forecast)" name="forecast" onchange="CompareDate()" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-2">
+                                                        <div class="form-group">
+                                                            <label for="exampleFormControlSelect1">Repeat:</label>
+                                                            @Html.DropDownListFor(n => n.taskListResponse.RepeatType_pKey, new SelectList(Model.commondropdownlist.repeatdropdowns,
+                                                "pKey", "TaskRepeatID", Model.taskListResponse.RepeatType_pKey), new { @class = "form-control form-control-sm", @onchange = "SelectedIndexChangedRepeat(this.value)" })
+                                                            <input type="text" name="RepeatType_pKey" id="dropdownRepeat" style="visibility:hidden;display:none" />
+                                                            <input type="text" name="formsubmit" value="5" style="visibility:hidden;display:none" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-3">
+                                                            <div class="form-group">
+                                                                <label for="exampleFormControlSelect1">Category:</label>
+                                                                @Html.DropDownListFor(n => n.taskListResponse.TaskCategory_pKey, new SelectList(Model.commondropdownlist.categorydropdowns,
+                                      "pKey", "TaskCategoryID", Model.taskListResponse.TaskCategory_pKey), new { @class = "form-control form-control-sm", @onchange = "SelectedIndexChangedCategory(this.value)" })
+                                                                <input type="text" name="TaskCategory_pKey" id="dropdownCategory" style="visibility:hidden;display:none" />
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-3">
+                                                            <div class="form-group">
+                                                                <label for="exampleFormControlSelect1">Status:</label>
+
+                                                                @Html.DropDownListFor(n => n.taskListResponse.status, new SelectList(Model.commondropdownlist.statusdropdowns,
+                                         "pkey", "TaskStatusID", Model.taskListResponse.status), new { @class = "form-control", @onchange = "SelectedIndexChangedStatus(this.value)" })
+                                                                <input type="text" name="status" id="dropdownStatus" style="visibility:hidden;display:none" />
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-2 custm-checkbox">
+                                                            <div class="form-check">
+                                                                @Html.CheckBox("reviewed", Model.taskListResponse.reviewed, new { @class = "form-check-input" })
+                                                                <label class="form-check-label" for="defaultCheck1">
+                                                                    Reviewed
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-2 custm-checkbox">
+                                                            <div class="form-check">
+                                                                @Html.CheckBox("active", Model.taskListResponse.active, new { @class = "form-check-input" })
+                                                                @*<input class="form-check-input" type="checkbox" value="" id="defaultCheck1">*@
+                                                                <label class="form-check-label" for="defaultCheck1">
+                                                                    Active
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="tab-pane p-5" id="tips">
+                                            <div class="form-group">
+                                                <textarea rows="5" cols="100" type="text" class="form-control" value="@Model.taskListResponse.Tips" name="Tips" id="Tips" maxlength="2000">@Model.taskListResponse.Tips</textarea>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="tab-pane p-5" id="instruction">
+                                            <textarea rows="10" cols="100" style="width:1100px ; height:200px" type="text" class="form-control" value="@Model.taskListResponse.Instruction" name="Instruction" id="Instruction" maxlength="2000">@Model.taskListResponse.Instruction</textarea>
+
+                                        </div>
+                                        <div class="tab-pane p-5" id="notes">
+
+                                            <textarea rows="5" cols="100" style="width:1100px ; height:200px" type="text" class="form-control" value="@Model.taskListResponse.Notes" name="Notes" id="Notes" maxlength="2000">@Model.taskListResponse.Notes</textarea>
+                                        </div>
+                                        <div class="tab-pane p-5" id="resources">
+                                            @*<input type="file" name="files" />
+                                                <button>Add</button>*@
+                                            <input type="hidden" name="hiddenResources" value="@Model.taskListResponse.Resources" />
+                                            <input type="hidden" name="hiddenResourcesFileNames" value="@Model.taskListResponse.ResourcesFileName" />
+
+                                            @Html.TextBoxFor(model => model.files, "", new { @type = "file", @multiple = "multiple" })
+
+
+                                            @if (Model.taskListResponse.pKey != null && Model.taskListResponse.pKey != "")
+                                            {
+                                                <button name="submit" type="submit" style="border-width: thin;" id="process" value="Upload">
+                                                    Upload
+                                                </button>
+                                            }
+
+                                            @if (Model.taskListResponse.ResourcesFileName != "")
+                                            {
+                                                <label for="exampleFormControlSelect1"> @Model.taskListResponse.Resources</label>
+
+                                                <a style="color:black" href="@Url.Action("DeleteImage", new { id = @Model.taskListResponse.pKey }).Replace("Portolo", "Task")"> <i class="fa-solid fa-trash"></i></a>
+                                            }
+
+                                            <textarea rows="1" cols="100" type="text" style="display:none" class="form-control" value="@Model.taskListResponse.Resources" name="Resources" id="Resources" maxlength="2000">@Model.taskListResponse.Resources</textarea>
+                                            <textarea rows="1" cols="100" type="text" style="display:none" class="form-control" value="@Model.taskListResponse.ResourcesFileName" name="ResourcesFileName" id="ResourcesFileName" maxlength="2000">@Model.taskListResponse.ResourcesFileName</textarea>
+                                            <br>
+                                            @if (Model.taskListResponse.publicTaskResources != null)
+                                            {
+
+
+                                                <table id="myTable" class="cedvel table table-striped table-bordered table-sm" style="width: 95% !important; max-width: 400% !important">
+                                                    <tr>
+                                                        <th>
+                                                            File Name
+                                                        </th>
+                                                        <th>
+                                                            Download
+                                                        </th>
+                                                        <th>
+                                                            Delete
+                                                        </th>
+                                                    </tr>
+                                                    @foreach (var item in Model.taskListResponse.publicTaskResources)
+                                                    {
+                                                        <tr>
+                                                            <td>
+
+                                                                @Html.DisplayFor(modelItem => item.Resources)
+                                                            </td>
+                                                            <td>
+                                                                @*<a href="~/PortoloDocuments/@item.ResourcesFileName" download="@item.Resources">Download</a>*@
+                                                                <a href="~/PortoloDocuments/@item.ResourcesFileName" download="@item.Resources"><img alt="Qries" src="~/Images/Icons/Download-Icon.png" style="width: 32px; height:32px"></a>
+
+                                                            </td>
+                                                            <td>
+                                                                <button style="border-width: thin; width: 87px; " class="brdr-1 btn-sm" value="@item.pkey" id="deleteresourcefile" onclick=funcDeletResourcefile(@item.pkey,@item.PublicTaskID,"Resource")>Delete</button>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            }
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+  
+
+    <script type="text/javascript" src="//js.nicedit.com/nicEdit-latest.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var url = document.location.href;
+
+            const myArray = url.split("#");
+            if ((myArray.length) > 1) {
+                var name = myArray[1];
+                if (name == "resources") {
+                    resourcesShow()
+                }
+            }
+        })
+
+        function Planningshow() {
+            $("#planning").show();
+
+            $("#instruction").hide();
+            $("#notes").hide();
+            $("#resources").hide();
+            $("#tips").hide();
+            var ID = $("#planning-tab");
+            updateclass(ID);
+            return false;
+
+        }
+
+        function TipsShow() {
+            $("#planning").hide();
+            $("#planning").attr("style", "display:none !important");
+            $("#instruction").hide();
+            $("#notes").hide();
+            $("#resources").hide();
+            $("#tips").show();
+            var ID = $("#tips-tab");
+            updateclass(ID);
+            return false;
+
+        }
+
+        function instructionShow() {
+            $("#planning").hide();
+            $("#planning").attr("style", "display:none !important");
+            $("#instruction").show();
+            $("#notes").hide();
+            $("#resources").hide();
+            $("#tips").hide();
+            var ID = $("#instruction-tab");
+            updateclass(ID);
+            return false;
+
+        }
+
+        function notesShow() {
+            $("#planning").hide();
+            $("#planning").attr("style", "display:none !important");
+            $("#instruction").hide();
+            $("#notes").show();
+            $("#resources").hide();
+            $("#tips").hide();
+            var ID = $("#notes-tab");
+            updateclass(ID);
+            return false;
+
+        }
+
+        function resourcesShow() {
+
+            $("#planning").hide();
+            $("#planning").attr("style", "display:none !important");
+            $("#instruction").hide();
+            $("#notes").hide();
+            $("#resources").show();
+            $("#tips").hide();
+            var ID = $("#resources-tab");
+            updateclass(ID);
+            return false;
+
+        }
+
+        function updateclass(ID) {
+            $("#planning-tab").removeClass().addClass('nav-link');
+            $("#tips-tab").removeClass().addClass('nav-link');
+            $("#instruction-tab").removeClass().addClass('nav-link');
+            $("#notes-tab").removeClass().addClass('nav-link');
+            $("#resources-tab").removeClass().addClass('nav-link');
+
+            $(ID).removeClass().addClass('nav-link active');
+        }
+
+
+        function funcDeletResourcefile(pkey, publicTaskId,source) {
+                $.ajax({
+                    type: "POST",
+                    url: "@ViewBag.Baseurl/Task/DeleteResourceFile",
+                    data: {
+
+                        pkey: pkey,
+                        source:source
+                    },
+                    success: function (result) {
+
+                        var baseUrl = "@Url.Action("EditTask", "Task", new { id = "PublicTaskId" })";
+                        baseUrl = baseUrl.replace("PublicTaskId", publicTaskId);
+                        window.location.href = baseUrl;
+                        alert("Resource File Deleted Successfully!")
+                        resourcesShow();
+                        return false;
+                    },
+                    error: function (result) {
+                        alert('error');
+                    }
+                });
+            }
+
+
+
+        //bkLib.onDomLoaded(function () { nicEditors.className("ttry") });
+        bkLib.onDomLoaded(function () {
+            nicEditors.editors.push(
+                new nicEditor().panelInstance(
+                    document.getElementById('Instruction')
+
+                )
+            );
+        });
+
+        bkLib.onDomLoaded(function () {
+            nicEditors.editors.push(
+                new nicEditor().panelInstance(
+                    document.getElementById('Notes')
+
+                )
+            );
+        });
+
+
+
+
+
+
+
+    </script>
+
+
+
+
+
+
+																					 
+																								   
+												 
+																								  
+																									   
+													 
+																									
+
+				
+								
+										   
+									   
+													  
+												   
+				   
+
+													 
+															  
+				 
+
+			   
+							  
+				   
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+            $.noConflict(false);
+            $(document).ready(function () {
+                // Toggle menu on click
+                $("#menu-toggler").click(function () {
+                    toggleBodyClass("menu-active");
+                });
+
+                function toggleBodyClass(className) {
+                    debugger;
+                    document.body.classList.toggle(className);
+                }               
+
+                if ("@ViewBag.Source" == "source") {
+
+                    resourcesShow();
+                }
+                else
+                {
+                    Planningshow();
+                }
+
+            });
+            $.noConflict(true)
+    </script>
+   
+																							   
+											 
+																							  
+																							   
+											 
+																							
+
+			
+							
+									   
+								   
+												  
+											   
+			   
+
+												 
+														  
+			 
+
+		   
+						  
+			 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>

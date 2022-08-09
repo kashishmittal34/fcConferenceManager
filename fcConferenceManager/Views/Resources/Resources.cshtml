@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewBag.Title = "Resources";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .lblTitle {
+            padding-bottom: 8px;
+            padding-top: 8px;
+            display: inline-block;
+            color: Navy;
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="magiMySessionMainWrapper mt-3">
+        <div class="container-fluid">
+            <div class="row">
+                @{
+                    Html.RenderAction("_PartialEventInfo", "Home");
+                }
+                <div class="col-md-8 col-lg-9 flex-grow-1">
+                    <div class="col-md-12">
+                        <div class="lblTitle"><h2>@ViewBag.PageTitle</h2></div>
+                        <div>@Html.Raw(@ViewBag.FormText)</div>
+                    </div>
+                </div>
+            </div>
+            </div>
+    </div>
+</body>
+</html>

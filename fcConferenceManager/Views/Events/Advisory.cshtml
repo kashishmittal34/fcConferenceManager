@@ -1,0 +1,406 @@
+
+@{
+    ViewBag.Title = "Advisory";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+<style>
+    /* #Advisory {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size:10pt;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #Advisory {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+            #Advisory td, #Advisory th {
+                text-align: left;
+            }
+
+            #Advisory tr {
+                height: 12px;
+            }
+
+                #Advisory tr:nth-child(odd) {
+                    background-color: #f2f2f2
+                }
+
+            #Advisory th {
+                background-color: #00a1ff;
+                color: white;
+                font-size: 14px;
+                height:15px;
+            }*/
+
+    .searchbar
+    {
+        background-color: lightblue;
+        margin-bottom: 5px;
+    }
+
+    .group
+    {
+        font-size: 10pt;
+    }
+
+    .group label
+    {
+        font-size: 8pt;
+    }
+
+    .modal
+    {
+        display: none;
+        position: fixed;
+        z-index: 8;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content
+    {
+        margin: 50px auto;
+        border: 1px solid #999;
+        /*  width: 50%;*/
+    }
+
+
+    .modal span
+    {
+        color: #666;
+        display: block;
+        padding: 0 0 5px;
+    }
+
+    .modal form
+    {
+        box-shadow: 0 2px 5px #f5f5f5;
+        background: #eee;
+    }
+
+    .modal .contact-form button
+    {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        background: #1c87c9;
+        font-size: 8px;
+        font-weight: 200;
+        color: #fff;
+    }
+
+    .modal button:hover
+    {
+        background: #2371a0;
+    }
+
+
+    .modal button.button
+    {
+        background: none;
+        border-top: none;
+        outline: none;
+        border-right: none;
+        border-left: none;
+        border-bottom: #02274a 1px solid;
+        padding: 0 0 3px 0;
+        font-size: 8px;
+        cursor: pointer;
+    }
+
+    .modal button.button:hover
+    {
+        border-bottom: #a99567 1px solid;
+        color: #a99567;
+    }
+
+    .lblTitle
+    {
+        padding-bottom: 12px;
+        /* padding-top: 8px;*/
+        display: inline-block;
+        color: Navy;
+        background-color: transparent;
+        padding-left: 2px;
+        font-weight: 400;
+    }
+
+    #modalOne img#_imgSpeakerPhoto
+    {
+        object-fit: cover;
+        object-position: center top;
+    }
+
+    .cusomImagePopUp
+    {
+        width: 150px;
+    }
+</style>
+
+
+<div class="magiMySessionMainWrapper mt-3">
+    <div class="container-fluid">
+        <div class="row">
+            @{
+                Html.RenderAction("_PartialEventInfo", "Home");
+            }
+            <div class="col-md-8 col-lg-9 flex-grow-1">
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="d-flex">
+                            <h2 class="ms-1">@ViewBag.PageTitle</h2>
+                            <input type="image" id="btnExport" value="Export" title="Export list" onclick="ExportTable()" src="/images/icons/excel.png" style="height: 32px; display: inline; margin-left: 20px;" />
+                            <input type="image" id="btnRefresh" value="Refresh" title="Refresh Page" onclick="RedoClick()" src="/images/icons/undo.png" style="height: 32px; display: inline; " />
+                            <input type="image" id="cphMain_imgSearch" value="Search" title="Search" onclick="SeacrhClick()" src="/images/icons/redo.png" style="height: 32px; display: inline; " />
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <a id="cmdReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1">Return</a>
+                    </div>
+                </div>
+
+                <div class="searchbar d-block d-md-flex p-1">
+                    <div class="group me-md-1 me-0">
+                        <label for="Name">Name</label><br />
+                        <input type="text" placeholder="" name="Name" id="Name">
+                    </div>
+                    <div class="group me-md-1 me-0">
+                        <label for="Title">Title</label><br />
+                        <input type="text" placeholder="" name="Title" id="Title">
+                    </div>
+                    <div class="group">
+                        <label for="Organization">Organization</label><br />
+                        <input type="text" placeholder="" name="Organization" id="Organization" />
+                    </div>
+
+
+                    @*<input type="button" id="btnExport" value="Export" onclick="ExportTable()" />*@
+
+
+                </div>
+
+
+
+                <div class="table-responsive">
+                    <table id="Advisory" class="table magi-table">
+                        <thead>
+                            <tr style="height:15px ;">
+
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Title
+                                </th>
+                                <th>
+                                    Organization
+                                </th>
+
+                            </tr>
+                        </thead>
+                        @{ foreach (var item in Model)
+                            {
+                                <tr>
+
+                                    <td>
+                                        <button id="@item.Id" name="Speakebtn" data-modal="modalOne" class="button" style="background:none; border:none; color:black"><u>@item.Name</u></button>
+                                    </td>
+                                    <td>
+                                        @item.Title
+                                    </td>
+                                    <td>
+                                        @item.Orginization
+                                    </td>
+                                </tr>
+
+                            }
+                        }
+                    </table>
+                </div>
+                <div class="float-end">
+                    <span>Rows : @Model.Count</span>
+                </div>
+
+                <div id="modalOne" class="modal">
+                    <div class="modal-dialog modal-dialog-centered modal-xl" style="width:800px;height:400px">
+                        <div class="modal-content">
+
+                            <table style="width: 100%">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <table style="width: 100%">
+                                                <tbody>
+                                                    <tr style="background-color:#76b8f3">
+                                                        <td style="padding: 3px">
+                                                            <span id="_lblSpeakerName" class="lblTitlePop" style="font-weight:bold;color:#000000"></span>
+                                                        </td>
+                                                        <td style="padding: 3px; text-align: right">
+                                                            <input class="close btn" name="cancel" id="_Close" type="button" value="Close">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-top: 5px">
+                                            <table style="width: 100%">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="vertical-align: top; width: 170px;">
+                                                            <img id="_imgSpeakerPhoto" class="img-fluid rounded-3 shadow cusomImagePopUp" src="~/accountimages/no-person.jpg">
+                                                        </td>
+                                                        <td style="padding-left: 10px; vertical-align: top">
+                                                            <span id="_lblSpeakerInfo"> </span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js">
+</script>
+<script type="text/javascript">
+
+    function ExportTable()
+    {
+        $("#Advisory").table2excel({
+            filename: "Advisory.xls"
+        });
+    }
+
+    $(document).ready(function ()
+    {
+
+        let modalBtns = [...document.querySelectorAll(".button")];
+        modalBtns.forEach(function (btn)
+        {
+            btn.onclick = function ()
+            {
+                var spkID = btn.id;
+                $.get("/Events/Spkclick", { id: spkID }, function (data)
+                {
+
+                    document.getElementById("_lblSpeakerName").textContent = data.sname;
+                    document.getElementById("_lblSpeakerInfo").textContent = data.sinfo;
+                    if (data.imageexist)
+                    {
+                        document.getElementById("_imgSpeakerPhoto").src = "/accountimages/" + spkID + "_img.jpg";
+                    }
+                    /* document.getElementById("_imgSpeakerPhoto").src = "/accountimages/" + spkID + "_img.jpg";*/
+                });
+
+                let modal = btn.getAttribute('data-modal');
+                document.getElementById(modal).style.display = "block";
+            }
+        });
+        let closeBtns = [...document.querySelectorAll(".close")];
+        closeBtns.forEach(function (btn)
+        {
+            btn.onclick = function ()
+            {
+                document.getElementById("_lblSpeakerName").textContent = "";
+                document.getElementById("_lblSpeakerInfo").textContent = "";
+                document.getElementById("_imgSpeakerPhoto").src = "/accountimages/no-person.jpg";
+                let modal = btn.closest('.modal');
+                modal.style.display = "none";
+            }
+        });
+        window.onclick = function (event)
+        {
+            if (event.target.className === "modal")
+            {
+                event.target.style.display = "none";
+            }
+        }
+
+        $(document).bind('keydown', function (e)
+        {
+            if (e.which === 13)
+            {
+                $('#cphMain_imgSearch').trigger('click');
+            }
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        var paraName = urlParams.get('name');
+        var paraTitle = urlParams.get('title');
+        var paraOrg = urlParams.get('Org');
+
+        if (paraName != null && paraName != "")
+        {
+            $('#Name').val(paraName);
+        }
+
+        if (paraTitle != null && paraTitle != "")
+        {
+            $('#Title').val(paraTitle);
+        }
+
+        if (paraOrg != null && paraOrg != "")
+        {
+            $('#Organization').val(paraOrg);
+        }
+    });
+
+    function SeacrhClick()
+    {
+        var name = document.getElementById("Name").value;
+        var title = document.getElementById("Title").value;
+        var org = document.getElementById("Organization").value;
+
+        if (name == "" && title == "" && org == "")
+        {
+            window.location.href = "/Events/Advisory";
+        }
+        else if (name != "" && title == "" && org == "")
+        {
+            window.location.href = "/Events/Advisory?name=" + name;
+        }
+        else if (name == "" && title != "" && org == "")
+        {
+            window.location.href = "/Events/Advisory?title=" + title;
+        }
+        else if (name == "" && title == "" && org != "")
+        {
+            window.location.href = "/Events/Advisory?Org=" + org;
+        }
+        else
+        {
+            window.location.href = "/Events/Advisory?name=" + name + "&title=" + title + "&Org=" + org;
+        }
+    }
+
+    function RedoClick()
+    {
+        window.location.href = "/Events/Advisory";
+    }
+</script>

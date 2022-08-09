@@ -1,0 +1,1341 @@
+@using System.Data
+@model fcConferenceManager.Models.ViewModels.ChatViewModel
+<!--chat section -->
+@if (Convert.ToBoolean(ViewBag.ChatPanel_Visible))
+{
+<style>
+   /* .magi-Chatting-wrapper
+    {
+        width: 250px;
+    }
+*/
+    #messengerAction, #icon-cover
+    {
+        display: none !important;
+    }
+
+    .chatting-list-people ul li
+    {
+        cursor: pointer;
+    }
+
+    .msgGUID
+    {
+        display:none;
+    }
+
+    #chatSectionForPanel, #oneToOneSectionForPanel
+    {
+        display: none;
+    }
+
+    ul#ulChatList li span img.list-images, ul#msgsList li div.magi-chatting-avatar img
+    {
+        height: 40px;
+        width: 40px;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    #parent_NetworkingTopics
+    {
+        display: none;
+    }
+
+    div.magiChatAvararMsg p
+    {
+        margin-bottom: 0;
+        word-wrap: break-word !important;
+        word-break: break-word;
+    }
+
+    li div.commonMsg
+    {
+        padding: 5px;
+        text-align: center;
+        background: chartreuse;
+        border-radius: 10px;
+        font-size: 14px;
+        margin: 0 auto;
+        font-weight: 600;
+    }
+
+    #chatSectionForPanel
+    {
+        position: relative;
+    }
+
+    #chatOverlay, #listOverlay
+    {
+        display: none;
+        position: absolute;
+        z-index: 999;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: Gray;
+        opacity: .5;
+    }
+
+    #overlaycenter, #overlaycenterForChatPanel, #overlaycenterForList
+    {
+        z-index: 1000;
+        width: 62px;
+        background-color: #fff;
+        border-radius: 10px;
+        opacity: 1;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -32px 0 0 -31px;
+    }
+
+    #overlaycenter img, #overlaycenterForChatPanel img, #overlaycenterForList img
+    {
+        height: 40px;
+        width: 40px;
+        margin: 10px;
+    }
+</style>
+<input id="hdTargetId" type="hidden" />
+<input id="rvName" type="hidden" />
+<div class="magi-Chatting-wrapper mb-2">
+    <div class="magi-chatting-header">
+        <select id="chatTypes" onchange="OnClientItemSelectedForChatType()">
+            @foreach (var v in Model.ChatTypes)
+            {
+                <option value="@v.Key">@v.Value</option>
+            }
+        </select>
+    </div>
+
+    @if (Model.PanelSet.Tables.Count > 2 && Model.PanelSet.Tables[2].Rows.Count > 0)
+    {
+        <div id="parent_NetworkingTopics" style="padding-top:0;" class="magi-chatting-header">
+            <select id="ddlNetTopics" onchange="OnSelectingNetworkingTopic()">
+                <option value="0">Select Topic</option>
+                @foreach (DataRow dr in Model.PanelSet.Tables[2].Rows)
+                {
+                    <option value='@dr["pKey"].ToString()'>@dr["strText"].ToString()</option>
+                }
+            </select>
+        </div>
+    }
+
+
+    <div id="chatSectionForPanel" class="magi-chatting-list-wrapper mb-2">
+        <div id="chatOverlay">
+            <div id="overlaycenter">
+                <img alt="" src="/images/icons/loading.gif" />
+            </div>
+        </div>
+
+        <ul id="msgsList" class="magi-chatting-list magiSrollbar"></ul>
+
+        <div class="magi-typeing-wrapper">
+            <div class="magi-typeing-input-wrapper d-flex justify-content-between">
+                <input type="text" id="txtMessageInput" value="" placeholder="Type Here Your Message..." class="magi-typeing-text-input" onkeyup="sendThisMsg(event)" />
+                <div class="magi-typeing-btn">
+                    <input id="btnSendMyMsg" type="image" src="/Images/Icons/sendIcon.png" value="Send" onclick="sendMyMessageForVE()"/>
+                </div>
+            </div>
+            <span class="magi-typeing-info d-none mt-1">When requesting a connection, introduce yourself and give a reason for the connection.</span>
+            <div id="dvShowTypingHere" class="magi-typeing-something mt-1">
+                <div class="d-flex align-items-baseline">
+                    <span>
+                        <img src="~/Images/icons/typing.gif" width="15" alt="pencil" />
+                    </span>
+                    <span class="lblSmall ms-1 typeing-text">Typing...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="oneToOneSectionForPanel" class="chatting-list-people">
+        <ul id="ulChatList" class="magiSrollbar">
+            @if (Model.PanelSet.Tables.Count > 0 && Model.PanelSet.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow dr in Model.PanelSet.Tables[0].Rows)
+                {
+                    <li dataimg='@dr["image"].ToString().Replace("~", "")'
+                        dataname='@dr["ContactName"].ToString()'
+                        datatitle='@dr["title"].ToString()'
+                        databio='@dr["bio"].ToString()'
+                        datadept='@dr["dept"].ToString()'
+                        dataorg='@dr["org"].ToString()'
+                        inthissession="1"
+                        inmychat='@dr["InMyChat"].ToString()'
+                        data-sort='@dr["timeOfMsg"].ToString()'
+                        data-key='@dr["id"].ToString()'
+                        searchstring='@dr["searchString"].ToString()'
+                        onclick="flipToChat('@dr["id"].ToString()','@dr["ContactName"].ToString()');return false;"
+                        isonline='@dr["isOnline"].ToString()'
+                        constatusnow='@dr["conStatusNow"].ToString()'
+                        fromme='@dr["fromMe"].ToString()'
+                        refusedbyown='@dr["refusedByOwn"].ToString()'
+                        isexpired='@dr["isExpired"].ToString()'>
+                        <span>
+                            <img class="list-images" src='@dr["image"].ToString().Replace("~", "")' alt='@dr["ContactName"].ToString()' />
+                        </span>
+                        <span class="chatting-list-name">
+                            @dr["ContactName"].ToString()
+                            <span>
+                                @{
+                                    string s = (((dr["isSpeaker"].ToString() == "1") && (dr["isSponser"].ToString() == "1")
+                                                ) ? "Speaker & Event Sponsor" : (dr["isSpeaker"].ToString() == "1" ? "Speaker" :
+                                                ((dr["isSponser"].ToString() == "1" ? "Event Sponsor" : (dr["isAttendee"].ToString() == "1") ? " Attendee" : ""))));
+                                    @s
+                                }
+                            </span>
+                        </span>
+                        <button class="btn">Chat</button>
+                    </li>
+                                        }
+                                    }
+        </ul>
+    </div>
+</div>
+<!--end chat section-->
+<script>
+    ///////////////////Chat JS starts here.........
+    var chatVE = $.connection.chatHub;
+    var pauseChat = false;
+    var isMingleStarted = false;
+
+    $(document).ready(function ()
+    {
+        $.connection.hub.transportConnectTimeout = 30000;
+        $.connection.hub.logging = true;
+
+        $.connection.hub.disconnected(function ()
+        {
+            if ($.connection.hub.lastError)
+            {
+                console.log("You has been disconnected. please refresh the page again");
+            }
+            setTimeout(function ()
+            {
+                $.connection.hub.start({ transport: ['serverSentEvents', 'foreverFrame', 'longPolling', 'webSockets'] }).done(function ()
+                {
+                    console.log("Connected by ChatPanel, transport = " + $.connection.hub.transport.name);
+                    var userId = getSelfConnectionId();
+                    var name = getMyName();
+                    var uri = window.location.pathname;
+                    chatVE.server.onconnected(userId, getMySession(), name, uri, false);
+
+                }).fail(function (e) { console.log("Not Connected by ChatPanel, transport error occurred."); });
+
+            }, 5000);// Restart connection after 5 seconds.
+        });
+        //$.connection.hub.start().done(function ()
+        $.connection.hub.start({ transport: ['serverSentEvents', 'foreverFrame', 'longPolling', 'webSockets'] }).done(function ()
+        {
+            console.log("Connected by ChatPanel, transport = " + $.connection.hub.transport.name);
+            var userId = getSelfConnectionId();
+            var name = getMyName();
+            var uri = window.location.pathname;
+            chatVE.server.onconnected(userId, getMySession(), name, uri, true);
+
+            pauseChat = ((getCookie("isChatPaused")).toString() == "1" ? true : false);
+            if (typeof OnClientItemSelectedForChatType === 'function')
+                OnClientItemSelectedForChatType();
+
+
+            if (typeof OpenZoomMeeting === 'function')
+                OpenZoomMeeting();
+
+        }).fail(function (e) { console.log("Not Connected by ChatPanel, transport error occurred."); });
+        /////////////The Section ends here.............
+
+        $("form input").on('keypress', function (e)
+        {
+            if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        });
+
+        addeventsForChatPanelChatBox(false);
+        //updateConnectionIconsOfList();  Later.....
+
+        $('ul#ulChatList li').css(dontShow);
+    });
+
+    ///////////////////Chat JS ends here.........
+
+    var sectionHeight = $('.magi-Video-wrapper').outerHeight() - 128;
+    function appendToListIfNotThere(receiverId, name, ImagRv, message, ChatType, UniqueID, grpName, nick, isMingle)
+    {
+        try
+        {
+            if ($('li[data-key="' + receiverId + '"]').length <= 0)
+            {
+                var listItem = "<li dataimg='" + ImagRv + "' dataname='" + name + "' ";
+                listItem += "datatitle='' databio='' datadept='' dataorg='' inthissession='' inmychat='1' ";
+                listItem += "data-sort='' data-key='" + receiverId + "' searchstring='" + name + "' ";
+                listItem += "onclick=\"flipToChat(" + receiverId + ",'" + name + "');return false;\" ";
+                listItem += "constatusnow='' ";
+                listItem += "fromme='' ";
+                listItem += "refusedbyown='' ";
+                listItem += "isexpired=''>";
+                listItem += (isMingle == 1 ? "" : "<span class='clsNewMsg' show='1'></span> ");
+                listItem += "<span class='magiVirtualCatListIcon'> ";
+                listItem += "<img alt='userIcon' style='border-radius: 50%;' width='35' src='" + ImagRv + "' /> ";
+                //listItem += "<span class='magiVirtualCatListOnlineIcon' style='right:-5px;bottom: 0;'></span> ";
+                listItem += "</span> ";
+                listItem += "<span class='magiVirtualCatListNameWrap'> ";
+                listItem += "<span class='magiVirtualCatListName'>" + name + "</span> ";
+                listItem += "<span class='magiVirtualCatListdegi clsPersonRole'> ";
+                listItem += "</span> ";
+                listItem += "</span> ";
+                listItem += "<button class='magiVirtualCatListBtn btnSmall clsChatWith'>Chat</button> ";
+                listItem += "</li> ";
+
+                $('ul#ulChatList').append(listItem);
+                $('li[data-key="' + receiverId + '"]').prependTo('ul#ulChatList');
+            }
+            else if (isMingle == 1)
+                $('li[data-key="' + receiverId + '"]').slideDown(200);
+            //else if (isMingle == 0)
+            //    $('li[data-key="' + receiverId + '"]').attr('onclick',"flipToChat(" + receiverId + ",'" + name + "');return false;");
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function CheckForTeamOption()
+    {
+        try
+        {
+            var team = $('#chatTypes option[value=7]').length;
+            return team;
+        }
+        catch (ex)
+        {
+            console.log(ex);
+            return 0;
+        }
+    }
+
+    function SelectInterestGrpInChatType()
+    {
+        try
+        {
+            var team = CheckForTeamOption();
+            if (team != 0)
+            {
+                $('#chatTypes option[value=7]').prop('selected', true);
+                setCookieForChat("adminGrp", "1");
+                OpenOurTeamChat();
+            }
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function selectOneToOneChat(targetID)
+    {
+        try
+        {
+            if (targetID == getTarget())
+            {
+                $('#chatTypes option[value=2]').prop('selected', true);
+                OnClientItemSelectedForChatType();
+            }
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function flipToMsgs()
+    {
+        $('#ulChatList').slideUp(100);
+        $('#chatSectionForPanel').slideDown(100);
+        $('#ChatListSection').addClass('listSection');
+        $('#msgsList').height(
+            $('#msgsList').height() +
+            ($('.footerSec').offset().top - ($('#msgsList').offset().top + $('#msgsList').height())
+            ) - ($('#belowTypingSection').height() + 55)
+        );
+    }
+
+    function FlipToMingleChat(id, name)
+    {
+        try
+        {
+            if (typeof OpenMyChat === 'function')
+            {
+                OpenMyChat(id, name, 1, 1);
+            }
+            else
+            {
+                alertify.alert('Chat feature is disabled for this event');
+            }
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function flipToChat(id, name)
+    {
+        try
+        {
+            if (getSelectedSponsor() != id)
+            {
+                if (chatAvailable)
+                {
+                    if (isMingleStarted)
+                        FlipToMingleChat(id, name);
+                    else
+                    {
+                        OpenChat(id, name, 1);
+                        $('li[data-key="' + id + '"] span.clsNewMsg').css(dontShow);
+                        $('li[data-key="' + id + '"]').attr('inmychat', '1');
+                    }
+                }
+                else
+                    alertify.alert('It should take 20-30 seconds to connect you to the chat server');
+            }
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function appendMsgToChat(talks)
+    {
+        $(talks).each(function (i, m)
+        {
+            var FormatedMsg = formatMessagesForVE(m.mine, m.strMsg, m.name, m.mid, m.img.replace('~', ''), m.timeOfMsg, m.MsgType);
+            $('ul#msgsList').append(FormatedMsg);
+
+            if (m.mine == true)
+            {
+                if (m.msgSt == 1)
+                {
+                    $('#' + m.mid).html('Received');
+                }
+                else if (m.msgSt == 2)
+                {
+                    $('#' + m.mid).html('Seen');
+                }
+            }
+
+            if (m.ak == false && m.mine == false)
+            {
+                m.ak = true;
+                //chatVE.server.sendAcknowledgementForSeen(getSelfConnectionId(), getTarget(), m.mid);
+                //chatVE.server.updateMessageStatus(getTarget(), m.mid, 2, getSelfConnectionId());
+            }
+        });
+    }
+
+    function sendMyMessageForVE()
+    {
+        try
+        {
+            if (getOptOut())
+            {
+                alertify.alert("You have choosen to be out of networking options entirely");
+                return;
+            }
+
+            var msg = $('#txtMessageInput').val();
+            var clsAvatarSndr = $('#hclsAvatarSndr').val();
+            if (msg !== "")
+            {
+                msg = textValitator(msg);
+                var guid = createGuid();
+                var msgObj = { strMsg: msg, name: '', img: clsAvatarSndr, mid: guid, msgSt: 0, mine: true, ak: false, timeOfMsg: '' };
+
+                chatVE.server.send(getSelfConnectionId(), getTarget(), getMyName(), clsAvatarSndr, msg, getThisChatType(), guid, '', '', true);
+                insertChatForVE("me", msg, '1', guid);
+                setTextInEntryForVE(null);
+
+                var myID = getSelfConnectionId();
+                var eventKey = parseInt(getCurrentEvent());
+                chatVE.server.saveChat(myID, getTarget(), getThisChatType(), getTargetName(), msgObj, getMyName(), eventKey, 0);
+
+                ////Move it on the top
+                MoveToTop(getTarget());
+            }
+        }
+        catch (ex)
+        {
+            throw ex;
+        }
+    }
+
+    function getThisChatType()
+    {
+        try
+        {
+            return 2;
+        }
+        catch (ex)
+        {
+            console.log(ex);
+            return null;
+        }
+    }
+
+    function MoveToTop(target)
+    {
+        $('li[data-key="' + target + '"]').attr('inmychat', '1')
+            .prependTo('ul#ulChatList').attr('hid', '0').slideDown(200)
+            .find('.clsNewMsg').attr('show', '1').removeClass('separationInList').attr('data-sort', 'DidSomeChat');
+
+        //$('ul#ulChatList li[data-sort=""]:first').addClass('separationInList');
+    }
+
+    function setTarget(value)
+    {
+        $('#hdTargetId').val(value);
+    }
+
+    function clearMsgs()
+    {
+        $('#msgsList').empty();
+    }
+
+    function getTarget()
+    {
+        return $('#hdTargetId').val().replaceAll(' ', '_');
+    }
+
+    function setTargetName(name)
+    {
+        $('#rvName').val(name);
+    }
+
+    function getTargetName()
+    {
+        return $('#rvName').val();
+    }
+
+    function setTargetImage(altImg)
+    {
+        altImg = altImg.replace('~', '');
+        $('#rvImage').prop("src", altImg);
+    }
+
+    function IsNotUndefinedAndAlsoNotNull(type)
+    {        
+        return (typeof type !== 'undefined' && type !== undefined && type !== null && type !== '');
+    }
+
+    function sendThisMsg(e)
+    {
+        if (e.which == 13)
+        {
+            try
+            {
+                sendMyMessageForVE();
+            }
+            catch (ex)
+            {
+                console.log(ex);
+            }
+        }
+    }
+
+    function flipToList(val)
+    {
+        $('#chatSectionForPanel').slideUp(100);
+        $('#ulChatList').slideDown(100);
+
+        $('ul#ulChatList li').attr('hid', '1').css(dontShow);
+        $('#oneToOneSectionForPanel').css(asBlock);
+
+        if (val == '6')
+        {
+            return;
+        }
+        else if (val == '2')
+        {
+            $('#ChatListSection').removeClass('listSection');
+            $('#msgsList').removeClass('heightChange');
+            $('ul#ulChatList li[inmychat=1]').attr('hid', '0').slideDown(200);
+        }
+        else if (val == '3')
+        {
+            $('#ChatListSection').removeClass('listSection');
+            $('#msgsList').removeClass('heightChange');
+            $('ul#ulChatList li[inthissession=1]').attr('hid', '0').slideDown(200);
+        }
+        else if (val == '4' && (getSelectedSponsor() == getSelfConnectionId()))
+        {
+            $('#ChatListSection').removeClass('listSection');
+            $('#msgsList').removeClass('heightChange');
+            $('ul#ulChatList li[inmychat!=1]').attr('hid', '0').slideDown(200);
+        }
+    }
+
+    function refreshChatPeopleList()
+    {
+        OnClientItemSelectedForChatType();
+        updateConnectionIconsOfList();
+    }
+
+    function updateConnectionIconsOfList()
+    {
+        $('ul#ulChatList li').each(function ()
+        {
+            try
+            {
+                var constatusnow = $(this).attr('constatusnow');
+                var fromme = $(this).attr('fromme');
+                var refusedbyown = $(this).attr('refusedbyown');
+                var isexpired = $(this).attr('isexpired');
+                var thisName = $(this).attr('dataname');
+
+                var strIconImg = '';
+                var buttonTitle = '';
+
+                if (constatusnow == '')
+                {
+                    strIconImg = '/Images/Icons/Connection_Request.png';
+                    buttonTitle = 'Request Connection';
+                }
+                else if (constatusnow == '0')
+                {
+                    if (isexpired == "1")
+                    {
+                        if (fromme == "1")
+                        {
+                            strIconImg = "/Images/Icons/Connection_Expired.png";
+                        }
+                        else
+                        {
+                            strIconImg = "/Images/Icons/Connection_ExpiredMe.png";
+                        }
+                        buttonTitle = "Connection Expired - Request Connection Again";
+                    }
+                    else
+                    {
+                        if (fromme == "1")
+                        {
+                            strIconImg = "/Images/Icons/Connection_Pending.png";
+                            buttonTitle = "Connection Requested by Me";
+                        }
+                        else
+                        {
+                            strIconImg = "/Images/Icons/Connection_Request.png";
+                            buttonTitle = "Connection Requested by " + thisName.toString();
+                        }
+                    }
+                }
+                else if (constatusnow == '1')
+                {
+                    strIconImg = '/Images/Icons/Connection_Accept.png';
+                    buttonTitle = "Connected";
+                }
+                else if (constatusnow == '2')
+                {
+                    if (fromme == "1")
+                    {
+                        if (refusedbyown == "1")
+                        {
+                            strIconImg = "/images/icons/Connection_Request.png";
+                            buttonTitle = 'I Retracted Connection Request';
+                        }
+                        else
+                        {
+                            strIconImg = "/images/icons/Connection_Pending.png";
+                            buttonTitle = 'Connection Requested by Me';
+                        }
+                    }
+                    else
+                    {
+                        if (refusedbyown == "1")
+                        {
+                            strIconImg = "/images/icons/Connection_Request.png";
+                            buttonTitle = 'Connection Retracted by ' + thisName.toString();
+                        }
+                        else
+                        {
+                            strIconImg = "/images/icons/Connection_Refuse.png";
+                            buttonTitle = 'Connection Declined by Me';
+                        }
+                    }
+                }
+                else if (constatusnow == '3')
+                {
+                    if (fromme == "1")
+                    {
+                        strIconImg = "/images/icons/Connection_Pending.png";
+                        buttonTitle = 'Connection Requested by Me';
+                    }
+                    else
+                    {
+                        strIconImg = "/images/icons/Connection_Ignore.png";
+                        buttonTitle = "Ignored by Me";
+                    }
+                }
+
+                if (strIconImg != '')
+                {
+                    var ShowConnectionIconOnTop = $('<img/>',
+                        {
+                            src: strIconImg,
+                            title: buttonTitle,
+                            alt: buttonTitle,
+                            class: 'clsConnectionInfoIcon'
+                        });
+
+                    $(this).find('.magiVirtualCatListIcon .clsConnectionInfoIcon').remove();
+                    $(this).find('.magiVirtualCatListIcon').append(ShowConnectionIconOnTop);
+                }
+            }
+            catch (ex)
+            {
+                console.log(ex);
+            }
+        });
+
+        try
+        {
+            /////For showing information about the people of VE - starts here
+            $('ul#ulChatList li').on('mouseenter', function (event)
+            {
+                setAndShow(this, true, event, true);
+            });
+
+            $('ul#ulChatList li').on('mouseleave', function ()
+            {
+                setAndShow(null, false, event, true);
+            });
+            /////For showing information about the people of VE - ends here
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function formatMessagesForVE(isThisMsgMine, msg, name, UniqueID, imgUrl, dateOfMsg, MsgType)
+    {
+        var strMsgString = '';
+
+        if (MsgType == 0)
+        {
+            if (isThisMsgMine)
+            {
+                strMsgString =
+                    '<li class="magi-chatting-list-item">' +
+                    '<div class="magi-chatting-msg-wrapper d-flex">' +
+                    '<div class="magi-chatting-msg">' +
+                    '<span class="magiChatAvatarName">Me</span>' +
+                    '<div class="magiChatAvararMsg">' +
+                    '<p>' + msg + '</p>' +
+                    '</div>' +
+                    '<span class="magiChatAvatarMsgTime">' + dateOfMsg + '</span>' +
+                    '<small id="' + UniqueID + '" class="msgGUID"></small>' +
+                    '</div>' +
+                    '<div class="magi-chatting-avatar">' +
+                    '<img src="' + imgUrl + '" alt="" />' +
+                    '</div>' +
+                    '</div>' +
+                    '</li>';
+            }
+            else
+            {
+                strMsgString =
+                    '<li class="magi-chatting-list-item">' +
+                    '<div class="magi-chatting-msg-wrapper d-flex left">' +
+                    '<div class="magi-chatting-msg">' +
+                    '<span class="magiChatAvatarName">' + name + '</span>' +
+                    '<div class="magiChatAvararMsg">' +
+                    '<p>' + msg + '</p>' +
+                    '</div>' +
+                    '<span class="magiChatAvatarMsgTime">' + dateOfMsg + '</span>' +
+                    '<small id="' + UniqueID + '" class="msgGUID"></small>' +
+                    '</div>' +
+                    '<div class="magi-chatting-avatar">' +
+                    '<img src="' + imgUrl + '" alt="" />' +
+                    '</div>' +
+                    '</div>' +
+                    '</li>';
+            }
+        }
+        else
+        {
+            strMsgString = '<li class="magi-chatting-list-item">' +
+                '<div class="magi-chatting-msg-wrapper d-flex">' +
+                '<div class="commonMsg">'
+                + msg +
+                '</div>' +
+                '</div>' +
+                '</li>';
+        }
+
+        return strMsgString;
+    }
+
+
+    function addeventsForChatPanelChatBox(needToCreate)
+    {
+        try
+        {
+            //if (needToCreate)
+            //{
+            //    $('#txtMessageInput').remove();
+            //    var txtInputChatPanel = $('<input/>', {
+            //        type: "text",
+            //        id: "txtMessageInput",
+            //        placeholder: "Enter your Message..",
+            //        onkeyup: "sendThisMsg(event)"
+            //    });
+            //    $('.magiVirtualChatInputBox').append(txtInputChatPanel);
+
+            //    var btnSendMyMsg = $('<input/>', {
+            //        type: "button",
+            //        id: "txtMessageInput",
+            //        value: "Send",
+            //        onkeyup: "sendMyMessageForVE()"
+            //    });
+            //    $('.magiVirtualChatInputWrapper').append(btnSendMyMsg);
+
+            //    $('div[id*=_hrchat').css(dontShow);
+            //}
+
+            $("#txtMessageInput").on('keypress', function ()
+            {
+                typingEventForVE();
+            });
+
+            $("#txtMessageInput").on('focus', function ()
+            {
+                typingEventForVE();
+            });
+
+            $("#txtMessageInput").on('blur', function ()
+            {
+                var receiverId = getTarget();
+                var senderID = getSelfConnectionId();
+                var ChatType = getThisChatType();
+                chatVE.server.typingEndsForVE(receiverId, senderID, ChatType);
+                chat.server.typingEnds(receiverId, senderID, ChatType);
+            });
+
+            $("#txtMessageInput").keydown(function ()
+            {
+                var key = event.keyCode || event.charCode;
+
+                if (key == 8 || key == 46 || key == 13)
+                {
+                    var receiverId = getTarget();
+                    var senderID = getSelfConnectionId();
+                    var ChatType = getThisChatType();
+                    chatVE.server.typingEndsForVE(receiverId, senderID, ChatType);
+                    chat.server.typingEnds(receiverId, senderID, ChatType);
+                }
+                else if (key == 191)
+                {
+                    var sentence = $(this).val();
+                    var myLastWord = lastWord(sentence);
+
+                    if (myLastWord == '/')
+                    {
+                        var n = sentence.lastIndexOf(myLastWord);
+                        sentence = sentence.slice(0, n) + sentence.slice(n).replace('/', getmyNickName());
+                        $(this).val(sentence);
+                        //placeCaretAtEnd(document.querySelector(this));
+                        return false;
+                    }
+                    else
+                    {
+                        var txt = getChatPhrases(myLastWord);
+                        if (txt != null && txt != '')
+                        {
+                            var n = sentence.lastIndexOf(myLastWord);
+                            sentence = sentence.slice(0, n) + sentence.slice(n).replace(myLastWord, txt);
+                            $(this).val(sentence);
+                            return false;
+                        }
+                    }
+                }
+            });
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+
+    function addMainMsgingTools()
+    {
+        try
+        {
+            //$('p.lead.emoji-picker-container').empty();
+            //var mainTxtInput = $('<input/>', {
+            //    id: "message",
+            //    class: "mytext",
+            //    placeholder: "Type Here Your Message...",
+            //    //data-emojiable:"converted",
+            //    //data-id:"953fa355-f080-4ad5-a264-b49f3181415a",
+            //    //data-type:"original-input",
+            //    style: "display: none;"
+            //});
+
+            //$('p.lead.emoji-picker-container').append(mainTxtInput);
+
+            //window.emojiPicker = new EmojiPicker({
+            //    emojiable_selector: '#message',
+            //    assetsPath: 'Images/lib/img/',
+            //    popupButtonClasses: 'fa fa-smile-o'
+            //});
+            //window.emojiPicker.discover();
+
+            var chatBoxHeight = $('#dvChatBox').height();
+            chatBoxHeight = (IsNotUndefinedAndAlsoNotNull(chatBoxHeight) && chatBoxHeight != 0)
+                ? chatBoxHeight : 500;
+
+            $('ul#msgList').css('height', chatBoxHeight - 161);
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function setTextInEntryForVE(txt)
+    {
+        try
+        {
+            $('#txtMessageInput').val(txt);
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function insertChatForVE(who, text, ChatType, UniqueID)
+    {
+        try
+        {
+            var date = formatAMPM(new Date());
+            var clsAvatarSndr = $('#hclsAvatarSndr').val();
+
+            var theText =
+                '<li class="magi-chatting-list-item">' +
+                '<div class="magi-chatting-msg-wrapper d-flex">' +
+                '<div class="magi-chatting-msg">' +
+                '<span class="magiChatAvatarName">Me</span>' +
+                '<div class="magiChatAvararMsg">' +
+                '<p>' + text + '</p>' +
+                '</div>' +
+                '<span class="magiChatAvatarMsgTime">' + date + '</span>' +
+                '<small id="' + UniqueID + '" class="msgGUID"></small>' +
+                '</div>' +
+                '<div class="magi-chatting-avatar">' +
+                '<img src="' + clsAvatarSndr + '" alt="" />' +
+                '</div>' +
+                '</div>' +
+                '</li>';
+
+            $("#msgsList").append(theText).scrollTop($("#msgsList").prop('scrollHeight'));
+        }
+        catch (ex)
+        {
+            throw ex;
+        }
+    }
+
+    function coverChat(val)
+    {
+        if (val)
+            $('#chatOverlay').css(asBlock);
+        else
+            $('#chatOverlay').css(dontShow);
+    }
+
+    function coverChatPanel(val)
+    {
+        if (val)
+            $('#chatPanelOverlay').css(asBlock);
+        else
+            $('#chatPanelOverlay').css(dontShow);
+    }
+
+    function typingEventForVE()
+    {
+        try
+        {
+            var v = $('#txtMessageInput').val();
+            if (v != '')
+            {
+                var receiverId = getTarget();
+                var name = getMyName();
+                var senderID = getSelfConnectionId();
+                var ChatType = getThisChatType();
+                chatVE.server.typingStartsForVE(receiverId, name, senderID, ChatType);
+                chat.server.typingStarts(receiverId, name, senderID, ChatType);
+            }
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+    jQuery('body').on('click', '.magiChatBtn', function ()
+    {
+        jQuery('.magi-virtualEventLeft-sidebar').addClass('active');
+    });
+
+    jQuery('body').on('click', '.magiVirtualClose', function ()
+    {
+        jQuery('.magi-virtualEventLeft-sidebar').removeClass('active');
+    });
+
+    function PauseThisChatPanel(ControlObj)
+    {
+        try
+        {
+            var isChecked = $(ControlObj).attr('data-paused');
+            if (isChecked == "0")
+            {
+                pauseChat = true;
+                $('#chatSectionForPanel').slideUp(100);
+                $('#ulChatList').slideUp(100);
+                $('#oneToOneSectionForPanel').slideUp(100);
+                $(ControlObj)
+                    .prop('src', '/Images/Icons/sleeping.png')
+                    .attr('alt', 'Chat Paused')
+                    .prop('title', 'Chat Paused')
+                    .attr('data-paused', '1')
+                    .css({ "background": "yellow", "color": "black" });
+                if (typeof setCookieForChat === 'function')
+                {
+                    setCookieForChat("isChatPaused", "1");
+                }
+            }
+            else
+            {
+                pauseChat = false;
+
+                if (typeof setCookieForChat === 'function')
+                {
+                    setCookieForChat("isChatPaused", "0");
+                }
+
+                if (
+                    (typeof chat !== "undefined")
+                    &&
+                    (typeof chat.client.sendAsync === 'function')
+                    &&
+                    (typeof msgStack == 'object' && msgStack.length > 0)
+                )
+                {
+                    $(msgStack).each(function (i, o)
+                    {
+                        chat.client.sendAsync(o.receiverId, o.name, o.ImagRv, o.message, o.ChatType, o.UniqueID, o.grpName, o.nick, o.dateOfMsg);
+                    });
+                    msgStack = [];
+                }
+
+                $(ControlObj)
+                    .prop('src', '/Images/Icons/awake.png')
+                    .attr('alt', 'Chat Active')
+                    .prop('title', 'Chat Active')
+                    .attr('data-paused', '0')
+                    .css({ "background": "yellowgreen", "color": "white" });
+                OnClientItemSelectedForChatType();
+            }
+            return false;
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function searchThisPersonPanel()
+    {
+        try
+        {
+            var searchString = $('#txtNameSearch').val();
+            if (searchString != '' && searchString != null)
+            {
+                $('ul#ulChatList li').each(function (i, o)
+                {
+                    if (
+                        (($(this).attr('searchString')).toUpperCase().includes(searchString.toUpperCase()))
+                        &&
+                        ($(this).attr('hid') == '0'))
+                    {
+                        $(this).slideDown(200);
+                    }
+                    else
+                        $(this).slideUp(200);
+                });
+            }
+            else
+            {
+                $('ul#ulChatList li[hid="0"]').slideDown(200);
+            }
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function ShowNetworkingTopics(val)
+    {
+        try
+        {
+            if (val)
+            {
+                $('#parent_NetworkingTopics').slideDown();
+                $('#ddlNetTopics').val('0');
+
+                $('#chatSectionForPanel').slideDown(100);
+                clearMsgs();
+                $('#belowTypingSection').css(dontShow);
+            }
+            else
+            {
+                $('#parent_NetworkingTopics').slideUp();
+            }
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function OnSelectingNetworkingTopic()
+    {
+        try
+        {
+            var selected_value = $('#ddlNetTopics').val();
+
+            if (selected_value != '0' && !pauseChat)
+            {
+                selected_value = 'group' + selected_value;
+                var selected_text = $('#ddlNetTopics option:selected').text();
+                $('#oneToOneSection').css(dontShow);
+
+                chatVE.server.getChatForThisPerson(getSelectedSponsor(), getSelfConnectionId(), '300', getCurrentEvent(), selected_value, true, false);
+                /////////////////////////////////////////////////////////
+                flipToMsgs();
+
+                setTarget(selected_value);
+                setTargetName(selected_text);
+                setTargetImage('/Images/Icons/theGroupIcon.png');
+                coverChat(true);
+            }
+            else if (selected_value == '0')
+            {
+                $('#chatSection').slideUp(100);
+            }
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function OnClientItemSelectedForChatType()
+    {
+        try
+        {
+            isMingleStarted = false;
+            ShowNetworkingTopics(false);
+            var selected_value = $('#chatTypes').val();
+            var sessionId = "";//$('#' + '<%=hdnSessionValue.ClientID%>').val();
+
+            showListOverlay(false);
+
+            if (!pauseChat)
+            {
+                if (selected_value == '0')
+                {
+                    $('#oneToOneSectionForPanel').css(dontShow);
+                    chatVE.server.getChatForThisPerson(getSelectedSponsor(), getSelfConnectionId(), '300', getCurrentEvent(), sessionId, true, true);
+                    /////////////////////////////////////////////////////////
+                    flipToMsgs();
+
+                    setTarget(sessionId);
+                    setTargetName(sessionId);
+                    setTargetImage('/Images/Icons/theGroupIcon.png');
+                    coverChat(true);
+                }
+                else if (selected_value == '1')
+                {
+                    $('#oneToOneSectionForPanel').css(dontShow);
+                    var eventGroup = "@Model.strActiveEventName";
+                    chatVE.server.getChatForThisPerson(getSelectedSponsor(), getSelfConnectionId(), '300', getCurrentEvent(), eventGroup, true, false);
+                    /////////////////////////////////////////////////////////
+                    flipToMsgs();
+
+                    setTarget(eventGroup);
+                    setTargetName(eventGroup);
+                    setTargetImage('/Images/Icons/theGroupIcon.png');
+                    coverChat(true);
+                }
+                else if (selected_value == '5')
+                {
+                    ShowNetworkingTopics(true);
+                    $('#oneToOneSectionForPanel').css(dontShow);
+                }
+                else if (selected_value == '6')
+                {
+                    isMingleStarted = true;
+                    var selfId = getSelfConnectionId();
+                    if (selfId == getSelectedSponsor())
+                    {
+                        chatVE.server.checkForMingle(selfId, getCurrentEvent());
+                        $('#oneToOneSectionForPanel').css(asBlock);
+                        showListOverlay(true);
+                        flipToList(6);
+                    }
+                    else
+                        alertify.alert("This feature is disabled while viewing other people chats.");
+                }
+                else if (selected_value == '7')
+                {
+                    OpenOurTeamChat();
+                }
+                else if (selected_value == '8')
+                {
+
+                    var selfId = getSelfConnectionId();
+                    if (selfId == getSelectedSponsor())
+                    {
+                        flipToList(6);
+                        RapidFire_click();
+                    }
+                    else
+                        alertify.alert("This feature is disabled while viewing other people chats.");
+                }
+                else
+                {
+                    flipToList(selected_value);
+                    $('#txtNameSearch').val('');
+                }
+            }
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function removeMsgingTools()
+    {
+        try
+        {
+            $('#txtMessageInput').remove();
+            $('#belowTypingSection').css(dontShow);
+            $('p.lead.emoji-picker-container').empty();
+            $('#typeAndSend').css(dontShow);
+            $('#btnSendMyMsg').remove();
+            var chatBoxHeight = $('#dvChatBox').height();
+            chatBoxHeight = (IsNotUndefinedAndAlsoNotNull(chatBoxHeight) && chatBoxHeight != 0)
+                ? chatBoxHeight : 500;
+            $('ul#msgList').css('height', chatBoxHeight - 51);
+            $('div[id*=_hrchat').css(dontShow);
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function getSelectedSponsor()
+    {
+        var hiddenValue = $('#hSelectedSponor').val();
+        var valueToReturn = isNotNullOrEmpty(hiddenValue) ? hiddenValue : getSelfConnectionId();
+        return valueToReturn;
+    }
+
+    function SelectTeam()
+    {
+        try
+        {
+            var ddl = $find("<%=ddChatType.ClientID%>");
+            var team = ddl.findItemByText("Team Chat");
+            if (team != null)
+                team.select();
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function OpenOurTeamChat()
+    {
+        try
+        {
+            $('#oneToOneSection').css(dontShow);
+            var eventGroup = "@Model.InterestBasedGroups";
+            chatVE.server.getChatForThisPerson(getSelectedSponsor(), getSelfConnectionId(), '300', getCurrentEvent(), eventGroup, true, false);
+            /////////////////////////////////////////////////////////
+            flipToMsgs();
+
+            setTarget(eventGroup);
+            setTargetName(eventGroup);
+            setTargetImage('/Images/Icons/theGroupIcon.png');
+            coverChat(true);
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+
+    function showListOverlay(val)
+    {
+        if (val)
+        {
+            $('#listOverlay').css(asInlineBlock);
+        }
+        else
+        {
+            $('#listOverlay').css(dontShow);
+        }
+    }
+
+    function ShowPanelNetworkingTopics(val)
+    {
+        try
+        {
+            if (val)
+            {
+                $('.magiVirtualEventChatingList ul#msgsList').css('min-height', '59vh');
+                $('#parent_NetworkingTopics').slideDown();
+            }
+            else
+            {
+                $('.magiVirtualEventChatingList ul#msgsList').css('min-height', '63vh');
+                $('#parent_NetworkingTopics').slideUp();
+            }
+        }
+        catch (ex)
+        {
+            console.log(ex);
+        }
+    }
+</script>
+}

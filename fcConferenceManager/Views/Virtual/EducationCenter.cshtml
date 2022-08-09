@@ -1,0 +1,630 @@
+﻿
+@{
+    ViewBag.Title = "EducationCenter";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="/Css/multiple-select.css" rel="stylesheet" />
+<script src="/Scripts/multiple-select.js" type="text/javascript"></script>
+<link href="/Css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="/Scripts/jquery.dataTables.min.js"></script>
+@* Video *@
+<link href="/Css/video-js.css" rel="stylesheet" />
+<script src="/Scripts/video.min.js" type="text/javascript"></script>
+<script src="/Scripts/Youtube.js" type="text/javascript"></script>
+<style>
+    .lblTitleTop
+    {
+        color: #00008b;
+        font-weight: bold;
+        background-color: transparent;
+        font-weight: 700;
+    }
+
+    #tblSpeaker thead
+    {
+        display: none;
+    }
+</style>
+<div class="container-fluid  mt-3">
+    <div class="row">
+        <div class='magiSidebarWrapper pe-md-0 mb-3 mb-md-0'>
+            @if (ViewBag.leftPanel_Visible == true)
+            {
+                Html.RenderAction("_PartialLeftPanel", "MyMagi");
+            }
+            @{
+                Html.RenderAction("ChatPanelAction", "MyMagi");
+            }
+        </div>
+        <div class="col-md-8 col-lg-9 flex-grow-1">
+            <div class="row mb-2">
+                <div class="row">
+                    <div class="col-md-8 ">
+                        @Html.Raw("<h2 class=''>" + @ViewBag.PageTitle + "</h2>")
+                    </div>
+                    <div class="col-md-4">
+                        <div class="d-flex flex-wrap justify-content-end">
+                            @{
+                                if (Model.HelpIconInfo != null)
+                                {
+                                    if ((Model.HelpIconInfo.PageIconVisible))
+                                    {
+                                        string bAutoplay = (Model.HelpIconInfo.bAutoPlay) ? "true" : "false";
+                                        <input type="hidden" id="vidAutoPlayType" value="@bAutoplay" />
+                                        @Html.Raw("<input id='PageHelpIcon' type='image' src='/images/icons/videoPlay2.png' value='' width='32' class='me-1 mb-1' style='vertical-align: middle;'/>")
+                                    }
+                                }
+                            }
+                            @if (ViewBag.VirtualDropdown_Visible)
+                            {
+                                <select id="VirtualEventDropDown" class="mb-1 me-1">
+                                    @if (Model.ddEventVirtualData != null)
+                                    {
+                                        foreach (System.Data.DataRow dr in Model.ddEventVirtualData.Rows)
+                                        {
+                                            @Html.Raw("<option value='" + dr["pKey"] + "' " + ((ViewBag.SelectedDropDown == dr["pKey"].ToString()) ? "selected>" : ">") + dr["strText"] + "</option>")
+                                        }
+                                    }
+                                </select>
+                            }
+                            <a id="btnReturn" href="@ViewBag.ReturnUrl" type="button" class="btn mb-1 mb-1">Return</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="magi-content-wrapper">
+                <div>
+                    <input type="hidden" id="hdfCreateSchedule" value="@ViewBag.hdfCreateSchedule" />
+                    <input type="hidden" id="hdfViewSchedule" value="@ViewBag.hdfViewSchedule" />
+                    <input type="hidden" id="hdfProgram" value="@ViewBag.hdfProgram" />
+                </div>
+                <div class="col-md-12  mt-2">
+                    <label id="lblMsg" style="width:100%;height:40px;border:1px solid black; padding-top:5px; display:none"></label>
+                </div>
+                <div class="col-md-12  mt-1">
+                    <label id="lblContent">@Html.Raw(ViewBag.lblContent)</label>
+                </div>
+
+                <div class="row justify-content-center  ps-3 pe-3">
+                    <div class="col-xxl-4 col-md-5 col-sm-9 mb-4">
+                        <div id="CreateMyScheduleDiv" onclick="location.href='/MyMAGI/MySession';" title="Click to go to your Create My Schedule page" style="cursor: pointer;" class="event-square">
+                            <img src="/Images/Icons/CreateSchedule.jpg" alt="Create Schedule" />
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-md-5 col-sm-9 mb-4">
+                        <div id="ViewMyScheduleDiv" onclick="location.href='/MyMAGI/MySchedule';" title="Click to go to your View My Schedule page" style="cursor: pointer; " class="event-square">
+                            <img src="/Images/Icons/ViewMySchedule.jpg" alt="View My Schedule" />
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-md-5 col-sm-9 mb-4">
+                        <div id="ProgramDiv" onclick="location.href='/Events/Program';" title="Click to see the Program" style="cursor: pointer;" class="event-square">
+                            <img src="/Images/Icons/Program.jpg" alt="Program" />
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-md-5 col-sm-9 mb-4" id="dvSponsorDirectory" style="display:none">
+                        <div onclick="location.href='/MyMAGI/MyConferenceBook';" title="My Book" style="cursor: pointer;" class="event-square">
+                            <img src="/Images/Icons/MyBook.jpg" alt="My Book" />
+                        </div>
+                    </div>
+                    <div style="display: none;" class="d-flex justify-content-center mt-5">
+                        <div title="Speakers Information" style="display: none; cursor: pointer; background-image: url(../Images/Icons/SpeakerInformation.jpg)" class="event-square">
+                            <h1 id="dvShowSpeakers">Speakers Information</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="rwViewLink" tabindex="-1" aria-labelledby="rwViewLink" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="width:700px ; height:370px ">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader  mb-2">
+                <h5 class="lblTitle">Recording URL</h5>
+                <div>
+                    <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <table id="tblViewLink" data-page-length="25" cellspacing="0" style=" border: solid 1px lightgray;" width="100%"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="rwSpeaker" tabindex="-1" aria-labelledby="rwSpeaker" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="width:800px ; ">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader  mb-2">
+                <h5 class="lblTitle">Speakers Information</h5>
+                <div>
+                    <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                </div>
+            </div>
+            <div class="col-md-12">
+
+                <table id="tblSpeaker" data-page-length="25" cellspacing="0" style=" border: solid 1px lightgray;" width="100%"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modelHelpMedia" tabindex="-1" aria-labelledby="modelHelpMedia" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header justify-content-end" style=" background-color: #fff !important; padding: 0px !important;">
+                <label id="closeHelpMedia" class="pull-right  float-end mb-2" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+            </div>
+            <div class="modal-body" id="modelHelpMediaBody">
+                <div class="row p-2">
+                    @{
+                        if (Model.HelpIconInfo != null)
+                        {
+                            if ((Model.HelpIconInfo.PageIconVisible))
+                            {
+                                <input type="hidden" id="LogIDinfo" value="" />
+                                <input type="hidden" id="pageVideoLink" value="@Model.HelpIconInfo.PageDocumentLink" data-filename="@Model.HelpIconInfo.PageFileName" data-usetype="@Model.HelpIconInfo.PageValue" data-type="@Model.HelpIconInfo.PageMediaType" data-mime="@Model.HelpIconInfo.PageMime" />
+                                <video id="pageVideoContent" class="video-js" controls preload="auto" width="300" height="400">
+                                    <p class="vjs-no-js">
+                                        To view this video please enable JavaScript, and consider upgrading to a web browser that
+                                    </p>
+                                </video>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modelVideoPlayer" tabindex="-1" aria-labelledby="modelVideoPlayer" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header justify-content-end" style=" background-color: #fff !important; padding: 0px !important;">
+                <label id="closeVideoPlayer" class="pull-right  float-end mb-2" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+            </div>
+            <div class="modal-body" id="modelHelpMediaBody">
+                <div class="row p-2">
+                    <video id="VideoPlayer" class="video-js" controls preload="auto" width="300" height="400">
+                        <p class="vjs-no-js">
+                            To view this video please enable JavaScript, and consider upgrading to a web browser that
+                        </p>
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modelIframeVideo" tabindex="-1" aria-labelledby="modelIframeVideo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header justify-content-end" style=" background-color: #fff !important; padding: 0px !important;">
+                <label id="closeIframeVideo" class="pull-right  float-end mb-2" data-bs-dismiss="modal" aria-label="Close" style="cursor:pointer;float:right"><i class="fa fa-close"></i></label>
+            </div>
+            <div class="modal-body" id="modelHelpMediaBody">
+                <div class="row p-2">
+                    <iframe id="IframeVideo" width="400" height="400"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modelNavInstructions" tabindex="-1" aria-labelledby="modelNavInstructions" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader">
+                <h5 class="modal-title" id="NavigationInstructions">Navigation Instructions</h5>
+                <div>
+                    <button id="closeNavInstructions" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row p-2">
+                    <div class="col-xs-12" id="modalNavBody" style="height:400px; overflow-y:scroll;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modelEvtUpdatesVirtual" tabindex="-1" aria-labelledby="modelEvtUpdatesVirtual" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader">
+                <h5 class="modal-title" id="EvtUpdatesVirtual">Event Updates</h5>
+                <div>
+                    <button id="closeEvtUpdatesVirtual" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                </div>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row p-2">
+                    <div class="col-xs-12 mb-1" id="modalEvtUpdatesVirtualBody" style="height:400px; overflow-y:scroll;">
+                    </div>
+                    <div class="text-center">
+                        <button id="closeEvtUpdatesVirtual" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (ViewBag.OpenSurveyRadWindow)
+{
+    <div class="modal fade" id="rwSurveyQuestion" tabindex="-1" aria-labelledby="rwSurveyQuestion" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title" id="rwSurveyQuestionTitle">Registration Questions</h5>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div class="col-xs-12 pt-1">
+                            @Html.Raw(ViewBag.lblRegText)
+                        </div>
+                        <div class="text-center">
+                            <button id="cmdSaveQ" type="button" class="btn">Proceed</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#rwSurveyQuestion').modal('show');
+            $('#cmdSaveQ').click(function (e) {
+                e.preventDefault();
+                var result = CommonFunctions.AjaxCall('Post', '/Virtual/cmdSaveQClick', '', 'json', 'Error While Updating Schedule');
+                if (result !== null && result !== "ERROR") {
+                    if (result.msg === "OK") {
+                        parent.location.href = result.URL;
+                    }
+                    else
+                        CommonFunctions.Alert("Error Occurred while updating");
+                }
+                else
+                    CommonFunctions.Alert("Error Occurred while updating");
+            });
+        });
+    </script>
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#CreateMyScheduleDiv").hover(function (e) {
+            if (!timeoutId) {
+                timeoutId = window.setTimeout(function () {
+                    timeoutId = null; // EDIT: added this line
+                    playAudio('CreateSchedule')
+                }, 2000);
+            }
+            e.preventDefault();
+        }, UserMouseOut);
+
+
+
+        $("#ViewMyScheduleDiv").hover(function (e) {
+            if (!timeoutId) {
+                timeoutId = window.setTimeout(function () {
+                    timeoutId = null; // EDIT: added this line
+                    playAudio('ViewSchedule')
+                }, 2000);
+            }
+            e.preventDefault();
+        }, UserMouseOut);
+
+        $("#ProgramDiv").hover(function (e) {
+            if (!timeoutId) {
+                timeoutId = window.setTimeout(function () {
+                    timeoutId = null; // EDIT: added this line
+                    playAudio('Program')
+                }, 2000);
+            }
+            e.preventDefault();
+        }, UserMouseOut);
+
+
+
+        $('#imgViewLink').on('click', function () {
+            var DataSet = null;
+            var result = CommonFunctions.AjaxCall('Get', '/MyMAGI/ViewVideo_EducationCenter', '', '', 'Error While Fetching Data.');
+            if (result !== null || result !== "ERROR") {
+                if (result.msg === "OK")
+                    DataSet = JSON.parse(result.Source);
+            }
+
+            $('#tblViewLink').dataTable({
+                paging: true, bPaginate: false, bInfo: false, bLengthChange: false, bFilter: false, rowsPerPageOptions: false, ordering: false, sorting: false, searching: false, "order": [[0, "desc"]],
+                bDestroy: true,
+                fixedHeader: true,
+                data: DataSet,
+                columns: [
+
+                    {
+                        title: "Title",
+                        data: "VideoTitle"
+
+                    },
+                    {
+                        title: "View",
+                        data: "VideoUrl",
+                        render: function (data) {
+                            //<label style="color:black">${data.Title}</label>
+                            return `<a href="ViewRecordings.aspx?URL= +'${data}'"><img src="/images/icons/eye.gif" style="font-size :10pt" title ="View"/></a>`
+                        }
+                    }
+                ],
+            });
+
+            $('#rwViewLink').modal('show');
+        });
+
+        $('#dvShowSpeakers').on('click', function (e) {
+            e.preventDefault();
+            var DataSet = null;
+            var result = CommonFunctions.AjaxCall('Get', '/MyMAGI/ViewSpeaker_EducationCenter', '', '', 'Error While Fetching Data.');
+            // var result = CommonFunctions.AjaxCall('Get', '/MyMAGI/ViewSpeaker_EducationCenter', '', '', 'Error While Fetching Data.');
+            if (result !== null || result !== "ERROR") {
+                if (result.msg === "OK")
+                    DataSet = JSON.parse(result.Source);
+            }
+
+            $('#tblSpeaker').dataTable({
+                paging: false, bPaginate: false, bInfo: false, bLengthChange: false, bFilter: false, rowsPerPageOptions: false, ordering: false, sorting: false, searching: false, "order": [[0, "desc"]],
+                bDestroy: true,
+                fixedHeader: true,
+                data: DataSet,
+                columns: [
+
+                    {
+                        title: "",
+                        data: { Name: "Name", PersonalBio: "PersonalBio", Title: "Title", OrganizationID: "OrganizationID", Account_pKey: "Account_pKey" },
+                        render: function (data) {
+                            // <img id="imgSpeakerPhoto" />
+                            var pkey = "";
+                            var imgSrc = "";
+                            pkey = data.Account_pkey.toString();
+                            var src = "/accountimages/" + pkey + "_img.jpg";
+
+                            var imageUrl = src;
+                            var img = new Image();
+                            img.src = imageUrl;
+                            img.onload = function () { imgSrc = imageUrl };
+                            img.onerror = function () { imgSrc = "/accountimages/no-person.jpg" };
+
+                            //imageExists(imageUrl, function (exists) {
+                            //    imgSrc = (exists ? imageUrl : "/accountimages/no-person.jpg");
+                            //    console.log('RESULT: url=' + imageUrl + ', exists=' + exists);
+
+                            //});
+                            return ` <div class="d-flex ">
+                        <div col-sm>
+                            <img class="mx-1 Rounded Shadow" src="${(imgSrc)}" style="width:120px; height:150px;">
+                        </div>
+                        <div class="flex-wrap col-sm">
+                            <label id="lblSpeakerName" class="lblTitlePop"><b>${(data.Name)}</b></label><br />
+                            <label id="lblSpeakerInfo">${(data.PersonalBio)}</label>
+                        </div>
+                    </div>
+                    <div class="d-flex ">
+                        <label><b>Job Title:</b></label>
+                        <label id="lblSpeakerJobTitle">${(data.Title)}</label>
+                    </div>
+                    <div class="d-flex">
+                        <label><b>Organization:</b></label>
+                        <label id="lblOrganizationID">${(data.OrganizationID)}</label>
+                    </div>`
+                        }
+                    }
+                ],
+            });
+
+            $('#rwSpeaker').modal('show');
+        });
+
+        $('#VirtualEventDropDown').multipleSelect({
+            multiple: false, isopen: false, placeholder: 'Show All', selectAll: false, selectAllText: 'Select all', multiple: false, multipleWidth: 'auto', filter: false, width: 'auto', height: 28, maxHeight: 450, onClick: function () { onChangeVirtual(); },
+        });
+
+        function onChangeVirtual() {
+            var Data = { DropDownValue: $('#VirtualEventDropDown').val() };
+            switch ($('#VirtualEventDropDown').val()) {
+                case "9":
+                    var result = CommonFunctions.AjaxCall('Get', '/Home/GetNavigationInstructions', '', 'json', 'Error accessing text block data.');
+                    if (result.msg === "OK") {
+                        $('#modalNavBody').html(result.Content);
+                        $('#modelNavInstructions').modal('show');
+                    }
+                    else
+                        CommonFunctions.Alert(result.msg);
+                    break;
+                case "27":
+                    var result = CommonFunctions.AjaxCall('Get', '/Home/GetEventUpdatesContent', '', 'json', 'Error loading Event Updates');
+                    if (result.msg === "OK") {
+                        $('#modalEvtUpdatesVirtualBody').html(result.Content);
+                        $('#modelEvtUpdatesVirtual').modal('show');
+                    }
+                    else
+                        CommonFunctions.Alert(result);
+                    break;
+                case "21":
+                    OpenChatWindow();
+                    break;
+                default:
+                    var result = CommonFunctions.AjaxCall('Post', '/Home/VirtualDropdownSelected', Data, 'json', 'Error Occurred while redirecting');
+                    if (result.ActionType === "Redirect")
+                        window.location.href = result.RedirectionUrl;
+                    break;
+            }
+        }
+
+
+
+    });
+    //function imageExists(url, callback) {
+    //    var img = new Image();
+    //    img.src = url;
+    //    img.onload = function () { callback(true); };
+    //    img.onerror = function () { callback(false); };
+
+    //}
+
+
+    //function ImageExist(url) {
+    //    var img = new Image();
+    //    img.src = url;
+    //    return img.height != 0;
+    //}
+
+    var sound = document.createElement("audio");
+    if (!("src" in sound)) {
+        sound = document.createElement("bgsound");
+    }
+    document.body.appendChild(sound);
+
+    function playSound(src) {
+        try {
+
+            sound.src = src;
+            sound.play && sound.play().catch(function (error) {
+                console.log("Kindly Click The Document First!")
+            });
+        }
+        catch (error) {
+            console.log("Kindly Click The Document First!")
+        }
+    }
+    function playAudio(type) {
+        if (type.toUpperCase() == "CREATESCHEDULE") {
+            var path = $('#hdfCreateSchedule').val();
+            if (path !== "")
+                playSound(path);
+        }
+        else if (type.toUpperCase() == "VIEWSCHEDULE") {
+            var path = $('#hdfViewSchedule').val();
+            if (path !== "")
+                playSound(path);
+        }
+        else if (type.toUpperCase() == "PROGRAM") {
+            var path = $('#hdfProgram').val();
+            if (path !== "")
+                playSound(path);
+        }
+    }
+    var timeoutId;
+    function UserMouseOut() {
+        if (timeoutId) {
+            window.clearTimeout(timeoutId);
+            timeoutId = null;
+
+        }
+    }
+</script>
+@if (Model.HelpIconInfo != null)
+{
+    if ((Model.HelpIconInfo.PageIconVisible))
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var player = videojs("pageVideoContent", { "techOrder": ["html5", "youtube"], "ytcontrols": false, "autoplay": true, "preload": "auto", "loop": false });
+                player.ready(function () {
+                    var promise = player.play();
+                    if (promise !== undefined) {
+                        promise.then(function () {
+                            // Autoplay started!
+                        }, function (error) {
+                            console.info(error);
+                        });
+                    }
+                });
+                player.on("ended", function () {
+                    if (typeof alertify !== 'undefined') {
+                        alertify.confirm('I have watched the entire video', function (e) {
+                            CommonFunctions.AjaxCall('Post', '/Home/UpdateHelpLogTime', { ID: $('#LogIDinfo').val() }, 'json', 'Error Occurred while Updating Log');
+                        });
+                    }
+                    else {
+                        var r = confirm('I have watched the entire video');
+                        if (r)
+                            CommonFunctions.AjaxCall('Post', '/Home/UpdateHelpLogTime', { ID: $('#LogIDinfo').val() }, 'json', 'Error Occurred while Updating Log');
+                        else
+                            CommonFunctions.AjaxCall('Post', '/Home/UpdateHelpLogTime', { ID: $('#LogIDinfo').val() }, 'json', 'Error Occurred while Updating Log');
+                    }
+                });
+                function PageVideoPlay(mediatype, sourceType, valueinfo) {
+                    var vimeoResult = valueinfo.match(/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|album\/(?:\d+)\/video\/|video\/|)(\d+)(?:[a-zA-Z0-9_\-]+)?/i);
+                    if (vimeoResult !== null) {
+                        window.open(valueinfo, '_blank');
+                    }
+                    else {
+                        if (mediatype.toLocaleLowerCase() === "video" || mediatype.toLocaleLowerCase() === "audio")
+                            player.src({ type: sourceType, src: valueinfo });
+                        if (mediatype.toLocaleLowerCase() === "video url") {
+                            var youtubeResult = valueinfo.match(/(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/);
+                            if (youtubeResult !== null)
+                                player.src({ type: 'video/youtube', src: valueinfo });
+                            else
+                                player.src(valueinfo);
+                        }
+
+
+                        $('#pageVideoContent').show();
+                        $('#modelHelpMedia').modal('show');
+                    }
+                }
+                function Logupdate(pvalue, fName, Autoplay) {
+                    $('#LogIDinfo').val(0);
+                    var data = {
+                        type: pvalue,
+                        fileName: fName,
+                        bAutoplay: Autoplay,
+                    }
+                    var result = CommonFunctions.AjaxCall('POST', '/Home/UpdateHelpIconLog', data, 'json', 'Error Occurred while Updating Log');
+                    if (result != null) {
+                        if (result.msg === "OK") {
+                            $('#LogIDinfo').val(result.LogResult);
+                        }
+                    }
+                }
+                var AutoplayPageVideo = $('#vidAutoPlayType').val();
+                if (AutoplayPageVideo !== null) {
+                    var elemDS = $('#pageVideoLink')[0].dataset;
+                    var mType = elemDS["type"];
+                    if (AutoplayPageVideo === "true") {
+                        var fname = elemDS["filename"];
+                        var uType = elemDS["usetype"];
+                        Logupdate(uType, fname, true);
+
+                        var valLink = $('#pageVideoLink').val();
+                        var sType = elemDS["mime"];
+                        if (mType.toLocaleLowerCase() === "document" || mType.toLocaleLowerCase() === "live url")
+                            window.open(valLink, '_blank');
+                        else
+                            PageVideoPlay(mType, sType, valLink);
+                    }
+                }
+                $('#PageHelpIcon').click(function (e) {
+                    e.preventDefault();
+                    var valLink1 = $('#pageVideoLink').val();
+                    var elem1DS = $('#pageVideoLink')[0].dataset;
+                    var mT1 = elem1DS["type"];
+                    var sT1 = elem1DS["mime"];
+                    var fname1 = elem1DS["filename"];
+                    var uType1 = elem1DS["usetype"];
+                    Logupdate(uType1, fname1, false);
+                    if (mT1.toLocaleLowerCase() === "document" || mT1.toLocaleLowerCase() === "live url")
+                        window.open(valLink1, '_blank');
+                    else
+                        PageVideoPlay(mT1, sT1, valLink1);
+                });
+                $('#closeHelpMedia').click(function () {
+                    player.pause();
+                });
+            });
+        </script>
+    }
+}

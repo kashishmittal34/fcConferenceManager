@@ -1,0 +1,172 @@
+﻿@using System.Data
+@model  DataTable
+@{
+    string LastDate = null;
+    string ValueNotEqual = null;
+}
+<div class="col-lg-12" id="content_placeHolder">
+    @if (Model != null)
+    {
+        var ModelRows = Model.Rows;
+
+        for (int i = 0; i < ModelRows.Count; i++)
+        {
+            bool isLiveStream = false;
+            isLiveStream = (ModelRows[i]["IsLiveStream"] != System.DBNull.Value) ? Convert.ToBoolean(ModelRows[i]["IsLiveStream"]) : false;
+
+            if (ModelRows[i]["DayNum"].ToString() != LastDate)
+            {
+                <div class="eventDate mb-1">
+                    <b class="blueColor">@ModelRows[i]["TimeSlotDay"]</b>
+                </div>
+                if (ViewBag.IsHybrid)
+                {
+                    @Html.Raw("<div class='table-responsive magiTableResponsive'><table class='table align-top'><thead><tr>")
+                    @Html.Raw("<th class='lblSmall' style='width: 60px;min-width: 60px;'><label class='lblSmall'>Attend</label><label class='lblSmall' style='display: block !important;'>In Person</label></th>")
+                    @Html.Raw("<th class='lblSmall' style='width: 60px;min-width: 60px;'><label class='lblSmall'>Attend</label><label class='lblSmall' style='display: block !important;'>Remotely</label></th>")
+                    @Html.Raw("<th class='lblSmall' style='width: 60px;min-width: 60px;'><label class='lblSmall'>Watch</label><label class='lblSmall' style='display: block !important;'>Recording</label></th>")
+                    @Html.Raw("<th class='lblSmall' style='width: 60px;min-width: 60px;'><label class='lblSmall'></label><label class='lblSmall' style='display: block !important;'>Slides</label></th>")
+                    @Html.Raw("<th class='lblSmall text-center' style='width: 140px;min-width: 140px;'><label class='lblSmall'></label><label class='lblSmall' style='display: block !important;'>Time</label></th>")
+                    @Html.Raw("<th class='lblSmall ps-3' style='width: 200px;min-width: 200px;'><label class='lblSmall'></label><label class='lblSmall' style='display: block !important;'>Level</label></th>")
+                    @Html.Raw("<th class='lblSmall'>Activity</th>")
+                    @Html.Raw("</tr></thead><tbody>")
+                }
+                else
+                {
+                    @Html.Raw("<div class='table-responsive magiTableResponsive'><table class='table align-top'><thead><tr>")
+                    @Html.Raw("<th class='lblSmall' style='width: 60px;min-width: 60px;'>Attend</th>")
+                    @Html.Raw("<th class='lblSmall' style='width: 60px;min-width: 60px;'>Watch</th>")
+                    @Html.Raw("<th class='lblSmall' style='width: 60px;min-width: 60px;'>Slides</th>")
+                    @Html.Raw("<th class='lblSmall text-center' style='width: 140px;min-width: 140px;'>Time</th>")
+                    @Html.Raw("<th class='lblSmall ps-3' style='width: 200px;min-width: 200px;'>Level</th>")
+                    @Html.Raw("<th class='lblSmall'>Activity</th>")
+                    @Html.Raw("</tr></thead><tbody>")
+                }
+            }
+            LastDate = ModelRows[i]["DayNum"].ToString();
+            if (ModelRows[i]["DayNum"].ToString() == LastDate)
+            {
+                string pvtActivity = ModelRows[i]["PrivateActivity"].ToString();
+                string strClass = "ckCheckItem";
+                string GreyBackground = ModelRows[i]["PnlBackColor"].ToString();
+                string borderClass = "", BorderClassRight= "";
+                if (pvtActivity == "2")
+                {
+                    borderClass = "BorderClass";
+                    BorderClassRight ="BorderClass2";
+                }
+
+                var htmlAttributesSlides = new Dictionary<string, object> { { "class", strClass }, { "style", "display : " + ((ModelRows[i]["Educ"].ToString() == "1") ? ";" : "none;") } };
+                var htmlAttributes = new Dictionary<string, object> { { "class", strClass }, { "style", "display : " + ((ModelRows[i]["ShowAttend"].ToString() == "1") ? ";" : "none;") } };
+                htmlAttributes.Add("data-id", ModelRows[i]["pKeys"].ToString());
+                htmlAttributes.Add("data-session", ModelRows[i]["SessionID"].ToString());
+                htmlAttributes.Add("data-SessionID", ModelRows[i]["Session_pKey"].ToString());
+                htmlAttributes.Add("data-PvtAct", pvtActivity);
+                htmlAttributes.Add("data-IsInvite", ModelRows[i]["Isinvitation"].ToString());
+                htmlAttributes.Add("data-st", ModelRows[i]["StartTime"].ToString());
+                htmlAttributes.Add("data-et", ModelRows[i]["EndTime"].ToString());
+
+                htmlAttributesSlides.Add("data-id", ModelRows[i]["pKeys"].ToString());
+                htmlAttributesSlides.Add("data-session", ModelRows[i]["SessionID"].ToString());
+                htmlAttributesSlides.Add("data-SessionID", ModelRows[i]["Session_pKey"].ToString());
+                htmlAttributesSlides.Add("data-PvtAct", pvtActivity);
+                htmlAttributesSlides.Add("data-IsInvite", ModelRows[i]["Isinvitation"].ToString());
+                htmlAttributesSlides.Add("data-st", ModelRows[i]["StartTime"].ToString());
+                htmlAttributesSlides.Add("data-et", ModelRows[i]["EndTime"].ToString());
+
+                if (ModelRows[i]["bEnabled"].ToString() == "0")
+                {
+                    htmlAttributes.Add("disabled", "disabled");
+                    htmlAttributesSlides.Add("disabled", "disabled");
+                }
+                bool ModelRequest = (ModelRows[i]["Request_Status"] != System.DBNull.Value && !string.IsNullOrEmpty(ModelRows[i]["Request_Status"].ToString()));
+                if (ModelRequest)
+                {
+                    <tr>
+                        <td colspan="6">
+                            <div class="lblSmall">@ModelRows[i]["Request_Status"]</div>
+                        </td>
+                    </tr>
+                }
+                <tr style="background-color: @GreyBackground;">
+                    <td class="py-1 ps-1 @borderClass">
+                        @Html.CheckBox("attendCheckbox_" + ModelRows[i]["pKeys"].ToString(), ((ModelRows[i]["attendChecked"].ToString() == "1") ? true : false), htmlAttributes)
+                    </td>
+                    @if (ViewBag.IsHybrid)
+                    {
+                        <td class="py-1 ps-1 @borderClass"> 
+                            @if (isLiveStream)
+                            {
+                                @Html.CheckBox("attendRemoteCheckbox_" + ModelRows[i]["pKeys"].ToString(), ((ModelRows[i]["attendRemoteChecked"].ToString() == "1") ? true : false), htmlAttributes)
+                            }
+                        </td>
+                    }
+                    <td class="py-1 ps-1  @borderClass">
+                        @Html.CheckBox("watchCheckbox_" + ModelRows[i]["pKeys"].ToString(), ((ModelRows[i]["watchChecked"].ToString() == "1") ? true : false), htmlAttributes)
+                    </td>
+                    <td class="py-1 ps-1 @BorderClassRight">
+                        @Html.CheckBox("slidesCheckbox_" + ModelRows[i]["pKeys"].ToString(), ((ModelRows[i]["slidesChecked"].ToString() == "1") ? true : false), htmlAttributesSlides)
+                    </td>
+                    <td class="py-1">
+                        <div>
+                            @ModelRows[i]["TimeSlot"].ToString().Replace(" - ", "-")
+                        </div>
+                    </td>
+                    <td class="ps-3 py-1">
+
+                        <div class="d-flex align-items-center">
+                            @{
+                                string bIconVisible = ((ModelRows[i]["IconVisible"].ToString() == "1") ? "style='display:block;'" : "style='display:none;'");
+                                @Html.Raw("<img src='" + Url.Content(ModelRows[i]["LevelIconFile"].ToString()) + "' width='20' class='me-2' alt='Level' " + bIconVisible + " />")
+                                if (ModelRows[i]["Educ"].ToString() == "1")
+                                {
+                                    <a href="javascript:void(0)" data-id="@ModelRows[i]["pKey"].ToString()" title="Ask question" class="me-2 icon askQuestion askQuestionIcon">?</a>
+                                }
+                                if ((ModelRows[i]["IsPromo"].ToString() == "True"))
+                                {
+                                    string strPromoUrl = Model.Rows[i]["VideoLink"].ToString();
+                                    if (strPromoUrl.Contains("SpeakerVideo"))
+                                    {
+                                        strPromoUrl = System.Web.VirtualPathUtility.ToAbsolute(strPromoUrl);
+                                    }
+                                    @Html.Raw("<img src='/Images/Icons/megaphone2.png' title='Play promo' data-id='" + Model.Rows[i]["pKey"].ToString() + "' data-url='" + strPromoUrl.Trim() + "' width='16' class='me-2 schPlayPromo' alt='megaphone' Style='cursor:pointer'/>")
+                                }
+                            }
+                        </div>
+                    </td>
+                    <td class="magi-custom-td-width d-flex py-1">
+                        @{
+
+                            string SessionsOverlap = (ViewBag.strOverLappingSession == null) ? "" : ViewBag.strOverLappingSession;
+
+                            if (ModelRows[i]["Educ"].ToString() == "1")
+                            {
+                                if (SessionsOverlap.Split(',').Contains(ModelRows[i]["SessionID"]))
+                                {
+                                    <div style="min-width:50px;width:50px;"><a class="SessionInfoLink me-2" href="javascript:void(0)" id='SessionInfo_@ModelRows[i]["pKeys"].ToString()' title="Overlaps with another session you plan to attend" data-id="@ModelRows[i]["pKey"].ToString()" style="color:red;"> @ModelRows[i]["SessionID"] </a></div>
+                                }
+                                else
+                                {
+                                    <div style="min-width:50px;width:50px;"><a class="SessionInfoLink me-2" href="javascript:void(0)" id='SessionInfo_@ModelRows[i]["pKeys"].ToString()' data-id="@ModelRows[i]["pKey"].ToString()"> @ModelRows[i]["SessionID"] </a></div>
+                                }
+                            }
+                        }
+
+                        @ModelRows[i]["Sessiontitle"]
+                    </td>
+                </tr>
+            }
+            if ((ModelRows.Count - 1) != i)
+            {
+                if (ModelRows[i]["DayNum"].ToString() != ModelRows[i + 1]["DayNum"].ToString())
+                {
+                    @Html.Raw("</tbody></table> </div>")
+                }
+            }
+            else
+            {
+                @Html.Raw("</tbody></table> </div>")
+            }
+        }
+    }
+</div>

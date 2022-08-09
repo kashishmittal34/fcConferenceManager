@@ -1,0 +1,46 @@
+﻿@model  List<fcConferenceManager.Models.Speakers>
+
+@{
+    bool AvailableData = false;
+    List<fcConferenceManager.Models.Speakers> ListSpeakers = new List<fcConferenceManager.Models.Speakers>();
+    IEnumerable<string> SpeakerList = new List<string>();
+    if (Model.Count > 0)
+    {
+        AvailableData = true;
+        SpeakerList = Model.Select(s => s.Sid).Distinct();
+    }
+}
+<div id="_Spk" class="table-responsive">
+    <table id="Speakers" class="table-bordered table-hover table-striped">
+        <tr>
+            <th height="10px">Speakers</th>
+        </tr>
+        @if (!AvailableData)
+        {
+            @Html.Raw("<tr style='vertical-align: top;'><td>No Results Found</td></tr>")
+        }
+        else
+        {
+            foreach (string key in SpeakerList)
+            {
+                ListSpeakers = Model.Where(s => s.Sid == key).ToList();
+                if (ListSpeakers != null && ListSpeakers.Count > 0)
+                {
+                    var item = ListSpeakers[0];
+                    @Html.Raw("<tr style='vertical-align: top;'><td>")
+                    <button id="@item.Sid" type="button" name="Speakebtn" data-modal="modalOne" class="button" style="background:none; border:none;padding-left:0;padding-right:0;"><b><u>@item.SpeakerName</u></b></button>
+                    if (item.ShowStar)
+                    {
+                        <img alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAA40lEQVQoFWP8////fwYkcPTQLjDP2s4NSZSBgQWFx8DA8OXRBqgQqkIGkIkwcOTgzv//z3uDMZgNk/j//z/jzu1b/rMxfmT49ekGAz/zQwZzpbdgE0/eE2b4+FeegY1Pg+HXf34GFuZf9xgc5HYyMIijOgKiAaTpHMPeR+4MTM5+uWAGqjIED6QIpIYJJARirDmrjpCFskBiIDkQACsEMfj4uKHSCApZDB48/z5fY3j9kYXh0ANdsEo7hcsMIDEYACt88uQJw5MPQgyywlkMwfYGYLmrVy4wPDk7jQEkJyMjwwAAfG5o9Gf4/iQAAAAASUVORK5CYII=" />
+                    }
+                    @Html.Raw("<span>" + item.SpeakerDegree + "</span><span>" + item.SpeakerTitle + "</span><span>" + item.SpeakerOrganization + "</span><br />")
+                    foreach (var data in ListSpeakers)
+                    {
+                        @Html.Raw("<details class='hidedetail'><summary class='summ'><a class='r_link' href='/Events/MySession?ESPK=@item.S_pKey&SPK=@item.Session_pKey' style='color:black;'>" + data.SessionId + "</a>" + data.SessionTitle + "</summary>" + data.SessionDescription + "</details>")
+                    }
+                    @Html.Raw("</td></tr>")
+                }
+            }
+        }
+    </table>
+</div>

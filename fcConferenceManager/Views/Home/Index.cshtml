@@ -1,0 +1,412 @@
+@using System.Data
+@model DataSet
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .colorblue
+    {
+        color: blue !important;
+    }
+
+    .disablegray
+    {
+        color: gray !important;
+        text-decoration: none;
+        pointer-events: none;
+    }
+
+    .lad-v
+    {
+        height: 140px;
+        object-fit: cover;
+    }
+
+    .custom-four-col-row
+    {
+        display: grid;
+        grid-gap: 32px;
+         grid-template-columns: 22.6% 30.5% 16.6% 16.9%;
+        margin-bottom:18px;
+    }
+
+    .b-right
+    {
+        border-right: 25px solid #fff;
+    }
+    .MiddleCon
+    {
+        margin-bottom: 50px;
+    }
+
+    @@media (max-width:991px){
+        .custom-four-col-row
+        {
+            grid-gap: 6px;
+            grid-template-columns: 1fr 2fr 1fr 1fr;
+        }
+    }
+
+    @@media (max-width:767px)
+    {
+        .custom-four-col-row .bgc:not(:last-child),
+        .b-right
+        {
+            border-right: none;
+            border-bottom: 32px solid #fff
+        }
+
+        .row.custom-four-col-row.mb-4
+        {
+            flex-direction: column;
+        }
+
+        .custom-four-col-row
+        {
+            grid-gap: 0;
+            grid-template-columns: 100%;
+        }
+    }
+</style>
+<div>
+    <div class="MiddleCon clearfix brbl brbr">
+            <div class=" custom-four-col-row">
+                @if ((bool)ViewData["Advertisement_Visible"] == true)
+                {
+                    <div class="bgc" style="max-height: 282px; overflow-y: scroll;">
+                        @Html.Raw(ViewData["lblAdvertisement"])
+                    </div>
+                }
+                <div class="bgc">
+                    <div class="row" style="display:none;">
+                        <div class="col-md-12">
+                            <select id="ddEvent" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="topCon">
+                        @if (ViewData["ddHomeEvent"] != null)
+                        {
+                            System.Data.DataTable HomeEventTable = (System.Data.DataTable)ViewData["ddHomeEvent"];
+                            if (HomeEventTable != null && HomeEventTable.Rows.Count>1)
+                            {
+                                <select id="ddHomeEventChange" class="form-contol">
+                                    @foreach (System.Data.DataRow dr in HomeEventTable.Rows)
+                                    {
+                                        string SelHomeEvetDrop = (ViewBag.SelectedEventHome.ToString() == dr["pKey"].ToString()) ? "Selected" : "";
+                                        <option Value='@dr["pKey"]' data-id="@dr["RowIndex"]" @SelHomeEvetDrop>@dr["EventFullname"]</option>
+                                    }
+                                </select>
+                            }
+                            else
+                            {
+                                <p id="lblEvent"><strong id="lblEventStrong" class="blueColor">@ViewData["lblEvent"]</strong></p>
+                            }
+                        }
+                        <p id="lblEventDetail">@ViewData["lblEventDetail"]</p>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6 text-md-center">
+                            @{
+                                string NextVisible = (Convert.ToBoolean(ViewData["cmdNextb_Visible"].ToString()) ? "block;" : "none !important;");
+                                string PrevVisible = (Convert.ToBoolean(ViewData["cmdPriorb_Visible"].ToString()) ? "block;" : "none !important;");
+                            }
+                            <img id="imgConf" src="@ViewData["ImageUrl"]" title="@ViewData["ToolTip"]" width="200" class="lad-v" onerror="this.onerror=null;this.src='../Images/Miscellaneous/NoImage.png';" />
+                            <div ID="phNextConfb" class="align-items-center mt-2 justify-md-content-center d-flex" style="display:@(Convert.ToBoolean(ViewData["phNextConfb_Visible"].ToString())? ";":"none !important;")">
+                                <input id="PriorImg" title="Previous Event" class="me-1 mt-1" type="image" src="~/images/navigation/left.png" alt="Mail" width="26" height="26" style="display:@PrevVisible" />
+                                <span class="me-1 ms-1"> Use arrows to change event </span>
+                                <input id="NextImg" title="Next Event" class="me-1 ms-1 mt-1" type="image" src="~/images/navigation/right.png" alt="pdf" width="26" height="26" style="display:@NextVisible" />
+                            </div>
+                            <button type="button" id="cmdEnterEvent" class="btnOrange m-2" style="display:@(Convert.ToBoolean(ViewData["cmdEnterEvent_Visible"].ToString())? "initial;":"none;")">Enter Event</button>
+                        </div>
+                        <div class="col-md-6 p-lg-0">
+                            @if (Model != null)
+                            {
+                                if (Model.Tables.Count > 0)
+                                {
+                                    DataTable dlQLinks = Model.Tables[0];
+                                    if (dlQLinks != null)
+                                    {
+                                        <ul id="midNav" class="midNav">
+                                            @{
+                                                foreach (System.Data.DataRow dr in dlQLinks.Rows)
+                                                {
+                                                    string disabled = (dr["bdisable"].ToString() == "0") ? "disabeled" : "";
+                                                    string CssClass = (dr["LinkText"].ToString() == "Pricing & Registration" && dr["bdisable"].ToString() != "0") ? "Font11 colorblue" : ((dr["bdisable"].ToString() == "0") ? "disablegray" : "Font11 underline-on-hover");
+
+                                                    @Html.Raw("<li><a href='" + dr["LinkPageMVC"] + "' class='" + CssClass + "' " + disabled + ">" + dr["LinkText"] + "</a></li>")
+                                                }
+                                            }
+                                        </ul>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class=" bgc">
+                    <div class="topCon">
+                        <p><strong class="blueColor">@ViewData["lblSpkr"]</strong></p>
+                        <p>@ViewData["lblSpkr1"]</p>
+                        <div class="col-sm-12 col-lg-12 col-md-12 p-0">
+                            <img src="~/images/HomePage2/IMG_speaker2.jpg" width="200" class="lad-v">
+                        </div>
+                        <div class="comLinRow">
+                            @if (Model != null)
+                            {
+                                if (Model.Tables.Count > 0)
+                                {
+                                    DataTable dlSpeak = Model.Tables[2];
+                                    if (dlSpeak != null)
+                                    {
+                                        foreach (System.Data.DataRow dr in dlSpeak.Rows)
+                                        {
+                                            @Html.Raw("<a href='/" + dr["LinkPage"] + "'>" + dr["LinkText"] + "</a>")
+                                        }
+                                    }
+                                }
+                            }
+                            @*<a href="">Interested in speaking at a MAGI conference?</a>*@
+                        </div>
+                    </div>
+                </div>
+                <div class=" bgc">
+
+                    <div class="topCon">
+                        <p><strong class="blueColor">@ViewData["lblCtn"]</strong></p>
+                        <p>@ViewData["lblCtn1"]</p>
+                        <div class="col-sm-12 col-lg-12 col-md-12 p-0">
+                            <img src="~/images/HomePage2/IMG_speaking.jpg" width="200" class="lad-v">
+                        </div>
+                        <div class="comLinRow">
+                            @if (Model != null)
+                            {
+                                if (Model.Tables.Count > 0)
+                                {
+                                    DataTable dlContent = Model.Tables[1];
+                                    if (dlContent != null)
+                                    {
+                                        foreach (System.Data.DataRow dr in dlContent.Rows)
+                                        {
+                                            @Html.Raw("<a href='/" + dr["LinkPage"] + "'>" + dr["LinkText"] + "</a>")
+                                        }
+                                    }
+                                }
+                            }
+                            @*<a href="">CTA templates, forms, checklists, etc.</a>*@
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        <div class="container-fluid clearfix">
+            <div class="row">
+                <div class="col-md-5 bgc b-right">
+                    @Html.Raw(ViewData["lblInfo"])
+                    <br />
+                    @if ((bool)ViewData["RegisterBtn_Visible"])
+                    {
+
+                        <button id="btnRegister" class="btn btnOrange Font12" style="margin: 0 auto;display: block;">Register</button>
+                    }
+                </div>
+                <div class="col-md-7 bgc">
+                    <p><strong class="blueColor">@ViewData["lblBlk2"]</strong></p>
+                    @Html.Raw(ViewData["lblNews"])
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modelEvtVirtualUpdate" tabindex="-1" aria-labelledby="modelEvtVirtualUpdate" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader">
+                <h5 class="modal-title" id="lblEventUpdateVirtual">Event Updates</h5>
+                <div>
+                    <button id="cmdEvtUpdatesVirtual" type="button" class="btn closeEvtVirtualUpdate" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                </div>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row p-2">
+                    <div class="col-xs-12 mb-1" id="modalEvtUpdatesVirtualBody" style="height:400px; overflow-y:scroll;">
+                    </div>
+                    <div class="text-center">
+                        <button id="cmdEvtUpdatesVirtual_Close" type="button" class="btn closeEvtVirtualUpdate" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modelVirtualEvent" tabindex="-1" aria-labelledby="modelVirtualEvent" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header modalBlueHeader">
+                <h5 class="modal-title" id="lblTitlePopVirtual">Virtual Event</h5>
+                <div>
+                    <button id="cmdVirtualEvent" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                </div>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row p-2">
+                    <div class="col-xs-12 mb-1" id="VirtualInstructionBody" style="height:200px; overflow-y:scroll;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    function GoToVirtualEvent() {
+        var result = CommonFunctions.AjaxCall('GET', '/Home/EnterEventInfo', '', 'json', 'Error Occurred while Updating List');
+        if (result !== null && result !== "ERROR") {
+            if (result.msg === "OK") {
+                if (result.Redirect)
+                    window.location.href = result.RedirectURL;
+
+                if (result.bPopUp) {
+                    $('#modalEvtUpdatesVirtualBody').append(result.lblEventUpdate);
+                    $('#modelEvtVirtualUpdate').modal('show');
+                }
+
+                if (result.bVirtual) {
+                    $('#VirtualInstructionBody').append(result.lblVirtualInstruction);
+                    $('#modelVirtualEvent').modal('show');
+                }
+            }
+        }
+    }
+
+    $(document).ready(function () {
+        $("#imgConf").on('error', function () { this.src = '../Images/Miscellaneous/NoImage.png'; });
+        $('#ddHomeEventChange').click(function () {
+            var dataID = $('#ddHomeEventChange option:selected').data("id");
+            var result = CommonFunctions.AjaxCall('GET', '/Home/EventChange_Index', { ID: "selected", SelectedValue: $('#ddHomeEventChange').val(), Current: dataID }, 'json', 'Error Occurred while Updating List');
+            if (result !== null && result !== "ERROR") {
+                if (result.msg === "OK") {
+                    if (result.NextVisible)
+                        $('#NextImg').show();
+                    else
+                        $('#NextImg').hide();
+                    if (result.PrevVisible)
+                        $('#PriorImg').show();
+                    else
+                        $('#PriorImg').hide();
+
+                    $('#imgConf').attr("src", result.ImgURL);
+                    $('#imgConf').attr("title", result.ToolTip);
+                    $('#lblEventStrong').text(result.EventFullName);
+                    $('#lblEventDetail').text(result.EventDetail);
+                    $('#ddHomeEventChange').val(result.SelectedEvent);
+                    if (!result.ImgConfEnabled)
+                        $('#imgConf').attr("disabled", "disabled");
+                    else
+                        $('#imgConf').removeAttr("disabled");
+
+                    if (result.LinksRefreshed !== null || result.LinksRefreshed !== "") {
+                        var htmlString = JSON.parse(result.LinksRefreshed).map(function (val) {
+                            var disabled = (val.bdisable === 0) ? "disabeled" : "";
+                            var CssClass = (val.LinkText === "Pricing & Registration" && val.bdisable !== 0) ? "Font11 colorblue" : ((val.bdisable === 0) ? "disablegray" : "Font11 underline-on-hover");
+                            return `<li><a href='/${val.LinkPage}' class='${CssClass}' ${disabled} >${val.LinkText}</a>`
+                        }).join('');
+                        $('#midNav').html(htmlString);
+                    }
+                }
+                else
+                    CommonFunctions.Alert(result.msg);
+            }
+            else
+                CommonFunctions.Alert("Error While Fetching List");
+        });
+
+        $('#PriorImg').click(function () {
+            var result = CommonFunctions.AjaxCall('GET', '/Home/EventChange_Index', { ID: "prior" }, 'json', 'Error Occurred while Updating List');
+            if (result !== null && result !== "ERROR") {
+                if (result.msg === "OK") {
+                    if (result.NextVisible)
+                        $('#NextImg').show();
+                    else
+                        $('#NextImg').hide();
+                    if (result.PrevVisible)
+                        $('#PriorImg').show();
+                    else
+                        $('#PriorImg').hide();
+
+                    $('#imgConf').attr("src", result.ImgURL);
+                    $('#imgConf').attr("title", result.ToolTip);
+                    $('#lblEventStrong').text(result.EventFullName);
+                    $('#lblEventDetail').text(result.EventDetail);
+                    if (!result.ImgConfEnabled)
+                        $('#imgConf').attr("disabled", "disabled");
+                    else
+                        $('#imgConf').removeAttr("disabled");
+                    $('#ddHomeEventChange').val(result.SelectedEvent);
+                    if (result.LinksRefreshed !== null || result.LinksRefreshed !== "") {
+                        var htmlString = JSON.parse(result.LinksRefreshed).map(function (val) {
+                            var disabled = (val.bdisable === 0) ? "disabeled" : "";
+                            var CssClass = (val.LinkText === "Pricing & Registration" && val.bdisable !== 0) ? "Font11 colorblue" : ((val.bdisable === 0) ? "disablegray" : "Font11 underline-on-hover");
+                            return `<li><a href='/${val.LinkPage}' class='${CssClass}' ${disabled} >${val.LinkText}</a>`
+                        }).join('');
+                        $('#midNav').html(htmlString);
+                    }
+                }
+                else
+                    CommonFunctions.Alert(result.msg);
+            }
+            else
+                CommonFunctions.Alert("Error While Fetching List");
+        });
+        $('#NextImg').click(function () {
+            var result = CommonFunctions.AjaxCall('GET', '/Home/EventChange_Index', { ID: "next" }, 'json', 'Error Occurred while Updating List');
+            if (result !== null && result !== "ERROR") {
+                if (result.msg === "OK") {
+                    if (result.NextVisible)
+                        $('#NextImg').show();
+                    else
+                        $('#NextImg').hide();
+                    if (result.PrevVisible)
+                        $('#PriorImg').show();
+                    else
+                        $('#PriorImg').hide();
+
+                    $('#imgConf').attr("src", result.ImgURL);
+                    $('#imgConf').attr("title", result.ToolTip);
+                    $('#lblEventStrong').text(result.EventFullName);
+                    $('#lblEventDetail').text(result.EventDetail);
+                    if (!result.ImgConfEnabled)
+                        $('#imgConf').attr("disabled", "disabled");
+                    else
+                        $('#imgConf').removeAttr("disabled");
+                    $('#ddHomeEventChange').val(result.SelectedEvent);
+                    if (result.LinksRefreshed !== null || result.LinksRefreshed !== "") {
+                        var htmlString = JSON.parse(result.LinksRefreshed).map(function (val) {
+                            var disabled = (val.bdisable === 0) ? "disabled" : "";
+                            var CssClass = (val.LinkText === "Pricing & Registration" && val.bdisable !== 0) ? "Font11 colorblue" : ((val.bdisable === 0) ? "disablegray" : "Font11 underline-on-hover");
+                            return `<li><a href='/${val.LinkPage}' class='${CssClass}' ${disabled} >${val.LinkText}</a>`
+                        }).join('');
+                        $('#midNav').html(htmlString);
+                    }
+                }
+                else
+                    CommonFunctions.Alert(result.msg);
+            }
+            else
+                CommonFunctions.Alert("Error While Fetching List");
+        });
+
+        $('.closeEvtVirtualUpdate').click(function () {
+            window.location.href = "/EventOnCloud";
+        })
+        $('#cmdEnterEvent').click(function (e) {
+            e.preventDefault();
+            GoToVirtualEvent();
+        });
+    });
+</script>
