@@ -8,14 +8,15 @@ using System.Web.Security;
 using Elimar.Models;
 using fcConferenceManager.Models;
 using MAGI_API.Models;
-using MAGI_API.Security;			  
+using MAGI_API.Security;
 namespace fcConferenceManager.Controllers
 {
     public class AccountController : Controller
     {
-		static SqlOperation repository = new SqlOperation();													
+        static SqlOperation repository = new SqlOperation();
         private string config;
         private string baseurl;
+
         public AccountController()
         {
             config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
@@ -37,10 +38,10 @@ namespace fcConferenceManager.Controllers
         }
 
         [HttpPost]
-        public ActionResult Login(UserModel model)
+        public ActionResult Login(UserModel model, string redirectTo)
         {
             var Baseurl = baseurl;
-            ViewBag.Baseurl = Baseurl;						  
+            ViewBag.Baseurl = Baseurl;
             loginResponse response = new loginResponse();
             if (model.Password == null || model.UserName == null)
             {
@@ -96,7 +97,7 @@ namespace fcConferenceManager.Controllers
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@UserName", model.UserName);
-                        
+
                         con.Open();
                         SqlDataReader reader = cmd.ExecuteReader();
                         //SqlDataReader sdr = await cmd.ExecuteReaderAsync();
@@ -108,10 +109,10 @@ namespace fcConferenceManager.Controllers
                             DataRow dr = table.Rows[0];
                             SqlOperation sql = new SqlOperation();
                             bool val = sql.Validate_Password(model.Password, dr["UP"].ToString());
-                            if (val==true)
+                            if (val == true)
                             {
                                 response.Id = Convert.ToInt32(dr["pKey"]);
-                                response.salutation1 = dr["Salutation_pKey"].ToString(); 
+                                response.salutation1 = dr["Salutation_pKey"].ToString();
                                 response.firstname = dr["Firstname"].ToString();
                                 response.middlename = dr["MiddleName"].ToString();
                                 response.lastname = dr["Lastname"].ToString();
@@ -126,7 +127,7 @@ namespace fcConferenceManager.Controllers
                                 response.skypeaddress = dr["SkypeAddress"].ToString();
                                 response.personalbiography = dr["PersonalBio"].ToString();
                                 response.Uimg = baseurl + "/Accountimages/" + dr["imgpath"].ToString();
-                                response.degrees = dr["Degrees"].ToString();                               
+                                response.degrees = dr["Degrees"].ToString();
                             }
                             else
                             {
@@ -144,8 +145,9 @@ namespace fcConferenceManager.Controllers
                         con.Close();
                         Session["User"] = response;
                         Session["FirstName"] = response.firstname;
-                        Session["LastName"] = response.lastname;																  
+                        Session["LastName"] = response.lastname;
                     }
+                    if (redirectTo != null) return Redirect("~/" + redirectTo);
 
                     return Redirect("~/Dashboard/Portolo");
 
@@ -160,7 +162,7 @@ namespace fcConferenceManager.Controllers
                 //}
                 //else if (response.status == "User Does not Exists")
                 //{
-				 
+
                 //    TempData["InvalidUser"] = "Not a valid user.";
                 //    return Redirect("~/Account/Portolo");
                 //}
@@ -190,129 +192,129 @@ namespace fcConferenceManager.Controllers
         [HttpPost]
         // public ActionResult Index(UserModel model)
         // {
-            // var baseUrl = ConfigurationManager.AppSettings["AppURL"].Replace("/forms", "");
-            // ViewBag.Baseurl = baseUrl;
-            // if (model.Password == null || model.UserName == null)
-            // {
+        // var baseUrl = ConfigurationManager.AppSettings["AppURL"].Replace("/forms", "");
+        // ViewBag.Baseurl = baseUrl;
+        // if (model.Password == null || model.UserName == null)
+        // {
 
 
-                // TempData["InvalidUser"] = "Please enter user name & password";
-                // return Redirect("~/Account/Portolo");
+        // TempData["InvalidUser"] = "Please enter user name & password";
+        // return Redirect("~/Account/Portolo");
 
-            // }
-            // // var s = cbe.GetCBLoginInfo(model.UserName, model.Password);
-            // List<UserResponse> userList = new List<UserResponse>();
+        // }
+        // // var s = cbe.GetCBLoginInfo(model.UserName, model.Password);
+        // List<UserResponse> userList = new List<UserResponse>();
 
-            // try
-            // {
-                // using (SqlConnection con = new SqlConnection(config))
-                // {
-                    // using (SqlCommand cmd = new SqlCommand("SP_Login_Page", con))
-                    // {
-                        // cmd.CommandType = CommandType.StoredProcedure;
-                        // cmd.Parameters.AddWithValue("@UserName", model.UserName);
-                        // cmd.Parameters.AddWithValue("@Password", model.Password);
-                        // con.Open();
-                        // SqlDataReader reader = cmd.ExecuteReader();
-                        // if (reader.HasRows.ToString() == "True")
-                        // {
-                            // while (reader.Read())
-                            // {
-                                // UserResponse response = new UserResponse();
-                                // response.status = reader["Status"].ToString();
-                                // response.ID = int.Parse(reader["ID"].ToString());
-                                // response.salutation1 = reader["salutation1"].ToString();
-                                // response.firstname = reader["firstname"].ToString();
-                                // response.middlename = reader["middlename"].ToString();
-                                // response.lastname = reader["lastname"].ToString();
-                                // response.suffix = reader["suffix"].ToString();
-                                // response.nickname = reader["nickname"].ToString();
-                                // response.signinaccountid = reader["signinaccountid"].ToString();
-                                // response.MainEmailType = reader["MainEmailType"].ToString();
-                                // response.mainemail = reader["mainemail"].ToString();
-                                // response.Password = reader["Password"].ToString();
-                                // response.sendemailto = reader["SendEmailTo"].ToString();
-                                // response.skypeaddress = reader["skypeaddress"].ToString();
-                                // response.linkedinURL = reader["linkedinURL"].ToString();
-                                // response.country = reader["country"].ToString();
-                                // response.city = reader["city"].ToString();
-                                // response.address1 = reader["address1"].ToString();
-                                // response.address2 = reader["address2"].ToString();
-                                // response.name = reader["AssistantName"].ToString();
-                                // response.zipcode = double.Parse(reader["zipcode"].ToString());
-                                // response.State = reader["State"].ToString();
-                                // response.timezone = reader["timezone"].ToString();
-                                // response.countrycode = reader["countrycode"].ToString();
-                                // response.phonenumber = reader["phonenumber"].ToString();
-                                // response.extension = reader["extension"].ToString();
-                                // response.email = reader["email"].ToString();
-                                // response.jobTitle = reader["jobTitle"].ToString();
-                                // response.department = reader["department"].ToString();
-                                // response.organization = reader["organization"].ToString();
-                                // response.website = reader["website"].ToString();
-                                // response.degreesandcertifications = reader["degreesandcertifications"].ToString();
-                                // response.personalbiography = reader["personalbiography"].ToString();
-                                // response.aboutmyorganizationandmyrole = reader["aboutmyorganizationandmyrole"].ToString();
-                                // response.salutation2 = reader["salutation2"].ToString();
-                                // response.phonetype1 = reader["phonetype1"].ToString();
-                                // response.phonetype2 = reader["phonetype2"].ToString();
-                                // response.phone1 = reader["phone1"].ToString();
-                                // response.phone1extension = reader["phone1extension"].ToString();
-                                // response.phone2 = reader["phone2"].ToString();
-                                // response.phone2extension = reader["phone2extension"].ToString();
-                                // response.countryCodephone1 = reader["countryCodephone1"].ToString();
-                                // response.countryCodephone2 = reader["countryCodephone2"].ToString();
-                                // if (reader["Uimg"].ToString() == null || reader["Uimg"].ToString() == "")
-                                // {
-                                    // response.Uimg = baseUrl + "/User-images/empty%20image.png";//"https://localhost:44376/"+reader["Uimg"].ToString();
-                                // }
-                                // else
-                                // {
-                                    // response.Uimg = baseUrl + reader["Uimg"].ToString();
-                                // }
-                                // if (reader["CV"].ToString() == null || reader["CV"].ToString() == "")
-                                // {
-                                    // //response.CV =reader["CVfile"].ToString();
-                                // }
-                                // else
-                                // {
-                                    // response.CV = reader["CV"].ToString();
-                                // }
-                                // userList.Add(response);
-                            // }
-                        // }
-                        // reader.Close();
-                        // //cmd.ExecuteNonQuery();
-                        // con.Close();
+        // try
+        // {
+        // using (SqlConnection con = new SqlConnection(config))
+        // {
+        // using (SqlCommand cmd = new SqlCommand("SP_Login_Page", con))
+        // {
+        // cmd.CommandType = CommandType.StoredProcedure;
+        // cmd.Parameters.AddWithValue("@UserName", model.UserName);
+        // cmd.Parameters.AddWithValue("@Password", model.Password);
+        // con.Open();
+        // SqlDataReader reader = cmd.ExecuteReader();
+        // if (reader.HasRows.ToString() == "True")
+        // {
+        // while (reader.Read())
+        // {
+        // UserResponse response = new UserResponse();
+        // response.status = reader["Status"].ToString();
+        // response.ID = int.Parse(reader["ID"].ToString());
+        // response.salutation1 = reader["salutation1"].ToString();
+        // response.firstname = reader["firstname"].ToString();
+        // response.middlename = reader["middlename"].ToString();
+        // response.lastname = reader["lastname"].ToString();
+        // response.suffix = reader["suffix"].ToString();
+        // response.nickname = reader["nickname"].ToString();
+        // response.signinaccountid = reader["signinaccountid"].ToString();
+        // response.MainEmailType = reader["MainEmailType"].ToString();
+        // response.mainemail = reader["mainemail"].ToString();
+        // response.Password = reader["Password"].ToString();
+        // response.sendemailto = reader["SendEmailTo"].ToString();
+        // response.skypeaddress = reader["skypeaddress"].ToString();
+        // response.linkedinURL = reader["linkedinURL"].ToString();
+        // response.country = reader["country"].ToString();
+        // response.city = reader["city"].ToString();
+        // response.address1 = reader["address1"].ToString();
+        // response.address2 = reader["address2"].ToString();
+        // response.name = reader["AssistantName"].ToString();
+        // response.zipcode = double.Parse(reader["zipcode"].ToString());
+        // response.State = reader["State"].ToString();
+        // response.timezone = reader["timezone"].ToString();
+        // response.countrycode = reader["countrycode"].ToString();
+        // response.phonenumber = reader["phonenumber"].ToString();
+        // response.extension = reader["extension"].ToString();
+        // response.email = reader["email"].ToString();
+        // response.jobTitle = reader["jobTitle"].ToString();
+        // response.department = reader["department"].ToString();
+        // response.organization = reader["organization"].ToString();
+        // response.website = reader["website"].ToString();
+        // response.degreesandcertifications = reader["degreesandcertifications"].ToString();
+        // response.personalbiography = reader["personalbiography"].ToString();
+        // response.aboutmyorganizationandmyrole = reader["aboutmyorganizationandmyrole"].ToString();
+        // response.salutation2 = reader["salutation2"].ToString();
+        // response.phonetype1 = reader["phonetype1"].ToString();
+        // response.phonetype2 = reader["phonetype2"].ToString();
+        // response.phone1 = reader["phone1"].ToString();
+        // response.phone1extension = reader["phone1extension"].ToString();
+        // response.phone2 = reader["phone2"].ToString();
+        // response.phone2extension = reader["phone2extension"].ToString();
+        // response.countryCodephone1 = reader["countryCodephone1"].ToString();
+        // response.countryCodephone2 = reader["countryCodephone2"].ToString();
+        // if (reader["Uimg"].ToString() == null || reader["Uimg"].ToString() == "")
+        // {
+        // response.Uimg = baseUrl + "/User-images/empty%20image.png";//"https://localhost:44376/"+reader["Uimg"].ToString();
+        // }
+        // else
+        // {
+        // response.Uimg = baseUrl + reader["Uimg"].ToString();
+        // }
+        // if (reader["CV"].ToString() == null || reader["CV"].ToString() == "")
+        // {
+        // //response.CV =reader["CVfile"].ToString();
+        // }
+        // else
+        // {
+        // response.CV = reader["CV"].ToString();
+        // }
+        // userList.Add(response);
+        // }
+        // }
+        // reader.Close();
+        // //cmd.ExecuteNonQuery();
+        // con.Close();
 
-                    // }
-                // }
-                // var item = "1";//s.FirstOrDefault();
-                // if (userList[0].status == "Success")
-                // {
-                    // TempData["users"] = userList;
-                    // return RedirectToAction("Profile", "Account", userList);
+        // }
+        // }
+        // var item = "1";//s.FirstOrDefault();
+        // if (userList[0].status == "Success")
+        // {
+        // TempData["users"] = userList;
+        // return RedirectToAction("Profile", "Account", userList);
 
-                // }
-                // else if (userList[0].status == "User Does not Exists")
+        // }
+        // else if (userList[0].status == "User Does not Exists")
 
-                // {
-                    // TempData["InvalidUser"] = "Not a valid user.";
-                    // return Redirect("~/Account/Portolo");
-                // }
-                // else
-                // {
-                    // ViewBag.Failedcount = item;
-                    // return Redirect("~/Account/Portolo");
-                // }
-                // var a = userList;
-            // }
-            // catch (Exception ex)
-            // {
-                // TempData["InvalidUser"] = "Not a valid user.";
-                // return Redirect("~/Account/Portolo");
-            // }
-            // return Redirect("~/Account/Portolo");
+        // {
+        // TempData["InvalidUser"] = "Not a valid user.";
+        // return Redirect("~/Account/Portolo");
+        // }
+        // else
+        // {
+        // ViewBag.Failedcount = item;
+        // return Redirect("~/Account/Portolo");
+        // }
+        // var a = userList;
+        // }
+        // catch (Exception ex)
+        // {
+        // TempData["InvalidUser"] = "Not a valid user.";
+        // return Redirect("~/Account/Portolo");
+        // }
+        // return Redirect("~/Account/Portolo");
         // }
 
 
@@ -347,25 +349,25 @@ namespace fcConferenceManager.Controllers
 
 
 
-while (reader.Read())
+                            while (reader.Read())
                             {
                                 UserResponse response = new UserResponse();
 
-                               
+
                                 response.ID = int.Parse(reader["pKey"].ToString());
                                 response.salutation1 = reader["Salutation_pKey"].ToString();
                                 response.firstname = reader["Firstname"].ToString();
                                 response.middlename = reader["MiddleName"].ToString();
                                 response.lastname = reader["Lastname"].ToString();
-                               // response.suffix = reader["suffix"].ToString();
-                               // response.nickname = reader["nickname"].ToString();
-                               // response.signinaccountid = reader["signinaccountid"].ToString();
-                               // response.MainEmailType = reader["MainEmailType"].ToString();
+                                // response.suffix = reader["suffix"].ToString();
+                                // response.nickname = reader["nickname"].ToString();
+                                // response.signinaccountid = reader["signinaccountid"].ToString();
+                                // response.MainEmailType = reader["MainEmailType"].ToString();
                                 response.mainemail = reader["Email"].ToString();
-                               // response.Password = reader["Password"].ToString();
-                               // response.sendemailto = reader["SendEmailTo"].ToString();
+                                // response.Password = reader["Password"].ToString();
+                                // response.sendemailto = reader["SendEmailTo"].ToString();
                                 response.skypeaddress = reader["SkypeAddress"].ToString();
-                              //  response.linkedinURL = reader["linkedinURL"].ToString();
+                                //  response.linkedinURL = reader["linkedinURL"].ToString();
                                 response.country = reader["CountryID"].ToString();
                                 response.city = reader["City"].ToString();
                                 //response.address1 = reader["address1"].ToString();
@@ -466,12 +468,12 @@ while (reader.Read())
 
 
                                 //    response.CV = reader["CV"].ToString();
-									 					   
+
                                 //}
-								 
+
                                 userList.Add(response);
                             }
-								
+
 
 
 
@@ -485,12 +487,12 @@ while (reader.Read())
 
 
             }
-            
+
             catch (Exception)
             {
                 if (Session["User"] == null)
                 {
-                        Redirect("~/Account/Portolo");
+                    Redirect("~/Account/Portolo");
                 }
 
             }
@@ -849,7 +851,7 @@ while (reader.Read())
                     user.aboutmyorganizationandmyrole = response[0].aboutmyorganizationandmyrole;
                     user.Uimg = response[0].Uimg;
                     user.CV = response[0].CV;
-                    user.salutationzID1 = response[0].salutationzID1;												 
+                    user.salutationzID1 = response[0].salutationzID1;
 
 
 
@@ -918,11 +920,11 @@ while (reader.Read())
 
 
                 int Id = objlt.Id;
-               // int Id = 10324;
+                // int Id = 10324;
                 // var s = cbe.GetCBLoginInfo(model.UserName, model.Password);
 
 
-                 UserResponse response = new UserResponse();
+                UserResponse response = new UserResponse();
                 using (SqlConnection con = new SqlConnection(config))
                 {
                     using (SqlCommand cmd = new SqlCommand("SP_GetUserProfileFromAccountList", con))
@@ -955,8 +957,7 @@ while (reader.Read())
                                 response.city = reader["city"].ToString();
                                 response.address1 = reader["address1"].ToString();
                                 response.address2 = reader["address2"].ToString();
-                                //response.name = reader["AssistantName"].ToString();
-                                //response.zipcode = reader["zipcode"].ToString()!=null?double.Parse(reader["zipcode"].ToString()):0;
+                                response.zipcode = reader["zipcode"].ToString();
                                 response.State = reader["State"].ToString();
                                 response.timezone = reader["timezone"].ToString();
                                 //response.countrycode = reader["countrycode"].ToString();
@@ -980,7 +981,7 @@ while (reader.Read())
                                 response.countryCodephone1 = reader["countryCodephone1"].ToString();
                                 response.countryCodephone2 = reader["countryCodephone2"].ToString();
                                 response.salutationzID1 = reader["salutationzID1"].ToString();
-															  
+
                                 if (reader["Uimg"].ToString() == null || reader["Uimg"].ToString() == "")
                                 {
                                     response.Uimg = baseurl + "/User-images/empty%20image.png";//"https://localhost:44376/"+reader["Uimg"].ToString();
@@ -1006,8 +1007,8 @@ while (reader.Read())
 
                         con.Close();
 
-                   }
-                    
+                    }
+
                     //if (response.State == "" || response.State==null )
                     //{
                     //    response.State = "0";
@@ -1032,8 +1033,8 @@ while (reader.Read())
                     //        reader.Close();
                     //        con.Close();
                     //    }
-                    
-                    
+
+
                     //query = $"select * from SYS_Countries where pKey = {int.Parse(response.country)};";
                     //using (SqlCommand cmd = new SqlCommand(query, con))
                     //{
@@ -1104,8 +1105,8 @@ while (reader.Read())
             return userList;
 
         }
-		public JsonResult BindTimeZones(string Country_Pkey)
-										  
+        public JsonResult BindTimeZones(string Country_Pkey)
+
         {
             DataTable ds = dba.BindTimeZones(Country_Pkey);
             List<SelectListItem> timezoneList = new List<SelectListItem>();
@@ -1115,8 +1116,8 @@ while (reader.Read())
             }
 
             return Json(timezoneList, JsonRequestBehavior.AllowGet);
-        }        
-		[HttpPost]
+        }
+        [HttpPost]
         [ValidateInput(true)]
         [CustomizedAuthorize]
         public JsonResult UpdateOrganisation(FormCollection updateorg)
@@ -1189,8 +1190,6 @@ while (reader.Read())
 
             {
                 if (errorMsg == "")
-			
-																	 
 
 
 
@@ -1205,13 +1204,15 @@ while (reader.Read())
 
 
 
-		 
-		  
-					 
 
 
-				 
-				  
+
+
+
+
+
+
+
                 {
                     errorMsg = "Error Occurred While Updating Organization";
                     if (cOrganization.SaveOrganization(cOrganization))
@@ -1222,150 +1223,150 @@ while (reader.Read())
                         cAccount.intAccount_PKey = data.Id;
                         cAccount.LoadAccount();
                         errorMsg = "Success";
-						 			
+
                     }
-		
 
-					 
-					  
-					 
-					   
-					  
-					 
-					  
-						
-					   
-					 
-					 
-					  
-						
-					  
-					
-					
-					  
-					  
-					  
-								  
-				   
-					  
-						
-						
-					   
-					 
-					  
-					   
-						
-					
-							  
-						 
-								
-						
-					   
-					   
-					 
-						
-					 
-						
-						 
-						 
-						   
-		 
-									   
-		 
-		 
-								 
-					  
-		 
-						  
-		 
-					  
-		 
-		 
-		 
-					
-		 
 
-		
-	   
-			
-			
 
-		 
 
-	  
-							
-					
 
-	  
-		   
-				   
-				
-	   
-			 
-		
-					 
-		
-	   
-			
-		 
-					 
-							
-					
-	  
-		   
-				   
-				
-	   
-			 
-		
-					  
-		
-	   
-			
-		 
-	  
-							
-					
-	  
-		   
-				   
-				
-	   
-			 
-		
-						
-		
-	   
-			
-		 
-	  
-							
-					
-	  
-		   
-				   
-				
-	   
-			 
-		
-					   
-		
-	   
-			
-		 
-	  
-										   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 }
             }
 
             catch (Exception ex)
             {
                 errorMsg = ex.Message;
-					
-			 
-	   
-			 
-	   
+
+
+
+
+
 
 
 
@@ -1376,7 +1377,7 @@ while (reader.Read())
 
             }
             return Json(new { result = errorMsg }, JsonRequestBehavior.AllowGet);
-				
+
 
         }
 
@@ -1405,7 +1406,7 @@ while (reader.Read())
             {
                 // TODO: Add delete logic here
 
-                return Redirect("~/Account/Index");												
+                return Redirect("~/Account/Index");
             }
             catch
             {

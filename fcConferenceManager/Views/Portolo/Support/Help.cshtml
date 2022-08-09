@@ -7,6 +7,19 @@
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" language="javascript">
         $(document).ready(function () {
+            $("#description").attr('maxlength', '1000');
+            $("#subject").attr('maxlength', '50');
+            $("#subject").on('input', function () {
+                var rem = 50 - $("#subject").val().length + " left out of " + 50;
+                debugger;
+                $("#subjectLength").text(rem);
+            })
+            $("#description").on('input', function () {
+                var rem = 1000 - $("#description").val().length + " left out of " + 1000;
+                debugger;
+                $("#descriptionLength").text(rem);
+            })
+            
             $("#submit").click(function () {
                 var firstname = $.trim($('#Name').val());
                 var telephone = $.trim($('#telephone').val());
@@ -37,7 +50,7 @@
                     alert("Maximum length for subject is 50");
                     return false;
                 }
-                else if (description.length >= 1000) {
+                else if (description.length > 1000) {
                     $("#description").focus();
                     alert("Maximum length for description is 1000");
                     return false;
@@ -82,10 +95,17 @@
             <div class="col-5">
                 <label for="subject">Subject</label>
                 <input maxlength="100" type="text" value="@ViewBag.Subject" class="form-control" id="subject" name="subject" placeholder="Enter Subject">
+                
+            </div>
+            <div class="col-2" style="position:relative" >
+                <span id="subjectLength" style="font-size:12px; position:absolute;bottom:8px; left:5px; "></span>
             </div>
         </div>
         <div>
-            <textarea maxlength="1000" style="height:300px; max-width:none; margin:10px 5px 5px 0px" class="form-control" placeholder="Description" name="discription"></textarea>
+            <textarea id="description" maxlength="1000" style="height:300px; max-width:none; margin:10px 5px 5px 0px" class="form-control" placeholder="Description" name="discription"></textarea>
+            <div style="position:relative">
+                <span id="descriptionLength" style="font-size:12px; position:absolute;bottom:8px; left:5px; "></span>
+            </div>
         </div>
         <button style="position:absolute;top:150px;right:20px;" id="submit" type="submit" class="btn btn-outline-warning">Send</button>
     </form>

@@ -22,38 +22,53 @@
     </head>
     <body>
 
-        <h1 style="color: orange; padding: 4px;">Score card</h1>
+        
 
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 style="color: orange;">Score card</h1>
+                    <div class="prof-info">
+                        <div class="card">
 
-        <form action="/Dashboard/Scorecard" method="post" enctype="multipart/form-data" onsubmit="callAjax(e);">
+                            <form action="/Dashboard/Scorecard" method="post" enctype="multipart/form-data"
+                                onsubmit="callAjax(e);">
 
-            <table id="myTable" class="cedvel table table-striped table-bordered table-sm" style="width: 95% !important; max-width: 400% !important">
-                <tr>
-                    <th>
-                        Questions
-                    </th>
-                </tr>
-                @foreach (var item in Model)
-                {
-                <tr>
-                    @*
-                    <td>
+                                <table id="myTable" class="cedvel table table-striped table-bordered table-sm"
+                                    style="width: 95% !important; max-width: 400% !important">
+                                    <tr>
+                                        <th>
+                                            Questions
+                                        </th>
+                                    </tr>
+                                @foreach (var item in Model)
+                                {
+                                        <tr>
+                                        @*
+                                            <td>
 
-                        @Html.DisplayFor(modelItem => item.pkey)
-                    </td>*@
-                    <td>
-                        @Html.DisplayFor(modelItem => item.questions)
-                        <br>
-                        <div>
-                            <input type="number" name="ratingscore" id="ratingscore" style="width: 50px;" min="0" max="5" value="@item.ratingscore" onchange="func_v(this.value,@item.pkey)">
+                                            @Html.DisplayFor(modelItem => item.pkey)
+                                            </td>*@
+                                            <td>
+                                            @Html.DisplayFor(modelItem => item.questions)
+                                                <br>
+                                                <div>
+                                                    <input type="number" name="ratingscore" id="ratingscore" style="width: 50px;"
+                                                    min="0" max="5" value="@item.ratingscore"
+                                                    onchange="func_v(this.value,@item.pkey)">
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                }
+                                </table>
+
+                            </form>
                         </div>
-                    </td>
-
-                </tr>
-                }
-            </table>
-
-        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
 

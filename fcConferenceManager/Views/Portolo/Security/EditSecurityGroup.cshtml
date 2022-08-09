@@ -28,7 +28,15 @@
 </style>
 <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
 <script type="text/javascript" language="javascript">
-
+    function select(a) {
+        //$(selector).siblings("input: checkbox").prop('checked', true);
+        
+        var ok = a.id;
+        debugger;
+        $("#" + ok).find('input[type=checkbox]').prop('checked', true);
+    }
+</script>
+<script type="text/javascript" language="javascript">
     $(document).ready(function () {
         $("#add").click(function () {
             $("#frame").show();
@@ -100,6 +108,17 @@
                 fileext: ".xls" // file extension
             });
         });
+        $("#memberCheckbox").change(function () {
+            debugger;
+            if ($("#memberCheckbox").is(':checked')) {
+                debugger;
+                $(".members").find('input[type=checkbox]').prop('checked', true);
+            }
+            else {
+                debugger;
+                $(".members").find('input[type=checkbox]').prop('checked', false);
+            }
+        });
     })
 
 </script>
@@ -137,7 +156,7 @@
             <table id="members" class="table table-striped">
                 <thead>
                     <tr style="background-color:cornflowerblue; color:white;">
-                        <td style="width:50px"><input class="form-check-input" type="checkbox" disabled/></td>
+                        <td  style="width:50px"><input id="memberCheckbox" class="form-check-input" type="checkbox"/></td>
                         <td style="width:100px"><lable>ID</lable></td>
                         <td style="width:300px"><lable>Name</lable></td>
                         <td style="width:100px"><lable>Activated</lable></td>
@@ -146,7 +165,7 @@
                 <tbody>
                     @foreach (var item in Model.members)
                     {
-                        <tr>
+                        <tr class="members">
                             <td><input value="@item.AccountID" class="form-check-input" type="checkbox" /></td>
                             <td>@item.AccountID</td>
                             <td>@item.AccountName</td>
@@ -174,8 +193,8 @@
                 <tbody>
                     @{foreach (var item in Model.ComponentList)
                         {
-                            <tr>
-                                <td>@item.ComponentName</td>
+                            <tr id="@item.ComponentName">
+                                <td><a href="#" onclick="select(@item.ComponentName.ToString())" >@item.ComponentName</a></td>
                                 @if (item.AllowView)
                                 {
                                     <td><input value="@item.ComponentName+AllowView" class="form-check-input" type="checkbox" checked /></td>

@@ -1,18 +1,26 @@
-﻿
+﻿@model IEnumerable<fcConferenceManager.Models.Portolo.Product>
+
 @{
-    ViewBag.Title = "Study";
+    ViewBag.Title = "Portolo";
     Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
 }
-
+@*<link href="~/Css/jquery.dataTables.min.css" rel="stylesheet" />*@
+<link href="/Css/multiple-select.css" rel="stylesheet" />
+<script src="/Scripts/multiple-select.js" type="text/javascript"></script>
 <link href="~/Content/components.css" rel="stylesheet" />
+<link href="~/Css/jquery-ui.css" rel="stylesheet" />
 <script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/dataTable.buttons.min.js"></script>
+<script src="~/Scripts/jquery.table2excel.min.js"></script>
 
 <head>
 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=, initial-scale=1.0">
+
 </head>
+
 
 <style>
     .form-control:disabled, .form-control[readonly] {
@@ -48,7 +56,6 @@
         }
 
 
-
     .dataTables_wrapper .dataTables_paginate a.paginate_button:hover {
         color: #333 !important;
         background-color: #e7e7e7 !important;
@@ -82,102 +89,92 @@
         content: none;
     }
 </style>
-
 <body>
+
     <section class="task-list-form">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    @using (Html.BeginForm("Search", "study", new { id = @ViewBag.UserId }, FormMethod.Get))
+                    @using (Html.BeginForm("SearchProduct", "Product", FormMethod.Get))
                     {
                         <div class="control-icons">
-                            <h2>Material's List</h2>
+                            <h2>Product List</h2>
+
+                            <button type="submit" name="excel" value="true" style="border-color: white; border: none;background-color:white">
+                                <i class="fa-solid fa-download" title="Download Excel"></i>
+                            </button>
 
                             <button type="submit" value="Search" name="action" style="border-color: white; border: none;background-color:white" title="Search">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </button>
-                            <a href="~/Study/Study"><i class="fa-solid fa-arrows-rotate"></i></a>
+                            <a href="~/Product/ProductList"><i class="fa-solid fa-arrows-rotate" title="Reset"></i></a>
 
                             <div class="controls">
-                                <a class="brdr-1 btn-sm" href="/Study/Add/@ViewBag.UserId"> Add </a>
-                                &nbsp;
-                                <a id="btnDelete" class="brdr-1 btn-sm" href="" onclick="return confirm('Are you sure?')"><i class="fa fa-trash-o"></i> Delete</a>
+                                <a class="brdr-1 btn-sm" href="/Product/AddProduct">Add Product</a>
+
+                                <a class="brdr-1 btn-sm" href="/Product/Delete" id="btnDelete" onclick="return confirm('Are you sure?')"><i class="fa fa-trash-o"></i>Delete</a>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label>Title:</label>
-                                    @Html.TextBox("name", null, new { @class = "form-control form-control-sm" })
+                                    <label>Product Name:</label>
+                                    @Html.TextBox("name", null, new { @class = "form-control form-control-sm", @id = "nameField" })
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>Description:</label>
+                                    @Html.TextBox("description", null, new { @class = "form-control form-control-sm", @id = "description" })
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label> Price:</label>
+                                    <input type="number" name="price" class="form-control form-control-sm" value="@ViewBag.Price"/>
                                 </div>
                             </div>
                         </div>
                         <br />
-
-                        <div class="card">
-                            <div class="emp-data">
-                                <table class="table table-bordered mb-0" id="table">
-                                    <thead>
-                                        <tr class="table-hd">
-                                            <th style="width:2px;" data-sortable="false"><input type="checkbox" name="select-all" id="select-all" /></th>
-                                            <th data-sortable="true">Title</th>
-                                            <th data-sortable="true">File Name</th>
-                                            <th data-sortable="False" style="width:10px;">File</th>
-                                            <th style="width:10px;">Edit</th>
-                                            <th style="width:10px;"> View</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if (ViewBag.Materials != null)
-                                        {
-                                            foreach (var item in ViewBag.Materials.Rows)
-                                            {
-                                                <tr>
-                                                    <td><input type="checkbox" name="ID" value="@item["pkey"]" class="custom-checkbox chkCheckBoxId" /></td>
-                                                    <td> @item["FileTitle"]</td>
-                                                    <td> @item["FileName"]</td>
-                                                    <td style="text-align:center">
-                                                        @if (@item["FilePath"] != "")
-                                                        {
-                                                            <a href="@item["FilePath"]" download title="Download"><i class="fas fa-cloud-download"></i></a>
-                                                        }
-                                                    </td>
-                                                    <td style="padding-top:10px; text-align:center"><a href="/Study/Edit/@item["pkey"]"> Edit</a></td>
-                                                    <td><input type="button" class="brdr-1 btn-sm cmdView" id="@item["FileDescription"]" href="#" value="View" /></td>
-                                                </tr>
-                                            }
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
                     }
+                    <div class="card">
+                        <div class="emp-data">
+                            <table class="table table-bordered mb-0" id="table">
+                                <thead>
+                                    <tr class="table-hd">
+                                        <th style="width:2px;" data-sortable="false">
+                                            <input type="checkbox" name="select-all" id="select-all" />
+                                        </th>
+                                        <th data-sortable="true">Product Name</th>
+                                        <th data-sortable="true">Description</th>
+                                        <th data-sortable="true">Price</th>
+                                        <th>Edit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ViewBag.Products != null)
+                                    {
+                                        foreach (var item in ViewBag.Products.Rows)
+                                        {
+                                            <tr>
+                                                <td><input type="checkbox" name="ID" value="@item["ProductId"]" class="custom-checkbox chkCheckBoxId" /> </td>
+                                                <td> @item["ProductName"] </td>
+                                                <td> @item["Description"] </td>
+                                                <td> $@item["Price"] </td>
+                                                
+                                                <td style="text-align:center"><a href="/Product/Edit/@item["ProductId"]"> Edit</a></td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
-
-
-    <div class="modal fade" id="ViewModal" tabindex="-1" aria-labelledby="modalOne" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xs">
-            <div class="modal-content">
-                <div class="modal-header modalBlueHeader">
-                    <h5 class="lblTitle mt-1">Description</h5>
-                    <div>
-                        <button id="closeModal" type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                    </div>
-                </div>
-                <div class="modal-body p-1">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p id="refreshOrganizationText" style="padding:10px; margin-bottom:5px;"></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
 
     <footer>
@@ -193,15 +190,14 @@
     <script>
         $(document).ready(function () {
             $("#table").dataTable({
-                paging: true, bFilter: true, ordering: true, searching: true, dom: 'tp', "order": [[0, "desc"]], pageLength: 50,
+                paging: true, bFilter: true, ordering: true, searching: true, dom: 'tp', "order": [[0, "desc"]],
             });
 
-            $('.cmdView').click(function (result) {
-                debugger
-                $('#ViewModal').modal('show');
-                $('#refreshOrganizationText').html(this.id);
+            $(".paginate_button").on("click", function () {
+                $("#select-all").prop('checked', false);
             });
         });
+
 
         var primarykey = [];
 
@@ -221,9 +217,11 @@
                     this.checked = false;
                 });
             }
+
         });
 
         $("#btnDelete").click(function (e) {
+            debugger
             var checklist = [];
             $(':checkbox:checked').each(function () {
                 if (this.value != "on")
@@ -235,22 +233,18 @@
                 alert("Please select at least one topic to delete");
             else {
                 $.ajax({
-                    url: "/Study/DeleteTopic",
+                    url: "/Product/Delete",
                     type: "POST",
                     data: { ids: ids }
                 });
             }
-
         });
-
 
     </script>
 
     <link rel="stylesheet" href="../Scripts/jquery-ui.css" />
     <script src="../Scripts/jquery-ui.js"></script>
-
 </body>
-
 
 
 

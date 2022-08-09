@@ -1,0 +1,330 @@
+﻿@model IEnumerable<fcConferenceManager.Models.Portolo.MasterTable>
+
+@{
+    ViewBag.Title = "MasterPage";
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+}
+<h2>Master Page</h2>
+<br />
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<div style="display:flex">
+    <div style="width:45%; border:1px solid; border-radius:2%; margin-left:50px">
+
+        <div style="background-color: deepskyblue; color: white; border-radius: 2%; display:flex">
+            <p style="margin:0 5px">Configration </p><a onclick="ExportToExcel();"><img src="~/Images/excel.png" style="border-radius:50% ;width:20px; height:20px" /></a>
+        </div>
+
+        @using (Html.BeginForm("MasterPage", "MasterPage", FormMethod.Post, new { style = "float:left" }))
+        {
+            @Html.DropDownList("tableId", new SelectList(ViewBag.masterTable, "Value", "Text"), new { style = "height:25px; width:150px;margin-left:10px;border-radius: 5px; margin-top:10px", onchange = "RoleDropDownChange()", @id = "tableRoleDropDown" })
+            <input type="submit" id="submitBtn" style="display:none" />
+        }
+
+        <button data-bs-toggle="modal" data-bs-target="#myModal" style="float: right; margin-top: 10px; margin-right:10px; border:hidden; background:white" id="btnShowModal"><img src="~/Images/plus.png" width="30" height="30" /></button>
+        <button id="DeleteButton" style="display: none; float: right; margin-top:10px; border:hidden; background:white"><img src="~/Images/minus.png" width="30" height="30" style="border-radius:50%" /></button>
+        <div class="modal" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Adding New Row</h4>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <label for="newName" class="col-md-3 col-form-label">Enter Name:</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" id="newName">
+                        </div>
+                    </div>
+                    <br />
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button id="createNewBtn" type="submit" class="btn btn-success" onclick="createNewEntry();">Submit</button>
+                        <button id="btnHideModal" type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <br />
+        <br />
+
+        @using (Html.BeginForm("BatchDelete", "MasterPage", FormMethod.Post))
+        {
+            <div style="display:none">
+                @Html.TextBox("RoleTableIds")
+            </div>
+
+            <input type="submit" id="SubmitDeleteBtn" style="display:none " />
+
+            <table style="margin-left: 10px;width: 98%">
+                <tr>
+                    <td style="padding-left: 3px">
+                        <div class="RadGrid RadGrid_Metro" style="width:98%;" tabindex="0">
+
+                            <div class="rgHeaderWrapper">
+                                <div class="rgHeaderDiv" style="overflow: hidden; margin-right: 17px;">
+
+                                    <table style="width:100%;table-layout:fixed;overflow:hidden;empty-cells:show;">
+                                        <colgroup>
+                                            <col style="width:35px">
+                                            <col style="width:50px">
+                                            <col>
+                                            <col style="width:35px">
+                                        </colgroup>
+                                        <thead>
+                                            <tr style="background-color:deepskyblue;color:white">
+                                                <th style="text-align:center;">
+                                                    <input type="checkbox" id="selecctall" />
+                                                </th>
+                                                <th style="text-align: center;">
+                                                    @Html.DisplayNameFor(model => model.Id)
+                                                </th>
+                                                <th style="text-align: center;">
+                                                    @Html.DisplayNameFor(model => model.Name)
+                                                </th>
+                                                <th style="text-align: center;">Edit</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="display:none;"><tr><td colspan="4"></td></tr></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="rgDataDiv" style="overflow-y:scroll;width:100%;height:100px;">
+
+                                <table style="width:100%;table-layout:fixed;overflow:hidden;empty-cells:show;">
+                                    <colgroup>
+                                        <col style="width:35px">
+                                        <col style="width:50px">
+                                        <col>
+                                        <col style="width:35px">
+                                    </colgroup>
+                                    <thead style="display:none;">
+                                        <tr>
+                                            <th scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.Count() == 0)
+                                        {
+
+                                            <tr>
+
+                                                <td colspan="4">
+                                                    NO RECORD !!!
+                                                </td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+
+                                            foreach (var item in Model)
+                                            {
+
+                                                <tr style="height:25px">
+                                                    <td>
+                                                        <input class="checkbox" type="checkbox" name="check" value="@item.Id" style="margin:0 auto" onchange="showDeleteButton()" />
+                                                    </td>
+                                                    <td style="text-align: center;">
+                                                        @Html.DisplayFor(modelItem => item.Id)
+                                                    </td>
+                                                    <td style="text-align: center;">
+                                                        @Html.DisplayFor(modelItem => item.Name)
+                                                    </td>
+                                                    <td style="text-align: center;">
+                                                        <a onclick="editName(this)" data-Id="@item.Id" data-Name="@item.Name" style="border:hidden; background:white"><img src="~/Images/gridgray.png" width="22"/></a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </div>
+
+                    </td>
+                </tr>
+            </table>
+
+
+        }
+        <br />
+        <button id="editModalBtn" data-bs-toggle="modal" data-bs-target="#editModal" style="display:none"></button>
+
+        <div class="modal" id="editModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Editing Row</h4>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <label for="updateName" class="col-md-3 col-form-label">Enter Name:</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" id="updateName">
+                        </div>
+                        <input type="text" class="form-control-plaintext" id="updateId" style="display:none">
+                        <input type="text" class="form-control-plaintext" id="updateTableId" style="display:none">
+                    </div>
+                    <br />
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button id="updateBtn" type="submit" class="btn btn-success" onclick="updateEntry()">Update</button>
+                        <button id="hideEditModalBtn" type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+</div>
+<br />
+<style>
+
+    tr:nth-child(even) {
+        background: #e2e2e2
+    }
+
+        tr:nth-child(even) > td > button {
+            background: #e2e2e2
+        }
+
+    tr:nth-child(odd) {
+        background: #FFF
+    }
+
+        tr:nth-child(odd) > td > button {
+            background: #FFF
+        }
+
+    .RoleTableId {
+        display: none;
+    }
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+
+</script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnShowModal").click(function () {
+            $("#myModal").modal('show');
+        });
+
+        $("#btnHideModal").click(function () {
+            $("#myModal").modal('hide');
+        });
+        $("#cross").click(function () {
+            $("#myModal").modal('hide');
+            $("#editModal").modal('hide');
+        });
+        $("#editModalBtn").click(function () {
+            $("#editModal").modal('show');
+        });
+        $("#hideEditModalBtn").click(function () {
+            $("#editModal").modal('hide');
+        });
+    });
+</script>
+
+<script>
+
+    document.getElementById('DeleteButton').onclick = function () {
+        var choice = confirm('Are you sure want to Delete?');
+        if (choice) {
+            var button = document.getElementById('SubmitDeleteBtn');
+            button.click();
+        }
+    };
+
+    document.getElementById('selecctall').onclick = function () {
+        var checkboxes = document.getElementsByName('check');
+        var length = 0;
+        for (var checkbox of checkboxes) {
+            checkbox.checked = this.checked;
+            length = length + 1;
+        }
+        if (length > 0) {
+            var button = document.getElementById('DeleteButton');
+            if (this.checked) {
+                button.style.display = "block";
+            } else {
+                button.style.display = "none";
+            }
+        }
+
+    }
+
+    function ExportToExcel() {
+        var x = document.getElementById("tableRoleDropDown").value;
+        window.location.href = "/MasterPage/ExportToExcel?role=" + x;
+    }
+
+    function editName(d) {
+        document.getElementById("updateName").value = d.getAttribute("data-Name");
+        document.getElementById("updateId").value = d.getAttribute("data-Id");
+        document.getElementById("updateTableId").value = document.getElementById("tableRoleDropDown").value;
+        document.getElementById("editModalBtn").click();
+    }
+
+    function showDeleteButton() {
+        var checkboxes = document.getElementsByName('check');
+        var flag = 0;
+        for (var checkbox of checkboxes) {
+            if (checkbox.checked) {
+                flag = flag + 1;
+            }
+        }
+        var button = document.getElementById('DeleteButton');
+        if (flag > 0) {
+            button.style.display = "block";
+        } else {
+            button.style.display = "none";
+        }
+    }
+
+    var x = document.getElementById("tableRoleDropDown").value;
+    document.getElementById("RoleTableIds").value = x;
+
+    function RoleDropDownChange() {
+        var button = document.getElementById("submitBtn");
+        button.click();
+    }
+
+    function createNewEntry() {
+        var x = document.getElementById("newName").value;
+        var y = document.getElementById("tableRoleDropDown").value;
+
+        window.location.href = "/MasterPage/AddNewEntry?RoleTableId=" + y +"&NewName="+ x;
+    }
+
+    function updateEntry() {
+        var x = document.getElementById("updateName").value;
+        var y = document.getElementById("updateId").value;
+        var z = document.getElementById("updateTableId").value;
+
+        window.location.href = "/MasterPage/EditEntry?updateName=" + x + "&updateId=" + y + "&updateTableId=" + z;
+    }
+
+</script>

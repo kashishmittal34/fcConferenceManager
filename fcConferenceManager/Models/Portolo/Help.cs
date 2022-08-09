@@ -22,5 +22,7 @@ namespace Elimar.Models
 
         public string Discription { get; set; }
 
+        public string reply { get; set; }
+
     }
 }

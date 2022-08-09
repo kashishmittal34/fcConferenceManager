@@ -67,7 +67,7 @@ namespace Elimar.Models
         public string address1 { get; set; }
         public string address2 { get; set; }
         public string name { get; set; }
-        public double zipcode { get; set; }
+        public string zipcode { get; set; }
         public string State { get; set; }
         public string timezone { get; set; }
         public string countrycode { get; set; }
@@ -121,7 +121,7 @@ namespace Elimar.Models
         public string address1 { get; set; }
         public string address2 { get; set; }
         public string name { get; set; }
-        public double zipcode { get; set; }
+        public string zipcode { get; set; }
         public string State { get; set; }
         public string timezone { get; set; }
         public string countrycode { get; set; }
