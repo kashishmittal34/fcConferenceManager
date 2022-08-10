@@ -74,13 +74,13 @@ namespace fcConferenceManager.Controllers.Portolo
             {
 
                 TempData["AlertMessage"] = "Uploaded Successfully !!";
-                return RedirectToAction("AppSettings", "Global");
+                return RedirectToAction("ConfigurationSettings", "Configuration");
             }
             else
             {
                 ModelState.AddModelError("", "Error In Add File. Please Try Again !!!");
             }
-            return RedirectToAction("AppSettings", "Global");
+            return RedirectToAction("ConfigurationSettings", "Configuration");
         }
         [HttpPost]
         public ActionResult OrganizationSettings(HttpPostedFileBase OrganizationImg)
@@ -108,13 +108,13 @@ namespace fcConferenceManager.Controllers.Portolo
             {
 
                 TempData["AlertMessage"] = "Uploaded Successfully !!";
-                return RedirectToAction("AppSettings", "Global");
+                return RedirectToAction("ConfigurationSettings", "Configuration");
             }
             else
             {
                 ModelState.AddModelError("", "Error In Add File. Please Try Again !!!");
             }
-            return RedirectToAction("AppSettings", "Global");
+            return RedirectToAction("ConfigurationSettings", "Configuration");
         }
         public string GetAccountName()
         {
@@ -246,7 +246,7 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         public ActionResult Download()
         {
-            string reportname = $"GlobalSettings_{DateTime.Now.ToString("dddd, dd MMMM yyyy")}.xlsx";
+            string reportname = $"ConfigurationSettings_{DateTime.Now.ToString("dddd, dd MMMM yyyy")}.xlsx";
             var list = GetSettingDetails();
             DataTable dt = new DataTable();
             dt.Clear();
@@ -270,7 +270,7 @@ namespace fcConferenceManager.Controllers.Portolo
             else
             {
                 TempData["Message"] = "No Data to Export";
-                return RedirectToAction("AppSettings");
+                return RedirectToAction("ConfigurationSettings", "Configuration");
             }
 
         }
