@@ -40,21 +40,34 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#Apply #Insert').prop('disabled', true);
-            $('#ActImg #OrgImg').change(function () {
+            $('#Apply').prop('disabled', true);
+            $('#ActImg').change(function () {
                 var extension = $(this).val().split('.').pop().toLowerCase();
                 var validFileExtensions = ['jpg', 'png', 'jpeg'];
                 if ($.inArray(extension, validFileExtensions) == -1) {
                     alert("Sorry!! Upload only 'jpg', 'png', 'jpeg' Images")
                     $(this).replaceWith($(this).val('').clone(true));
                     //Disable Submit Button  
-                    $('#Apply #Insert').prop('disabled', true);
+                    $('#Apply').prop('disabled', true);
                 } else {
                     //Enable Submit Button  
-                    $('#Apply #Insert').prop('disabled', false);
+                    $('#Apply').prop('disabled', false);
                 }
             });
-           
+            $('#Insert').prop('disabled', true);
+            $('#OrgImg').change(function () {
+                var extension = $(this).val().split('.').pop().toLowerCase();
+                var validFileExtensions = ['jpg', 'png', 'jpeg'];
+                if ($.inArray(extension, validFileExtensions) == -1) {
+                    alert("Sorry!! Upload only 'jpg', 'png', 'jpeg' Images")
+                    $(this).replaceWith($(this).val('').clone(true));
+                    //Disable Submit Button  
+                    $('#Insert').prop('disabled', true);
+                } else {
+                    //Enable Submit Button  
+                    $('#Insert').prop('disabled', false);
+                }
+            });
         });
 
 
