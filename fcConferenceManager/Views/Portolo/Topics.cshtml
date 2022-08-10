@@ -4,14 +4,9 @@
     ViewBag.Title = "Portolo";
     Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
 }
-@*<link href="~/Css/jquery.dataTables.min.css" rel="stylesheet" />*@
-<link href="/Css/multiple-select.css" rel="stylesheet" />
-<script src="/Scripts/multiple-select.js" type="text/javascript"></script>
 <link href="~/Content/components.css" rel="stylesheet" />
-<link href="~/Css/jquery-ui.css" rel="stylesheet" />
+													
 <script src="~/Scripts/jquery.dataTables.min.js"></script>
-<script src="~/Scripts/dataTable.buttons.min.js"></script>
-<script src="~/Scripts/jquery.table2excel.min.js"></script>
 
 <head>
 
@@ -190,21 +185,10 @@
         </div>
     </section>
 
-
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <p>	© 2022 by Elimar Systems. All Rights Reserved <a href="#" class="ml-5">Website Terms of Use</a></p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
     <script>
         $(document).ready(function () {
             $("#table").dataTable({
-                paging: true, bFilter: true, ordering: true, searching: true, dom: 'tp', "order": [[0, "desc"]],
+                paging: true, bFilter: true, ordering: true, searching: true, dom: 'tp', "order": [[0, "desc"]], pageLength: 50
             });
 
             $(".paginate_button").on("click", function () {

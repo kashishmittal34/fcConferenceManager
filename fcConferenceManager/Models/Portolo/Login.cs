@@ -32,7 +32,9 @@ namespace Elimar.Models
         public string department { get; set; }
 		public string personalbiography { get; set; }											 
         public string Uimg { get; set; }
-		public string degrees { get; set; }								   
+		public string degrees { get; set; }
+        public bool IsGlobalAdmin { get; set; }
+        
     }
 
     public class UserModel

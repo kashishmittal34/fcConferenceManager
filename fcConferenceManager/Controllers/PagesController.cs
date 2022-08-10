@@ -26,14 +26,15 @@ namespace fcConferenceManager.Controllers
         }
         public ActionResult getAllPageDetails(string FilterName, string FilterURL, string FilterStatus,string FilterEventType, int? page, string SortOrder = "Title")
         {
-            clsAccount cAccount = ((clsAccount)Session["cAccount"]);
+            //clsAccount cAccount = ((clsAccount)Session["cAccount"]);
 
-            if (cAccount.intAccount_PKey<=0)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
+            //if (cAccount.intAccount_PKey<=0)
+            //{
+
+            //    return RedirectToAction("Index", "Home");
+            //}
+            //else
+            //{
                 if (FilterName != null)
                 {
                     FilterName = FilterName.Trim();
@@ -79,7 +80,7 @@ namespace fcConferenceManager.Controllers
                 var data = this.data(FilterName, FilterURL, FilterStatus, FilterEventType, SortOrder);
                 ViewBag.data = data;
                 return View(data.ToPagedList(pageIndex, pageSize));
-            }
+            //}
         }
 
         [HttpPost]

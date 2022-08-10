@@ -3,6 +3,10 @@
     Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
 }
 <style>
+    .table-hd {
+        background: #6e6c6c;
+        color: #fff;
+    }
     td, th {
         text-align: left;
     }
@@ -26,18 +30,18 @@
 <br />
 <script src="https://kit.fontawesome.com/b79227d049.js" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<form class="container" asp-action="Details" method="get" style="display:inline-block">
+<form class="container-fluid" asp-action="Details" method="get" style="display:inline-block">
     <div class="form-actions no-color">
-        <table style="border-collapse:separate; border-spacing:15px;">
+        <table style="border-collapse: separate; border-spacing: 15px; width: 100%;">
             <tr>
-                <td>Find by name: <input class="form-control" type="text" name="nameSearch" value="@ViewData["NameFilter"]" /></td>
-                <td>Find by Email: <input class="form-control" type="text" name="emailSearch" value="@ViewData["EmailFilter"]" /></td>
-                <td style="position:relative;"><input style="position:absolute;bottom:0px;" type="submit" value="Search" class="btn btn-dark" />  | </td>
-                <td style="position:relative; "><a style="position: absolute; bottom: 0px; margin-left: 80px" href="~/support/supportList" class="btn btn-primary">Reset</a></td>
+                <td style="width:250px;">Find by name: <input class="form-control" type="text" name="nameSearch" value="@ViewData["NameFilter"]" /></td>
+                <td style="width:250px;">Find by Email: <input class="form-control" type="text" name="emailSearch" value="@ViewData["EmailFilter"]" /></td>
+                <td style="vertical-align: bottom; text-align: center; width: 100px;"><input  type="submit" value="Search" class="btn btn-outline-warning" /></td>
+                <td style="vertical-align: bottom; text-align: center; width: 100px; "><a href="~/support/supportList" class="btn btn-outline-warning">Reset</a></td>
                 @if (ViewBag.AllowAdd)
                 {
-                    <td>
-                        <div style="position:absolute;right:5px;margin:5px 50px">
+                    <td style="text-align:right; vertical-align:bottom;">
+                        <div>
                             @Html.ActionLink("create New", "Help", "Support", new { @class = "btn btn-outline-warning" })
                         </div>
                     </td>
@@ -49,12 +53,12 @@
 <div class="card container" style="border:2px solid;padding:0px;">
     <table style="margin:20px 20px 20px 20px; max-width:97%; align-content:flex-start" id="tbldata" class="table  table-bordered table-striped ">
         <thead>
-            <tr class="table-dark">
+            <tr class="table-hd">
                 <th scope="col">Id</th>
-                <th scope="col"><a style="color:white" href="~/support/supportList?nameSort=@ViewData["NameSortParm"]"><label>Name</label></a></th>
-                <th scope="col">Email</th>
+                <th scope="col" style="max-width:80px"><a style="color:white" href="~/support/supportList?nameSort=@ViewData["NameSortParm"]"><label>Name</label></a></th>
+                <th style="max-width:80px" scope="col">Email</th>
                 <th scope="col" style="max-width:150px">Subject</th>
-                <th scope="col">Discription</th>
+                <th scope="col" style="max-width:250px">Discription</th>
                 <th scope="col">Reply</th>
             </tr>
         </thead>
@@ -63,12 +67,11 @@
             {
                 <tr class="table">
                     <td>@item.PKey</td>
-                    <td>@item.Name</td>
-                    <td>@item.Email</td>
-                    <td style="max-width:150px">@item.Subject</td>
-                    <td style="white-space:pre">@item.Discription.Trim()</td>
+                    <td style="max-width:80px">@item.Name</td>
+                    <td style="max-width:80px">@item.Email</td>
+                    <td style="max-width:150px; overflow:auto;">@item.Subject</td>
+                    <td style="white-space:pre;  max-width:250px; overflow:auto;">@item.Discription.Trim()</td>
                     <td><button style="text-decoration:none; color:black; background-color:transparent; border:none" class="cmdView" id="@item.PKey" href="#" name="@item.reply"><i class="fa-solid fa-comment-dots"></i></button></td>
-                    @*<td><a href="#" id="@item.reply" style="text-decoration:none; color:black; background-color:transparent;"><i class="fa-solid fa-comment-dots cmdView"></i></a></td>*@
                 </tr>
             }
         </tbody>

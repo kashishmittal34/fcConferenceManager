@@ -19,9 +19,6 @@ namespace fcConferenceManager.Models
         [Display(Name = "New Page Title")]
         public string newTitle { get; set; }
 
-        [Display(Name = "Link Name")]
-        public string LinkName { get; set; }
-
         [Display(Name = "Section")]
         public string Section { get; set; }
 
@@ -47,5 +44,24 @@ namespace fcConferenceManager.Models
 
         [Display(Name = "Link to Documentation")]
         public string LinkDocumentation { get; set; }
+
+        [Display(Name = "User")]
+        public string Users { get; set; }
+
+        [Display(Name = "Updated")]
+        public string Updated { get; set; }
+
+        [Display(Name = "Tab")]
+        public string Tab { get; set; }
+
+        [Display(Name = "Type")]
+        public string PageType { get; set; }
+
+
+        [Display(Name = "User Requirement")]
+        public string UserReq { get; set; }
+
+        [Display(Name = "Questions")]
+        public string ques { get; set; }
     }
 }

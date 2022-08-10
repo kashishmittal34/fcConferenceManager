@@ -6,14 +6,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace fcConferenceManager.Models.Portolo
 {
+
     public class MasterTable
     {
-        [Display(Name = "ID")]
-        public int Id { get; set; }
-        [Display(Name = "Name")]
-        public string Name
-        {
-            get; set;
-        }
+        public IEnumerable<LookUp> LookUps { get; set; }
+        public IEnumerable<GlobalSetting> GlobalSettings { get; set; }
+        public IEnumerable<RegistrationSetting> RegistrationSettings { get; set; }
+
+        public IEnumerable<EventRole> EventRoles { get; set; }
     }
 }

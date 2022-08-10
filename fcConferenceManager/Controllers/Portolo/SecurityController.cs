@@ -16,14 +16,41 @@ namespace fcConferenceManager.Controllers
     {
         private string config;
         private string baseurl;
+
+        bool view;
         public SecurityController()
         {
             config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             baseurl = ConfigurationManager.AppSettings["BaseURL"];
+            loginResponse objlt = (loginResponse)System.Web.HttpContext.Current.Session["User"];
+            if (objlt != null)
+            {
+                string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+
+                string query = $"select * from Account_List where GlobalAdministrator = 1 and pKey = {objlt.Id};";
+
+                using (SqlConnection con = new SqlConnection(config))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        if (reader.HasRows)
+                        {
+                            view = true;
+                            return;
+                        }
+                        reader.Close();
+                        con.Close();
+                    }
+                }
+            }
         }
 
         public ActionResult EditSecurityGroup(int? PK)
         {
+            loginResponse objlt = (loginResponse)Session["User"];
+            if (objlt == null || !view) return Redirect("~/Account/Portolo");
             PK = PK != null ? PK : 46;
             SecurityGroup securityGroup = new SecurityGroup();
             securityGroup.SecurtiyGroupPkey = (int)PK;
@@ -91,6 +118,8 @@ namespace fcConferenceManager.Controllers
         }
         public ActionResult AddMember(int? PK ,int? pageNo, string nameSearch, string emailSearch)
         {
+            loginResponse objlt = (loginResponse)Session["User"];
+            if (objlt == null || !view) return Redirect("~/Account/Portolo");
             List<UserRequest> userList = new List<UserRequest>();
             string query = $"select * from Account_List a join Organization_List o on a.ParentOrganization_pKey = o.pKey where a.ContactName != '' order by a.ContactName; ";
             ViewData["NameFilter"] = nameSearch;

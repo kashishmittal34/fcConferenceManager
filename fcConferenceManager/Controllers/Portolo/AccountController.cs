@@ -127,7 +127,7 @@ namespace fcConferenceManager.Controllers
                                 response.skypeaddress = dr["SkypeAddress"].ToString();
                                 response.personalbiography = dr["PersonalBio"].ToString();
                                 response.Uimg = baseurl + "/Accountimages/" + dr["imgpath"].ToString();
-                                response.degrees = dr["Degrees"].ToString();                               
+                                response.degrees = dr["Degrees"].ToString(); response.IsGlobalAdmin = (bool)dr["GlobalAdministrator"];                               
                             }
                             else
                             {
@@ -344,6 +344,11 @@ namespace fcConferenceManager.Controllers
                         SqlDataReader reader = cmd.ExecuteReader();
                         if (reader.HasRows.ToString() == "True")
                         {
+
+
+
+
+
 while (reader.Read())
                             {
                                 UserResponse response = new UserResponse();
@@ -405,19 +410,84 @@ while (reader.Read())
                                 //}
                                 //else
                                 //{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                 //    response.CV = reader["CV"].ToString();
 									 					   
                                 //}
 								 
                                 userList.Add(response);
                             }
-                   }
+								
+
+
+
+                        }
                         reader.Close();
                         //cmd.ExecuteNonQuery();
                         con.Close();
                     }
                 }
-            }       
+
+
+
+            }
+            
             catch (Exception)
             {
                 if (Session["User"] == null)
@@ -426,7 +496,9 @@ while (reader.Read())
                 }
 
             }
+
             return userList;
+
         }
 
         // GET: Account/Details/5
@@ -1020,7 +1092,7 @@ while (reader.Read())
                 //{
                 //    Redirect("~/Account/Portolo");
                 //}
-
+  
 
 
 

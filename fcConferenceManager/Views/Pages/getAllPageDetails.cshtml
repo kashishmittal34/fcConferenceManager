@@ -60,9 +60,12 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="searchbar d-block d-md-flex p-1">
                         <div class="group me-md-1 me-0">
                             @{
+
+
                                 if (ViewBag.FilterName != null)
                                 {
                                     string y = Convert.ToString(ViewBag.FilterName);
@@ -83,16 +86,14 @@
                                 {
                                     string x = Convert.ToString(ViewBag.FilterURL);
                                     @Html.TextBox("FilterURL", x, new { placeholder = "Page URL" });
-
                                 }
-
                                 else
                                 {
                                     @Html.TextBox("FilterURL", "", new { placeholder = "Page URL" });
                                 }
-
                             }
                         </div>
+
                         <div class="group me-md-1 me-0">
 
                             @Html.DropDownList("FilterStatus", new SelectList(ViewBag.getDropDownStatus, "Value", "Text"), new { style = "height:25px; width:125px;border-radius: 5px;" })
@@ -149,313 +150,387 @@
 
         <br>
 
-        <!--<div id="StatusModal" class="modal fade" role="dialog">
-            <div class="modal-dialog">-->
-        <!-- Modal content-->
-        <!--<div class="modal-content" style="height:400px">
-                    <div class="modal-header">
-
-                        <h4 class="modal-title">Batch Update Status/Section</h4>
-                    </div>
-                    <div class="modal-body">
-
-                        @Html.Label("Set Status")
-                        @Html.DropDownList("BatchStatus", new SelectList(ViewBag.getDropDownStatus, "Value", "Text"), new { @class = "form-control" })
-                        <br />
-                        <br />
-                        @Html.Label("Set Section")
-                        @Html.TextBox("BatchSection", "", new { @class = "form-control" })
-                        <br />
-                        <br />
-                        <button type="submit" class="btn btn-success">Update</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
-                    </div>
-                    <div class="modal-footer">
-
-                    </div>
-                </div>
-
-            </div>
-        </div>-->
-
-
-
     </div>
-
-    <table class="table magi-table MyTable" width=100%>
-        <tr>
-            <th width="20px">
-                <input type="checkbox" id="selecctall" style="margin:5px 0 0 5px" />
-            </th>
-            <th width="90px">
-                @Html.DisplayNameFor(model => model[0].Title)
-                @{
-                    if (ViewBag.FilterSortOrder == "Title")
-                    {
+    
 
 
-                        <a href="/Pages/getAllPageDetails?SortOrder=TitleDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+
+
+
+
+    <div style="width:95%">
+        <table class="table magi-table MyTable" style="overflow-x : scroll;width:2500px">
+            <tr>
+                <th width="20px">
+                    <input type="checkbox" id="selecctall" style="margin:5px 0 0 5px" />
+                </th>
+                <th width="90px">
+                    @Html.DisplayNameFor(model => model[0].Title)
+                    @{
+                        if (ViewBag.FilterSortOrder == "Title")
+                        {
+
+
+                            <a href="/Pages/getAllPageDetails?SortOrder=TitleDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                        else
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=Title" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+                        }
                     }
-                    else
+                </th>
+
+
+                <th width="120px">
+                    @Html.DisplayNameFor(model => model[0].newTitle)
+                    @{
+                        if (ViewBag.FilterSortOrder == "newTitle")
+                        {
+
+
+                            <a href="/Pages/getAllPageDetails?SortOrder=newTitleDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                        else
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=newTitle" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                    }
+                </th>
+
+                <th width="80px">
+                    @Html.DisplayNameFor(model => model[0].Section)
+                    @{
+                        if (ViewBag.FilterSortOrder == "Section")
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=SectionDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                        else
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=Section" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                    }
+
+                </th>
+                <th width="90px">
+                    @Html.DisplayNameFor(model => model[0].EventType)
+                    @{
+                        if (ViewBag.FilterSortOrder == "EventType")
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=EventTypeDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                        else
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=EventType" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                    }
+
+                </th>
+                <th width="70px">
+                    @Html.DisplayNameFor(model => model[0].Status)
+                    @{
+                        if (ViewBag.FilterSortOrder == "Status")
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=StatusDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                        else
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=Status" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                    }
+                </th>
+                <th width="90px">
+                    @Html.DisplayNameFor(model => model[0].EventName)
+                    @{
+                        if (ViewBag.FilterSortOrder == "EventName")
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=EventNameDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                        else
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=EventName" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+
+                        }
+
+                    }
+
+                </th>
+                <th width="130px">
+                    @Html.DisplayNameFor(model => model[0].URL)
+                    @{
+                        if (ViewBag.FilterSortOrder == "URL")
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=URLDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+
+                        }
+                        else
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=URL" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+
+                        }
+                    }
+
+                </th>
+                <th width="130px">
+                    @Html.DisplayNameFor(model => model[0].newURL)
+                    @{
+                        if (ViewBag.FilterSortOrder == "newURL")
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=newURLDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                        else
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=newURL" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                    }
+                </th>
+                <th width="90px">
+                    @Html.DisplayNameFor(model => model[0].Updated)
+                    @{
+                        if (ViewBag.FilterSortOrder == "updated")
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=updatedDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                        else
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=updated" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                    }
+                </th>
+                <th width="90px">
+                    @Html.DisplayNameFor(model => model[0].Tab)
+                    @{
+                        if (ViewBag.FilterSortOrder == "tab")
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=tabDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                        else
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=tab" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                    }
+                </th>
+                <th width="150px">
+                    @Html.DisplayNameFor(model => model[0].Users)
+                    @{
+                        if (ViewBag.FilterSortOrder == "users")
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=usersDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                        else
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=users" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                    }
+                </th>
+                <th width="150px">
+                    @Html.DisplayNameFor(model => model[0].PageType)
+                    @{
+                        if (ViewBag.FilterSortOrder == "pageType")
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=pageTypeDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                        else
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=pageType" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+                        }
+                    }
+                </th>
+                <th width="110px">
+                    @Html.DisplayNameFor(model => model[0].AccessFrom)
+                    @{
+                        if (ViewBag.FilterSortOrder == "AccessFrom")
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=AccessFromDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+
+                        }
+                        else
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=AccessFrom" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+
+                        }
+                    }
+
+
+                </th>
+                <th width="100px">
+                    @Html.DisplayNameFor(model => model[0].AccessTo)
+                    @{
+                        if (ViewBag.FilterSortOrder == "AccessTo")
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=AccessToDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+
+                        }
+                        else
+
+
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=AccessTo" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+
+                        }
+                    }
+
+                </th>
+                <th width="200px">
+                    @Html.DisplayNameFor(model => model[0].UserReq)
+                    @{
+                        if (ViewBag.FilterSortOrder == "userReq")
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=userReqDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+
+                        }
+                        else
+
+
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=userReq" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+
+                        }
+                    }
+
+                </th>
+                <th width="200px">
+                    @Html.DisplayNameFor(model => model[0].ques)
+                    @{
+                        if (ViewBag.FilterSortOrder == "ques")
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=quesDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+
+                        }
+                        else
+
+
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=ques" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+
+                        }
+                    }
+
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].Notes)
+                    @{
+                        if (ViewBag.FilterSortOrder == "Notes")
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=NotesDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+
+                        }
+                        else
+                        {
+                            <a href="/Pages/getAllPageDetails?SortOrder=Notes" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+
+                        }
+                    }
+
+
+                </th>
+                <th width="200px">
+
+                    @Html.DisplayNameFor(model => model[0].LinkDocumentation)
+                    @{
+                        if (ViewBag.FilterSortOrder == "LinkDocumentation")
+                        {
+
+
+                            <a href="/Pages/getAllPageDetails?SortOrder=LinkDocumentationDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
+
+                        }
+                        else
+                        {
+
+                            <a href="/Pages/getAllPageDetails?SortOrder=LinkDocumentation" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+
+                        }
+                    }
+
+                </th>
+
+                <th width="90px"></th>
+            </tr>
+            @{
+                if (Model.Count > 0)
+                {
+                    foreach (var item in Model)
                     {
-                        <a href="/Pages/getAllPageDetails?SortOrder=Title" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
+                        <tr>
+
+
+                            <td>
+                                <input class="checkbox" type="checkbox" name="check[]" value="@item.Id" style="margin:5px 0 0 3px" />
+                                @*@Html.CheckBoxFor(modelItem => item.Check, new { @id = item.Id, @name = "check", @value = item.Id })*@
+                            </td>
+                            <td style="word-break: break-all;">
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.newTitle)
+                            </td>
+                            <td style="word-break: break-all;">
+                                @Html.DisplayFor(modelItem => item.Section)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EventType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                            <td style="word-break: break-all;">
+                                @Html.DisplayFor(modelItem => item.EventName)
+                            </td>
+                            <td style="word-break: break-all;">
+                                <a href="@item.URL">@item.URL</a>
+                            </td>
+                            <td style="word-break: break-all;">
+                                <a href="@item.newURL">@item.newURL</a>
+                            </td>
+                            <td style="word-break: break-all;">
+                                @Html.DisplayFor(modelItem => item.Updated)
+                            </td>
+                            <td style="word-break: break-all;">
+                                @Html.DisplayFor(modelItem => item.Tab)
+                            </td>
+                            <td style="word-break: break-all;">
+                                @Html.DisplayFor(modelItem => item.Users)
+                            </td>
+                            <td style="word-break: break-all;">
+                                @Html.DisplayFor(modelItem => item.PageType)
+                            </td>
+                            <td style="word-break: break-all;">
+                                @Html.DisplayFor(modelItem => item.AccessFrom)
+                            </td>
+                            <td style="word-break: break-all;">
+                                @Html.DisplayFor(modelItem => item.AccessTo)
+                            </td>
+                            <td style="word-break: break-all;">
+                                @Html.DisplayFor(modelItem => item.UserReq)
+                            </td>
+                            <td style="word-break: break-all;">
+                                @Html.DisplayFor(modelItem => item.ques)
+                            </td>
+                            <td style="word-break: break-all;">
+                                @Html.DisplayFor(modelItem => item.Notes)
+                            </td>
+                            <td style="word-break: break-all;">
+                                @Html.DisplayFor(modelItem => item.LinkDocumentation)
+                            </td>
+
+                            <td>
+                                @Html.ActionLink("Edit", "updatePageDetails", new { id = item.Id }) |
+                                @Html.ActionLink("Delete", "deletePage", new { id = item.Id }, new { onclick = "return confirm('Are you sure want to Delete?');" })
+                            </td>
+                        </tr>
                     }
                 }
-            </th>
-
-
-            <th width="120px">
-                @Html.DisplayNameFor(model => model[0].newTitle)
-                @{
-                    if (ViewBag.FilterSortOrder == "newTitle")
-                    {
-
-
-                        <a href="/Pages/getAllPageDetails?SortOrder=newTitleDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
-                    }
-                    else
-                    {
-                        <a href="/Pages/getAllPageDetails?SortOrder=newTitle" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
-                    }
-                }
-            </th>
-
-            <th width="80px">
-                @Html.DisplayNameFor(model => model[0].Section)
-                @{
-                    if (ViewBag.FilterSortOrder == "Section")
-                    {
-                        <a href="/Pages/getAllPageDetails?SortOrder=SectionDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
-                    }
-                    else
-                    {
-                        <a href="/Pages/getAllPageDetails?SortOrder=Section" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
-                    }
-                }
-
-            </th>
-            <th width="90px">
-                @Html.DisplayNameFor(model => model[0].EventType)
-                @{
-                    if (ViewBag.FilterSortOrder == "EventType")
-                    {
-                        <a href="/Pages/getAllPageDetails?SortOrder=EventTypeDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
-                    }
-                    else
-                    {
-                        <a href="/Pages/getAllPageDetails?SortOrder=EventType" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
-                    }
-                }
-
-            </th>
-            <th width="70px">
-                @Html.DisplayNameFor(model => model[0].Status)
-                @{
-                    if (ViewBag.FilterSortOrder == "Status")
-                    {
-                        <a href="/Pages/getAllPageDetails?SortOrder=StatusDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
-                    }
-                    else
-                    {
-                        <a href="/Pages/getAllPageDetails?SortOrder=Status" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
-                    }
-                }
-
-
-            </th>
-            <th width="90px">
-                @Html.DisplayNameFor(model => model[0].EventName)
-                @{
-                    if (ViewBag.FilterSortOrder == "EventName")
-                    {
-                        <a href="/Pages/getAllPageDetails?SortOrder=EventNameDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
-                    }
-                    else
-                    {
-                        <a href="/Pages/getAllPageDetails?SortOrder=EventName" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
-
-                    }
-                }
-
-            </th>
-            <th width="130px">
-                @Html.DisplayNameFor(model => model[0].URL)
-                @{
-                    if (ViewBag.FilterSortOrder == "URL")
-                    {
-                        <a href="/Pages/getAllPageDetails?SortOrder=URLDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
-
-                    }
-                    else
-                    {
-                        <a href="/Pages/getAllPageDetails?SortOrder=URL" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
-
-                    }
-                }
-
-
-            </th>
-
-            <th width="130px">
-                @Html.DisplayNameFor(model => model[0].newURL)
-                @{
-                    if (ViewBag.FilterSortOrder == "newURL")
-                    {
-
-
-                        <a href="/Pages/getAllPageDetails?SortOrder=newURLDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
-                    }
-                    else
-                    {
-                        <a href="/Pages/getAllPageDetails?SortOrder=newURL" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
-                    }
-                }
-            </th>
-
-            <th width="110px">
-                @Html.DisplayNameFor(model => model[0].AccessFrom)
-                @{
-                    if (ViewBag.FilterSortOrder == "AccessFrom")
-                    {
-                        <a href="/Pages/getAllPageDetails?SortOrder=AccessFromDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
-
-                    }
-                    else
-                    {
-                        <a href="/Pages/getAllPageDetails?SortOrder=AccessFrom" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
-
-                    }
-                }
-
-
-            </th>
-            <th width="100px">
-                @Html.DisplayNameFor(model => model[0].AccessTo)
-                @{
-                    if (ViewBag.FilterSortOrder == "AccessTo")
-                    {
-                        <a href="/Pages/getAllPageDetails?SortOrder=AccessToDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
-
-                    }
-                    else
-
-
-                    {
-                        <a href="/Pages/getAllPageDetails?SortOrder=AccessTo" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
-
-                    }
-                }
-
-            </th>
-
-            <th>
-                @Html.DisplayNameFor(model => model[0].Notes)
-                @{
-                    if (ViewBag.FilterSortOrder == "Notes")
-                    {
-                        <a href="/Pages/getAllPageDetails?SortOrder=NotesDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
-
-                    }
-                    else
-                    {
-                        <a href="/Pages/getAllPageDetails?SortOrder=Notes" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
-
-                    }
-                }
-
-
-            </th>
-            <th width="160px">
-
-                @Html.DisplayNameFor(model => model[0].LinkDocumentation)
-                @{
-                    if (ViewBag.FilterSortOrder == "LinkDocumentation")
-                    {
-
-
-                        <a href="/Pages/getAllPageDetails?SortOrder=LinkDocumentationDesc" style="color:black"><img src="~/images/Icons/sortup.svg" alt="Sort" height="15" width="15" /></a>
-
-                    }
-                    else
-                    {
-
-                        <a href="/Pages/getAllPageDetails?SortOrder=LinkDocumentation" style="color:black"><img src="~/images/Icons/sortdown.svg" alt="Sort" height="15" width="15" /></a>
-
-                    }
-                }
-
-            </th>
-
-            <th width="90px"></th>
-        </tr>
-        @{
-            if (Model.Count > 0)
-            {
-                foreach (var item in Model)
+                else
                 {
                     <tr>
+                        <td colspan="14" style="text-align:center">NO RECORD FOUND!!!!</td>
 
-
-                        <td>
-                            <input class="checkbox" type="checkbox" name="check[]" value="@item.Id" style="margin:5px 0 0 3px" />
-                            @*@Html.CheckBoxFor(modelItem => item.Check, new { @id = item.Id, @name = "check", @value = item.Id })*@
-                        </td>
-                        <td style="word-break: break-all;">
-                            @Html.DisplayFor(modelItem => item.Title)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.newTitle)
-                        </td>
-                        <td style="word-break: break-all;">
-                            @Html.DisplayFor(modelItem => item.Section)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.EventType)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Status)
-                        </td>
-                        <td style="word-break: break-all;">
-                            @Html.DisplayFor(modelItem => item.EventName)
-                        </td>
-                        <td style="word-break: break-all;">
-                            <a href="@item.URL">@item.URL</a>
-                        </td>
-                        <td style="word-break: break-all;">
-                            <a href="@item.newURL">@item.newURL</a>
-                        </td>
-                        <td style="word-break: break-all;">
-                            @Html.DisplayFor(modelItem => item.AccessFrom)
-                        </td>
-                        <td style="word-break: break-all;">
-                            @Html.DisplayFor(modelItem => item.AccessTo)
-                        </td>
-                        <td style="word-break: break-all;">
-                            @Html.DisplayFor(modelItem => item.Notes)
-                        </td>
-                        <td style="word-break: break-all;">
-                            @Html.DisplayFor(modelItem => item.LinkDocumentation)
-                        </td>
-
-                        <td>
-                            @Html.ActionLink("Edit", "updatePageDetails", new { id = item.Id }) |
-                            @Html.ActionLink("Delete", "deletePage", new { id = item.Id }, new { onclick = "return confirm('Are you sure want to Delete?');" })
-                        </td>
                     </tr>
                 }
             }
-            else
-            {
-                <tr>
-                    <td colspan="14" style="text-align:center">NO RECORD FOUND!!!!</td>
 
-                </tr>
-            }
-        }
-
-    </table>
-
+        </table>
+    </div>
 }
 
 <hr />

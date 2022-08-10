@@ -157,7 +157,7 @@ namespace fcConferenceManager.Controllers
                         int Id = objlt.Id;
                         string filename = Id + "_img.jpg";
                         //string filename = Path.GetFileName(file.FileName);
-                        string imgPath = Path.Combine(Server.MapPath("/ImagesUpload/"), filename);
+                        string imgPath = Path.Combine(Server.MapPath("/Accountimages/"), filename);
                         if (bytes != null)
                         {
                             if (System.IO.File.Exists(imgPath))
@@ -178,7 +178,7 @@ namespace fcConferenceManager.Controllers
                             }
                             file.SaveAs(imgPath);
                         }
-                        cmd.Parameters.AddWithValue("@Uimg", "/ImagesUpload/" + file.FileName);
+                        cmd.Parameters.AddWithValue("@Uimg", "/Accountimages/" + file.FileName);
                     }
                     else
                     {

@@ -1,0 +1,256 @@
+﻿@model Elimar.Models.Process
+@{
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+}
+<head>
+    <script>
+        function validate(e) {
+            debugger;
+            if ($("#discription").val().trim().length == 0) {
+                alert("please enter description");
+                e.preventDefault();
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        $(document).ready(function () {
+            $(".next1").click(function () {
+                if ($("#name").val().trim().length == 0) {
+                    alert("please enter name");
+                }
+                else {
+                    $(".next1").addClass("active");
+                    $(".next").removeClass("active");
+                    $(".next2").removeClass("active");
+                    $(".next3").removeClass("active");
+                    $(".next4").removeClass("active");
+                    $("#process1").hide();
+                    $("#process3").hide();
+                    $("#process4").hide();
+                    $("#process5").hide();
+                    $("#process2").show();
+                    $("#submit").hide();
+                }
+            });
+            $(".next").click(function () {
+                $(".next").addClass("active");
+                $(".next1").removeClass("active");
+                $(".next2").removeClass("active");
+                $(".next3").removeClass("active");
+                $(".next4").removeClass("active");
+                $("#process2").hide();
+                $("#process3").hide();
+                $("#process4").hide();
+                $("#process5").hide();
+                $("#process1").show();
+                $("#submit").hide();
+            });
+            $(".next2").click(function () {
+                if ($("#name").val().trim().length == 0) {
+                    alert("please enter name");
+                }
+                else if ($("#email").val().trim().length == 0) {
+                    alert("please enter email");
+                }
+                else {
+                    $(".next2").addClass("active");
+                    $(".next").removeClass("active");
+                    $(".next1").removeClass("active");
+                    $(".next3").removeClass("active");
+                    $(".next4").removeClass("active");
+                    $("#process2").hide();
+                    $("#process1").hide();
+                    $("#process4").hide();
+                    $("#process5").hide();
+                    $("#process3").show();
+                    $("#submit").hide();
+                }
+            });
+            $(".next3").click(function () {
+                if ($("#name").val().trim().length == 0) {
+                    alert("please enter name");
+                }
+                else if ($("#email").val().trim().length == 0) {
+                    alert("please enter email");
+                }
+                else if ($("#telephone").val().trim().length == 0) {
+                    alert("please enter telephone no");
+                }
+                else {
+                    $(".next3").addClass("active");
+                    $(".next").removeClass("active");
+                    $(".next1").removeClass("active");
+                    $(".next2").removeClass("active");
+                    $(".next4").removeClass("active");
+                    $("#process2").hide();
+                    $("#process1").hide();
+                    $("#process3").hide();
+                    $("#process5").hide();
+                    $("#process4").show();
+                    $("#submit").hide();
+                }
+            });
+            $(".next4").click(function () {
+                if ($("#name").val().trim().length == 0) {
+                    alert("please enter name");
+                }
+                else if ($("#email").val().trim().length == 0) {
+                    alert("please enter email");
+                }
+                else if ($("#telephone").val().trim().length == 0) {
+                    alert("please enter telephone no");
+                }
+                else if ($("#subject").val().trim().length == 0) {
+                    alert("please enter subject");
+                }
+                else {
+                    $(".next4").addClass("active");
+                    $(".next").removeClass("active");
+                    $(".next1").removeClass("active");
+                    $(".next2").removeClass("active");
+                    $(".next3").removeClass("active");
+                    $("#process2").hide();
+                    $("#process1").hide();
+                    $("#process3").hide();
+                    $("#process4").hide();
+                    $("#process5").show();
+                    $("#submit").show();
+                }
+            });
+        });
+
+    </script>
+    <style>
+        .pointer.active {
+            background: cornflowerblue;
+        }
+        .pointer.active::before {
+            border-left: 20px solid cornflowerblue;
+        }
+        .pointer {
+            width: 200px;
+            height: 40px;
+            position: relative;
+            background:lightgrey;
+            margin:3px;
+            text-align:center;
+            cursor:pointer;
+        }
+        .pointer:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            border-left: 20px solid white;
+            border-top: 20px solid transparent;
+            border-bottom: 20px solid transparent;
+        }
+
+        .pointer:before {
+            content: "";
+            position: absolute;
+            right: -20px;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            border-left: 20px solid lightGrey;
+            border-top: 20px solid transparent;
+            border-bottom: 20px solid transparent;
+        }
+        .text-content{
+            text-align:center;
+            margin-top:10px;
+        }
+        a{
+            color:black;
+        }
+        a:hover{
+            color:black;
+        }
+    </style>
+</head>
+<body>
+    <form class="container" action="/Portolo/ProcessSubmit" method="post" enctype="multipart/form-data" onsubmit="validate(event);" style="padding: 5px;">
+        <div class="row">
+            <div style="z-index:5" class="col pointer active next">
+                <a href="#">
+                    <div class="text-content">
+                        <p>Process1</p>
+                    </div>
+                </a>
+            </div>
+            <div style="z-index:4" class="col pointer next1">
+                <a href="#">
+                    <div class="text-content">
+                        <p>Process2</p>
+                    </div>
+                </a>
+            </div>
+            <div style="z-index:3" class="col pointer next2">
+                <a href="#">
+                    <div class="text-content">
+                        <p>Process3</p>
+                    </div>
+                </a>
+            </div>
+            <div style="z-index:2" class="col pointer next3">
+                <a href="#">
+                    <div class="text-content">
+                        <p>Process4</p>
+                    </div>
+                </a>
+            </div>
+            <div style="z-index:1" class="col pointer next4">
+                <a href="#">
+                    <div class="text-content">
+                        <p>Process5</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div id="process1" class="row">
+            <div class="col-4">
+                <h1>Process 1</h1><br />
+                <label>Name</label>
+                <input style="margin:2px 10px 10px 0px;" id="name" name="name" class="form-control" />
+                <input type="button" class="btn btn-primary next1" value="Next" />
+            </div>
+        </div>
+        <div id="process2" class="row" style="display:none;">
+            <div class="col-4">
+                <h1>Process 2</h1><br />
+                <label>Email</label>
+                <input style="margin:3px 10px 10px 0px;" id="email" name="email" class="form-control" />
+                <input type="button" class="btn btn-primary next2" value="Next" />
+            </div>
+        </div>
+        <div id="process3" class="row "  style="display:none;">
+            <div class="col-4">
+                <h1>Process 3</h1><br />
+                <label>Telephone</label>
+                <input style="margin:3px 10px 10px 0px;" id="telephone" name="telephone" class="form-control" />
+                <input type="button" class="btn btn-primary next3" value="Next" />
+            </div>
+        </div>
+        <div id="process4" class="row "  style="display:none;">
+            <div class="col-4">
+                <h1>Process 4</h1><br />
+                <label>Subject</label>
+                <input style="margin:3px 10px 10px 0px;" id="subject" name="subject" class="form-control" />
+                <input type="button" class="btn btn-primary next4" value="Next" />
+            </div>
+        </div>
+        <div id="process5" class="row" style="display:none;">
+            <div class="col-4">
+                <h1>Process 5</h1><br />
+                <label>Description</label>
+                <input style="margin:3px 10px 10px 0px;" id="discription" name="discription" class="form-control" />
+            </div>
+        </div>
+        <input style="display:none;" id="submit" class="btn btn-primary" value="Submit" type="submit"/>
+    </form>
+</body>

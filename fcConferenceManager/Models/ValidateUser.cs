@@ -362,6 +362,9 @@ namespace MAGI_API.Models
     {
         public string Account_pKey { get; set; }
         public string Fullname { get; set; }
+        public string Nickname { get; set; }
+        public string MiddleName { get; set; }
+        public string Suffix { get; set; }
         public string ShowStar { get; set; }
         public string Tooltip { get; set; }
         public string Degrees { get; set; }

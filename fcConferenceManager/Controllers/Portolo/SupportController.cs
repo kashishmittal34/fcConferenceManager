@@ -26,7 +26,28 @@ namespace fcConferenceManager.Controllers
             {
                 string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
 
-                string query = $"select * from SecurityGroup_Members sm join Privilage_listForPortolo pl on pl.SecurityGroupPkey = sm.SecurityGroup_pKey where sm.Account_pKey = {objlt.Id} and pl.PrivilageID = 'SupportList';";
+                string query = $"select * from Account_List where GlobalAdministrator = 1 and pKey = {objlt.Id};";
+
+                using (SqlConnection con = new SqlConnection(config))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        if (reader.Read())
+                        {
+                            view = true;
+                            edit = true;
+                            add = true;
+                            delete = true;
+                            return;
+                        }
+                        reader.Close();
+                        con.Close();
+                    }
+                }
+
+                query = $"select * from SecurityGroup_Members sm join Privilage_listForPortolo pl on pl.SecurityGroupPkey = sm.SecurityGroup_pKey where sm.Account_pKey = {objlt.Id} and pl.PrivilageID = 'SupportList';";
 
                 using (SqlConnection con = new SqlConnection(config))
                 {
@@ -37,10 +58,10 @@ namespace fcConferenceManager.Controllers
                         while (reader.Read())
                         {
                             account = int.Parse(reader["Account_pkey"].ToString());
-                            view = bool.Parse(reader["AllowView"].ToString());
-                            add = bool.Parse(reader["AllowAdd"].ToString());
-                            edit = bool.Parse(reader["AllowEdit"].ToString());
-                            delete = bool.Parse(reader["AllowDelete"].ToString());
+                            view = view || bool.Parse(reader["AllowView"].ToString());
+                            add =  add || bool.Parse(reader["AllowAdd"].ToString());
+                            edit =edit ||  bool.Parse(reader["AllowEdit"].ToString());
+                            delete = delete || bool.Parse(reader["AllowDelete"].ToString());
                         }
                         reader.Close();
                         con.Close();
@@ -104,7 +125,7 @@ namespace fcConferenceManager.Controllers
             }
             else if (emailSearch != null)
             {
-                query = $"select * from PortoloSupport where name like '%{emailSearch}%'";
+                query = $"select * from PortoloSupport where email like '%{emailSearch}%'";
             }
             switch (nameSort)
             {
@@ -132,6 +153,7 @@ namespace fcConferenceManager.Controllers
                         help.Subject = reader["subject"].ToString();
                         help.Telephone = reader["telephone"].ToString();
                         help.Discription = reader["description"].ToString();
+                        help.reply = reader["reply"].ToString();
                         helpList.Add(help);
                     }
                     reader.Close();
@@ -152,7 +174,6 @@ namespace fcConferenceManager.Controllers
 
             if (count > 5)
             {
-
                 int start = (int)(pageNo != null ? (pageNo - 1) * 5 : 0);
                 int end = start + 5 > count ? count % 5 : 5;
 
@@ -161,6 +182,21 @@ namespace fcConferenceManager.Controllers
             }
 
             return View("~/Views/Portolo/support/supportList.cshtml", helpList);
+        }
+
+        [HttpPost]
+        public JsonResult Reply(int id, string message)
+        {
+            SqlConnection config = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
+            string query = $"Update PortoloSupport set reply = '{message}' where Pkey = {id}";
+
+            config.Open();
+
+            SqlCommand cmd = new SqlCommand(query, config);
+
+            cmd.ExecuteNonQuery();
+            config.Close();
+            return Json(JsonRequestBehavior.AllowGet);
         }
     }
 }

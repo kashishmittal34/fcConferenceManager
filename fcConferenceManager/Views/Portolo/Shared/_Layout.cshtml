@@ -15,33 +15,7 @@
     <link rel="stylesheet" href="~/css/responsive.css">
     <script type="text/javascript" src="https://magiweb-qa.azurewebsites.net/Scripts/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://magiweb-qa.azurewebsites.net/Scripts/modernizr-2.8.3.js"></script>
-    <script type="text/javascript">
-
-        var urlRedirect = "../Account/Portolo";
-
-        function callAjax(e) {
-            $("#Logout").click(function (e) {
-                $.ajax({
-                    type: "POST",
-                    url: "../Dashboard/Logout",
-
-
-                    success: function (result) {
-                        debugger;
-                            window.location.href = urlRedirect;
-
-
-                    },
-                    error: function (result) {
-                        alert('error');
-
-                    }
-                });
-            });
-        }
-       
-
-    </script>
+    
 </head>
 <body style="padding:0%;font-size:14px;">
 
@@ -85,12 +59,14 @@
                                     <ul class="sub-nav">
 
                                         <li><a class="sub-nav__link" href="~/Portolo/Topics">Topics</a></li>
-																																 
+										                                        <li><a class="sub-nav__link" href="~/Product/ProductList">Products</a></li>
+																						 
 																													   
 																												 
 																									
 																								   
 																										 
+																											 
 																											 
 																										  
 																									  
@@ -105,7 +81,7 @@
                                     <a class="nav__link mr-0">Configuration</a>
                                     <ul class="sub-nav">
                                         <li><a class="sub-nav__link" href="#">Topics/Discussion groups</a></li>
-                                        <li><a class="sub-nav__link" href="#">Process library</a></li>
+                                        <li><a class="sub-nav__link" href="~/Portolo/ProcessLibrary">Process library</a></li>
                                         <li><a class="sub-nav__link" href="#">Performance </a></li>
                                         <li><a class="sub-nav__link" href="#">Optional Features</a></li>
                                         <li><a class="sub-nav__link" href="#">System Configuration</a></li>
@@ -126,13 +102,13 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-             <div class="d-flex justify-content-between">
+             <div class="d-flex justify-content-between align-items-center">
                             <div class="botm-links">
                                 <a href="~/Portolo/Tasklist" target="_blank">Task List</a>
                                 <a href="~/Dashboard/Scorecard">Score Card</a>
                                 <a href="#">Process Mapping Tools</a>
                                         <a class="nav__link mr-0" href="#"style="padding:5px">My Pages</a>
-                                        <ul class="sub-nav" style="left:380px;top:110px" >
+                                        <ul class="sub-nav" style="left:380px;top:110px">
                                             <li><a class="sub-nav__link" href="~/Account/ProfilePage">My Profile</a></li>
                                             <li><a class="sub-nav__link" href="~/Account/MyOrganization">My organization</a></li>
                                             <li><a class="sub-nav__link" href="~/Portolo/UserTopics">My topics</a></li>
@@ -154,7 +130,7 @@
                                 {
 
                                     <a href="~/Account/ProfilePage">@Session["FirstName"] @Session["LastName"]</a>
-                                    <button id="Logout" class="brdr-1" @*style="background: #ffa500; color: white; margin: -3px; "*@ onclick="callAjax(this)">Logout</button>
+                                    <button id="Logout" class="brdr-1" @*style="background: #ffa500; color: white; margin: -3px; "*@>Logout</button>
  
                                 }
                                 @*<a href="" class="brdr-1">Logout</a>*@
@@ -173,9 +149,40 @@
             @RenderBody()
                         
         </div>
+		<footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <p> © 2022 by Elimar Systems. All Rights Reserved <a href="#" class="ml-5">Website Terms of Use</a></p>
+                    </div>
+                </div>
+            </div>
+        </footer>		 
         <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
         @RenderSection("scripts", required: false)
 
 
     </body>
 </html>
+
+<script>
+
+    var urlRedirect = "../Account/Portolo";
+
+    $("#Logout").click(function (e) {
+        debugger
+        $.ajax({
+            type: "POST",
+            url: "/Dashboard/Logout",
+
+            success: function (result) {
+                window.location.href = urlRedirect;
+            },
+            error: function (result) {
+                alert('error');
+
+            }
+        });
+    });
+
+</script>		

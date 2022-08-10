@@ -34,8 +34,8 @@
         {
             <div class="row mb-2 gx-1" style="text-align:right">
                 <div>
-                    <input type="submit" value="Save" class="btn btn-default" style="width:100px"/>
-                    <a href="/pages/getAllPageDetails" class="btn"  style="width:100px">Cancel</a>
+                    <input type="submit" value="Save" class="btn btn-default" style="width:100px" />
+                    <a href="/pages/getAllPageDetails" class="btn" style="width:100px">Cancel</a>
                 </div>
 
 
@@ -57,7 +57,7 @@
                 </div>
 
                 <div class="col-md-3">
-                   
+
                     @Html.LabelFor(model => model.Section, htmlAttributes: new { @class = "control-label labelbold" })
 
                     @Html.DropDownListFor(model => model.Section, new SelectList(ViewBag.getDropDownSection, "Value", "Text"), new { @class = "form-control", style = "height:37px;border-radius: 5px !important;" })
@@ -81,7 +81,7 @@
 
                 <div class="col-md-3">
                     @Html.LabelFor(model => model.EventName, htmlAttributes: new { @class = "control-label col-md-3 labelbold" })
-                    @Html.TextBoxFor(model => model.EventName, new { @class = "form-control", @id = "trim_input6", @onchange = "myFunction();", required = "required" })
+                    @Html.TextBoxFor(model => model.EventName, new { @class = "form-control", @id = "trim_input6", @onchange = "myFunction();"})
                 </div>
             </div>
             <div class="row mb-2 gx-1">
@@ -113,6 +113,53 @@
                 </div>
 
             </div>
+
+            <div class="row mb-3">
+
+                <div class="col-md-2" style="margin:0 19px 0 0">
+                    @Html.LabelFor(model => model.Updated, htmlAttributes: new { @class = "control-label col-md-3 labelbold" })
+
+
+                    @Html.TextBoxFor(model => model.Updated, new { @class = "form-control", @id = "trim_input9", @onchange = "myFunction();" })
+
+
+                </div>
+
+                <div class="col-md-2" style="margin:0 18px 0 18px">
+
+                    @Html.LabelFor(model => model.Tab, htmlAttributes: new { @class = "control-label col-md-4 labelbold" })
+
+                    @Html.TextBoxFor(model => model.Tab, new { @class = "form-control", @id = "trim_input10", @onchange = "myFunction();" })
+                </div>
+
+                <div class="col-md-2" style="margin:0 18px 0 18px">
+                    @Html.LabelFor(model => model.Users, htmlAttributes: new { @class = "control-label col-md-8 labelbold" })
+
+                    @Html.TextBoxFor(model => model.Users, new { @class = "form-control", @id = "trim_input11", @onchange = "myFunction();" })
+
+                </div>
+                <div class="col-md-2" style="margin:0 0 0 19px">
+                    @Html.LabelFor(model => model.PageType, htmlAttributes: new { @class = "control-label col-md-8 labelbold" })
+
+                    @Html.TextBoxFor(model => model.PageType, new { @class = "form-control", @id = "trim_input12", @onchange = "myFunction();" })
+
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                @Html.LabelFor(model => model.UserReq, htmlAttributes: new { @class = "control-label col-md-9 labelbold" })
+                <div class="col-md-9">
+                    @Html.TextAreaFor(model => model.UserReq, new { @class = "form-control", @id = "trim_input13", @onchange = "myFunction();" })
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                @Html.LabelFor(model => model.ques, htmlAttributes: new { @class = "control-label col-md-9 labelbold" })
+                <div class="col-md-9">
+                    @Html.TextAreaFor(model => model.ques, new { @class = "form-control", @id = "trim_input14", @onchange = "myFunction();" })
+                </div>
+            </div>
+
             <div class="row mb-2">
                 <div class="col-md-9">
                     @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-9 labelbold" })
@@ -143,6 +190,12 @@
             document.getElementById("trim_input6").value = document.getElementById("trim_input6").value.trim();
             document.getElementById("trim_input7").value = document.getElementById("trim_input7").value.trim();
             document.getElementById("trim_input8").value = document.getElementById("trim_input8").value.trim();
+            document.getElementById("trim_input9").value = document.getElementById("trim_input9").value.trim();
+            document.getElementById("trim_input10").value = document.getElementById("trim_input10").value.trim();
+            document.getElementById("trim_input11").value = document.getElementById("trim_input11").value.trim();
+            document.getElementById("trim_input12").value = document.getElementById("trim_input12").value.trim();
+            document.getElementById("trim_input13").value = document.getElementById("trim_input13").value.trim();
+            document.getElementById("trim_input14").value = document.getElementById("trim_input14").value.trim();
 
         }
         $(function () {
