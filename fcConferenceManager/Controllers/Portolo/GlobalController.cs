@@ -53,8 +53,18 @@ namespace fcConferenceManager.Controllers.Portolo
             ApplicationSettingViewModel model = new ApplicationSettingViewModel();
             if (AccountImg != null)
             {
-                model.AccountImg = GetFileName(AccountImg);
+                var Extension = Path.GetExtension(AccountImg.FileName);
+                var changeExtension = Path.ChangeExtension(Extension, ".jpg");
+                var ResourcefileName = "AccountImage" + changeExtension;
+                string path = Path.Combine(Server.MapPath("~/ImagesUpload/"), ResourcefileName);
+                string filepath = Url.Content(Path.Combine("~/ImagesUpload/", ResourcefileName));
+                if (System.IO.File.Exists(filepath))
+                {
+                    System.IO.File.Delete(filepath);
+                }
+                AccountImg.SaveAs(path);
 
+                model.AccountImg = filepath;
             }
             else
             {
@@ -73,12 +83,22 @@ namespace fcConferenceManager.Controllers.Portolo
             return RedirectToAction("AppSettings", "Global");
         }
         [HttpPost]
-        public ActionResult OrgnaizationSettings(HttpPostedFileBase OrganizationImg)
+        public ActionResult OrganizationSettings(HttpPostedFileBase OrganizationImg)
         {
             ApplicationSettingViewModel model = new ApplicationSettingViewModel();
             if (OrganizationImg != null)
             {
-                model.OrganizationImg = GetFileName(OrganizationImg);
+                var Extension = Path.GetExtension(OrganizationImg.FileName);
+                var changeExtension = Path.ChangeExtension(Extension, ".jpg");
+                var ResourcefileName = "OrganizationImage" + changeExtension;
+                string path = Path.Combine(Server.MapPath("~/ImagesUpload/"), ResourcefileName);
+                string filepath = Url.Content(Path.Combine("~/ImagesUpload/", ResourcefileName));
+                if (System.IO.File.Exists(filepath))
+                {
+                    System.IO.File.Delete(filepath);
+                }
+                OrganizationImg.SaveAs(path);
+                model.OrganizationImg = filepath;
             }
             else
             {
@@ -126,7 +146,7 @@ namespace fcConferenceManager.Controllers.Portolo
             string query = string.Empty;
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             SqlConnection con = new SqlConnection(config);
-            query = "Update Portolo_ApplicationSettings set SettingValue = '"+model+"' where pKey = 200";
+            query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where pKey = 200";
             con.Open();
             SqlCommand command = new SqlCommand(query, con);
             int numResult = command.ExecuteNonQuery();
@@ -142,7 +162,7 @@ namespace fcConferenceManager.Controllers.Portolo
             string query = string.Empty;
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             SqlConnection con = new SqlConnection(config);
-            query = "Update Portolo_ApplicationSettings set SettingValue = '"+model+"' where pKey = 201";
+            query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where pKey = 201";
             con.Open();
             SqlCommand command = new SqlCommand(query, con);
             int numResult = command.ExecuteNonQuery();
@@ -255,22 +275,7 @@ namespace fcConferenceManager.Controllers.Portolo
             }
 
         }
-        public string GetFileName(HttpPostedFileBase file)
-        {
-
-            string filename = Path.GetFileName(file.FileName);
-            if ((file != null) && file.ContentLength > 0)
-            {
-                var Extension = Path.GetExtension(file.FileName);
-                var ResourcefileName = "ImagePath_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + Extension;
-                string path = Path.Combine(Server.MapPath("~/ImagesUpload/"), ResourcefileName);
-                string filepath = Url.Content(Path.Combine("~/ImagesUpload/", ResourcefileName));
-                file.SaveAs(path);
-                return filepath;
-            }
-
-            return filename;
-        }
+       
 
     }
 }
