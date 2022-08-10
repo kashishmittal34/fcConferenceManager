@@ -80,7 +80,6 @@
     <Compile Include="Controllers\Portolo\DashboardController.cs" />
     <Compile Include="Controllers\Portolo\ElimarController.cs" />
     <Compile Include="Controllers\Portolo\ConfigurationController.cs" />
-    <Compile Include="Controllers\Portolo\GlobalController.cs" />
     <Compile Include="Controllers\Portolo\MasterPageController.cs" />
     <Compile Include="Controllers\Portolo\PortoloController.cs" />
     <Compile Include="Controllers\Portolo\ProductController.cs" />
@@ -2380,7 +2379,6 @@
     <Content Include="Views\Portolo\MasterPage\MasterPage.cshtml" />
     <Content Include="Views\Portolo\Product\AddProduct.cshtml" />
     <Content Include="Views\Portolo\Product\Index.cshtml" />
-    <Content Include="Views\Portolo\Global\AppSettings.cshtml" />
     <Content Include="Views\Portolo\Process.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
