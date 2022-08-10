@@ -16,7 +16,7 @@ using System.Web.Mvc;
 namespace fcConferenceManager.Controllers.Portolo
 {
     [CheckActiveEventAttribute]
-    public class GlobalController : Controller
+    public class ConfigurationController : Controller
     {
         DBAccessLayer dba = new DBAccessLayer();
         static SqlOperation repository = new SqlOperation();
@@ -32,12 +32,12 @@ namespace fcConferenceManager.Controllers.Portolo
             connString += string.Format("MultipleActiveResultSets={0};", "true");
             return connString;
         }
-        public GlobalController()
+        public ConfigurationController()
         {
             config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
         }
 
-        public ActionResult AppSettings(ApplicationSettingViewModel setting)
+        public ActionResult ConfigurationSettings(ApplicationSettingViewModel setting)
         {
 
             List<ApplicationSetting> setlist = GetSettingDetails();
@@ -124,7 +124,6 @@ namespace fcConferenceManager.Controllers.Portolo
             string query = "Select SettingValue from Portolo_ApplicationSettings where pKey = 200 ";
             SqlCommand command = new SqlCommand(query, con);
             string accountname = command.ExecuteScalar().ToString();
-
             con.Close();
             return accountname;
         }

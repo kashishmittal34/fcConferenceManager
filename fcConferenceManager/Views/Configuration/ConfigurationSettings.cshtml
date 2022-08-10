@@ -13,7 +13,7 @@
     <script>
         function GetDetails(id) {
             $.ajax({
-                url: "/Global/EditSetting/" + id,
+                url: "/Configuration/EditSetting/" + id,
                 type: "GET",
                 contentType: "application/json;charset=UTF-8",
                 dataType: "json",
@@ -40,68 +40,23 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#Apply').prop('disabled', true);
-            $('#ActImg').change(function () {
+            $('#Apply #Insert').prop('disabled', true);
+            $('#ActImg #OrgImg').change(function () {
                 var extension = $(this).val().split('.').pop().toLowerCase();
                 var validFileExtensions = ['jpg', 'png', 'jpeg'];
                 if ($.inArray(extension, validFileExtensions) == -1) {
                     alert("Sorry!! Upload only 'jpg', 'png', 'jpeg' Images")
                     $(this).replaceWith($(this).val('').clone(true));
                     //Disable Submit Button  
-                    $('#Apply').prop('disabled', true);
+                    $('#Apply #Insert').prop('disabled', true);
                 } else {
                     //Enable Submit Button  
-                    $('#Apply').prop('disabled', false);
+                    $('#Apply #Insert').prop('disabled', false);
                 }
             });
-            $('#Insert').prop('disabled', true);
-            $('#OrgImg').change(function () {
-                var extension = $(this).val().split('.').pop().toLowerCase();
-                var validFileExtensions = ['jpg', 'png', 'jpeg'];
-                if ($.inArray(extension, validFileExtensions) == -1) {
-                    alert("Sorry!! Upload only 'jpg', 'png', 'jpeg' Images")
-                    $(this).replaceWith($(this).val('').clone(true));
-                    //Disable Submit Button  
-                    $('#Insert').prop('disabled', true);
-                } else {
-                    //Enable Submit Button  
-                    $('#Insert').prop('disabled', false);
-                }
-            });
-            $('#Apply').click(function () {
-                if ($('#ActImg').val() == null) {
-                    alert("First Upload Image!");
-                    return false;
-                }
-                return true;
-            });
-            $('#Insert').click(function () {
-                if ($('#OrgImg').val()==null) {
-                    alert("First Upload Image!");
-                    return false;
-                }
-                return true;
-            });
-            $('input').css('width', ((
-                input.getAttribute('placeholder').length + 1) * 8) + 'px');
-            $("input").focusout(function () {
-                if (this.value.length > 0) {
-                    this.style.width =
-                        ((this.value.length + 1) * 8) + 'px';
-                } else {
-                    this.style.width =
-                        ((this.getAttribute('placeholder').length + 1) * 8)
-                        + 'px';
-                }
-            });
+           
         });
 
-        function ResetAccountImage() {
-            $('#profilephoto').show();
-        }
-        function ResetOrganizationImage() {
-            $('#organizationphoto').show();
-        }
 
     </script>
     <style>
@@ -167,14 +122,14 @@
                     <div class="box box-primary">
                        
                         <br />
-                        @using (@Html.BeginForm("AppSettings", "Global", FormMethod.Get))
+                        @using (@Html.BeginForm("ConfigurationSettings", "Configuration", FormMethod.Get))
                         {
                             <div class="strip-info">
                                 <div class="d-flex justify-content-between  align-items-center">
                                     <div class="card-body">
                                        
-                                        <label class="dt-head-left" style="font-size:large;"><b>Global Settings</b></label> &nbsp;
-                                        <button type="submit" name="search" onclick="location.href='@Url.Action("Download", "Global",  FormMethod.Post)';return false;" title="ExportExcel"><i class="fa-solid fa-download"></i></button>
+                                        <label class="dt-head-left" style="font-size:large;"><b>Configuration Settings</b></label> &nbsp;
+                                        <button type="submit"  onclick="location.href='@Url.Action("Download", "Configuration",  FormMethod.Post)';return false;" title="ExportExcel"><i class="fa-solid fa-download"></i></button>
                                   
                                     </div>
                                 </div>
@@ -244,7 +199,7 @@
                                      <tbody>
 
                                          <tr>
-                                             @using (Html.BeginForm("AccountSettings", "Global", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                             @using (Html.BeginForm("AccountSettings", "Configuration", FormMethod.Post, new { enctype = "multipart/form-data" }))
                                              {
                                                  <td style="text-align: center; padding: revert">
                                                      <label for="AccountImg"><b>Upload Profile Image</b></label>
@@ -267,7 +222,7 @@
                                                      </div>
                                                  </td>
                                              }
-                                             @using (Html.BeginForm("OrganizationSettings", "Global", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                             @using (Html.BeginForm("OrganizationSettings", "Configuration", FormMethod.Post, new { enctype = "multipart/form-data" }))
                                              {
                                                  <td style="text-align: center; ">
                                                      <label for="OrganizationImg"><b>Upload Organization Image</b></label>
@@ -309,7 +264,7 @@
                         </div>
                         <div class="modal-body" style="height:250px">
                             <div class="box box-primary">
-                                @using (Html.BeginForm("UpdateSetting", "Global", FormMethod.Post))
+                                @using (Html.BeginForm("UpdateSetting", "Configuration", FormMethod.Post))
                                 {
                                     <form id="myForm">
                                         <div class="modal-body">

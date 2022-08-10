@@ -79,7 +79,7 @@
     <Compile Include="Controllers\Portolo\AddtaskController.cs" />
     <Compile Include="Controllers\Portolo\DashboardController.cs" />
     <Compile Include="Controllers\Portolo\ElimarController.cs" />
-    <Compile Include="Controllers\Portolo\GlobalController.cs" />
+    <Compile Include="Controllers\Portolo\ConfigurationController.cs" />
     <Compile Include="Controllers\Portolo\PortoloController.cs" />
     <Compile Include="Controllers\Portolo\RegistrationController.cs" />
     <Compile Include="Controllers\Portolo\RegistrationNewController.cs" />
