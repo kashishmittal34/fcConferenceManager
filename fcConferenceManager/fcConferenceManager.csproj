@@ -2369,7 +2369,7 @@
     <Content Include="Views\Portolo\UserTopics.cshtml" />
     <Content Include="Views\Portolo\Security\AddMember.cshtml" />
     <Content Include="Views\Portolo\Security\EditSecurityGroup.cshtml" />
-    <Content Include="Views\Global\AppSettings.cshtml" />
+    <Content Include="Views\Configuration\ConfigurationSettings.cshtml" />
     <Content Include="Views\Portolo\MasterPage\MasterPage.cshtml" />
     <Content Include="Views\Portolo\Product\AddProduct.cshtml" />
     <Content Include="Views\Portolo\Product\Index.cshtml" />
