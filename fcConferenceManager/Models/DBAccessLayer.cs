@@ -5207,11 +5207,11 @@ namespace fcConferenceManager.Models
             cmd.Parameters.AddWithValue("@strpkey", strpkey);
             if (!clsUtility.ExecuteQuery(cmd, null, "Delete Task"))
             {
-                return "Task Not Deleted ";
+                return "Task Not Deleted";
             }
             else
             {
-                return "Task Deleted sucessfully";
+                return "Task Delete";
             }
         }
 

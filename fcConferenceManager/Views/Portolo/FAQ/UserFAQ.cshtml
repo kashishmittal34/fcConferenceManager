@@ -1,0 +1,145 @@
+﻿
+@{
+    ViewBag.Title = "Frequently Asked Questions";
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/components.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+</head>
+<link href="~/Css/style.css" rel="stylesheet" />
+
+<body>
+    <section class="task-list-form">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    @using (Html.BeginForm("UserSearchQuestion", "FAQ", FormMethod.Get))
+                    {
+                        <div class="control-icons">
+                            <h2>Frequently Asked Questions</h2>
+
+                            <button type="submit" value="Search" name="action" style="border-color: white; border: none;background-color:white" title="Search">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                            <a href="~/FAQ/userFAQ"><i class="fa-solid fa-arrows-rotate"></i></a>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>Question:</label>
+                                    @Html.TextBox("question", null, new { @class = "form-control form-control-sm" })
+                                </div>
+                            </div>
+                            <div class="col-lg-2"> 
+                                <div class="form-group">
+                                    <label>Answer:</label>
+                                    @Html.TextBox("answer", null, new { @class = "form-control form-control-sm" })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                    }
+                <div class="card" style="align-items:normal; text-align:left">
+                    <table>
+                        @foreach (var cat in ViewBag.category)
+                        {
+                            <tr>
+                                <td style="width:20px;">
+                                    <i class="fas fa-caret-right" style="color: #ed6c31"></i>
+                                    <div style="display:none">
+                                        @if (ViewBag.FAQList != null)
+                                        {
+                                            int i = 1;
+                                            foreach (var item in ViewBag.FAQList.Rows)
+                                            {
+                                                if (@cat == item["category"])
+                                                {
+                                                    <table>
+                                                        <tr>
+                                                            <td  style="width:20px;">
+                                                                <i class="fas fa-caret-right" style="color: #ed6c31"></i>
+                                                                <div style="display:none"><b>Answer :</b>  @item["Answer"] </div>
+                                                            </td>
+                                                            <td>
+                                                                <b> Question @i: @item["Question"]</b>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    { i = i + 1; }
+                                                }
+
+                                            }
+                                        }
+                                    </div>
+                                </td>
+                                
+                                <td><b>@cat</b></td>
+                            </tr>
+                        }
+                    </table>
+
+                    <br />
+                    <b>If you have any other question, You can post here:</b>
+                    @Html.TextArea("Test", new { @class = "form-control", cols = "100", rows = "4", @id = "Question", @Style = "max-width:800px" })
+                    <br />
+                    <button class="brdr-1 btn-sm" id="PostQuestion" name="action" style="width:60px;" title="Post">Post</button>
+                </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <p>	© 2022 by Elimar Systems. All Rights Reserved <a href="#" class="ml-5">Website Terms of Use</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        $("#PostQuestion").click(function () {
+            var ques = $("#Question").val();
+            $.ajax({
+                url: "/FAQ/PostQuestion",
+                type: "POST",
+                data: { question: ques }
+            });
+            $("#Question").val('');
+            alert("Your question has been submitted.");
+        })
+
+        $(".card").on("click", ".fa-caret-right", function () {
+            $(this).closest("tr").after("<tr><td></td><td colspan = '999'>" + $(this).next().html() + "</td></tr>");
+            $(this).removeClass('fa-caret-right');
+            $(this).addClass('fa-caret-down');
+        });
+
+        $(".card").on("click", ".fa-caret-down", function () {
+            $(this).closest("tr").next().remove();
+            $(this).removeClass('fa-caret-down');
+            $(this).addClass('fa-caret-right');
+        });
+
+    </script>
+
+    <link rel="stylesheet" href="../Scripts/jquery-ui.css" />
+    <script src="../Scripts/jquery-ui.js"></script>
+</body>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        
+    </script>

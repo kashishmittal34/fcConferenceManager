@@ -6,13 +6,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 <body>
+	<div class="body-main-wrap">							
     <script type="text/javascript" language="javascript">
     $(document).ready(function () {
        var imageurl = '@Url.Content("ViewBag.Baseurl/User-images/empty image.png")';
         $("#image").attr("src", imageurl);
     });
     function fileCheck(elm) {
-        debugger;
         var fn = String($(elm).val());
         var filename = fn.match(/[^\\/]*$/)[0]; // remove C:\fakename
         var imageurl = '@Url.Content("ViewBag.Baseurl/User-images/imagename")';
@@ -143,9 +143,7 @@
 
     </script>
     <style>
-        footer{
-            position:relative;
-        }
+        
         .span {
    
             display: inline-block;
@@ -198,13 +196,17 @@
 
 
     <div class="container-fluid" style="margin-bottom:15px;">
+	<form class="container" action="/Registration/RegistrationSubmit" method="post" enctype="multipart/form-data" onsubmit="validateInputs(e);">
         <input name="ID" value="@Model.ID" hidden />
         <div class="row">
             <div class="col-4">
                 <h3 style="color: black; font-weight: bold">
                     @Model.firstname @Model.lastname's Profile
-
                 </h3>
+				 <h4 class="magi-justify-content-space-between" style="text-align: right; vertical-align: top; padding:7px">
+            @Html.ActionLink("Edit", "Registration", "RegistrationNew", new { userID = Model.ID }, new { @class = "btn btn-outline-warning" })
+
+        </h4>
             </div>
             <div class="col-6"></div>
             <div class="col-2">
@@ -489,7 +491,7 @@
             </div>
         </div>
     </div>
-
+</form>
 
 </body>
 

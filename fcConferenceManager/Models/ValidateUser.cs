@@ -465,6 +465,7 @@ namespace MAGI_API.Models
         public string Sessioninfo { get; set; }
         public string DocFileName { get; set; }
         public string SessionFileName { get; set; }
+        public string chairperson { get; set; }
 
     }
     public class AccountBio

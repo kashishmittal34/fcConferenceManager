@@ -54,41 +54,65 @@
                                             <li><a class="sub-nav__link" href="#">link 3 - long link - long link - long link</a></li>
                                         </ul>
                                     </li>
-                                    <li class="menu-item current-menu-item">
-                                    <a class="nav__link mr-0" href="#">Pages</a>
-                                    <ul class="sub-nav">
+		@if(((Elimar.Models.loginResponse)Session["User"]).IsGlobalAdmin)
+                                        {
+                                            <li class="menu-item current-menu-item">
+                                            <a class="nav__link mr-0" href="#">Pages</a>
+                                            <ul class="sub-nav">
 
-                                        <li><a class="sub-nav__link" href="~/Portolo/Topics">Topics</a></li>
-										                                        <li><a class="sub-nav__link" href="~/Product/ProductList">Products</a></li>
-																						 
-																													   
-																												 
+                                                <li><a class="sub-nav__link" href="~/Portolo/Topics">Topics</a></li>
+                                                <li><a class="sub-nav__link" href="~/Product/ProductList">Products</a></li>
+                                                <li><a class="sub-nav__link" href="~/FAQ/FAQList">FAQ</a></li>
+
+
+
+
+
+                                            </ul>
+                                            </li>
+                                        }
+
+																																																															
+																																									  
+																			
+																											
+																								
+																				  
+																						  
+																						  
+																							  
+																							  
+																							  
+																						  
 																									
-																								   
-																										 
-																											 
-																											 
-																										  
-																									  
-																														
-																													
-																												
-																														  
+																								
+																							  
+																											
 
-                                    </ul>
+                                    <li class="menu-item current-menu-item">
+                                        <a class="nav__link mr-0">Configuration</a>
+                                        <ul class="sub-nav">
+                                            <li><a class="sub-nav__link" href="#">Topics/Discussion groups</a></li>
+                                            <li><a class="sub-nav__link" href="#">Process library</a></li>
+                                            <li><a class="sub-nav__link" href="#">Performance </a></li>
+                                            <li><a class="sub-nav__link" href="#">Optional Features</a></li>
+                                            <li><a class="sub-nav__link" href="#">System Configuration</a></li>
+                                            <li><a class="sub-nav__link" href="#">Security Groups</a></li>
+                                            <li><a class="sub-nav__link" href="#">System support/help </a></li>
+                                        </ul>
                                     </li>
-									<li class="menu-item current-menu-item">
-                                    <a class="nav__link mr-0">Configuration</a>
-                                    <ul class="sub-nav">
-                                        <li><a class="sub-nav__link" href="#">Topics/Discussion groups</a></li>
-                                        <li><a class="sub-nav__link" href="~/Portolo/ProcessLibrary">Process library</a></li>
-                                        <li><a class="sub-nav__link" href="#">Performance </a></li>
-                                        <li><a class="sub-nav__link" href="#">Optional Features</a></li>
-                                        <li><a class="sub-nav__link" href="#">System Configuration</a></li>
-                                        <li><a class="sub-nav__link" href="#">Security Groups</a></li>
-                                        <li><a class="sub-nav__link" href="#">System support/help </a></li>
-                                    </ul>
-                                </li>			
+																											 
+																			   
+														
+																																																																 
+																																													 
+																																												
+																																														
+																																																													   
+																																													 
+																																																													   
+										 
+										
                                 </ul>
                             </div>
                         </nav>
@@ -108,19 +132,19 @@
                                 <a href="~/Dashboard/Scorecard">Score Card</a>
                                 <a href="#">Process Mapping Tools</a>
                                         <a class="nav__link mr-0" href="#"style="padding:5px">My Pages</a>
-                                        <ul class="sub-nav" style="left:380px;top:110px">
+                                        <ul class="sub-nav" style="left:380px;top:110px" >
                                             <li><a class="sub-nav__link" href="~/Account/ProfilePage">My Profile</a></li>
                                             <li><a class="sub-nav__link" href="~/Account/MyOrganization">My organization</a></li>
                                             <li><a class="sub-nav__link" href="~/Portolo/UserTopics">My topics</a></li>
                                             <li><a class="sub-nav__link" href="~/Study/Study">My studies</a></li>
                                             <li><a class="sub-nav__link" href="#">My roles </a></li>
-                                            <li><a class="sub-nav__link" href="#">My FAQs </a></li>
+                                            <li><a class="sub-nav__link" href="~/FAQ/UserFAQ">My FAQs </a></li>
                                             <li><a class="sub-nav__link" href="#">My checklists </a></li>
                                             <li><a class="sub-nav__link" href="#"> My checklist item</a></li>
                                             <li><a class="sub-nav__link" href="#">My performance </a></li>
                                             <li><a class="sub-nav__link" href="#">My reports </a></li>
                                             <li><a class="sub-nav__link" href="#"> My analytics & visualization</a></li>
-                                            <li><a class="sub-nav__link" href="~/Portolo/MyFiles"> My files</a></li>
+                                            <li><a class="sub-nav__link" href="#"> My files</a></li>
                                             <li><a class="sub-nav__link" href="#">My discussion groups </a></li>
                                             <li><a class="sub-nav__link" href="#"> My organization's subscription</a></li>
                                         </ul>

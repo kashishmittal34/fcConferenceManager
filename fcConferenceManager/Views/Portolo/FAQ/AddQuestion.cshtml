@@ -1,0 +1,100 @@
+﻿@model fcConferenceManager.Models.Portolo.FAQ
+
+@{
+    ViewBag.Title = "Add Question";
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+}
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+
+</head>
+
+<style>
+    .form-control:disabled, .form-control[readonly] {
+        background-color: #e9ecef0f;
+        opacity: 1;
+    }
+</style>
+
+<body>
+
+    <section class="task-list-form">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <form action="/FAQ/AddQuestion" method="post" enctype="multipart/form-data" onsubmit="validateInputs(e);">
+                        @Html.HiddenFor(model => model.FAQId)
+                        <div class="control-icons">
+                            <h2> Add Question </h2>
+
+                            <div class="controls">
+                                <input type="submit" name="Save" value="Save" id="idSave" class="brdr-1 btn-sm" onclick="return validateInputs(event);">
+                                <a href="~/FAQ/FAQList" class="brdr-1 btn-sm" style="padding:7px 5px"> Cancel </a>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-box">
+                                    <div class="form-group">
+                                        <label>Question</label>
+                                        @Html.TextBoxFor(model => model.Question, new { @class = "form-control form-control-sm", @id = "Question" })
+                                    </div><br />
+                                    <div class="form-group">
+                                        <label>Answer</label>
+                                        @Html.TextAreaFor(model => model.Answer, new { @class = "form-control", cols = "100", rows = "5", @id = "Answer" })
+                                    </div><br />
+                                    <div class="form-group">
+                                        <label>Category</label>
+                                        @Html.TextBoxFor(model => model.category, new { @class = "form-control form-control-sm", @id = "Category" })
+                                    </div><br />
+                                    <div class="form-group">
+                                        <label>Active</label><br />
+                                        @Html.CheckBoxFor(model => model.IsActive)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <p>	© 2022 by Elimar Systems. All Rights Reserved <a href="#" class="ml-5">Website Terms of Use</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+<script type="text/javascript" language="javascript">
+
+    function validateInputs(e) {
+
+        var question = $.trim($('#Question').val());
+        var answer = $.trim($('#Answer').val());
+        if (question == "") {
+            $("#Question").focus();
+
+            alert("Please enter the question");
+            return false;
+        }
+        if (answer == "") {
+            $("#Answer").focus();
+
+            alert("Please enter the answer of the question");
+            return false;
+        }
+    }
+</script>
+

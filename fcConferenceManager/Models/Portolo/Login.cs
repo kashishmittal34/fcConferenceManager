@@ -158,6 +158,7 @@ namespace Elimar.Models
 
         public string salutationzID1 { get; set; }
 
+		public string suffixvalue { get; set; }									   
     }
 
     public class getdropdownvalues

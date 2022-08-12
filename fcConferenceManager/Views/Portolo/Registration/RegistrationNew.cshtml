@@ -551,7 +551,7 @@
     <form class="container" action="/RegistrationNew/RegistrationSubmit" method="post" enctype="multipart/form-data" onsubmit="validateInputs(e);" style="padding: 5px;">
         <input class="form-control" name="ID" value="@Model.ID" hidden />
         <div style="text-align:right;vertical-align:top;float:right">
-            @if (Model.ID != 0 &&  Model.ID != null)
+            @if (Model.ID != 0 && Model.ID != null)
             {
                 <input class="btn btn-outline-warning" type="submit" id="Saveid" style="width:78px;" value="Apply" onclick="return validateInputs(event);" />
                 <input class="btn btn-outline-warning" type="submit" id="Udateid" style="width:78px;" value="Update" onclick="return validateInputs(event);" />

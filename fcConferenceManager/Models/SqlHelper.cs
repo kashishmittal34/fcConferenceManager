@@ -412,7 +412,7 @@ namespace MAGI_API.Models
                         result = await cmd.ExecuteNonQueryAsync();
                         cmd.Parameters.Clear();
                     }
-                    catch(Exception)
+                    catch(Exception )
                     {
                         throw;
                     }

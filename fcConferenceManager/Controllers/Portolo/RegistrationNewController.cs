@@ -33,6 +33,9 @@ namespace fcConferenceManager.Controllers
             ViewBag.salutation1 = GetSalutationDropDown();
             ViewBag.state = GetStateDropDown("1");
             ViewBag.timeZone = GetStateDropDown("1");
+			ViewBag.suffix = GetSuffixDropDown();
+            ViewBag.phonetype1 = GetPhoneTypesDropDown();
+            ViewBag.phonetype2 = GetPhoneTypesDropDown();									 
             List<UserResponse> userList = new List<UserResponse>();
             UserResponse user = new UserResponse();
             if (userID > 0)
@@ -84,7 +87,7 @@ namespace fcConferenceManager.Controllers
                 user.countrypkey = userList[0].countrypkey;
                 user.state_pkey = userList[0].state_pkey;
                 user.salutationzID1 = userList[0].salutationzID1;
-                
+                user.suffixvalue= userList[0].suffixvalue;
                 ViewBag.userImage = baseurl + userList[0].Uimg;
 
                 //user.Uimg = userList[0].portoloStatus;
@@ -312,7 +315,7 @@ namespace fcConferenceManager.Controllers
                         response.countrypkey = reader["Countrypkey"].ToString();
                         response.state_pkey = reader["state_pkey"].ToString();
                         response.salutationzID1 = reader["salutationzID1"].ToString();
-                      
+                        response.suffixvalue = reader["suffixvalue"].ToString();
                         //response.portoloStatus = reader["PortoloStatus"].ToString();
                         if (reader["Uimg"].ToString() == null || reader["Uimg"].ToString() == "")
                         {
@@ -510,6 +513,51 @@ namespace fcConferenceManager.Controllers
             }
             return SalutationList;
         }
+	public List<SelectListItem> GetPhoneTypesDropDown()
+        {
+            List<SelectListItem> PhoneTypesList = new List<SelectListItem>();
+            string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(config))
+            {
+                string query = "select * from SYS_PhoneTypes;";
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.HasRows.ToString() == "True")
+                    {
+                        while (reader.Read())
+                        {
+                            PhoneTypesList.Add(new SelectListItem { Text = reader["PhoneTypeID"].ToString(), Value = reader["pKey"].ToString() });
+                        }
+                    }
+                }
+            }
+            return PhoneTypesList;
+        }
+
+        public List<SelectListItem> GetSuffixDropDown()
+        {
+            List<SelectListItem> SuffixList = new List<SelectListItem>();
+            string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(config))
+            {
+                string query = "select * from SYS_Suffixes;";
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.HasRows.ToString() == "True")
+                    {
+                        while (reader.Read())
+                        {
+                            SuffixList.Add(new SelectListItem { Text = reader["SuffixID"].ToString(), Value = reader["pKey"].ToString() });
+                        }
+                    }
+                }
+            }
+            return SuffixList;
+        }	 
         public List<SelectListItem> GetStateDropDown(string country_id)
         {
             country_id = country_id == null ? "1" : country_id;
