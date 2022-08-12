@@ -140,6 +140,7 @@
     <Compile Include="Models\Portolo\DropDownList.cs" />
     <Compile Include="Models\Portolo\ElimarResponse.cs" />
     <Compile Include="Models\Portolo\EventRole.cs" />
+    <Compile Include="Models\Portolo\FAQ.cs" />
     <Compile Include="Models\Portolo\GlobalSetting.cs" />
     <Compile Include="Models\Portolo\Help.cs" />
     <Compile Include="Models\Portolo\Login.cs" />
@@ -2380,6 +2381,9 @@
     <Content Include="Views\Portolo\Product\AddProduct.cshtml" />
     <Content Include="Views\Portolo\Product\Index.cshtml" />
     <Content Include="Views\Portolo\Process.cshtml" />
+    <Content Include="Views\Portolo\FAQ\AddQuestion.cshtml" />
+    <Content Include="Views\Portolo\FAQ\FAQList.cshtml" />
+    <Content Include="Views\Portolo\FAQ\UserFAQ.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
