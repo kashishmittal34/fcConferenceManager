@@ -140,7 +140,6 @@
     <Compile Include="Models\Portolo\DropDownList.cs" />
     <Compile Include="Models\Portolo\ElimarResponse.cs" />
     <Compile Include="Models\Portolo\EventRole.cs" />
-    <Compile Include="Models\Portolo\FAQ.cs" />
     <Compile Include="Models\Portolo\GlobalSetting.cs" />
     <Compile Include="Models\Portolo\Help.cs" />
     <Compile Include="Models\Portolo\Login.cs" />

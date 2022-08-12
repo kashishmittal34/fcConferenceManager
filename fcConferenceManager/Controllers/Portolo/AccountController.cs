@@ -411,72 +411,12 @@ while (reader.Read())
                                 //else
                                 //{
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                 //    response.CV = reader["CV"].ToString();
 									 					   
                                 //}
 								 
                                 userList.Add(response);
                             }
-								
-
-
-
                         }
                         reader.Close();
                         //cmd.ExecuteNonQuery();
@@ -629,10 +569,6 @@ while (reader.Read())
                     user.Uimg = response[0].Uimg;
                     user.CV = response[0].CV;
                     user.salutationzID1 = response[0].salutationzID1;												 
-
-
-
-
                     return View("~/Views/Portolo/Account/ProfilePage.cshtml", user);
                 }
                 return View("~/Views/Portolo/Account/ProfilePage.cshtml", user);
@@ -829,14 +765,6 @@ while (reader.Read())
                 //{
                 //    Redirect("~/Account/Portolo");
                 //}
-  
-
-
-
-
-
-
-
             }
 
             return userList;
