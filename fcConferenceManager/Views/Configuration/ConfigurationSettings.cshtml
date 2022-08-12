@@ -137,19 +137,11 @@
                         <br />
                         @using (@Html.BeginForm("ConfigurationSettings", "Configuration", FormMethod.Get))
                         {
-                            <div class="strip-info">
-                                <div class="d-flex justify-content-between  align-items-center">
-                                    <div class="card-body">
-                                       
+                                    <div class="card-header">
                                         <label class="dt-head-left" style="font-size:large;"><b>Configuration Settings</b></label> &nbsp;
                                         <button type="submit"  onclick="location.href='@Url.Action("Download", "Configuration",  FormMethod.Post)';return false;" title="ExportExcel"><i class="fa-solid fa-download"></i></button>
-                                  
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                        <br />
-
+                                    </div>                             
+                        }                 
 
                         <br />
 
@@ -167,20 +159,15 @@
                                     firstText: "<< First", previousText: "< Prev", nextText: "Next >", lastText: "Last >>",
                                     htmlAttributes: new { id = "DataTable" },
                                     columns: grid.Columns(
-
-                                      grid.Column("pkey", header: "Id", canSort: true),
-
-                                      grid.Column("SettingID", header: "Setting Id", canSort: true),
-
-                                    grid.Column("SettingValue", header: "Value", canSort: true),
+                                     grid.Column("pkey", header: "Id", canSort: true),
+                                     grid.Column("SettingID", header: "Setting Id", canSort: true),
+                                     grid.Column("SettingValue", header: "Value", canSort: true),
                                      grid.Column(header: "Actions", format:
-                                                                            @<text>
-                                                                                <a class="btn-outline-primary" onclick="GetDetails(@item.pkey)">
-
-                                                                                    <i class="fa fa-edit"></i>
-                                                                                </a>
-                                                                            </text>)));
-
+                                     @<text>
+                                     <a class="btn-outline-primary" onclick="GetDetails(@item.pkey)">
+                                     <i class="fa fa-edit"></i>
+                                     </a>
+                                     </text>)));
                                     @Html.Hidden("dir", grid.SortDirection)
                                     @Html.Hidden("col", grid.SortColumn)
 
@@ -191,17 +178,17 @@
                                 }
                             </div>
                         </div>
+
                         <br/>
 
                         <div class="box-body">
                             <div class="column">
-
-                                <h5>Image Upload</h5>
-                                <br />
+                                <div class="card-header dt-head-left">
+                                    <h5>Image Upload</h5>
+                                </div>
+                            
                                 <br/>
                                
-
-
 <table id="uploadtable" class="table table-bordered ">
                                      <thead>
                                          <tr>
