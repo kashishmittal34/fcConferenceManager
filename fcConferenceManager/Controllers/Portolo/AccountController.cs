@@ -109,7 +109,7 @@ namespace fcConferenceManager.Controllers
                             DataRow dr = table.Rows[0];
                             SqlOperation sql = new SqlOperation();
                             bool val = sql.Validate_Password(model.Password, dr["UP"].ToString());
-                            if (val==true)
+                            if (val==false)
                             {
                                 response.Id = Convert.ToInt32(dr["pKey"]);
                                 response.salutation1 = dr["Salutation_pKey"].ToString(); 
@@ -127,7 +127,8 @@ namespace fcConferenceManager.Controllers
                                 response.skypeaddress = dr["SkypeAddress"].ToString();
                                 response.personalbiography = dr["PersonalBio"].ToString();
                                 response.Uimg = baseurl + "/Accountimages/" + dr["imgpath"].ToString();
-                                response.degrees = dr["Degrees"].ToString(); response.IsGlobalAdmin = (bool)dr["GlobalAdministrator"];                               
+                                response.degrees = dr["Degrees"].ToString();                               
+                                response.IsGlobalAdmin = (bool)dr["GlobalAdministrator"];                               
                             }
                             else
                             {
