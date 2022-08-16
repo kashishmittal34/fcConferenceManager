@@ -1,24 +1,22 @@
 ﻿
 using ClosedXML.Excel;
 using Elimar.Models;
+using ExcelDataReader;
+using fcConferenceManager.Models;
+using fcConferenceManager.Models.Portolo;
+using HandleMultipleButtonInMVC.CustomAttribute;
+using MAGI_API.Models;
+using OfficeOpenXml;
+using OfficeOpenXml.Table;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using MAGI_API.Models;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Data;
-using System.Web.Security;
-using fcConferenceManager.Models;
-using MAGI_API.Security;
-using System.Threading.Tasks;
-using HandleMultipleButtonInMVC.CustomAttribute;
-using System.IO;
-using fcConferenceManager.Models.Portolo;
-using System.Data.SqlClient;
-using OfficeOpenXml;
-using OfficeOpenXml.Table;
 //using PagedList.Mvc;
 //using PagedList;					
 
@@ -463,6 +461,7 @@ namespace fcConferenceManager.Controllers.Portolo
             {
                 return Redirect("~/Account/Portolo");
             }
+
             SqlConnection con = new SqlConnection(ReadConnectionString());
             DataTable dt = new DataTable();
 
@@ -476,7 +475,104 @@ namespace fcConferenceManager.Controllers.Portolo
 
             return View();
         }
+     
+        [HttpPost]
+       
+        public ActionResult ImportExcel(HttpPostedFileBase files)
+        {
+            if(ModelState.IsValid)
+            {
+                if(files != null && files.ContentLength >  0)
+                {
+                    Stream stream = files.InputStream;
+                    IExcelDataReader reader = null;
+                    if(files.FileName.EndsWith(".xls"))
+                    {
+                        string filename = files.FileName;
+                        string path = Server.MapPath("~/PortoloDocuments/" + filename);
+                        if (System.IO.File.Exists(path))
+                        {
+                            System.IO.File.Delete(path);
+                        }
+                        files.SaveAs(path);
 
+                        reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                    }
+                    else if(files.FileName.EndsWith(".xlsx"))
+                    {
+                        string filename = files.FileName;
+                        string path = Server.MapPath("~/PortoloDocuments/" + filename);
+                        if (System.IO.File.Exists(path))
+                        {
+                            System.IO.File.Delete(path);
+                        }
+                        files.SaveAs(path);
+                        reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("File", "This file format is not supported");
+                        return RedirectToAction("Topics","Portolo");
+                    }
+                    int fieldCount = reader.FieldCount;
+                    int rowCount = reader.RowCount;
+                    DataTable dt = new DataTable();
+                    DataRow row;
+                    DataTable dt_ = new DataTable();
+                    DataSet ds = new DataSet();
+                    ds = reader.AsDataSet();
+                    try
+                    {
+                 
+                        dt_ = ds.Tables[0];
+                        
+                        for(int i=0; i<dt_.Columns.Count; i++)
+                        {
+                            dt.Columns.Add(dt_.Rows[0][i].ToString());
+                        }
+                        int rowCounter = 0;
+                        for(int rows = 1; rows < dt_.Rows.Count; rows++)
+                        {
+                            row = dt.NewRow();
+                            for(int col = 0; col<dt_.Columns.Count; col++)
+                            {
+                                row[col] = dt_.Rows[rows][col].ToString();
+                                rowCounter++;
+                            }
+                            dt.Rows.Add(row);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        ModelState.AddModelError("File", "Unable to upload file");
+                        return RedirectToAction("Topics", "Portolo");
+                    }
+                    DataSet result = new DataSet();
+                    result.Tables.Add(dt);
+                    reader.Close();
+                    reader.Dispose();
+                    DataTable dataTable = result.Tables[0];
+                    
+                    for(int i = 0; i < result.Tables[0].Rows.Count; i++)
+                    {
+                        string conn = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+                        SqlConnection con = new SqlConnection(conn);
+                        string query = "Insert into Portolo_Topics(Title,Description,IsActive) Values('" + result.Tables[0].Rows[i][2].ToString() + "','" + result.Tables[0].Rows[i][3].ToString() + "','" + result.Tables[0].Rows[i][1].ToString() + "')";
+                        con.Open();
+                        SqlCommand cmd = new SqlCommand(query, con);
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                    return RedirectToAction("Topics", "Portolo");
+                }
+                else
+                {
+                    ModelState.AddModelError("File","Please upload your file");
+                }
+
+            }
+            return View();
+        }
         public ActionResult AddTopic(Topic model)
         {
             if (Session["User"] == null) return Redirect("~/Account/Portolo");
@@ -731,50 +827,22 @@ namespace fcConferenceManager.Controllers.Portolo
 
             return View("~/Views/Portolo/Task/TaskList.cshtml", taskListRequest);
         }
-        public ActionResult MyFiles(MyFileUpload myMyFileUpload, string search)
+        public ActionResult MyFiles(MyFileUpload myFileUpload, string search)
         {
 
-            List<MyFileUpload> uploadlist = GetFileDetails();
-
-
-
-
-
-
-
-
-
-
-
-
-            myMyFileUpload.FileList = uploadlist;
+            List<MyFileUpload> fileslist = GetFileDetails();
+            myFileUpload.FileList = fileslist;
 
             string apppath = GetBaseUrl();
             ViewBag.apppath = apppath;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             if (!string.IsNullOrEmpty(search))
             {
-                var searchlist = (from list in uploadlist where list.FileName.StartsWith(search.Trim(), StringComparison.OrdinalIgnoreCase) select list).ToList();
+                var searchlist = (from list in fileslist where list.FileName.StartsWith(search.Trim(), StringComparison.OrdinalIgnoreCase) select list).ToList();
                 return View(searchlist);
             }
 
 
-            return View(myMyFileUpload.FileList);
+            return View(myFileUpload.FileList);
         }
         [HttpPost]
 
@@ -782,16 +850,6 @@ namespace fcConferenceManager.Controllers.Portolo
         {
             MyFileUpload model = new MyFileUpload();
             List<MyFileUpload> list = GetFileDetails();
-
-
-
-
-
-
-
-
-
-
             model.FileList = list;
 
             if (files != null)
@@ -802,11 +860,10 @@ namespace fcConferenceManager.Controllers.Portolo
                 string path = Path.Combine(Server.MapPath("~/PortoloDocuments/"), ResourcefileName);
                 model.FileUrl = Url.Content(Path.Combine("~/PortoloDocuments/", ResourcefileName));
                 model.FileName = filename;
-
                 if (SaveFile(model))
                 {
                     files.SaveAs(path);
-                    TempData["AlertMessage"] = "Uploaded Successfully !!";
+                    TempData["AlertMessage"] = "filesed Successfully !!";
                     return RedirectToAction("MyFiles", "Portolo");
                 }
                 else
@@ -859,7 +916,7 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         private List<MyFileUpload> GetFileDetails()
         {
-            List<MyFileUpload> uploadlist = new List<MyFileUpload>();
+            List<MyFileUpload> fileslist = new List<MyFileUpload>();
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             DataTable dtData = new DataTable();
             SqlConnection con = new SqlConnection(config);
@@ -870,7 +927,7 @@ namespace fcConferenceManager.Controllers.Portolo
             con.Close();
             foreach (DataRow dr in dtData.Rows)
             {
-                uploadlist.Add(new MyFileUpload
+                fileslist.Add(new MyFileUpload
                 {
                     FileId = Convert.ToInt32(@dr["pkey"]),
                     FileName = @dr["Resources"].ToString(),
@@ -879,7 +936,7 @@ namespace fcConferenceManager.Controllers.Portolo
                 });
 
             }
-            return uploadlist;
+            return fileslist;
         }
         public JsonResult GetFilePath(int? id)
         {
@@ -889,18 +946,18 @@ namespace fcConferenceManager.Controllers.Portolo
         public ActionResult ProcessLibrary(ProcessLibrary library, string search)
         {
 
-            List<ProcessLibrary> uploadlist = GetProcessDetails();
+            List<ProcessLibrary> fileslist = GetProcessDetails();
 
-            library.processList = uploadlist;
+            library.processList = fileslist;
             if (!string.IsNullOrEmpty(search))
             {
                 ViewBag.search = search;
-                var searchlist = (from list in uploadlist where list.Process.StartsWith(search.Trim(), StringComparison.OrdinalIgnoreCase) select list).ToList();
+                var searchlist = (from list in fileslist where list.Process.StartsWith(search.Trim(), StringComparison.OrdinalIgnoreCase) select list).ToList();
                 Session["searchlist"] = searchlist;
                 return View(searchlist);
             }
 
-            library.processList = uploadlist;
+            library.processList = fileslist;
             return View(library.processList);
         }
 

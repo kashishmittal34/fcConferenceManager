@@ -1,0 +1,89 @@
+﻿
+
+@{
+    ViewBag.Title = "ImportExcel";
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+}
+
+@model System.Data.DataTable
+@using System.Data;
+
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<style>
+    #table1 {
+        border: solid black 2px;
+        border-color: blue;
+        border-radius: 10px 40px 40px 10px;
+        border-collapse: collapse;
+    }
+</style>
+<body>
+    <section class="task-list-form center">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-primary">
+                        @using (Html.BeginForm("ImportExcel", "Portolo", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            <div class="info2">
+                                <br />
+                                <h2>Uploaded Excel File</h2>
+                                <br />
+                                <br />
+
+                                <div class="form-group" name="Fichier1">
+                                    <!-- COMPONENT START -->
+                                    <div class="right-div">
+                                        @Html.ActionLink("Go Back!", "Topics", "Portolo", new { @class = "btn btn-border btn-primary", @Styles = "border-radius: 12px;" })
+                                    </div>
+
+                                </div>
+
+
+
+
+                            </div>
+                            <br />
+                            <br />
+                            if (Model != null)
+                            {
+                                <table id="table1" class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            @foreach (DataColumn col in Model.Columns)
+                                            {
+                                                <th>@col.ColumnName</th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (DataRow row in Model.Rows)
+                                        {
+                                            <tr>
+                                                @foreach (DataColumn col in Model.Columns)
+                                                {
+                                                    <td>@row[col.ColumnName]</td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                        }
+                     </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+
+                        <script>
+                            $(document).ready(function () {
+                                $("table1").DataTable();
+                            });
+                        </script>
+
+
+
+
