@@ -20,7 +20,7 @@ namespace fcConferenceManager
     {
         protected void Application_Start(object sender, EventArgs e)
         {
-            GlobalHost.Configuration.ConnectionTimeout = TimeSpan.FromSeconds(110);
+            GlobalHost.Configuration.ConnectionTimeout = TimeSpan.FromSeconds(3600);
             GlobalHost.Configuration.DisconnectTimeout = TimeSpan.FromSeconds(3600);
             GlobalHost.Configuration.KeepAlive = TimeSpan.FromSeconds(1200);
             // Fires when the application is started
@@ -125,7 +125,7 @@ namespace fcConferenceManager
             // --database timeout secs
             int dbTimeoutSecs = Convert.ToInt32(ReadAppSetting("AppT"));
             if (dbTimeoutSecs <= 0)
-                dbTimeoutSecs = 120;
+                dbTimeoutSecs = 3600;
             connString += string.Format("Connect Timeout={0};", dbTimeoutSecs);
             connString += string.Format("MultipleActiveResultSets={0};", "true");
             // --success, return connection string
