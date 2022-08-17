@@ -25,6 +25,23 @@
 
     });
 </script>
+<style>
+    thead {
+        background-color: #6e6c6c;
+    }
+
+    th a {
+        color: lightyellow;
+    }
+
+    th {
+        color: lightyellow;
+    }
+    
+    a:hover{
+        color:orange;
+    }
+</style>
 <body>
 
 
@@ -32,27 +49,27 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                     @using (Html.BeginForm("MyFiles", "Portolo", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    @using (Html.BeginForm("MyFiles", "Portolo", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
 
                         @Html.AntiForgeryToken()
                         <div class="row">
-							
-												 
-									  
-																								 
-								 
-													
-																				  
+
+
+
+
+
+
+
                             <div class="col-md-10">
                                 <h4 class="my-4">My Files</h4>
-                             
+
                                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                                 <div class="form-group row">
                                     <label class="control-label"><b>Upload Files</b></label>
                                     <div class="col-md-3">
-                                        
+
                                         <input type="file" id="files" name="files" required="required" class="form-control">
                                     </div>
                                     <div class="col-md-offset-2 col-md-4">
@@ -61,13 +78,13 @@
                                 </div>
 
                                 @* <div class="form-group">
-                                    <div class="col-md-offset-2 col-md-10">
-                                        <input type="submit" value="Upload" class="btn" style="color:blue" />
-                                    </div>
-                                </div> *@
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <input type="submit" value="Upload" class="btn" style="color:blue" />
+                                        </div>
+                                    </div> *@
 
                             </div>
-														 
+
                         </div>
                     }
                     <form id="contact" action="/Portolo/MyFiles" method="get" enctype="multipart/form-data" onsubmit="validateInputs(e);">
@@ -85,19 +102,20 @@
                                         <div class="form-group">
 
                                             <div class="card-header">
-                                                <b>Search</b>
+                                                <b style="font-size:15px;">Search</b>
                                                 &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
                                                 @Html.TextBox("search")
 
 
                                                 &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
-                                                <input type="submit" value="Search" class="btn btn-default" />
+                                               
+                                                    <input type="submit" value="Search" class="brdr-1 btn-sm" />
 
 
-                                                &nbsp;&nbsp;
+                                                    &nbsp;&nbsp;
 
-                                                <button class="btn btn-default" onclick="location.href='@Url.Action("MyFiles", "Portolo")';return false;">Reset</button>
-
+                                                    <button class="brdr-1 btn-sm" onclick="location.href='@Url.Action("MyFiles", "Portolo")';return false;">Reset</button>
+                                               
                                             </div>
 
                                             <div id="data">
@@ -112,23 +130,23 @@
                                                                  firstText: "<< First", previousText: "< Prev", nextText: "Next >", lastText: "Last >>",
                                                                  htmlAttributes: new { id = "DataTable" },
                                                                  columns: grid.Columns(
-                                                                     grid.Column("FileName", header: "File Name", canSort: false),
+                                                                     grid.Column("FileName", header: "File Name", canSort: true),
 
                                                                      grid.Column(header: "Download", format:
-                                                                                                                                                @<text>
+                                                                                                                                                        @<text>
 
-                                                                                                                                                    <a href="~/Portolo/DownloadFile?filePath=@item.FileUrl"><img src="~/Images/Icons/Downloadfileicon.png" style="width: auto; height: contain;align-content:flex-start" title="Download" /></a>
+                                                                                                                                                            <a href="~/Portolo/DownloadFile?filePath=@item.FileUrl"><img src="~/Images/Icons/Downloadfileicon.png" style="width: auto; height: contain;align-content:flex-start" title="Download" /></a>
 
-                                                                                                                                                </text>),
-             grid.Column( header: "Copy Link", format:
-@<text>
-    <input type="hidden" value="@ViewBag.apppath" id="sourcePath" />
-    <a class="clipboard"  onclick="funcCopyToClipboard(@item.FileId)"><img src="~/Images/Icons/Copylnk.png" style="width: 30px; height: 20px; align-content:flex-start" /></a>
-</text>),
-grid.Column(header: "Delete", format:
-@<text>
-    <a class="btn btn-default" href="~/Portolo/DeleteFile?pkey=@item.FileId" ,new { onclick="return confirm('Are you sure wants to delete?');" }>Delete</a>
-</text>)));
+                                                                                                                                                        </text>),
+       grid.Column(header: "Copy Link", format:
+                                        @<text>
+                                            <input type="hidden" value="@ViewBag.apppath" id="sourcePath" />
+                                            <a class="clipboard" onclick="funcCopyToClipboard(@item.FileId)"><img src="~/Images/Icons/Copylnk.png" style="width: 30px; height: 20px; align-content:flex-start" /></a>
+                                        </text>),
+                          grid.Column(header: "Delete", format:
+                                    @<text>
+                                        <a class="brdr-1 btn-sm" href="~/Portolo/DeleteFile?pkey=@item.FileId" ,new { onclick="return confirm('Are you sure wants to delete?');" }>Delete</a>
+                                    </text>)));
                                                 }
                                                 else
                                                 {
@@ -164,7 +182,7 @@ grid.Column(header: "Delete", format:
                 contentType: "application/json;charset=UTF-8",
                 dataType: "json",
                 success: function (result) {
-                    var searchPath = $('#sourcePath').val() + result.FileUrl;                  
+                    var searchPath = $('#sourcePath').val() + result.FileUrl;
                     navigator.clipboard.writeText(searchPath);
                     document.execCommand("copy");
                     alert("Link Copied!");
@@ -172,11 +190,11 @@ grid.Column(header: "Delete", format:
                 error: function (result) {
                     alert('Sorry!There is Some Error!');
                 }
-              
+
             });
             return false;
         }
-        
+
 
     </script>
 

@@ -118,26 +118,36 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         public string GetAccountName()
         {
+            string query = string.Empty , accountname = string.Empty;
+            
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             SqlConnection con = new SqlConnection(config);
             con.Open();
-            string query = "Select SettingValue from Portolo_ApplicationSettings where pKey = 200 ";
+            query = "Select SettingValue from Portolo_ApplicationSettings where pKey = 200";
+
             SqlCommand command = new SqlCommand(query, con);
-            string accountname = command.ExecuteScalar().ToString();
+            if (command.ExecuteScalar() != null)
+            {
+                accountname = command.ExecuteScalar().ToString();
+            }
             con.Close();
             return accountname;
         }
         public string GetOrgName()
         {
+            string query = string.Empty, orgname = string.Empty;
             DataTable dt = new DataTable();
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             SqlConnection con = new SqlConnection(config);
             con.Open();
-            string query = "Select SettingValue from Portolo_ApplicationSettings where pKey = 201";
+            query = "Select SettingValue from Portolo_ApplicationSettings where pKey = 201";
             SqlCommand command = new SqlCommand(query, con);
-            string accountname = command.ExecuteScalar().ToString();
+            if (command.ExecuteScalar() != null)
+            {
+                orgname = command.ExecuteScalar().ToString();
+            }
             con.Close();
-            return accountname;
+            return orgname;
         }
         private bool UploadImages(string model)
         {

@@ -551,8 +551,6 @@ namespace fcConferenceManager.Controllers.Portolo
                     result.Tables.Add(dt);
                     reader.Close();
                     reader.Dispose();
-                    DataTable dataTable = result.Tables[0];
-                    
                     for(int i = 0; i < result.Tables[0].Rows.Count; i++)
                     {
                         string conn = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
@@ -863,7 +861,7 @@ namespace fcConferenceManager.Controllers.Portolo
                 if (SaveFile(model))
                 {
                     files.SaveAs(path);
-                    TempData["AlertMessage"] = "filesed Successfully !!";
+                    TempData["AlertMessage"] = "Uploaded Successfully !!";
                     return RedirectToAction("MyFiles", "Portolo");
                 }
                 else
