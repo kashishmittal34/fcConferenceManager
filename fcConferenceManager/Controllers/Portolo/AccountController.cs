@@ -127,8 +127,8 @@ namespace fcConferenceManager.Controllers
                                 response.skypeaddress = dr["SkypeAddress"].ToString();
                                 response.personalbiography = dr["PersonalBio"].ToString();
                                 response.Uimg = baseurl + "/Accountimages/" + dr["imgpath"].ToString();
-                                response.degrees = dr["Degrees"].ToString();                               
-                                response.IsGlobalAdmin = (bool)dr["GlobalAdministrator"];                               
+                                response.degrees = dr["Degrees"].ToString();
+                                response.IsGlobalAdmin = (bool)dr["GlobalAdministrator"];
                             }
                             else
                             {
@@ -531,7 +531,7 @@ while (reader.Read())
                     user.firstname = response[0].firstname;
                     user.middlename = response[0].middlename;
                     user.lastname = response[0].lastname;
-                    user.suffix = response[0].suffix;
+                    user.suffixvalue = response[0].suffixvalue;
                     user.nickname = response[0].nickname;
                     user.signinaccountid = response[0].signinaccountid;
                     user.MainEmailType = response[0].MainEmailType;
@@ -617,7 +617,6 @@ while (reader.Read())
                                 response.firstname = reader["firstname"].ToString();
                                 response.middlename = reader["middlename"].ToString();
                                 response.lastname = reader["lastname"].ToString();
-                                response.suffix = reader["suffix"].ToString();
 								response.suffixvalue = reader["suffixvalue"].ToString();
                                 response.nickname = reader["nickname"].ToString();
                                 response.signinaccountid = reader["signinaccountid"].ToString();

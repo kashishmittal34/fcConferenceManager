@@ -103,7 +103,10 @@
         $("#Organization option[value=@Model.organization]").attr("selected", true);
         var org = $('#Organization :selected').text();
         $("#select2-Organization-container").text(org);
-        $("#Salutation1 option[value=@Model.salutation1]").attr("selected","selected");
+            $("#Salutation1 option[value=@Model.salutation1]").attr("selected", "selected");
+            $("#Suffix option[value=@Model.suffix]").attr("selected", "selected");
+            $("#PhoneType1 option[value=@Model.phonetype1]").attr("selected", "selected");
+            $("#PhoneType2 option[value=@Model.phonetype2]").attr("selected","selected");
     });
     </script>
     <script type="text/javascript" language="javascript">

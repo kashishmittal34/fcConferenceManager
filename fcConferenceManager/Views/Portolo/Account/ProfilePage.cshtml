@@ -22,7 +22,7 @@
         var data = filename.split(".")[1];
         if (data.toLowerCase() != 'jpg' && data.toLowerCase() != 'png' && data.toLowerCase() != 'gif')
         {
-            alert("Invalid file, Please select jpg,png,gif files");
+            alert("Invalid file, Please select jpg, png, gif files"); 
 
             $("#file").val('');
           var imageurl = '@Url.Content("ViewBag.Baseurl/User-images/empty image.png")';

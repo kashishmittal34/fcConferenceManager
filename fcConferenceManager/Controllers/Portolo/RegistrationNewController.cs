@@ -23,19 +23,19 @@ namespace fcConferenceManager.Controllers
 
         public ActionResult Registration(int? userID, int? PortoloKey)
         {
-            
+			
 
 			loginResponse objlt = (loginResponse)Session["User"];
-            if (objlt == null) return Redirect("~/Account/Portolo");														
+            //if (objlt == null) return Redirect("~/Account/Portolo");														
             ViewBag.portolodropdown = getdropdownprtlo();
             ViewBag.Country = GetCountryDropDown();
             ViewBag.organization = GetOrganizationDropDown();
             ViewBag.salutation1 = GetSalutationDropDown();
             ViewBag.state = GetStateDropDown("1");
             ViewBag.timeZone = GetStateDropDown("1");
-			ViewBag.suffix = GetSuffixDropDown();
+            ViewBag.suffix = GetSuffixDropDown();
             ViewBag.phonetype1 = GetPhoneTypesDropDown();
-            ViewBag.phonetype2 = GetPhoneTypesDropDown();									 
+            ViewBag.phonetype2 = GetPhoneTypesDropDown();
             List<UserResponse> userList = new List<UserResponse>();
             UserResponse user = new UserResponse();
             if (userID > 0)
@@ -97,7 +97,7 @@ namespace fcConferenceManager.Controllers
                 ViewBag.timeZone = GetTimeZoneDropDown(user.countrypkey);
                 return View("~/Views/Portolo/Registration/RegistrationNew.cshtml", user);
             }
-            return Redirect("/Account/ProfilePage");
+            return View("~/Views/Portolo/Registration/RegistrationNew.cshtml", user);
         }
         [HttpPost]
         public ActionResult RegistrationSubmit(UserRequest request, HttpPostedFileBase file, HttpPostedFileBase CVfile,bool? save)
@@ -245,11 +245,11 @@ namespace fcConferenceManager.Controllers
 
          public List<UserResponse> RegistrationList(int? id, int? PortoloKey )
         {
-           if (Session["User"] == null)
+            if (Session["User"] == null)
             {
                 Redirect("~/account/portolo");
             }
-                loginResponse objlt = (loginResponse)Session["User"];
+            loginResponse objlt = (loginResponse)Session["User"];
                int Id = objlt.Id;
             
             if (PortoloKey==null)
@@ -406,7 +406,7 @@ namespace fcConferenceManager.Controllers
 
         }
 
- public void DownloadExcel()
+        public void DownloadExcel()
         {
             DataTable dt = new DataTable();
             dt.Clear();
@@ -513,7 +513,8 @@ namespace fcConferenceManager.Controllers
             }
             return SalutationList;
         }
-	public List<SelectListItem> GetPhoneTypesDropDown()
+
+        public List<SelectListItem> GetPhoneTypesDropDown()
         {
             List<SelectListItem> PhoneTypesList = new List<SelectListItem>();
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
@@ -557,7 +558,7 @@ namespace fcConferenceManager.Controllers
                 }
             }
             return SuffixList;
-        }	 
+        }
         public List<SelectListItem> GetStateDropDown(string country_id)
         {
             country_id = country_id == null ? "1" : country_id;
