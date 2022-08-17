@@ -57,16 +57,35 @@
         .pdl-1 {
             padding-left: 15px;
         }
+
         thead {
             background-color: #6e6c6c;
         }
-        th a{
-            color: lightyellow;
-        }
-        th {
+
+        th a {
             color: lightyellow;
         }
 
+        th {
+            color: lightyellow;
+        }
+        i {
+            background: orange;
+            padding: 5px;
+            color: #fff;
+            border-radius: 50px;
+            margin-left: 5px;
+        }
+        #anchor {
+            background: orange;
+            padding: 5px;
+            color: #fff;
+            border-radius: 50px;
+            margin-left: 5px;
+        }
+        a:hover{
+            color : darkorange;
+        }
     </style>
 </head>
 <body>
@@ -82,99 +101,78 @@
                         <br />
                         @using (@Html.BeginForm("ProcessLibrary", "Portolo", FormMethod.Get))
                         {
-                       
-																								
-														   
-													 
-											   
-																															  
-											   
+                            <div class="control-icons">
+                                <h5>Search</h5>
+
+                                <input type="text" name="search" class="form-control form-control-sm d-inline-block" placeholder="Process Name" value=@ViewBag.search />
 
 
-                                <div class="control-icons">
-                                    <h5>Search</h5>
+                                <button type="submit" value="Search" title="Search" style="border-color: white;border: none;background-color:white;">
+                                    <i class="fa-solid fa-magnifying-glass"> </i>
+                                </button>
 
-                                    <input type="text" name="search" class="form-control form-control-sm d-inline-block"  placeholder="Process Name"  value=@ViewBag.search />
+                                <button type="submit" style="border-color: white;border: none;background-color:white;" onclick="location.href='@Url.Action("ProcessLibrary", "Portolo")';return false;" title="Reset">
+                                    <i class="fa-solid fa-arrows-rotate"></i>
+                                </button>
 
+                                <button type="submit" style="border-color: white;border: none;background-color:white;" onclick="location.href='@Url.Action("Download", "Portolo",FormMethod.Post)';return false;" title="ExportExcel"><i class="fa-solid fa-download"></i></button>
 
-                                    <button type="submit" value="Search" title="Search" style="border-color: white;border: none;background-color:white;">
-                                        <i class="fa-solid fa-magnifying-glass"> </i>
+                                <div class="controls">
+
+                                    <button type="button" class="brdr-1 btn-sm" data-toggle="modal" data-target="#model-mrole" onclick="Openform()" style="margin-right:20px; ">
+                                        Add New Process
                                     </button>
-                                   
-                                    <button type="submit" style="border-color: white;border: none;background-color:white;" onclick="location.href='@Url.Action("ProcessLibrary", "Portolo")';return false;" title="Reset">
-                                        <i class="fa-solid fa-arrows-rotate"></i>
-                                    </button>
-
-                                    <button type="submit" style="border-color: white;border: none;background-color:white;" onclick="location.href='@Url.Action("Download", "Portolo",FormMethod.Post)';return false;" title="ExportExcel"><i class="fa-solid fa-download"></i></button>
-
-                                    <div class="controls">
-
-                                        <button type="button" class="brdr-1 btn-sm" data-toggle="modal" data-target="#model-mrole" onclick="Openform()" style="margin-right:20px; ">
-                                            Add New Process
-                                        </button>
-
-                                        
-
-                                    </div>
-
                                 </div>
-								  
-						 
-							  
 
-
-                           
-
-                        
+                            </div>
                         }
-           
-                   
-                     
                         <div class="box-body">
                             <div class="emp-db mt-4">
                                 <div class="card emp-data">
                                     <div class="emp-data">
-                                 <div id="example">
-                            
-                                @if (Model.Count > 0)
-                                {
-                                    var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 10);
-                                    @grid.GetHtml(tableStyle: "table table-striped table-bordered table-hover", headerStyle: "webgrid-header",
-                                    alternatingRowStyle: "webgrid-alternating-row", selectedRowStyle: "webgrid-selected-row",
-                                    footerStyle: "webgrid-footer", rowStyle: "webgrid-row-style", mode: WebGridPagerModes.All,
-                                    firstText: "<< First", previousText: "< Prev", nextText: "Next >", lastText: "Last >>",
-                                    htmlAttributes: new { id = "DataTable" },
-                                    columns: grid.Columns(
+                                        <div id="example">
 
-                                      grid.Column("pkey", header: "Id", canSort: true),
+                                            @if (Model.Count > 0)
+                                            {
+                                                var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 10);
+                                                @grid.GetHtml(tableStyle: "table table-striped table-bordered table-hover", headerStyle: "webgrid-header",
+                                                alternatingRowStyle: "webgrid-alternating-row", selectedRowStyle: "webgrid-selected-row",
+                                                footerStyle: "webgrid-footer", rowStyle: "webgrid-row-style", mode: WebGridPagerModes.All,
+                                                firstText: "<< First", previousText: "< Prev", nextText: "Next >", lastText: "Last >>",
+                                                htmlAttributes: new { id = "DataTable" },
+                                                columns: grid.Columns(
 
-                                      grid.Column("Process", header: "Process", canSort: true),
+                                                  grid.Column("pkey", header: "Id", canSort: true),
 
-                                     grid.Column(header: "Actions", format:
-                                                                    @<text>
-                                                                        <a class="btn-outline-primary" onclick="GetDetails(@item.pkey)">
+                                                  grid.Column("Process", header: "Process", canSort: true),
 
-                                                                            <i class="fa fa-edit"></i>
-                                                                        </a>
-                                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                        <a>
-                                                                            @Html.ActionLink(" ", "DeleteProcess", "Portolo", new { pkey = item.pkey }, new { onclick = "return confirm('Are sure wants to delete?');", @class = "fa fa-trash-o" })
-                                                                        </a>
-                                                                    </text>)));
+                                                 grid.Column(header: "Actions", format:
+                                                                                    @<text>
+                                                                                     
+                                                                                            <a  onclick="GetDetails(@item.pkey)">
 
-                                    @Html.Hidden("dir", grid.SortDirection)
-                                    @Html.Hidden("col", grid.SortColumn)
+                                                                                                <i class="fa fa-edit"></i>
+                                                                                            </a>
+                                                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                                            <a >
+                                                                                                @Html.ActionLink(" ", "DeleteProcess", "Portolo", new { pkey = item.pkey }, new { onclick = "return confirm('Are sure wants to delete?');", @class = "fa fa-trash-o ",@id="anchor"})
+                                                                                            </a>
+                                                                                      
+                                                                                    </text>)));
 
-                                }
-                                else
-                                {
-                                    <b>No Details Found.</b>
-                                }
-                            </div>
+                                                @Html.Hidden("dir", grid.SortDirection)
+                                                @Html.Hidden("col", grid.SortColumn)
+
+                                            }
+                                            else
+                                            {
+                                                <b>No Details Found.</b>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                           
+
 
                         </div>
                     </div>
@@ -196,7 +194,7 @@
                                         <div class="modal-body" style="height:200px">
                                             <div class="col-md-8">
                                                 <div class="form-group">
-                                                    <label for="Process">Process Name :</label>
+                                                    <label for="Process"style="font-size:20px"><b>Process Name:</b></label>
                                                     <br />
                                                     <br />
                                                     <input type="text" class="form-control" id="rolename" name="Process" placeholder="Process Name" required="">
@@ -207,8 +205,8 @@
 
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary" id="AddSubmit">Submit</button>
-                                            <button id="closeModal" type="button" class="btn btn-default pull-right" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                                            <button type="submit" class="btn btn-primary" id="AddSubmit" style="background-color:orange">Submit</button>
+                                            <button id="closeModal" type="button" class="brdr-1 btn-sm pull-right" data-bs-dismiss="modal" aria-label="Close">Close</button>
                                         </div>
                                     </form>
                                 }
@@ -233,7 +231,7 @@
                                             <div class="col-md-8">
                                                 <div class="form-group">
                                                     <input type="hidden" id="hfId" name="pkey">
-                                                    <label for="Process">Process Name :</label>
+                                                    <label for="Process" style="font-size:20px"><b>Process Name:</b></label>
                                                     <br />
                                                     <br />
                                                     <input type="text" class="form-control" id="txtUpdateName" name="Process" placeholder="Process Name" required="">
@@ -244,8 +242,8 @@
 
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary" id="SubmitButton">Update</button>
-                                            <button id="closeModal" type="button" class="btn btn-default pull-right" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                                            <button type="submit" class="btn btn-primary" id="SubmitButton" style="background-color:orange">Update</button>
+                                            <button id="closeModal" type="button" class="brdr-1 btn-sm pull-right" data-bs-dismiss="modal" aria-label="Close">Close</button>
                                         </div>
                                     </form>
                                 }
