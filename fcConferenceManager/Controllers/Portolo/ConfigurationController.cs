@@ -120,7 +120,7 @@ namespace fcConferenceManager.Controllers.Portolo
         {
             string query = string.Empty , accountname = string.Empty;
             
-            string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+            
             SqlConnection con = new SqlConnection(config);
             con.Open();
             query = "Select SettingValue from Portolo_ApplicationSettings where  SettingID = 'Upload_Account_Image'";
@@ -137,7 +137,7 @@ namespace fcConferenceManager.Controllers.Portolo
         {
             string query = string.Empty, orgname = string.Empty;
             DataTable dt = new DataTable();
-            string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+          
             SqlConnection con = new SqlConnection(config);
             con.Open();
             query = "Select SettingValue from Portolo_ApplicationSettings where SettingID = 'Upload_Org_Image'";
@@ -153,7 +153,7 @@ namespace fcConferenceManager.Controllers.Portolo
         {
 
             string query = string.Empty;
-            string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+           
             SqlConnection con = new SqlConnection(config);
             query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where SettingID =  'Upload_Account_Image'";
             con.Open();
@@ -169,7 +169,7 @@ namespace fcConferenceManager.Controllers.Portolo
         {
 
             string query = string.Empty;
-            string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+           
             SqlConnection con = new SqlConnection(config);
             query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where SettingID = 'Upload_Org_Image'";
             con.Open();
@@ -212,8 +212,6 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         public ActionResult UpdateSetting(ApplicationSetting setting)
         {
-
-
             using (SqlConnection con = new SqlConnection(config))
             {
                 using (SqlCommand cmd = new SqlCommand("SP_ApplicationSettings", con))
