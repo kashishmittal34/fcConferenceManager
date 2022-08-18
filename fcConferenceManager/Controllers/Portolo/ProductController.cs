@@ -8,6 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ClosedXML.Excel;
+using ExcelDataReader;
 using fcConferenceManager.Models.Portolo;
 
 namespace fcConferenceManager.Controllers.Portolo
@@ -29,6 +30,7 @@ namespace fcConferenceManager.Controllers.Portolo
             con.Close();
 
             ViewBag.Products = dt;
+            ViewBag.InvalidExcel = TempData["InvalidExcel"];
             return View("~/Views/Portolo/Product/Index.cshtml");
         }
 
@@ -136,5 +138,118 @@ namespace fcConferenceManager.Controllers.Portolo
                 }
             }
         }
+        #region ImportExcel
+
+        [HttpPost]
+
+        public ActionResult ImportFromExcel(HttpPostedFileBase files)
+        {
+            if (ModelState.IsValid)
+            {
+                if (files != null && files.ContentLength > 0)
+                {
+                    Stream stream = files.InputStream;
+                    IExcelDataReader reader = null;
+                    if (files.FileName.EndsWith(".xls"))
+                    {
+                        string filename = files.FileName;
+                        string path = Server.MapPath("~/PortoloDocuments/" + filename);
+                        if (System.IO.File.Exists(path))
+                        {
+                            System.IO.File.Delete(path);
+                        }
+                        files.SaveAs(path);
+
+                        reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                    }
+                    else if (files.FileName.EndsWith(".xlsx"))
+                    {
+                        string filename = files.FileName;
+                        string path = Server.MapPath("~/PortoloDocuments/" + filename);
+                        if (System.IO.File.Exists(path))
+                        {
+                            System.IO.File.Delete(path);
+                        }
+                        files.SaveAs(path);
+                        reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("File", "This file format is not supported");
+                        return RedirectToAction("ProductList", "Product");
+                    }
+                    int fieldCount = reader.FieldCount;
+                    int rowCount = reader.RowCount;
+                    DataTable dt = new DataTable();
+                    DataRow row;
+                    DataTable dt_ = new DataTable();
+                    DataSet ds = new DataSet();
+                    ds = reader.AsDataSet();
+                    try
+                    {
+
+                        dt_ = ds.Tables[0];
+
+                        for (int i = 0; i < dt_.Columns.Count; i++)
+                        {
+                            dt.Columns.Add(dt_.Rows[0][i].ToString());
+                        }
+                        int rowCounter = 0;
+                        for (int rows = 1; rows < dt_.Rows.Count; rows++)
+                        {
+                            row = dt.NewRow();
+                            for (int col = 0; col < dt_.Columns.Count; col++)
+                            {
+                                row[col] = dt_.Rows[rows][col].ToString();
+                                rowCounter++;
+                            }
+                            dt.Rows.Add(row);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        ModelState.AddModelError("File", "Unable to upload file");
+                        return RedirectToAction("ProductList", "Product");
+                    }
+                    DataSet result = new DataSet();
+                    result.Tables.Add(dt);
+                    reader.Close();
+                    reader.Dispose();
+                    DataTable dataTable = result.Tables[0];
+
+                   
+                    for (int i = 0; i < result.Tables[0].Rows.Count; i++)
+                    {
+                        string numString = result.Tables[0].Rows[i][3].ToString(); //"1287543.0" will return false for a long
+                        int number1 = 0;
+                        bool canConvert = int.TryParse(numString, out number1);
+                        if (canConvert == true)
+                        {
+                            string conn = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+                            SqlConnection con = new SqlConnection(conn);
+                            string query = "Insert into Portolo_ProductList(ProductName,Description,Price) Values('" + result.Tables[0].Rows[i][1].ToString() + "','" + result.Tables[0].Rows[i][2].ToString() + "','" + result.Tables[0].Rows[i][3].ToString() + "')";
+                            con.Open();
+                            SqlCommand cmd = new SqlCommand(query, con);
+                            cmd.ExecuteNonQuery();
+                            con.Close();
+                        }
+                        else
+                        {
+                            TempData["InvalidExcel"] = "Invalid! Excel File";
+                            break;
+                        }
+                    }
+                    
+                    return RedirectToAction("ProductList", "Product");
+                }
+                else
+                {
+                    ModelState.AddModelError("File", "Please upload your file");
+                }
+
+            }
+            return RedirectToAction("ProductList", "Product");
+        }
+        #endregion
     }
 }

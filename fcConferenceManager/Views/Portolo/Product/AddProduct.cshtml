@@ -55,7 +55,7 @@
                                                  <div class="input-group-prepend">
                                                   <span class="input-group-text" style="line-height:1">$</span>
                                                  </div>
-                                                @Html.TextBoxFor(model=>model.Price, new { @class = "form-control form-control-sm"})
+                                                @Html.TextBoxFor(model=>model.Price, new { @class = "form-control form-control-sm" ,@id= "Price"})
                                                  @*<input type="text" class="form-control" style="height:30px" value="@Model.Price">*@
                                              </div>
                                         
@@ -93,6 +93,23 @@
             $("#Product").focus();
 
             alert("Please enter the Product Name");
+            return false;
+        }
+        var value = $('#Price').val();
+        if (value == "") {
+            //Check if price is numeric
+            alert("Please enter the Price Value !"); //Show error
+            $('#Price').focus(); //Focus on field
+            return false;
+        }
+        else if (!$.isNumeric(value)) {
+            alert("Please enter correct Price Value !"); //Show error
+            $('#Price').focus(); //Focus on field
+            return false;
+        }
+        else if (value == "0") {
+            alert("The Price Value should not be Zero!"); //Show error
+            $('#Price').focus(); //Focus on field
             return false;
         }
     }

@@ -44,7 +44,7 @@ namespace fcConferenceManager.Controllers.Portolo
             setting.SettingList = setlist;
             setting.AccountImg = GetAccountName();
             setting.OrganizationImg = GetOrgName();
-            return View(setting);
+            return View("~/Views/Portolo/Configuration/ConfigurationSettings.cshtml", setting);
 
         }
         [HttpPost]
