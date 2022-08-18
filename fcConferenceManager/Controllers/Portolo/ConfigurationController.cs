@@ -55,9 +55,9 @@ namespace fcConferenceManager.Controllers.Portolo
             {
                 var Extension = Path.GetExtension(AccountImg.FileName);
                 var changeExtension = Path.ChangeExtension(Extension, ".jpg");
-                var ResourcefileName = "AccountImage" + changeExtension;
-                string path = Path.Combine(Server.MapPath("~/ImagesUpload/"), ResourcefileName);
-                string filepath = Url.Content(Path.Combine("~/ImagesUpload/", ResourcefileName));
+                var ResourcefileName = "Portolo_AccountImage" + changeExtension;
+                string path = Path.Combine(Server.MapPath("~/PortoloDocuments/"), ResourcefileName);
+                string filepath = Url.Content(Path.Combine("~/PortoloDocuments/", ResourcefileName));
                 if (System.IO.File.Exists(filepath))
                 {
                     System.IO.File.Delete(filepath);
@@ -70,7 +70,7 @@ namespace fcConferenceManager.Controllers.Portolo
             {
                 model.AccountImg = string.Empty;
             }
-            if (UploadImages(model.AccountImg))
+            if (UploadAccountImages(model.AccountImg))
             {
 
                 TempData["AlertMessage"] = "Uploaded Successfully !!";
@@ -90,9 +90,9 @@ namespace fcConferenceManager.Controllers.Portolo
             {
                 var Extension = Path.GetExtension(OrganizationImg.FileName);
                 var changeExtension = Path.ChangeExtension(Extension, ".jpg");
-                var ResourcefileName = "OrganizationImage" + changeExtension;
-                string path = Path.Combine(Server.MapPath("~/ImagesUpload/"), ResourcefileName);
-                string filepath = Url.Content(Path.Combine("~/ImagesUpload/", ResourcefileName));
+                var ResourcefileName = "Portolo_OrganizationImage" + changeExtension;
+                string path = Path.Combine(Server.MapPath("~/PortoloDocuments/"), ResourcefileName);
+                string filepath = Url.Content(Path.Combine("~/PortoloDocuments/", ResourcefileName));
                 if (System.IO.File.Exists(filepath))
                 {
                     System.IO.File.Delete(filepath);
@@ -123,7 +123,7 @@ namespace fcConferenceManager.Controllers.Portolo
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             SqlConnection con = new SqlConnection(config);
             con.Open();
-            query = "Select SettingValue from Portolo_ApplicationSettings where pKey = 200";
+            query = "Select SettingValue from Portolo_ApplicationSettings where  SettingID = 'Upload_Account_Image'";
 
             SqlCommand command = new SqlCommand(query, con);
             if (command.ExecuteScalar() != null)
@@ -140,7 +140,7 @@ namespace fcConferenceManager.Controllers.Portolo
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             SqlConnection con = new SqlConnection(config);
             con.Open();
-            query = "Select SettingValue from Portolo_ApplicationSettings where pKey = 201";
+            query = "Select SettingValue from Portolo_ApplicationSettings where SettingID = 'Upload_Org_Image'";
             SqlCommand command = new SqlCommand(query, con);
             if (command.ExecuteScalar() != null)
             {
@@ -149,13 +149,13 @@ namespace fcConferenceManager.Controllers.Portolo
             con.Close();
             return orgname;
         }
-        private bool UploadImages(string model)
+        private bool UploadAccountImages(string model)
         {
 
             string query = string.Empty;
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             SqlConnection con = new SqlConnection(config);
-            query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where pKey = 200";
+            query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where SettingID =  'Upload_Account_Image'";
             con.Open();
             SqlCommand command = new SqlCommand(query, con);
             int numResult = command.ExecuteNonQuery();
@@ -171,7 +171,7 @@ namespace fcConferenceManager.Controllers.Portolo
             string query = string.Empty;
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             SqlConnection con = new SqlConnection(config);
-            query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where pKey = 201";
+            query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where SettingID = 'Upload_Org_Image'";
             con.Open();
             SqlCommand command = new SqlCommand(query, con);
             int numResult = command.ExecuteNonQuery();
@@ -274,7 +274,7 @@ namespace fcConferenceManager.Controllers.Portolo
                     dataRow["Value"] = item.SettingValue;
                     dt.Rows.Add(dataRow);
                 }
-                var exportbytes = ExporttoExcel(dt, reportname);
+                var exportbytes = ExporttoExcel(dt, reportname);    
                 return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
             }
             else
