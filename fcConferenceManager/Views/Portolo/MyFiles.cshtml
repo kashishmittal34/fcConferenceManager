@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="~/Css/style.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="wXWPE7+C5Hf7XhIYRLVnYzwDuNv9+IDtq275TZhyGBmZsCHkp/b27NRuUQ50t0uqvZFUJzzYlOy+E5YV0XISSgTN+UECYByz6yzX5h1rCZm3HzYX8BRtyKWPY7U//IUu" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -37,9 +38,17 @@
     th {
         color: lightyellow;
     }
-    
-    a:hover{
-        color:orange;
+
+    a:hover {
+        color: orange;
+    }
+
+    #anchor {
+        background: orange;
+        padding: 5px;
+        color: #fff;
+        border-radius: 50px;
+        margin-left: 5px;
     }
 </style>
 <body>
@@ -54,35 +63,23 @@
 
                         @Html.AntiForgeryToken()
                         <div class="row">
-
-
-
-
-
-
-
                             <div class="col-md-10">
                                 <h4 class="my-4">My Files</h4>
 
                                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                                <div class="form-group row">
-                                    <label class="control-label"><b>Upload Files</b></label>
+                                <div class="row">
+                                    <label class="control-label" style="font-size:15px;"><b>Upload Files</b></label>
+                                    <br   />
+                                    
                                     <div class="col-md-3">
 
                                         <input type="file" id="files" name="files" required="required" class="form-control">
                                     </div>
-                                    <div class="col-md-offset-2 col-md-4">
+                                    <div class="col-md-3">
                                         <input type="submit" value="Upload" class="brdr-1" />
                                     </div>
                                 </div>
-
-                                @* <div class="form-group">
-                                        <div class="col-md-offset-2 col-md-10">
-                                            <input type="submit" value="Upload" class="btn" style="color:blue" />
-                                        </div>
-                                    </div> *@
-
                             </div>
 
                         </div>
@@ -93,29 +90,22 @@
                             <div class="col-lg-12 mt-5">
 
                                 <div class="dash-tabs prof-info">
-
-
-
                                     <div class="col-md-10 card">
-
-
                                         <div class="form-group">
-
                                             <div class="card-header">
-                                                <b style="font-size:15px;">Search</b>
-                                                &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
-                                                @Html.TextBox("search")
-
-
-                                                &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
-                                               
-                                                    <input type="submit" value="Search" class="brdr-1 btn-sm" />
-
-
-                                                    &nbsp;&nbsp;
-
-                                                    <button class="brdr-1 btn-sm" onclick="location.href='@Url.Action("MyFiles", "Portolo")';return false;">Reset</button>
-                                               
+                                                <div class="control-icons">
+                                                    <b style="font-size:15px;">Search</b>
+                                                    &nbsp;&nbsp; 
+                                                    @Html.TextBox("search")
+                                                    &nbsp;
+                                                    <button type="submit" value="Search" title="Search" style="border:none">
+                                                        <i class="fa-solid fa-magnifying-glass"> </i>
+                                                    </button>
+                                                    &nbsp;
+                                                    <button type="submit" style="border: hidden;" onclick="location.href='@Url.Action("MyFiles", "Portolo")';return false;" title="Reset">
+                                                        <i class="fa-solid fa-arrows-rotate"></i>
+                                                    </button>
+                                                </div>
                                             </div>
 
                                             <div id="data">
@@ -123,7 +113,7 @@
                                                 {
 
 
-                                                    var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 5);
+                                                    var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 50);
                                                     @grid.GetHtml(tableStyle: "table table-striped table-bordered table-hover", headerStyle: "webgrid-header",
                                                                  alternatingRowStyle: "webgrid-alternating-row", selectedRowStyle: "webgrid-selected-row",
                                                                  footerStyle: "webgrid-footer", rowStyle: "webgrid-row-style", mode: WebGridPagerModes.All,
@@ -133,20 +123,20 @@
                                                                      grid.Column("FileName", header: "File Name", canSort: true),
 
                                                                      grid.Column(header: "Download", format:
-                                                                                                                                                        @<text>
+                                                                                                                                                            @<text>
 
-                                                                                                                                                            <a href="~/Portolo/DownloadFile?filePath=@item.FileUrl"><img src="~/Images/Icons/Downloadfileicon.png" style="width: auto; height: contain;align-content:flex-start" title="Download" /></a>
+                                                                                                                                                                <a href="~/Portolo/DownloadFile?filePath=@item.FileUrl"><img src="~/Images/Icons/Downloadfileicon.png" style="width: auto; height: contain;align-content:flex-start" title="Download" /></a>
 
-                                                                                                                                                        </text>),
-       grid.Column(header: "Copy Link", format:
+                                                                                                                                                            </text>),
+                                     grid.Column(header: "Copy Link", format:
                                         @<text>
                                             <input type="hidden" value="@ViewBag.apppath" id="sourcePath" />
                                             <a class="clipboard" onclick="funcCopyToClipboard(@item.FileId)"><img src="~/Images/Icons/Copylnk.png" style="width: 30px; height: 20px; align-content:flex-start" /></a>
                                         </text>),
-                          grid.Column(header: "Delete", format:
-                                    @<text>
-                                        <a class="brdr-1 btn-sm" href="~/Portolo/DeleteFile?pkey=@item.FileId" ,new { onclick="return confirm('Are you sure wants to delete?');" }>Delete</a>
-                                    </text>)));
+                                           grid.Column(header: "Delete", format:
+                                      @<text>
+                                     <a class="fa fa-trash-o" href="~/Portolo/DeleteFile?pkey=@item.FileId" ,new { onclick="return confirm('Are you sure wants to delete?');" , id="anchor" }></a>
+                                     </text>)));
                                                 }
                                                 else
                                                 {
@@ -194,25 +184,5 @@
             });
             return false;
         }
-
-
-    </script>
-
-
-
-    <script>
-        $.noConflict(false);
-        $(document).ready(function () {
-            // Toggle menu on click
-            $("#menu-toggler").click(function () {
-                toggleBodyClass("menu-active");
-            });
-
-            function toggleBodyClass(className) {
-                document.body.classList.toggle(className);
-            }
-
-        });
-        $.noConflict(true)
     </script>
 </body>
