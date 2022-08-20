@@ -115,7 +115,7 @@
             float: inline-start;
             width: 200px;
             height: 200px;
-            object-fit: cover;
+            object-fit: fill;
             border-color: black;
             border: solid;
         }
@@ -146,8 +146,10 @@
                         @using (@Html.BeginForm("ConfigurationSettings", "Configuration", FormMethod.Get))
                         {
                             <div class="card-header">
-                                <label class="dt-head-left" style="font-size:large;"><b>Configuration Settings</b></label> &nbsp;
-                                <button type="submit" onclick="location.href='@Url.Action("Download", "Configuration",  FormMethod.Post)';return false;" title="ExportExcel"><i class="fa-solid fa-download"></i></button>
+                                <div class="control-icons">
+                                    <label class="dt-head-left" style="font-size:large;"><b>Configuration Settings</b></label> &nbsp;
+                                    <a onclick="location.href='@Url.Action("Download", "Configuration",  FormMethod.Post)';return false;" title="ExportExcel"><i class="fa-solid fa-download"></i></a>
+                                </div>
                             </div>
                         }
 
@@ -168,11 +170,11 @@
                                  grid.Column("SettingID", header: "Setting Id", canSort: true),
                                  grid.Column("SettingValue", header: "Value", canSort: true),
                                  grid.Column(header: "Edit", format:
-                                            @<text>
-                                                <a class="btn" onclick="GetDetails(@item.pkey)">
-                                                    <i class="fa fa-edit" style="color:orange"></i>
-                                                </a>
-                                            </text>)));
+                                                @<text>
+                                                    <a class="btn" onclick="GetDetails(@item.pkey)">
+                                                        <i class="fa fa-edit" style="color:orange"></i>
+                                                    </a>
+                                                </text>)));
                                 @Html.Hidden("dir", grid.SortDirection)
                                 @Html.Hidden("col", grid.SortColumn)
 
@@ -182,7 +184,6 @@
                                 <b>No Details Found.</b>
                             }
 
-                          
                         </div>
                         <br />
 
@@ -193,19 +194,14 @@
                         <br />
 
                         <div class=" card">
-
-
-                           
-
                             <table id="uploadtable" class="table table-bordered ">
                                 <thead>
                                     <tr>
                                         <th style="text-align:center">  Personal Image </th>
-                                        <th style="text-align:center">  Organisation Image</th>
+                                        <th style="text-align:center">  Organization Image</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-
                                     <tr>
                                         @using (Html.BeginForm("AccountSettings", "Configuration", FormMethod.Post, new { enctype = "multipart/form-data" }))
                                         {
@@ -214,19 +210,19 @@
                                                 <br />
                                                 @if (Model.AccountImg == "" || Model.AccountImg == null)
                                                 {
-                                                    <img class="unique" id="profilephoto" src="~/Images/Icons/blankphoto.png" alt="your image" />
+                                                    <img class="unique" id="profilephoto" src="~/PortoloDocuments/blankphoto.png" alt="your image" />
                                                 }
                                                 else
                                                 {
                                                     <img class="unique" id="profile" src="@Url.Content(Model.AccountImg)" alt="your image" />
                                                 }
-
-
                                                 <br />
                                                 <div class="justify-content-end">
-                                                    <input class="btn btn-block btn-default pull-left" type="file" name="AccountImg" accept=".png,.jpg,.jpeg,.gif,.tif" id="ActImg" />
-                                                    <button type="submit" class="brdr-1 btn-sm btn-orange" id="Apply">Save</button>
-                                                    <button type="submit" class="brdr-1 btn-sm pull-right">Reset</button>
+                                                    <div class="form-control-plaintext">
+                                                        <input class="btn btn-block pull-left" type="file" name="AccountImg" accept=".png,.jpg,.jpeg,.gif,.tif" id="ActImg" />
+                                                        <button type="submit" class="brdr-1 btn-sm btn-orange" id="Apply">Save</button>
+                                                        <button type="submit" class="brdr-1 btn-sm pull-right">Reset</button>
+                                                    </div>
                                                 </div>
                                             </td>
                                         }
@@ -237,7 +233,7 @@
                                                 <br />
                                                 @if (Model.OrganizationImg == "" || Model.OrganizationImg == null)
                                                 {
-                                                    <img class="unique" id="organizationphoto" src="~/Images/Icons/Organizationlogo.png" alt="your image" />
+                                                    <img class="unique" id="organizationphoto" src="~/PortoloDocuments/Organizationlogo.png" alt="your image" />
                                                 }
                                                 else
                                                 {
@@ -245,29 +241,25 @@
                                                 }
                                                 <br />
                                                 <div class="justify-content-end">
-                                                    <input class="btn btn-block btn-default pull-left" type="file" name="OrganizationImg" accept=".png,.jpg,.jpeg,.gif,.tif" id="OrgImg" />
-                                                    <button type="submit" class="brdr-1 btn-sm btn-orange " id="Insert">Save</button>
-                                                    <button type="submit" class="brdr-1 btn-sm pull-right">Reset</button>
+                                                    <div class="form-control-plaintext">
+                                                        <input class="btn btn-block pull-left" type="file" name="OrganizationImg" accept=".png,.jpg,.jpeg,.gif,.tif" id="OrgImg" />
+                                                        <button type="submit" class="brdr-1 btn-sm btn-orange " id="Insert">Save</button>
+                                                        <button type="submit" class="brdr-1 btn-sm pull-right">Reset</button>
+                                                    </div>
                                                 </div>
                                             </td>
                                         }
                                     </tr>
                                 </tbody>
                             </table>
-
-
-
                         </div>
-
                     </div>
                 </div>
             </div>
-
             <div class="modal fade" id="modal-Update" tabindex="-1" aria-labelledby="modalOne" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-dialog modal-dialog-centered modal-xl form-popup">
                     <div class="modal-content">
                         <div class="modal-header with-border">
-
                             <h3 class="box-title k-dialog-centered"> Update Settings</h3>
                         </div>
                         <div class="modal-body" style="height:250px">
@@ -287,7 +279,6 @@
                                                 </div>
                                             </div>
                                             <div class="clearfix"></div>
-
                                         </div>
                                         <div class="modal-footer">
                                             <button type="submit" class="brdr-1 btn-sm btn-outline-primary " id="SubmitButton">Update</button>
@@ -302,7 +293,6 @@
             </div>
         </div>
         <br />
-
     </section>
 </body>
 </html>
