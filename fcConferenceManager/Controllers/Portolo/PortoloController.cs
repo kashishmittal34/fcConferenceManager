@@ -894,19 +894,27 @@ namespace fcConferenceManager.Controllers.Portolo
         public ActionResult DeleteFile(int pkey)
         {
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
-            using (SqlConnection con = new SqlConnection(config))
+            try
             {
-                using (SqlCommand cmd = new SqlCommand("DeleteFile", con))
+                using (SqlConnection con = new SqlConnection(config))
                 {
-                    con.Open();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@pKey", pkey);
+                    using (SqlCommand cmd = new SqlCommand("DeleteFile", con))
+                    {
+                        con.Open();
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@pKey", pkey);
 
 
-                    cmd.ExecuteNonQuery();
-                    con.Close();
+                        cmd.ExecuteNonQuery();
+                        con.Close();
 
+                    }
                 }
+                TempData["AlertMessage"] = "Deleted Successfully !!";
+            }
+            catch(Exception)
+            {
+                TempData["AlertMessage"] = "Unsuccessfull !!";
             }
 
             return RedirectToAction("MyFiles", "Portolo");

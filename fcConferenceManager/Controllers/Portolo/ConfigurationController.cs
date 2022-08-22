@@ -66,15 +66,16 @@ namespace fcConferenceManager.Controllers.Portolo
                 AccountImg.SaveAs(path);
 
                 model.AccountImg = filepath;
+                TempData["Message"] = "Uploaded Successfully !!";
             }
             else
             {
                 model.AccountImg = string.Empty;
+                
             }
             if (UploadAccountImages(model.AccountImg))
             {
 
-                TempData["Message"] = "Uploaded Successfully !!";
                 return RedirectToAction("ConfigurationSettings", "Configuration");
             }
             else
@@ -100,6 +101,7 @@ namespace fcConferenceManager.Controllers.Portolo
                 }
                 OrganizationImg.SaveAs(path);
                 model.OrganizationImg = filepath;
+                TempData["Message"] = "Uploaded Successfully !!";
             }
             else
             {
@@ -108,7 +110,7 @@ namespace fcConferenceManager.Controllers.Portolo
             if (UploadOrgImages(model.OrganizationImg))
             {
 
-                TempData["Message"] = "Uploaded Successfully !!";
+               
                 return RedirectToAction("ConfigurationSettings", "Configuration");
             }
             else
