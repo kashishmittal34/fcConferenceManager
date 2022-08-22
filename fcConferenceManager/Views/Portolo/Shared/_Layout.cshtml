@@ -19,174 +19,140 @@
 </head>
 <body style="padding:0%;font-size:14px;">
 
-        <header class="header">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <nav class="navbar">
-                            <div class="logo"><img src="~/Images/Icons/PortoloLogo.png" /></div>
-                            @*<div style="font-family:'Javanese Text';font-size:11pt">Portolo</div>*@
+    <header class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="navbar">
+                        <div class="logo"><img src="~/Images/Icons/PortoloLogo.png" /></div>
+                        @*<div style="font-family:'Javanese Text';font-size:11pt">Portolo</div>*@
 
-                            <div class="push-left">
-                                <button id="menu-toggler" data-class="menu-active" class="hamburger">
-                                    <span class="hamburger-line hamburger-line-top"></span>
-                                    <span class="hamburger-line hamburger-line-middle"></span>
-                                    <span class="hamburger-line hamburger-line-bottom"></span>
-                                </button>
+                        <div class="push-left">
+                            <button id="menu-toggler" data-class="menu-active" class="hamburger">
+                                <span class="hamburger-line hamburger-line-top"></span>
+                                <span class="hamburger-line hamburger-line-middle"></span>
+                                <span class="hamburger-line hamburger-line-bottom"></span>
+                            </button>
 
-                                <!--  Menu compatible with wp_nav_menu  -->
-                                <ul id="primary-menu" class="menu nav-menu">
-                                    <li class="menu-item current-menu-item"><a class="nav__link" href="#">Home</a></li>
-                                    <li class="menu-item current-menu-item" @*class="menu-item dropdown"*@>
-                                        <a class="nav__link" href="#">About</a>
-                                        <ul class="sub-nav">
-                                            <li><a class="sub-nav__link" href="#">link 1</a></li>
-                                            <li><a class="sub-nav__link" href="#">link 2</a></li>
-                                            <li><a class="sub-nav__link" href="#">link 3 - long link - long link - long link</a></li>
-                                        </ul>
+                            <!--  Menu compatible with wp_nav_menu  -->
+                            <ul id="primary-menu" class="menu nav-menu">
+                                <li class="menu-item current-menu-item"><a class="nav__link" href="#">Home</a></li>
+                                <li class="menu-item dropdown" @*class="menu-item dropdown"*@>
+                                    <a class="nav__link" href="#">About</a>
+                                    <ul class="sub-nav">
+                                        <li><a class="sub-nav__link" href="~/Configuration/PublicPage?AboutUs=1">About Us</a></li>
+                                        @*<li><a class="sub-nav__link" href="#">link 2</a></li>
+                                            <li><a class="sub-nav__link" href="#">link 3 - long link - long link - long link</a></li>*@
+                                    </ul>
 
-                                    </li>
-                                    <li class="menu-item current-menu-item" @*class="menu-item dropdown"*@>
-                                        <a class="nav__link mr-0" href="#">Contact</a>
-                                        <ul class="sub-nav">
-                                            <li><a class="sub-nav__link" href="#">link 1</a></li>
-                                            <li><a class="sub-nav__link" href="#">link 2</a></li>
-                                            <li><a class="sub-nav__link" href="#">link 3 - long link - long link - long link</a></li>
-                                        </ul>
-                                    </li>
-		@if(((Elimar.Models.loginResponse)Session["User"]).IsGlobalAdmin)
-                                        {
-                                            <li class="menu-item current-menu-item">
-                                            <a class="nav__link mr-0" href="#">Pages</a>
-                                            <ul class="sub-nav">
-
-                                                <li><a class="sub-nav__link" href="~/Portolo/Topics">Topics</a></li>
-                                                <li><a class="sub-nav__link" href="~/Product/ProductList">Products</a></li>
-                                                <li><a class="sub-nav__link" href="~/FAQ/FAQList">FAQ</a></li>
-
-
-
-
-
-                                            </ul>
-                                            </li>
-                                        }
-
-																																																															
-																																									  
-																			
-																											
-																								
-																				  
-																						  
-																						  
-																							  
-																							  
-																							  
-																						  
-																									
-																								
-																							  
-																											
-
+                                </li>
+                                <li class="menu-item dropdown" @*class="menu-item dropdown"*@>
+                                    <a class="nav__link" href="#">Contact</a>
+                                    <ul class="sub-nav">
+                                        <li><a class="sub-nav__link" href="#">link 1</a></li>
+                                        <li><a class="sub-nav__link" href="#">link 2</a></li>
+                                        <li><a class="sub-nav__link" href="#">link 3 - long link - long link - long link</a></li>
+                                    </ul>
+                                </li>
+                                @if (((Elimar.Models.loginResponse)Session["User"]).IsGlobalAdmin)
+                                {
                                     <li class="menu-item current-menu-item">
-                                        <a class="nav__link mr-0">Configuration</a>
+                                        <a class="nav__link mr-0" href="#">Pages</a>
                                         <ul class="sub-nav">
-                                            <li><a class="sub-nav__link" href="#">Topics/Discussion groups</a></li>
-                                            <li><a class="sub-nav__link" href="~/Portolo/ProcessLibrary">Process library</a></li>
-                                            <li><a class="sub-nav__link" href="#">Performance </a></li>
-                                            <li><a class="sub-nav__link" href="#">Optional Features</a></li>
-                                            <li><a class="sub-nav__link" href="~/Configuration/ConfigurationSettings">System Configuration</a></li>
-                                            <li><a class="sub-nav__link" href="#">Security Groups</a></li>
-                                            <li><a class="sub-nav__link" href="#">System support/help </a></li>
+
+                                            <li><a class="sub-nav__link" href="~/Portolo/Topics">Topics</a></li>
+                                            <li><a class="sub-nav__link" href="~/Product/ProductList">Products</a></li>
+                                            <li><a class="sub-nav__link" href="~/FAQ/FAQList">FAQ</a></li>
                                         </ul>
                                     </li>
-																											 
-																			   
-														
-																																																																 
-																																													 
-																																												
-																																														
-																																																													   
-																																													 
-																																																													   
-										 
-										
-                                </ul>
-                            </div>
-                        </nav>
-                    </div>
+                                }
+                                <li class="menu-item current-menu-item">
+                                    <a class="nav__link mr-0">Configuration</a>
+                                    <ul class="sub-nav">
+                                        <li><a class="sub-nav__link" href="#">Topics/Discussion groups</a></li>
+                                        <li><a class="sub-nav__link" href="~/Portolo/ProcessLibrary">Process library</a></li>
+                                        <li><a class="sub-nav__link" href="#">Performance </a></li>
+                                        <li><a class="sub-nav__link" href="#">Optional Features</a></li>
+                                        <li><a class="sub-nav__link" href="~/Configuration/ConfigurationSettings">System Configuration</a></li>
+                                        <li><a class="sub-nav__link" href="#">Security Groups</a></li>
+                                        <li><a class="sub-nav__link" href="#">System support/help </a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
                 </div>
             </div>
-        </header>
-        <!--  -->
-        <!--  -->
-        <div class="strip-info">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-             <div class="d-flex justify-content-between align-items-center">
-                            <div class="botm-links">
-                                <a href="~/Portolo/Tasklist" target="_blank">Task List</a>
-                                <a href="~/Dashboard/Scorecard">Score Card</a>
-                                <a href="#">Process Mapping Tools</a>
-                                        <a class="nav__link mr-0" href="#"style="padding:5px">My Pages</a>
-                                        <ul class="sub-nav" style="left:380px;top:110px" >
-                                            <li><a class="sub-nav__link" href="~/Account/ProfilePage">My Profile</a></li>
-                                            <li><a class="sub-nav__link" href="~/Account/MyOrganization">My organization</a></li>
-                                            <li><a class="sub-nav__link" href="~/Portolo/UserTopics">My topics</a></li>
-                                            <li><a class="sub-nav__link" href="~/Study/Study">My studies</a></li>
-                                            <li><a class="sub-nav__link" href="#">My roles </a></li>
-                                            <li><a class="sub-nav__link" href="~/FAQ/UserFAQ">My FAQs </a></li>
-                                            <li><a class="sub-nav__link" href="#">My checklists </a></li>
-                                            <li><a class="sub-nav__link" href="#"> My checklist item</a></li>
-                                            <li><a class="sub-nav__link" href="#">My performance </a></li>
-                                            <li><a class="sub-nav__link" href="#">My reports </a></li>
-                                            <li><a class="sub-nav__link" href="#"> My analytics & visualization</a></li>
-                                            <li><a class="sub-nav__link" href="~/Portolo/MyFiles"> My files</a></li>
-                                            <li><a class="sub-nav__link" href="#">My discussion groups </a></li>
-                                            <li><a class="sub-nav__link" href="#"> My organization's subscription</a></li>
-                                        </ul>
-                            </div>
-                            <div class="log-in-out">
-                                @if (Session["User"] != null)
-                                {
+        </div>
+    </header>
+    <!--  -->
+    <!--  -->
+    <div class="strip-info">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="botm-links">
+                            <a href="~/Portolo/Tasklist" target="_blank">Task List</a>
+                            <a href="~/Dashboard/Scorecard">Score Card</a>
+                            <a href="#">Process Mapping Tools</a>
+                            <a class="nav__link mr-0" href="#" style="padding:5px">My Pages</a>
+                            <ul class="sub-nav" style="left:380px;top:110px">
+                                <li><a class="sub-nav__link" href="~/Account/ProfilePage">My Profile</a></li>
+                                <li><a class="sub-nav__link" href="~/Account/MyOrganization">My organization</a></li>
+                                <li><a class="sub-nav__link" href="~/Portolo/UserTopics">My topics</a></li>
+                                <li><a class="sub-nav__link" href="~/Study/Study">My studies</a></li>
+                                <li><a class="sub-nav__link" href="#">My roles </a></li>
+                                <li><a class="sub-nav__link" href="~/FAQ/UserFAQ">My FAQs </a></li>
+                                <li><a class="sub-nav__link" href="#">My checklists </a></li>
+                                <li><a class="sub-nav__link" href="#"> My checklist item</a></li>
+                                <li><a class="sub-nav__link" href="#">My performance </a></li>
+                                <li><a class="sub-nav__link" href="#">My reports </a></li>
+                                <li><a class="sub-nav__link" href="#"> My analytics & visualization</a></li>
+                                <li><a class="sub-nav__link" href="~/Portolo/MyFiles"> My files</a></li>
+                                <li><a class="sub-nav__link" href="#">My discussion groups </a></li>
+                                <li><a class="sub-nav__link" href="#"> My organization's subscription</a></li>
+                            </ul>
+                        </div>
+                        <div class="log-in-out">
+                            @if (Session["User"] != null)
+                            {
 
-                                    <a href="~/Account/ProfilePage">@Session["FirstName"] @Session["LastName"]</a>
-                                    <button id="Logout" class="brdr-1" @*style="background: #ffa500; color: white; margin: -3px; "*@>Logout</button>
- 
-                                }
-                                @*<a href="" class="brdr-1">Logout</a>*@
-																																										 
-                            </div>
+                                <a href="~/Account/ProfilePage">@Session["FirstName"] @Session["LastName"]</a>
+                                <button id="Logout" class="brdr-1" @*style="background: #ffa500; color: white; margin: -3px; "*@>Logout</button>
+
+                            }
+                            @*<a href="" class="brdr-1">Logout</a>*@
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
 
-        <div class="">
-            @*--------------------------------------------------------------------------------------------------------------------------------------*@
-            @*class="container body-content"*@
-            @RenderBody()
-                        
-        </div>
-		<footer>
+    <div class="">
+        @*--------------------------------------------------------------------------------------------------------------------------------------*@
+        @*class="container body-content"*@
+        @RenderBody()
+       
+    </div>
+    
+        <footer>
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12 text-center">
-                        <p> © 2022 by Elimar Systems. All Rights Reserved <a href="#" class="ml-5">Website Terms of Use</a></p>
+                        <p> © 2022 by Elimar Systems. All Rights Reserved <a href="~/Configuration/PublicPage?AboutUs=2" class="ml-5">Website Terms of Use</a></p>
                     </div>
                 </div>
             </div>
-        </footer>		 
+        </footer>
         <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
         @RenderSection("scripts", required: false)
 
 
-    </body>
+</body>
 </html>
 
 <script>
@@ -208,5 +174,5 @@
             }
         });
     });
-
+    
 </script>		

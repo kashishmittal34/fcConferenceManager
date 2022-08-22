@@ -7,7 +7,6 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="~/Scripts/CustomScript/_common.js"></script>
     <script src="~/obj/Release/Package/PackageTmp/Scripts/CustomScript/_common.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="wXWPE7+C5Hf7XhIYRLVnYzwDuNv9+IDtq275TZhyGBmZsCHkp/b27NRuUQ50t0uqvZFUJzzYlOy+E5YV0XISSgTN+UECYByz6yzX5h1rCZm3HzYX8BRtyKWPY7U//IUu" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -89,6 +88,16 @@
     </style>
 </head>
 <body>
+    @if (ViewBag.Message != null)
+    {
+        <script type="text/javascript">
+
+            window.onload = function () {
+                alert("@ViewBag.Message");
+            };
+        </script>
+
+    }
     <section class="task-list-form center">
         <div class="container">
             <div class="row">
@@ -134,7 +143,7 @@
 
                                             @if (Model.Count > 0)
                                             {
-                                                var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 10);
+                                                var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 50);
                                                 @grid.GetHtml(tableStyle: "table table-striped table-bordered table-hover", headerStyle: "webgrid-header",
                                                 alternatingRowStyle: "webgrid-alternating-row", selectedRowStyle: "webgrid-selected-row",
                                                 footerStyle: "webgrid-footer", rowStyle: "webgrid-row-style", mode: WebGridPagerModes.All,
@@ -147,18 +156,18 @@
                                                   grid.Column("Process", header: "Process", canSort: true),
 
                                                  grid.Column(header: "Actions", format:
-                                                                                    @<text>
-                                                                                     
-                                                                                            <a  onclick="GetDetails(@item.pkey)">
+                                                                                        @<text>
+
+                                                                                            <a onclick="GetDetails(@item.pkey)">
 
                                                                                                 <i class="fa fa-edit"></i>
                                                                                             </a>
                                                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                                            <a >
-                                                                                                @Html.ActionLink(" ", "DeleteProcess", "Portolo", new { pkey = item.pkey }, new { onclick = "return confirm('Are sure wants to delete?');", @class = "fa fa-trash-o ",@id="anchor"})
+                                                                                            <a>
+                                                                                                @Html.ActionLink(" ", "DeleteProcess", "Portolo", new { pkey = item.pkey }, new { onclick = "return confirm('Are sure wants to delete?');", @class = "fa fa-trash-o ", @id = "anchor" })
                                                                                             </a>
-                                                                                      
-                                                                                    </text>)));
+
+                                                                                        </text>)));
 
                                                 @Html.Hidden("dir", grid.SortDirection)
                                                 @Html.Hidden("col", grid.SortColumn)
@@ -194,7 +203,7 @@
                                         <div class="modal-body" style="height:200px">
                                             <div class="col-md-8">
                                                 <div class="form-group">
-                                                    <label for="Process"style="font-size:20px"><b>Process Name:</b></label>
+                                                    <label for="Process" style="font-size:20px"><b>Process Name:</b></label>
                                                     <br />
                                                     <br />
                                                     <input type="text" class="form-control" id="rolename" name="Process" placeholder="Process Name" required="">
@@ -254,16 +263,7 @@
             </div>
         </div>
         <br />
-        @if (ViewBag.Message != null)
-        {
-            <script type="text/javascript">
-
-            window.onload = function () {
-                alert("@ViewBag.Message");
-            };
-            </script>
-
-        }
+       
     </section>
 </body>
 </html>

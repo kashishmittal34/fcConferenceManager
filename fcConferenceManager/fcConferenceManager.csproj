@@ -2397,6 +2397,7 @@
     <Content Include="Views\Portolo\FAQ\FAQList.cshtml" />
     <Content Include="Views\Portolo\FAQ\UserFAQ.cshtml" />
     <Content Include="Views\Portolo\ImportExcel.cshtml" />
+    <Content Include="Views\Portolo\Configuration\PublicPage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

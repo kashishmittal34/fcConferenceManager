@@ -136,6 +136,16 @@
     </style>
 </head>
 <body>
+    @if (ViewBag.Message != null)
+    {
+        <script type="text/javascript">
+
+            window.onload = function () {
+                alert("@ViewBag.Message");
+            };
+        </script>
+
+    }
     <section class="task-list-form center">
         <div class="container">
             <div class="row">
@@ -170,11 +180,11 @@
                                  grid.Column("SettingID", header: "Setting Id", canSort: true),
                                  grid.Column("SettingValue", header: "Value", canSort: true),
                                  grid.Column(header: "Edit", format:
-                                                @<text>
-                                                    <a class="btn" onclick="GetDetails(@item.pkey)">
-                                                        <i class="fa fa-edit" style="color:orange"></i>
-                                                    </a>
-                                                </text>)));
+                                                    @<text>
+                                                        <a class="btn" onclick="GetDetails(@item.pkey)">
+                                                            <i class="fa fa-edit" style="color:orange"></i>
+                                                        </a>
+                                                    </text>)));
                                 @Html.Hidden("dir", grid.SortDirection)
                                 @Html.Hidden("col", grid.SortColumn)
 

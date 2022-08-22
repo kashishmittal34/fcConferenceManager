@@ -852,7 +852,7 @@ namespace fcConferenceManager.Controllers.Portolo
                 var searchlist = (from list in fileslist where list.FileName.StartsWith(search.Trim(), StringComparison.OrdinalIgnoreCase) select list).ToList();
                 return View(searchlist);
             }
-
+            ViewBag.AlertMessage = TempData["AlertMessage"];
 
             return View(myFileUpload.FileList);
         }
@@ -967,8 +967,8 @@ namespace fcConferenceManager.Controllers.Portolo
                 var searchlist = (from list in uploadlist where list.Process.StartsWith(search.Trim(), StringComparison.OrdinalIgnoreCase) select list).ToList();
                 Session["searchlist"] = searchlist;
                 return View(searchlist);
-            }			 					
-		
+            }
+             ViewBag.Message  = TempData["Message"];
             library.processList = uploadlist;
             return View(library.processList);
         }
@@ -989,7 +989,7 @@ namespace fcConferenceManager.Controllers.Portolo
                 if (SaveProcess(model))
                 {
 
-                    ViewBag.Message = "Added Successfully !!";
+                    TempData["Message"] = "Added Successfully !!";
                     return RedirectToAction("ProcessLibrary", "Portolo");
                 }
                 else
@@ -1064,12 +1064,12 @@ namespace fcConferenceManager.Controllers.Portolo
                     con.Close();
                     if (result == 1)
                     {
-                        ViewBag.Message = "Process Deleted Successfully";
+                        TempData["Message"] = "Process Deleted Successfully";
                         ModelState.Clear();
                     }
                     else
                     {
-                        ViewBag.Message = "Unsucessfull";
+                        TempData["Message"] = "Unsucessfull";
                         ModelState.Clear();
                     }
 
@@ -1101,12 +1101,12 @@ namespace fcConferenceManager.Controllers.Portolo
                         int result = cmd.ExecuteNonQuery();
                     if (result == 1)
                     {
-                        ViewBag.Message = "Process Updated Successfully";
+                        TempData["Message"] = "Process Updated Successfully";
                         ModelState.Clear();
                     }
                     else
                     {
-                        ViewBag.Message = "Unsucessfull";
+                        TempData["Message"] = "Unsucessfull";
                         ModelState.Clear();
                     }
                     con.Close();

@@ -1,0 +1,144 @@
+﻿
+@{
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+  
+    ViewBag.Title = "AboutUs";
+}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="~/obj/Release/Package/PackageTmp/Scripts/CustomScript/_common.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="wXWPE7+C5Hf7XhIYRLVnYzwDuNv9+IDtq275TZhyGBmZsCHkp/b27NRuUQ50t0uqvZFUJzzYlOy+E5YV0XISSgTN+UECYByz6yzX5h1rCZm3HzYX8BRtyKWPY7U//IUu" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var Pcode = @ViewBag.content;
+            if (Pcode == 1 || Pcode == "1") {
+                $('#aboutus').show();
+                $('#termsofuse').hide();
+            }
+            else {
+                $('#aboutus').hide();
+                $('#termsofuse').show();
+            }
+        });
+
+    </script>
+    <style>
+        div .modal-dialog-centered {
+            max-width: 80%;
+        }
+
+        .pdl-1 {
+            padding-left: 15px;
+        }
+
+        thead {
+            background-color: #6e6c6c;
+        }
+
+        th a {
+            color: lightyellow;
+        }
+
+        th {
+            color: lightyellow;
+        }
+
+        i {
+            background: orange;
+            padding: 5px;
+            color: #fff;
+            border-radius: 50px;
+            margin-left: 5px;
+        }
+
+        #anchor {
+            background: orange;
+            padding: 5px;
+            color: #fff;
+            border-radius: 50px;
+            margin-left: 5px;
+        }
+
+        a:hover {
+            color: darkorange;
+        }
+    </style>
+</head>
+<body>
+    <section class="task-list-form center">
+        <div class="container">
+
+            <form method="get" action="/PublicPage/Configuration" id="aboutus">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header with-border">
+
+                            <h3 class="box-title k-dialog-centered">About Us:</h3>
+                            @*<button id="closeModal" type="button" class="brdr-1 btn-sm pull-right" data-bs-dismiss="modal" aria-label="Close">Close</button>*@
+                        </div>
+                        <div class="modal-body">
+                            <div class="box box-primary">
+
+
+                                <p>
+                                    Model Agreements & Guidelines International (MAGI) is streamlining clinical research by standardizing best practices for clinical operations, business and regulatory compliance. "MAGI" is pronounced with "G" as in Georgia and "I" as in Ireland. Hear MAGI pronounced
+
+                                    Subscribe to First Clinical Research News  on Twitter, your source for up-to-date, practical information in online articles, blogs, etc.
+
+                                    Our 10,000+ members represent most of the major players in the industry. Membership is free. Members obtain a free subscription to the Journal of Clinical Research Best Practices and free access to the MAGI CTA Template and and over 150 other forms, checklists and other standards. Membership is individual, not organizational.
+
+                                    Twitter: #MAGIworld
+                                    LinkedIn: MAGI - Clinical Research Best Practices
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+
+            <form method="get" action="/PublicPage/Configuration" id="termsofuse">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header with-border">
+
+                            <h3 class="box-title k-dialog-centered">Terms Of Use:</h3>
+                            @*<button id="closeModal" type="button" class="brdr-1 btn-sm pull-right" data-bs-dismiss="modal" aria-label="Close">Close</button>*@
+                        </div>
+                        <div class="modal-body">
+                            <div class="box box-primary">
+
+                                <div class="modal-body">
+                                    <p>
+                                        MAGI makes no representations about the suitability, reliability, availability, timeliness and accuracy of the information, products and services on or available through this website (and conferences and other activities) for any purpose. All such information, products and services are provided "As Is" without warranty of any kind. MAGI hereby disclaims all warranties and conditions with regard to this information, products and services, including all implied warranties and conditions of merchantability, fitness for a particular purpose, title and non-infringement.
+
+                                        All information on this website (and in conferences and other activities) is provided as opinion and does not constitute legal or regulatory advice. You may inform MAGI of information on this website that you believe to be inaccurate or displeasing to you, but modification or removal of such information is entirely at the discretion of MAGI.
+
+                                        MAGI will not sell or rent your data to unaffiliated third parties. However, it makes no representations or warranties that your data will be kept confidential, disclaims all liability for loss of your data, and might transfer its business and associated data to another organization.
+
+                                        In no event shall MAGI be liable for any direct, indirect, punitive, incidental, special or consequential damages or any damages whatsoever including, without limitation, damages for loss of use, data or profits, arising out of or in any way connected with the use or performance of this website, with the delay or inability to use this website or related services, the provision of or failure to provide services, or for any information, products or services obtained through this website or otherwise arising out of its use, whether based on contract, tort, negligence, strict liability or otherwise, even if MAGI has been advised of the possibility of damages. Because some states and jurisdictions do not allow for the exclusion or limitation of liability for consequential or incidental damages, that limitation may not apply to you. If you are dissatisfied with any portion of this website or any of these terms of use, your sole and exclusive remedy is to discontinue using this website.
+
+                                        MAGI is a unit of the WIRB-Copernicus Group (WCG). These terms apply to MAGI, WCG and their suppliers, partners, speakers, contributors, associates and community members.
+                                    </p>
+                                    <div class="clearfix"></div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                </form>
+        </div>
+      
+        <br />
+
+    </section>
+</body>
+</html>

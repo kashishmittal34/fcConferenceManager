@@ -44,6 +44,7 @@ namespace fcConferenceManager.Controllers.Portolo
             setting.SettingList = setlist;
             setting.AccountImg = GetAccountName();
             setting.OrganizationImg = GetOrgName();
+            ViewBag.Message = TempData["Message"];
             return View("~/Views/Portolo/Configuration/ConfigurationSettings.cshtml", setting);
 
         }
@@ -73,7 +74,7 @@ namespace fcConferenceManager.Controllers.Portolo
             if (UploadAccountImages(model.AccountImg))
             {
 
-                TempData["AlertMessage"] = "Uploaded Successfully !!";
+                TempData["Message"] = "Uploaded Successfully !!";
                 return RedirectToAction("ConfigurationSettings", "Configuration");
             }
             else
@@ -107,7 +108,7 @@ namespace fcConferenceManager.Controllers.Portolo
             if (UploadOrgImages(model.OrganizationImg))
             {
 
-                TempData["AlertMessage"] = "Uploaded Successfully !!";
+                TempData["Message"] = "Uploaded Successfully !!";
                 return RedirectToAction("ConfigurationSettings", "Configuration");
             }
             else
@@ -224,12 +225,12 @@ namespace fcConferenceManager.Controllers.Portolo
                     int result = cmd.ExecuteNonQuery();
                     if (result == 1)
                     {
-                        ViewBag.Message = "Setting Updated Successfully";
+                        TempData["Message"] = "Setting Value Updated Successfully";
                         ModelState.Clear();
                     }
                     else
                     {
-                        ViewBag.Message = "Unsucessfull";
+                        TempData["Message"] = "Unsucessfull";
                         ModelState.Clear();
                     }
                     con.Close();
@@ -283,6 +284,11 @@ namespace fcConferenceManager.Controllers.Portolo
 
         }
        
-
+        public PartialViewResult PublicPage()
+        {
+            //string strContent = System.Web.HttpContext.Current.Request.Url.ToString();
+            ViewBag.content = Request.QueryString["AboutUs"];
+            return PartialView("~/Views/Portolo/Configuration/PublicPage.cshtml");
+        }
     }
 }

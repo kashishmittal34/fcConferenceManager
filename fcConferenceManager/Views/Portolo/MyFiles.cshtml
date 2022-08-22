@@ -30,19 +30,15 @@
     thead {
         background-color: #6e6c6c;
     }
-
     th a {
         color: lightyellow;
     }
-
     th {
         color: lightyellow;
     }
-
     a:hover {
         color: orange;
     }
-
     #anchor {
         background: orange;
         padding: 5px;
@@ -52,8 +48,16 @@
     }
 </style>
 <body>
+    @if (ViewBag.AlertMessage != null)
+    {
+        <script type="text/javascript">
 
+            window.onload = function () {
+                alert("@ViewBag.AlertMessage");
+            };
+        </script>
 
+    }
     <section class="task-list-form center">
         <div class="container">
             <div class="row">
@@ -68,97 +72,97 @@
 
                                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                            <div class="row">
-                                <label class="control-label" style="font-size:15px;"><b>Upload File</b></label>
-                                <br />
                                 <div class="row">
-                                   
-                                    <div class="col-md-2"  >
-                                        
-                                            <input style="text-size-adjust:1000%" type="file" id="files" name="files" required="required" class="form-control-sm form-box">
-                                       
-                                    </div>
-                                    <div class="col-md-1">
-                                       
-                                            <input type="submit" value="Upload" class="brdr-1" />
-                                       
-                                    </div>
-                                </div>
-                                </div>
-                                </div>
-                                </div>
-                                }
-                                <form id="contact" action="/Portolo/MyFiles" method="get" enctype="multipart/form-data" onsubmit="validateInputs(e);">
-
+                                    <label class="control-label" style="font-size:15px;"><b>Upload File</b></label>
+                                    <br />
                                     <div class="row">
-                                        <div class="col-lg-12 mt-5">
 
-                                            <div class="dash-tabs prof-info">
-                                                <div class="col-md-10 card">
-                                                    <div class="form-group">
-                                                        <div class="card-header">
-                                                            <div class="control-icons">
-                                                                <b style="font-size:15px;">Search</b>
-                                                                &nbsp;&nbsp;
-                                                                @Html.TextBox("search" ,null,new { @class = "form-input",@placeholder = "File Name"})
-                                                                &nbsp;
-                                                                <button class="hidden"  value="Search" title="Search" style="border:none">
-                                                                    <i class="fa-solid fa-magnifying-glass"> </i>
-                                                                </button>
-                                                                &nbsp;
-                                                                <a style="border: hidden;" onclick="location.href='@Url.Action("MyFiles", "Portolo")';return false;" title="Reset">
-                                                                    <i class="fa-solid fa-arrows-rotate"></i>
-                                                                </a>
-                                                            </div>
-                                                        </div>
+                                        <div class="col-md-2">
 
-                                                        <div id="data">
-                                                            @if (Model.Count > 0)
-                                                            {
+                                            <input style="text-size-adjust:1000%" type="file" id="files" name="files" required="required" class="form-control-sm form-box">
 
+                                        </div>
+                                        <div class="col-md-1">
 
-                                                                var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 50);
-                                                                @grid.GetHtml(tableStyle: "table table-striped table-bordered table-hover", headerStyle: "webgrid-header",
-                                                                             alternatingRowStyle: "webgrid-alternating-row", selectedRowStyle: "webgrid-selected-row",
-                                                                             footerStyle: "webgrid-footer", rowStyle: "webgrid-row-style", mode: WebGridPagerModes.All,
-                                                                             firstText: "<< First", previousText: "< Prev", nextText: "Next >", lastText: "Last >>",
-                                                                             htmlAttributes: new { id = "DataTable" },
-                                                                             columns: grid.Columns(
-                                                                                 grid.Column("FileName", header: "File Name", canSort: true),
+                                            <input type="submit" value="Upload" class="brdr-1" />
 
-                                                                                 grid.Column(header: "Download", format:
-                                                                                                                                                                                    @<text>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <form id="contact" action="/Portolo/MyFiles" method="get" enctype="multipart/form-data" onsubmit="validateInputs(e);">
 
-                                                                                                                                                                                        <a href="~/Portolo/DownloadFile?filePath=@item.FileUrl"><img src="~/Images/Icons/Downloadfileicon.png" style="width: auto; height: contain;align-content:flex-start" title="Download" /></a>
+                        <div class="row">
+                            <div class="col-lg-12 mt-5">
 
-                                                                                                                                                                                    </text>),
-                                        grid.Column(header: "Copy Link", format:
-                                                        @<text>
-                                                            <input type="hidden" value="@ViewBag.apppath" id="sourcePath" />
-                                                            <a class="clipboard" onclick="funcCopyToClipboard(@item.FileId)"><img src="~/Images/Icons/Copylnk.png" style="width: 30px; height: 20px; align-content:flex-start" /></a>
-                                                        </text>),
-                                      grid.Column(header: "Delete", format:
-                                                        @<text>
-                                                            <a class="fa fa-trash-o" href="~/Portolo/DeleteFile?pkey=@item.FileId" ,new { onclick="return confirm('Are you sure wants to delete?');" , id="anchor" }></a>
-                                                        </text>)));
-                                                            }
-                                                            else
-                                                            {
-
-                                                                <b>No Details Found.</b>
-                                                                <br />
-                                                               
-                                                               
-                                                            }
-                                                        </div>
-                                                    </div>
+                                <div class="dash-tabs prof-info">
+                                    <div class="col-md-10 card">
+                                        <div class="form-group">
+                                            <div class="card-header">
+                                                <div class="control-icons">
+                                                    <b style="font-size:15px;">Search</b>
+                                                    &nbsp;&nbsp;
+                                                    @Html.TextBox("search", null, new { @class = "form-input", @placeholder = "File Name" })
+                                                    &nbsp;
+                                                    <button class="hidden" value="Search" title="Search" style="border:none">
+                                                        <i class="fa-solid fa-magnifying-glass"> </i>
+                                                    </button>
+                                                    &nbsp;
+                                                    <a style="border: hidden;" onclick="location.href='@Url.Action("MyFiles", "Portolo")';return false;" title="Reset">
+                                                        <i class="fa-solid fa-arrows-rotate"></i>
+                                                    </a>
                                                 </div>
+                                            </div>
+
+                                            <div id="data">
+                                                @if (Model.Count > 0)
+                                                {
+
+
+                                                    var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 50);
+                                                    @grid.GetHtml(tableStyle: "table table-striped table-bordered table-hover", headerStyle: "webgrid-header",
+                                                                 alternatingRowStyle: "webgrid-alternating-row", selectedRowStyle: "webgrid-selected-row",
+                                                                 footerStyle: "webgrid-footer", rowStyle: "webgrid-row-style", mode: WebGridPagerModes.All,
+                                                                 firstText: "<< First", previousText: "< Prev", nextText: "Next >", lastText: "Last >>",
+                                                                 htmlAttributes: new { id = "DataTable" },
+                                                                 columns: grid.Columns(
+                                                                     grid.Column("FileName", header: "File Name", canSort: true),
+
+                                                                     grid.Column(header: "Download", format:
+                                                                                                                                                                            @<text>
+
+                                                                                                                                                                                <a href="~/Portolo/DownloadFile?filePath=@item.FileUrl"><img src="~/Images/Icons/Downloadfileicon.png" style="width: auto; height: contain;align-content:flex-start" title="Download" /></a>
+
+                                                                                                                                                                            </text>),
+                         grid.Column(header: "Copy Link", format:
+                                            @<text>
+                                                <input type="hidden" value="@ViewBag.apppath" id="sourcePath" />
+                                                <a class="clipboard" onclick="funcCopyToClipboard(@item.FileId)"><img src="~/Images/Icons/Copylnk.png" style="width: 30px; height: 20px; align-content:flex-start" /></a>
+                                            </text>),
+                   grid.Column(header: "Delete", format:
+                                        @<text>
+                                            <a class="fa fa-trash-o" href="~/Portolo/DeleteFile?pkey=@item.FileId" ,new { onclick="return confirm('Are you sure wants to delete?');" , id="anchor" }></a>
+                                        </text>)));
+                                                }
+                                                else
+                                                {
+
+                                                    <b>No Details Found.</b>
+                                                    <br />
+
+
+                                                }
                                             </div>
                                         </div>
                                     </div>
-
-                                </form>
+                                </div>
                             </div>
+                        </div>
+
+                    </form>
+                </div>
             </div>
         </div>
     </section>
