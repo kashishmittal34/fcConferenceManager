@@ -83,6 +83,7 @@
 
         var question = $.trim($('#Question').val());
         var answer = $.trim($('#Answer').val());
+        var cat = $.trim($('#Category').val());
         if (question == "") {
             $("#Question").focus();
 
@@ -93,6 +94,13 @@
             $("#Answer").focus();
 
             alert("Please enter the answer of the question");
+            return false;
+        }
+
+        if (cat == "") {
+            $("#Category").focus();
+
+            alert("Please enter the category");
             return false;
         }
     }

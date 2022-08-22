@@ -307,10 +307,10 @@
                                 <div class="col-md-8  float-md-end  p-0">
                                     <select id="cbTimeZone" name="cbTimeZone" style="width:100%;">
                                         <option value="0">--Select--</option>
-                                        @foreach (System.Data.DataRow dr in ViewBag.TimeZoneTable.Rows)
+                                        @foreach (var dr in ViewBag.TimeZoneTable.Rows)
                                         {
                                             strSelected = "";
-                                            if (@organization.intTimezone_pKey == Convert.ToInt32(@dr["pKey"].ToString()))
+                                            if (@organization.intTimezone_pKey == (int)(@dr["pKey"]))
                                             {
                                                 strSelected = "selected";
                                             }

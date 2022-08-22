@@ -99,13 +99,14 @@
                         <div class="control-icons">
                             <h2>Questions List</h2>
 
-                            <button type="submit" name="excel" value="true" style="border-color: white; border: none;background-color:white">
+                            <a id="ExcelBtn" style="border-color: white; border: none;background-color:white">
                                 <i class="fa-solid fa-download" title="Download Excel"></i>
-                            </button>
+                            </a>
 
-                            <button type="submit" value="Search" name="action" style="border-color: white; border: none;background-color:white" title="Search">
+                            <button type="submit" id="SearchBtn" name="search" value="true" style="border-color: white; border: none;background-color:white" title="Search">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </button>
+
                             <a href="~/FAQ/FAQList"><i class="fa-solid fa-arrows-rotate"></i></a>
 
                             <div class="controls">
@@ -119,19 +120,19 @@
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label>Question:</label>
-                                    @Html.TextBox("question", null, new { @class = "form-control form-control-sm" })
+                                    @Html.TextBox("question", null, new { @class = "form-control form-control-sm", @id = "question" })
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label>Answer:</label>
-                                    @Html.TextBox("answer", null, new { @class = "form-control form-control-sm" })
+                                    @Html.TextBox("answer", null, new { @class = "form-control form-control-sm", @id = "answer" })
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label>Category:</label>
-                                    @Html.TextBox("category", null, new { @class = "form-control form-control-sm" })
+                                    @Html.TextBox("category", null, new { @class = "form-control form-control-sm", @id = "category" })
                                 </div>
                             </div>
                             <div class="col-lg-2">
@@ -172,7 +173,7 @@
                                                 <td> @item["Question"] </td>
                                                 <td> @item["Answer"] </td>
                                                 <td> @item["Category"] </td>
-                                                @if (item["IsActive"] != false)
+                                                @if (item[4] != false)
                                                 {
                                                     <td>Active</td>
                                                 }
@@ -235,6 +236,11 @@
                 });
             }
 
+        });
+
+        $("#ExcelBtn").click(function () {
+            var form = $(this).parents('form:first');
+            form.submit();
         });
 
         $("#btnDelete").click(function (e) {

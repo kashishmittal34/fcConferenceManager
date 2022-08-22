@@ -1,0 +1,56 @@
+﻿
+    <div class="row">
+        <input type="hidden" name="reportId" value="1" />
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label>Name:</label>
+                @Html.TextBox("name", null, new { @class = "form-control form-control-sm" })
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label>Email:</label>
+                @Html.TextBox("email", null, new { @class = "form-control form-control-sm" })
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label>Organization:</label>
+                @Html.TextBox("org", null, new { @class = "form-control form-control-sm" })
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label>Title:</label>
+                @Html.TextBox("titl", null, new { @class = "form-control form-control-sm" })
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <table class="table table-bordered mb-0" id="table">
+        <thead>
+            <tr class="table-hd">
+                <th>Name</th>
+                <th data-sortable="true">Email</th>
+                <th data-sortable="true">Organization</th>
+                <th data-sortable="true">Title</th>
+                <th>Phone</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (ViewBag.Reports != null)
+            {
+                foreach (var item in ViewBag.Reports.Rows)
+                {
+                    <tr>
+                        <td> @item["Firstname"] @item["Lastname"] </td>
+                        <td> @item["Email"] </td>
+                        <td> @item["OrganizationID"] </td>
+                        <td>@item["Title"]</td>
+                        <td>@item["Phone"]</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>

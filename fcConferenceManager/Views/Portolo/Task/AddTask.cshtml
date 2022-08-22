@@ -137,7 +137,6 @@
 </head>
 <body>
 
-
     <section class="task-list-form">
         <div class="container">
             <div class="row">
@@ -146,8 +145,7 @@
                         <input type="text" style="visibility: hidden" name="editprimarykey" value="@Model.taskListResponse.pKey" />
                         <div class="control-icons">
                             <h2> @ViewBag.HeadingTitle </h2>
-                            <!-- <a href=""><i class="fa-solid fa-arrow-left"></i></a>
-                            <a href=""><i class="fa-solid fa-magnifying-glass"></i></a> -->
+                            
                             <div class="controls">
 
                                 <input type="submit" name="submit" value="Apply" id="idApply" class="brdr-1 btn-sm" onclick="return validateInputs(event);">
@@ -155,12 +153,6 @@
                                 @*<a href="~/Portolo/TaskList" class="brdr-1 btn-sm" style = "background-color:white;" >Cancel</a>*@
                                 @Html.ActionLink("Cancel", "TaskList", "Portolo", null, new { @class = "brdr-1 btn-sm", style = "background-color:white;" })
 
-
-                                @*<input type="submit" name="Cancel" value="Cancel" id="idCancel" class="brdr-1 btn-sm">*@
-                                @*<button href="" class="brdr-1 btn-sm">Apply</button>
-                                    <button href="" class="brdr-1 btn-sm ">Save</button>
-                                    <button href="" class="brdr-1 btn-sm">Cancel</button>*@
-                                <!-- <button href="" class="brdr-1 btn-sm">Download</button> -->
                             </div>
 
                         </div>
@@ -301,8 +293,7 @@
                                             <textarea rows="5" cols="100" style="width:1100px ; height:200px" type="text" class="form-control" value="@Model.taskListResponse.Notes" name="Notes" id="Notes" maxlength="2000">@Model.taskListResponse.Notes</textarea>
                                         </div>
                                         <div class="tab-pane p-5" id="resources">
-                                            @*<input type="file" name="files" />
-                                                <button>Add</button>*@
+                                            
                                             <input type="hidden" name="hiddenResources" value="@Model.taskListResponse.Resources" />
                                             <input type="hidden" name="hiddenResourcesFileNames" value="@Model.taskListResponse.ResourcesFileName" />
 
@@ -315,6 +306,10 @@
                                                     Upload
                                                 </button>
                                             }
+
+                                            <div class="k-i-myspace">
+
+                                            </div>
 
                                             @if (Model.taskListResponse.ResourcesFileName != "")
                                             {
@@ -329,8 +324,6 @@
                                             <br>
                                             @if (Model.taskListResponse.publicTaskResources != null)
                                             {
-
-
                                                 <table id="myTable" class="cedvel table table-striped table-bordered table-sm" style="width: 95% !important; max-width: 400% !important">
                                                     <tr>
                                                         <th>
@@ -374,8 +367,6 @@
             </div>
         </div>
     </section>
-
-  
 
     <script type="text/javascript" src="//js.nicedit.com/nicEdit-latest.js"></script>
     <script type="text/javascript">
@@ -468,7 +459,8 @@
         }
 
 
-        function funcDeletResourcefile(pkey, publicTaskId,source) {
+        function funcDeletResourcefile(pkey, publicTaskId, source)
+        {
                 $.ajax({
                     type: "POST",
                     url: "@ViewBag.Baseurl/Task/DeleteResourceFile",
@@ -490,9 +482,7 @@
                         alert('error');
                     }
                 });
-            }
-
-
+        }
 
         //bkLib.onDomLoaded(function () { nicEditors.className("ttry") });
         bkLib.onDomLoaded(function () {
@@ -513,42 +503,7 @@
             );
         });
 
-
-
-
-
-
-
     </script>
-
-
-
-
-
-
-					  
-						   
-			 
-						  
-							
-			  
-						 
-
-	
-		
-			 
-			
-			   
-			   
-	   
-
-			  
-				 
-	 
-
-	  
-		 
-	   
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
             integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
             crossorigin="anonymous"></script>
@@ -566,7 +521,7 @@
                 });
 
                 function toggleBodyClass(className) {
-                    debugger;
+                    
                     document.body.classList.toggle(className);
                 }
 
@@ -582,68 +537,11 @@
             });
         $.noConflict(true)
 			 
-   
-						  
-			
-						 
-						  
-			
-					   
-
         //this is for the delete icon on add task page in resource tab
         $('#removeFile').on('click', function () {
 			
-		   
-			  
-			  
-	  
-
             $('#file').val("")
         })
     </script>
-
-	 
-		
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </body>

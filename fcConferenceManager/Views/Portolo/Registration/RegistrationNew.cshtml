@@ -4,6 +4,8 @@
     Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
 }
 <head>
+	 <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
     <style>
         .span
         {
@@ -94,6 +96,7 @@
             });
         });
         $(window).on('load', function () {
+        var dd = 22;
 
 
 
@@ -167,6 +170,8 @@
    }
 
     function validateInputs(e) {
+
+var dd = $('#imgCropped').val($('#result').attr('src'));
 
 
     var Salutation1 = $.trim($('#Salutation1').val());
@@ -727,12 +732,8 @@
                             <td style="padding-left: 5px">
                                 <span>Suffix:</span>
                                 <br>
-                                <div style="width:100px;" tabindex="0">
-                                    <select class="form-select" value="@Model.suffix" name="suffix">
-                                        <option value="" @(Model.suffix == "" ? "selected" : "")>(none)</option>
-                                        <option value="Jr." @(Model.suffix == "Jr." ? "selected" : "")>Jr.</option>
-                                        <option value="Sr." @(Model.suffix == "Sr." ? "selected" : "")>Sr.</option>
-                                    </select>
+                                <div style="width:100px;" tabindex="0">                                    
+                                    @Html.DropDownList("Suffix", null, "(none)", new { @class = "form-select" })
                                 </div>
                             </td>
                             <td style="padding-left: 5px">
@@ -826,18 +827,20 @@
                                             <span style="color: #00008b; font-weight: bold">Mailing Address</span>
                                         </td>
                                     </tr>
-                                    <tr>
+                                     <tr>
                                         <td style="text-align: right">
                                             <span title="Selection required">Country:</span>
+                                            @Model.country
+                                            @Model.countrypkey
                                         </td>
                                         <td style="padding-left: 5px; text-align: left">
                                             <div title="Selection required" style="width:260px;" tabindex="0">
-                                                <!--<select value="@Model.country" name="Country">
-                                                    <option value=213 @(Model.country == "213" ? "selected" : "")>India</option>
-                                                    <option value=1 @(Model.country == "1" ? "selected" : "")>USA</option>
-                                                    <option value=128 @(Model.country == "128" ? "selected" : "")>Russia</option>
-                                                    <option value=194 @(Model.country == "194" ? "selected" : "")>Australia</option>
-                                                </select>-->
+                                               
+																																
+																														  
+																																 
+																																	
+															
                                                 @Html.DropDownList("Country", null, "---Select Country----", new { @class = "form-select" })
                                             </div>
                                         </td>
@@ -872,13 +875,13 @@
                                         </td>
                                         <td style="padding-left: 5px; text-align: left">
                                             <div title="Selection required" style="width:260px;" tabindex="0">
-                                                <!--<select value="@Model.State" name="State" id="state" required>
+                                                
 
-                                                    <option value=91 @(Model.State == "91" ? "selected" : "")>Delhi</option>
-                                                    <option value=119 @(Model.State == "119" ? "selected" : "")>Uttar Pradesh</option>
-                                                    <option value=86 @(Model.State == "86" ? "selected" : "")>Bihar</option>
-                                                </select>
-                                                -->
+																															
+																																	  
+																															
+														 
+												   
                                                 @Html.DropDownList("State", null, "---Select State----", new { @class = "form-select" })
                                             </div>
 
@@ -898,12 +901,12 @@
                                         </td>
                                         <td style="padding-left: 5px; text-align: left">
                                             <div style="width:260px;" tabindex="0">
-                                                <!--<select value="@Model.timezone" name="Timezone">
-                                                    <option value=580 @(Model.timezone == "580" ? "selected" : "")>US/Eastern</option>
-                                                    <option value=579 @(Model.timezone == "579" ? "selected" : "")>US/Central</option>
-                                                    <option value=585 @(Model.timezone == "585" ? "selected" : "")>US/Mountain</option>
-                                                </select>
-                                                    -->
+                                              
+																																	  
+																																	  
+																																	   
+														 
+													   
                                                 @Html.DropDownList("Timezone", null, "---Select TimeZone----", new { @class = "form-select" })<br />
                                             </div>
                                         </td>
@@ -919,13 +922,8 @@
                                             <span>Phone 1:</span>
                                             <br>
                                             <div>
-                                                <select class="form-select-sm" value="@Model.phonetype1" name="Phonetype1">
-                                                    <option value=1 @(Model.phonetype1 == "1" ? "selected" : "")>Direct</option>
-                                                    <option value=15 @(Model.phonetype1 == "15" ? "selected" : "")>Home</option>
-                                                    <option value=17 @(Model.phonetype1 == "17" ? "selected" : "")>Assistant</option>
-
-                                                </select>
-
+                                                
+                                                @Html.DropDownList("PhoneType1", null, new { @class = "form-select-sm" })
                                                 <span>+</span>
                                                 <span>
                                                     <input class="form-control-sm" type="number" required name="countryCodephone1" value="1" disabled="disabled" />
@@ -944,12 +942,8 @@
                                             <div style="width:120px;" tabindex="0">
                                             </div>
                                             <div>
-                                                <select class="form-select-sm" value="@Model.phonetype2" name="Phonetype2">
-                                                    <option value=1 @(Model.phonetype2 == "1" ? "selected" : "")>Direct</option>
-                                                    <option value=15 @(Model.phonetype2 == "15" ? "selected" : "")>Home</option>
-                                                    <option value=17 @(Model.phonetype2 == "17" ? "selected" : "")>Assistant</option>
-
-                                                </select>
+                                               
+                                                @Html.DropDownList("PhoneType2", null, new { @class = "form-select-sm" })
                                                 <span>+</span>
                                                 <span>
                                                     <input class="form-control-sm" type="number" name="countryCodephone2" value="1" disabled="disabled" />

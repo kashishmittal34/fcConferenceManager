@@ -6,8 +6,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 <body>
-	<div class="body-main-wrap">							
-    <script type="text/javascript" language="javascript">
+    <div class="body-main-wrap">
+        <script type="text/javascript" language="javascript">
     $(document).ready(function () {
        var imageurl = '@Url.Content("ViewBag.Baseurl/User-images/empty image.png")';
         $("#image").attr("src", imageurl);
@@ -22,7 +22,7 @@
         var data = filename.split(".")[1];
         if (data.toLowerCase() != 'jpg' && data.toLowerCase() != 'png' && data.toLowerCase() != 'gif')
         {
-            alert("Invalid file, Please select jpg, png, gif files"); 
+            alert("Invalid file, Please select jpg, png, gif files");
 
             $("#file").val('');
           var imageurl = '@Url.Content("ViewBag.Baseurl/User-images/empty image.png")';
@@ -37,7 +37,7 @@
 
     function validateInputs(e) {
 
-        debugger;
+				 
         var Salutation1 = $.trim($('#Salutation1').val());
         var firstName = $.trim($('#firstNameid').val());
         var LastName = $.trim($('#LastName').val());
@@ -141,346 +141,412 @@
 
     }
 
-    </script>
-    <style>
-        
-        .span {
+        </script>
+        <style>
+		
+			   
    
-            display: inline-block;
-            width: 75px;
-            height: 38px;
-        }
+								  
+						
+						 
+		 
 
-
-        .form-control:focus {
-            box-shadow: none;
-            border-color: #BA68C8
-        }
-
-        .profile-button {
-            background: rgb(99, 39, 120);
-            box-shadow: none;
-            border: none
-        }
-
-            .profile-button:hover {
-                background: #682773
+            .span {
+                display: inline-block;
+                width: 75px;
+                height: 38px;
             }
 
-            .profile-button:focus {
-                background: #682773;
-                box-shadow: none
+							 
+							 
+								 
+		 
+
+            .form-control:focus {
+										 
+                box-shadow: none;
+                border-color: #BA68C8
+		 
+
+								   
+								   
             }
 
-            .profile-button:active {
-                background: #682773;
-                box-shadow: none
+            .profile-button {
+                background: rgb(99, 39, 120);
+                box-shadow: none;
+                border: none
             }
 
-        .back:hover {
-            color: #682773;
-            cursor: pointer
-        }
+                .profile-button:hover {
+                    background: #682773
+                }
+			 
 
-        .labels {
-            font-size: 11px
-        }
+                .profile-button:focus {
+                    background: #682773;
+                    box-shadow: none
+                }
 
-        .add-experience:hover {
-            background: #BA68C8;
-            color: #fff;
-            cursor: pointer;
-            border: solid 1px #BA68C8
-        }
-    </style>
+                .profile-button:active {
+                    background: #682773;
+                    box-shadow: none
+                }
 
+            .back:hover {
+								
+                color: #682773;
+                cursor: pointer
+									 
+            }
+			
 
-    <div class="container-fluid" style="margin-bottom:15px;">
-	<form class="container" action="/Registration/RegistrationSubmit" method="post" enctype="multipart/form-data" onsubmit="validateInputs(e);">
-        <input name="ID" value="@Model.ID" hidden />
-        <div class="row">
-            <div class="col-4">
-                <h3 style="color: black; font-weight: bold">
-                    @Model.firstname @Model.lastname's Profile
-                </h3>
-				 <h4 class="magi-justify-content-space-between" style="text-align: right; vertical-align: top; padding:7px">
-            @Html.ActionLink("Edit", "Registration", "RegistrationNew", new { userID = Model.ID }, new { @class = "btn btn-outline-warning" })
+            .labels {
+                font-size: 11px
+            }
 
-        </h4>
-            </div>
-            <div class="col-6"></div>
-            <div class="col-2">
-                <h4 class="magi-justify-content-space-between" style="text-align: right; vertical-align: top; padding:7px">
-                    @Html.ActionLink("Edit", "Registration", "RegistrationNew", new { userID = Model.ID }, new { @class = "btn btn-outline-warning" })
+            .add-experience:hover {
+                background: #BA68C8;
+                color: #fff;
+                cursor: pointer;
+                border: solid 1px #BA68C8
+            }
+        </style>
+        <div class="container-fluid" style="margin-bottom:15px;">
+            <form class="container" action="/Registration/RegistrationSubmit" method="post" enctype="multipart/form-data" onsubmit="validateInputs(e);">
+                <input name="ID" value="@Model.ID" hidden />
+                <div class="row">
+                    <div class="col-4">
+                        <h3 style="color: black; font-weight: bold">
+                            @Model.firstname @Model.lastname's Profile
+                        </h3>
+                        <h4 class="magi-justify-content-space-between" style="text-align: right; vertical-align: top; padding:7px">
+																																			  
 
-                </h4>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-3 border-right">
-                <div class="d-flex flex-column align-items-center text-center py-2">
-                    @if (Model.Uimg == null)
-                    {
+                        </h4>
+                    </div>
+                    <div class="col-6"></div>
+                    <div class="col-2">
+                        <h4 class="magi-justify-content-space-between" style="text-align: right; vertical-align: top; padding:7px">
+                            @Html.ActionLink("Edit", "Registration", "RegistrationNew", new { userID = Model.ID }, new { @class = "btn btn-outline-warning" })
 
-                        <img alt="" id="image" src="@Url.Content("aa")" style="display:  10px;" height: 278px; width: 266px; />
-                    }
-                    else
-                    {
-                        if (Model.Uimg != null)
-                        {
-
-                            <img alt="" id="image1" src="@Url.Content(Model.Uimg)" style="display: 10px; height: 278px; width: 266px;" />
-                        }
-
-                        else
-                        {
-
-                            <img alt="" id="image" src="@Url.Content(Model.Uimg)" style="display: 10px; height: 278px; width: 266px;" />
-															   
-
-                        }
-																									   
-																																												 
-
-                    }
-                </div>
-            </div>
-            <div class="col-md-7 border-right">
-                <div class="row mt-2">
-                    <div class="prof-info">
-                        <div class="card">
-                            <div class="prof-data">
-                                <h4 class="mt-3 mb-2">Identification</h4>
-                                <table class="table table-bordered">
-                                    <tr>
-                                        <td style="font-weight:bold">Salutation</td>
-                                        <td>@Model.salutationzID1</td>
-                                        <td style="font-weight:bold">First Name</td>
-                                        <td>@Model.firstname</td>
-                                    </tr>
-
-
-                                    <tr>
-                                        <td style="font-weight:bold">Middle Name</td>
-                                        <td>@Model.middlename</td>
-
-                                        <td style="font-weight:bold">Last Name</td>
-                                        <td>@Model.lastname</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td style="font-weight:bold">Suffix</td>
-                                        <td>@Model.suffix</td>
-                                        @*</tr>
-                                        <tr>*@
-                                        <td style="font-weight:bold">Nick name</td>
-                                        <td>@Model.nickname</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-weight:bold">Sign In Account ID</td>
-                                        <td>@Model.signinaccountid</td>
-                                        @*</tr>
-                                        <tr>*@
-                                        <td style="font-weight:bold">Email</td>
-                                        <td>@Model.mainemail</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-weight:bold">Send Mail To</td>
-                                        <td>@Model.sendemailto</td>
-                                        @*</tr>
-                                        <tr>*@
-                                        <td style="font-weight:bold">Country</td>
-                                        <td>@Model.country</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-weight:bold">State</td>
-                                        <td>@Model.State</td>
-                                        @*</tr>
-                                        <tr>*@
-                                        <td style="font-weight:bold">Job Title</td>
-                                        <td>@Model.jobTitle</td>
-                                    </tr>
-                                </table>
-                            </div>
-															   
-
-																																													 
-																																							
-										
-													  
-															   
-                            <div class="prof-info">
-														  
-																   
-																						 
+                        </h4>
+                    </div>
+			  
+						 
+											   
 																					
-														
-																																																										 
-																																						
-																																																										 
-																																																
-														 
+											
+					 
 
-                                <div class="prof-data">
-                                    <h4 class="mt-3 mb-2">
-                                        Contact Informaton
-                                    </h4>
-                                    <table class="table table-bordered">
-                                        <tr>
-                                            <td style="font-weight:bold">Personal Bio</td>
-                                            <td>@Model.personalbiography</td>
+																															   
+					 
+						
+					 
+											   
+						 
 
-                                            <td style="font-weight:bold">Mobile No</td>
-                                            <td>@Model.phone1</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-weight:bold">Email</td>
-                                            <td>@Model.mainemail</td>
+																																		 
+						 
 
-                                            <td style="font-weight:bold">Skype Address</td>
-                                            <td>@Model.skypeaddress</td>
-                                        </tr>
+							
+						 
 
-                                        <tr>
-                                            <td style="font-weight:bold">Linked IN</td>
-																																														
-															   
-															  
-																																																									
-                                            <td>@Model.linkedinURL</td>
-														 
-														
-																																																															
-																																						  
-															   
-															  
-																																																																	   
-																																																
-														 
-														
-																																																											 
-																																				  
-															   
-															  
-																																																																			   
-																																														  
-														 
-														
-																																																																	   
-																																													 
-															   
-															  
-																																																									
-																																															
-														 
-														
-												  
+																																		
+				  
 
-                                            <td style="font-weight:bold">Organization</td>
-                                            <td>@Model.organization</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-weight:bold">Degree & Certificate</td>
-                                            <td>@Model.degreesandcertifications</td>
+						 
+							
+											 
 
-																	   
-																		  
-																		  
-														 
-																						
-															
-                                            <td style="font-weight:bold">Website</td>
-                                            <td>@Model.website</td>
-                                        </tr>
+					 
+                </div>
+                <div class="row">
+                    <div class="col-md-3 border-right">
+                        <div class="d-flex flex-column align-items-center text-center py-2">
+                            @if (Model.Uimg == null)
+                            {
+                                <img alt="" id="image" src="@Url.Content("aa")" style="display:  10px;" height: 278px; width: 266px; />
+                            }
+                            else
+                            {
+                                if (Model.Uimg != null)
+                                {
+                                    <img alt="" id="image1" src="@Url.Content(Model.Uimg)" style="display: 10px; height: 278px; width: 266px;" />
+                                }
+										 
 
-																									   
-																				  
-															 
-															
-																								   
-																					 
-
-																										   
-																						
-															 
-
-															
-																									   
-																					   
-
-																										  
-																						
-															 
-															
-																												  
-																									
-
-																									 
+                                else
+                                {
+                                    <img alt="" id="image" src="@Url.Content(Model.Uimg)" style="display: 10px; height: 278px; width: 266px;" />
+                                }
+                            }
 																				   
-															 
+																
+										 
 
-                                    </table>
+										
+																				
+															  
+											   
+											  
+																				   
+																
+										 
+										
+                        </div>
+                    </div>
+                    <div class="col-md-7 border-right">
+                        <div class="row mt-2">
+																			   
+																 
+										 
+										
+																					  
+																   
+											   
+											  
+																				 
+															   
+										 
+										
+																			   
+															 
+											   
+											  
+																				   
+																
+										 
+										
+								  
+				  
+
+											  
+									   
+		  
+			   
+				  
+                            <div class="prof-info">
+                                <div class="card">
+                                    <div class="prof-data">
+                                        <h4 class="mt-3 mb-2">Identification</h4>
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td style="font-weight:bold">Salutation</td>
+                                                <td>@Model.salutationzID1</td>
+                                                <td style="font-weight:bold">First Name</td>
+                                                <td>@Model.firstname</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold">Middle Name</td>
+                                                <td>@Model.middlename</td>
+
+													   
+														  
+														  
+										 
+																		
+											
+                                                <td style="font-weight:bold">Last Name</td>
+                                                <td>@Model.lastname</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td style="font-weight:bold">Suffix</td>
+                                                <td>@Model.suffixvalue</td>
+                                                @*</tr>
+                                                    <tr>*@
+                                                <td style="font-weight:bold">Nick name</td>
+                                                <td>@Model.nickname</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold">Sign In Account ID</td>
+                                                <td>@Model.signinaccountid</td>
+                                                @*</tr>
+                                                    <tr>*@
+                                                <td style="font-weight:bold">Email</td>
+                                                <td>@Model.mainemail</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold">Send Mail To</td>
+                                                <td>@Model.sendemailto</td>
+                                                @*</tr>
+                                                    <tr>*@
+                                                <td style="font-weight:bold">Country</td>
+                                                <td>@Model.country</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold">State</td>
+                                                <td>@Model.State</td>
+                                                @*</tr>
+                                                    <tr>*@
+                                                <td style="font-weight:bold">Job Title</td>
+                                                <td>@Model.jobTitle</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="prof-info">
+                                        <div class="prof-data">
+                                            <h4 class="mt-3 mb-2">
+                                                Contact Informaton
+                                            </h4>
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <td style="font-weight:bold">Personal Bio</td>
+                                                    <td>@Model.personalbiography</td>
+
+                                                    <td style="font-weight:bold">Mobile No</td>
+                                                    <td>@Model.phone1</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bold">Email</td>
+                                                    <td>@Model.mainemail</td>
+
+                                                    <td style="font-weight:bold">Skype Address</td>
+                                                    <td>@Model.skypeaddress</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bold">Linked IN</td>
+											  
+				  
+				 
+														 
+                                                    <td>@Model.linkedinURL</td>
+			   
+			  
+															   
+										
+				  
+				 
+																	
+												
+			   
+			  
+															
+									  
+				  
+				 
+																	  
+												
+			   
+			  
+																	
+											  
+				  
+				 
+														 
+											   
+			   
+			  
+			  
+
+                                                    <td style="font-weight:bold">Organization</td>
+                                                    <td>@Model.organization</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bold">Degree & Certificate</td>
+                                                    <td>@Model.degreesandcertifications</td>
+
+					
+					
+					
+			   
+					  
+			   
+                                                    <td style="font-weight:bold">Website</td>
+                                                    <td>@Model.website</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+							
+					  
+				
+			   
+						   
+					  
+
+							 
+					  
+				
+
+			   
+							
+						
+
+							
+					  
+				
+			   
+							  
+						 
+
+						  
+					   
+				
+
+                                    </div>
                                 </div>
 
-												  
-											  
-												  
+			  
+			 
+			  
 
+				   
+				  
+				 
+
+
+
+			   
+			  
+			 
+																					
+																				 
+																					
+																			   
+																  
 																   
-															   
-															  
-
-
-
-													  
-												  
-												 
-																																																																																			 
-																																																																																	
-																																																																																	   
-																																																																															
-																																																															   
-																																																																	  
-																																																																											   
-																																																																																			 
-																																																																																					
-																																																															   
-																																												
-																																																																																	
-
-													 
-
-															  
-																																																																																																																				
-																																																																																																																					  
-
-
-											  
-
-
-
-										  
-
-
-
-
-
-																																																																																			  
-																																										  
-																		  
-																																																																																																		
-																																																																									   
+																			  
+																					
+																					 
+																  
 											
-																																																																
-																																																																	  
-																																																																																						
-																																																																																	  
-																																																																																					
-																																																																																			 
-																																																																
-										  
-										 
-									  
+																				 
+
+			  
+
+				 
+																													
+																													   
+
+
+			 
+
+
+
+			
+
+
+
+
+
+																					 
+											
+					
+																								  
+																			
+		   
+																
+																   
+																					  
+																				   
+																					 
+																					
+																
+			
+		   
+		   
                             </div>
 
                         </div>
@@ -488,10 +554,10 @@
 
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
-</form>
+	   
 
 </body>
 

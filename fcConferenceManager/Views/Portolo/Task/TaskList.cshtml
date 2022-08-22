@@ -47,60 +47,24 @@
 
 <html>
 
-@*<script type="text/javascript">
 
-        $.noConflict(false);
-        $(function () {
-
-            $("#datepicker").datepicker({
-                dateFormat: "mm/dd/y"
-            });
-        });
-
-        $(function () {
-
-            $("#datepicker1").datepicker({
-                dateFormat: "mm/dd/y"
-            });
-        });
-
-
-    </script>*@
 
 <head>
 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=, initial-scale=1.0">
-    <!--<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap"
-          rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="../Css/bootstrap.min.css">
-    <link rel="stylesheet" href="../Css/Portolostyle.css">
-    <link rel="stylesheet" href="../Css/responsive.css">-->
-    @*<title>Portolo</title>*@
-    <!--<meta name="description"
-          content="A web design and development company with 10+ years of experience in building results-driven web solutions for your custom business needs." />-->
 
     <script type="text/javascript">
-	   
-
-							   
-
         $(document).ready(function () {
             $("#ddlCategory").val($("#category").val());
             $("#ddTaskStatus").val($("#status").val());
 
-								   
             $("#reviewed").val($("#hdreviewed").val());
             $("#ddlRepeatTask").val($("#intRepeat").val());
             $("#ddlPortoloRepeatTask").val($("#intPortoloRepeat").val());
 
             $("#ddlPortoloRepeatTask").val($("#intPortoloRepeat").val());
-
-												   
-													   
-												  
 
             var plandates = $("#intPortoloRepeat").val();
             if (plandates != "3") {
@@ -127,25 +91,20 @@
                 $("#datepicker1").prop('disabled', false);
             }
         }
-	   
 
         function removeSpaces(string) {
             return string.split(' ').join('');
-													
-													 
-													  
+
         }
     </script>
 </head>
 
-	
+
 <body>
     <style>
         .form-control:disabled, .form-control[readonly] {
             background-color: #e9ecef0f;
             opacity: 1;
-
-			 
         }
     </style>
     <section class="task-list-form">
@@ -163,50 +122,25 @@
                             <button type="submit" value="Reset" name="action" style="border-color: white; border: none;background-color:white" title="Reset">
                                 <a href=""><i class="fa-solid fa-arrows-rotate"></i></a>
                             </button>
-		
-										   
-					
-		   
 
                             <button type="submit" value="Search" name="action" style="border-color: white; border: none;background-color:white" title="Search">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </button>
 
-                            @*<a href="@ViewBag.Baseurl/Task/TaskList"><i class="fa-solid fa-magnifying-glass"></i></a>*@
                             <a href="@ViewBag.Baseurl/portolo/DownloadExcel"><i class="fa-solid fa-download" title="Download Excel"></i></a>
-				 
+
                             <div class="controls">
-                                @*<button>@Html.ActionLink("CreateTask", "CreateTask", "Portolo", null, new { style = "color:orange;", @class = "brdr-1 btn-sm" })</button>*@
-                                @*<button class="brdr-1 btn-sm">
-                                    <a href="@Url.Action("CreateTask", "Portolo")" target="_blank">Create New</a>
-                                    </button>*@
-                                @*<button class="brdr-1 btn-sm">@Html.ActionLink("Create New", "CreateTask", "Portolo", new { style = "color:orange;" })</button>*@
                                 <a class="brdr-1 btn-sm" href="@ViewBag.Baseurl/Task/AddTask"> Create New</a>
-
-                                @*<button href="@ViewBag.Baseurl/Portolo/CopyTask" class="brdr-1 btn-sm">Copy</button>*@
-                                @*<a class="brdr-1 btn-sm" value="Copy" name="Copy" href="@ViewBag.Baseurl/Portolo/CopyTask"> Copy Task</a>*@
-                                @*<button type="submit" value="Search" name="action" class="brdr-1 btn-sm">Search</button>*@
                                 <button type="submit" value="CopyTask" name="action" class="brdr-1 btn-sm">Copy</button>
-
                                 <button type="submit" value="Delete" name="action" class="brdr-1 btn-sm" onclick="return confirm('Are you sure?')"><i class="fa fa-trash-o"></i> Delete</button>
-
-
                             </div>
-
                         </div>
                         <div class="row">
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="exampleFormControlSelect1">Plan Dates:</label>
-                                    @*<select class="form-control form-control-sm" id="plandates" onchange="getval(this);" name="planType">
-            <option value="0" @(ViewBag.Request.planType == 0 ? "selected" : "0")>All</option>
-            <option value="1" @(ViewBag.Request.planType == 1 ? "selected" : "0")>Past Week</option>
-            <option value="2" @(ViewBag.Request.planType == 2 ? "selected" : "0")>Next Week</option>
-            <option value="3" @(ViewBag.Request.planType == 3 ? "selected" : "0")>Other</option>
 
-        </select>*@
-
-                                    @Html.DropDownList("intPortoloRepeat", PortoloRepeatTask, new { @class = "form-control form-control-sm", id = "ddlPortoloRepeatTask", @ViewBag.Request.intPortoloRepeat , @onchange = "getval(this);" })
+                                    @Html.DropDownList("intPortoloRepeat", PortoloRepeatTask, new { @class = "form-control form-control-sm", id = "ddlPortoloRepeatTask", @ViewBag.Request.intPortoloRepeat, @onchange = "getval(this);" })
 
                                     <input type="hidden" value="@ViewBag.Request.intPortoloRepeat" id="intPortoloRepeat" />
                                 </div>
@@ -216,7 +150,7 @@
                                     <label for="exampleFormControlSelect1"></label>
                                     @*<input type="date" class="form-control form-control-sm">*@
                                     <label for="exampleFormControlSelect1">From:</label>
-                                    <input type="text" class="form-control form-control-sm" name="duedate" id="datepicker" value="String.Format(" {0:d}", @ViewBag.Request.duedate !=null?ViewBag.Request.duedate:DateTime.Now)"
+                                    <input type="text" class="form-control form-control-sm" name="duedate" id="datepicker" value="@String.Format("{0:D}", @ViewBag.Request.duedate !=null?ViewBag.Request.duedate:DateTime.Now)"
                                            placeholder="mm/dd/yy" readonly="readonly" />
                                     <input type="text" style="display: none" value="@ViewBag.Request.duedate" name="duedate" id="duedatehidden" />
                                 </div>
@@ -230,14 +164,12 @@
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="exampleFormControlSelect1">Number:</label>
-                                    @*<input type="text" class="form-control form-control-sm">*@
                                     <input tpye="text" class="form-control form-control-sm" value="@ViewBag.Request.number" id="number" onblur="this.value=removeSpaces(this.value);" name="number">
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="exampleFormControlSelect1">Title:</label>
-                                    @*<input type="text" class="form-control form-control-sm">*@
                                     <input tpye="text" class="form-control form-control-sm" value="@ViewBag.Request.title" id="title" onblur="this.value=(this.value);" name="title">
                                 </div>
                             </div>
@@ -268,14 +200,6 @@
                                         <option value="false" @(ViewBag.Request.active == "false" ? "selected" : "")>Inactive</option>
                                     </select>
 
-
-                                    @*<select class="form-control form-control-sm" id="exampleFormControlSelect1">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                        </select>*@
                                 </div>
                             </div>
                             <div class="col-lg-2">
@@ -290,17 +214,7 @@
                                     <input type="hidden" value="@ViewBag.Request.reviewed" id="hdreviewed" />
                                 </div>
                             </div>
-                            @*<div class="col-lg-2">
-                                    <div class="form-group">
-                                        <label for="exampleFormControlSelect1">Task List Range:</label>
-                                        <select class="form-control form-control-sm" id="exampleFormControlSelect1">
-                                            <option value="0" @(ViewBag.Request.tasklistrange == "0" ? "selected" : "")>All</option>
-                                            <option value="1" @(ViewBag.Request.tasklistrange == "1" ? "selected" : "")> Back 1 year</option>
-                                            <option value="2" @(ViewBag.Request.tasklistrange == "2" ? "selected" : "")> Back 2 year</option>
-                                            <option value="3" @(ViewBag.Request.tasklistrange == "3" ? "selected" : "")> Back 3 year</option>
-                                        </select>
-                                    </div>
-                                </div>*@
+
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="exampleFormControlSelect1">Repeat:</label>
@@ -318,7 +232,7 @@
                                     <table id="myTableshorting" class="table table-bordered mb-0">
                                         <thead>
                                             <tr class="table-hd">
-                                                <th onclick="sortTable(0)">
+                                                <th>
                                                     <input type="checkbox" name="select-all" onchange="Checkboxchange(this);" id="select-all" />
                                                 </th>
                                                 <th onclick="sortTable(1)">Number</th>
@@ -342,9 +256,9 @@
                                             <tbody id="myTable">
                                                 @foreach (var item in ViewBag.BindList)
                                                 {
-									 
+
                                                     <tr>
-		   
+
 
                                                         <td>
                                                             <input type="checkbox" name="ID" value="@item.pKey" class="custom-checkbox chkCheckBoxId" />
@@ -354,8 +268,8 @@
                                                         <td valign="top">
 
                                                             @*<a style="color:black" href="@Url.Action("EditTask", new { id = item.pKey }).Replace("Portolo","Task")"> @item.number</a>*@
-																					 
-																
+
+
                                                             <a style="color:black" href="@Url.Action("EditTask" , new {id = @item.pKey }).Replace("Portolo","Task")">@item.number</a>
 
                                                         </td>
@@ -395,14 +309,14 @@
                                                         <td>
                                                             @item.mostrecentnote
                                                         </td>
- 
+
                                                     </tr>
 
                                                 }
                                             </tbody>
                                         }
 
-										 
+
                                     </table>
 
                                 </div>
@@ -414,7 +328,7 @@
                     </form>
 
                     @*//  }*@
-						  
+
                 </div>
             </div>
         </div>
@@ -441,56 +355,51 @@
             });
         </script>
     }
-		
+
     <script>
         $(document).ready(function () {
             // Toggle menu on click
-
 
             $("#menu-toggler").click(function () {
                 toggleBodyClass("menu-active");
             });
 
-										 
             function toggleBodyClass(className) {
                 document.body.classList.toggle(className);
             }
 
-
         });
         var primarykey = [];
 
-        function Checkboxchange(e) {
-            $("#select-all").click(function (event) {
-                if (this.checked) {
-                    primarykey.length = 0;
-                    // Iterate each checkbox
-                    $(':checkbox').each(function () {
-                        this.checked = true;
-                        if (this.value != "on") {
 
-                            primarykey.push(this.value);
-                        }
-                    });
-                } else {
-                    $(':checkbox').each(function () {
-                        this.checked = false;
-                    });
-                }
-            });
-					 
-        }
+        debugger;
+        $("#select-all").click(function (event) {
+            debugger;
+            if (this.checked) {
+                primarykey.length = 0;
+                // Iterate each checkbox
+                $(':checkbox').each(function () {
+                    this.checked = true;
+                    if (this.value != "on") {
+
+                        primarykey.push(this.value);
+                    }
+                });
+            } else {
+                $(':checkbox').each(function () {
+                    this.checked = false;
+                });
+            }
+        });
+
 
 
         var checkids = "";
-			
+
     </script>
     <link rel="stylesheet" href="../Scripts/jquery-ui.css" />
     <script src="~/Scripts/jquery-2.1.1.min.js"></script>
     <script src="../Scripts/jquery-ui.js"></script>
-
-    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>*@
-    @*<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">*@
 
     <style>
         .pager {
@@ -635,11 +544,11 @@
                 var goToPage = parseInt(pager.data("curr")) - 1;
                 goTo(goToPage);
             }
-					
+
             function next() {
                 goToPage = parseInt(pager.data("curr")) + 1;
                 goTo(goToPage);
-					   
+
             }
 
             function goTo(page) {
@@ -691,7 +600,7 @@
         };
 
         $(document).ready(function () {
-						
+
             $('#myTable').pageMe({
 
                 pagerSelector: '#myPager',
@@ -711,7 +620,7 @@
 
                 $("#datepicker").datepicker({
                     dateFormat: "mm/dd/y"
-					   
+
                 });
             });
 
@@ -784,7 +693,8 @@
             trs.slice(0, 50).show();
         }
     </script>
-
-</body> 
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    
+</body>
 
 </html>

@@ -1,0 +1,41 @@
+﻿<div class="row">
+    <input type="hidden" name="reportId" value="2" />
+    <div class="col-lg-2">
+        <div class="form-group">
+            <label>Product Name:</label>
+            @Html.TextBox("name", null, new { @class = "form-control form-control-sm" })
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="form-group">
+            <label>Description:</label>
+            @Html.TextBox("description", null, new { @class = "form-control form-control-sm" })
+        </div>
+    </div>
+</div>
+<br />
+<table class="table table-bordered mb-0" id="table">
+    <thead>
+        <tr class="table-hd">
+            <th data-sortable="true">Product Name</th>
+            <th data-sortable="true">Description</th>
+            <th data-sortable="true">Price</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ViewBag.Reports != null)
+        {
+            foreach (var item in ViewBag.Reports.Rows)
+            {
+                <tr>
+                    <td> @item["ProductName"] </td>
+                    <td> @item["Description"] </td>
+                    <td> $@item["Price"] </td>
+
+                    <td class="TestId" style="text-align:center"><a href="/Product/Edit/@item["ProductId"]"> Edit</a></td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
