@@ -18,23 +18,23 @@ namespace fcConferenceManager.Controllers
 {
     public class pagesController : Controller
     {
-        public List<page> data(string FilterName, string FilterURL, string FilterStatus, string FilterEventType, string SortOrder = "Title")
+        public List<page> data(string FilterName, string FilterURL, string FilterStatus, string FilterEventType,string FilterType, string SortOrder = "Title")
         {
             pageRepository pgrepo = new pageRepository();
-            return pgrepo.getDetailFilterByNameURLStatusEventType(FilterName, FilterURL, FilterStatus, FilterEventType, SortOrder);
+            return pgrepo.getDetailFilterByNameURLStatusEventType(FilterName, FilterURL, FilterStatus, FilterEventType, FilterType, SortOrder);
 
         }
-        public ActionResult getAllPageDetails(string FilterName, string FilterURL, string FilterStatus,string FilterEventType, int? page, string SortOrder = "Title")
+        public ActionResult getAllPageDetails(string FilterName, string FilterURL, string FilterStatus,string FilterEventType,string FilterType, int? page, string SortOrder = "Title")
         {
-            //clsAccount cAccount = ((clsAccount)Session["cAccount"]);
+            clsAccount cAccount = ((clsAccount)Session["cAccount"]);
 
-            //if (cAccount.intAccount_PKey<=0)
-            //{
+            if (cAccount.intAccount_PKey <= 0)
+            {
 
-            //    return RedirectToAction("Index", "Home");
-            //}
-            //else
-            //{
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
                 if (FilterName != null)
                 {
                     FilterName = FilterName.Trim();
@@ -60,6 +60,10 @@ namespace fcConferenceManager.Controllers
                 {
                     FilterEventType = null;
                 }
+                if(FilterType == "")
+            {
+                FilterType = null;
+            }
 
                 ViewBag.FilterSortOrder = SortOrder;
 
@@ -67,7 +71,7 @@ namespace fcConferenceManager.Controllers
                 ViewBag.FilterURL = FilterURL;
                 ViewBag.FilterStatus = FilterStatus;
                 ViewBag.FilterEventType = FilterEventType;
-
+                ViewBag.FilterType = FilterType;
                 int pageSize = 25;
 
                 int pageIndex = (page ?? 1);
@@ -77,11 +81,11 @@ namespace fcConferenceManager.Controllers
                 ViewBag.getDropDownEventType = pgrepo.getDropDownEventType();
                 ViewBag.getDropDownSection = pgrepo.getDropDownSection();
 
-                var data = this.data(FilterName, FilterURL, FilterStatus, FilterEventType, SortOrder);
+                var data = this.data(FilterName, FilterURL, FilterStatus, FilterEventType, FilterType, SortOrder);
                 ViewBag.data = data;
                 return View(data.ToPagedList(pageIndex, pageSize));
-            //}
         }
+    }
 
         [HttpPost]
         public ActionResult ExcelImport(HttpPostedFileBase file)
@@ -188,12 +192,12 @@ namespace fcConferenceManager.Controllers
         }
 
 
-        public ActionResult ExcelExport(string FilterName, string FilterURL, string FilterStatus, string FilterEventType, string SortOrder = "Title")
+        public ActionResult ExcelExport(string FilterName, string FilterURL, string FilterStatus, string FilterEventType,string FilterType, string SortOrder = "Title")
         {
             var gv = new GridView();
             pageRepository pgrepo = new pageRepository();
             
-            var data = pgrepo.getPageDetailForExport(FilterName, FilterURL, FilterStatus, FilterEventType, SortOrder);
+            var data = pgrepo.getPageDetailForExport(FilterName, FilterURL, FilterStatus, FilterEventType, FilterType, SortOrder);
             if(data.Count == 0)
             {
                 data.Add(new page());
@@ -311,40 +315,66 @@ namespace fcConferenceManager.Controllers
 
         public ActionResult BatchUpdateStatus(FormCollection formCollection)
         {
-            if (formCollection.Count <= 2)
+            if (formCollection.Count <= 3)
             {
                 return new ContentResult() { Content = "<script language='javascript' type='text/javascript'>alert('No Row Selected!!!');window.location.href='/Pages/getAllPageDetails';</script>" };
             }
+            var y = formCollection[3];
             var x = formCollection[2].Split(',').ToList();
-            pageRepository pgrepo = new pageRepository();
 
-            if (formCollection[0] != "") {
-                foreach (var item in x)
+            pageRepository pgrepo = new pageRepository();
+            if(y == "Update")
+            {
+                if (formCollection[0] != "")
                 {
-                    if (item != "false")
+                    foreach (var item in x)
                     {
-                        pgrepo.BatchUpdateStatus(Convert.ToInt32(item), formCollection[0]);
+                        if (item != "false")
+                        {
+                            pgrepo.BatchUpdateStatus(Convert.ToInt32(item), formCollection[0]);
+                        }
                     }
                 }
+                if (formCollection[1].Trim() != "")
+                {
+                    foreach (var item in x)
+                    {
+                        if (item != "false")
+                        {
+                            pgrepo.BatchUpdateSection(Convert.ToInt32(item), formCollection[1]);
+                        }
+                    }
+                }
+                if (formCollection[0] == "" && formCollection[1].Trim() == "")
+                {
+                    return new ContentResult() { Content = "<script language='javascript' type='text/javascript'>alert('No Entry in Status or Section!!!');window.location.href='/Pages/getAllPageDetails';</script>" };
+                }
+
             }
-            if (formCollection[1].Trim() != "")
+            else
             {
                 foreach (var item in x)
                 {
                     if (item != "false")
                     {
-                        pgrepo.BatchUpdateSection(Convert.ToInt32(item), formCollection[1]);
+                        pgrepo.DeletePage(Convert.ToInt32(item));
                     }
                 }
-            }
-            if (formCollection[0] == "" && formCollection[1].Trim() == "")
-            {
-                return new ContentResult() { Content = "<script language='javascript' type='text/javascript'>alert('No Entry in Status or Section!!!');window.location.href='/Pages/getAllPageDetails';</script>" };
             }
 
             return RedirectToAction("getAllPageDetails");
         }
 
+        public ActionResult BatchDeletePages(FormCollection formCollection)
+        {
+            if (formCollection.Count <= 2)
+            {
+                return new ContentResult() { Content = "<script language='javascript' type='text/javascript'>alert('No Row Selected!!!');window.location.href='/Pages/getAllPageDetails';</script>" };
+            }
+
+            return RedirectToAction("getAllPageDetails");
+
+        }
         
 
     }

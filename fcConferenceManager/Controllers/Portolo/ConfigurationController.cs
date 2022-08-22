@@ -71,7 +71,6 @@ namespace fcConferenceManager.Controllers.Portolo
             else
             {
                 model.AccountImg = string.Empty;
-                
             }
             if (UploadAccountImages(model.AccountImg))
             {

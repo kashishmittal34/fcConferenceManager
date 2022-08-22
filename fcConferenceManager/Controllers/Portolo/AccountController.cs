@@ -52,44 +52,7 @@ namespace fcConferenceManager.Controllers
 
             try
             {
-                //IdentityUser user = repository.GetUserbyNameAndPassword(model.UserName, model.Password).Result;
-                //if (user == null)
-                //{
-                //    OwinError oobj = new OwinError();
-                //    oobj.error = "invalid_grant";
-                //    oobj.error_description = "The user name or password is incorrect.";
-                //    // return Ok(oobj);
-
-                //    ModelState.AddModelError("", oobj.error_description);
-                //}
-
-                //else if (!user.EmailConfirmed)
-                //{
-                //    OwinError oobj = new OwinError();
-                //    oobj.error = "invalid_grant";
-                //    oobj.error_description = "User did not confirm email.";
-                //    ModelState.AddModelError("", oobj.error_description);
-                //}
-                //else
-                //{
-                //    OwinResult obj = new OwinResult();
-                //    obj.access_token = Guid.NewGuid().ToString();
-                //    obj.token_type = "bearer";
-                //    obj.expires_in = "86399";
-                //    obj.userid = user.CustomerId;
-                //    obj.username = user.FirstName + " " + user.LastName;
-                //    obj.eventid = user.EventId;
-                //    obj.eventname = user.EventName;
-                //    obj.eventtypeid = user.EventTypeId;
-                //    obj.eventuserid = user.EventAccount_pkey;
-                //    obj.eventuserstatusid = user.ParticipationStatus_pKey;
-                //    obj.role = "KeyUser";
-                //    obj.issued = DateTime.Now.ToString("ddd, dd MMM yyyy HH:mm:ss GMT");
-                //    obj.expires = DateTime.Now.AddDays(1).ToString("ddd, dd MMM yyyy HH:mm:ss GMT");
-                //    // return Ok(obj);
-                //    ///Context.SaveChanges();
-                //}
-                //return View();
+                
                 DataTable table = null;
                 using (SqlConnection con = new SqlConnection(config))
                 {
@@ -154,27 +117,8 @@ namespace fcConferenceManager.Controllers
 
                 }
 
-                //var item = "1";//s.FirstOrDefault();
-                //if (response.status == "Success")
-                //{
-                //    TempData["users"] = response;
-                //    return RedirectToAction("Profile", "Account", response);
-
-                //}
-                //else if (response.status == "User Does not Exists")
-                //{
-				 
-                //    TempData["InvalidUser"] = "Not a valid user.";
-                //    return Redirect("~/Account/Portolo");
-                //}
-                //else
-                //{
-                //    ViewBag.Failedcount = item;
-                //    return Redirect("~/Account/Portolo");
-                //}
-                //var a = response;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 TempData["InvalidUser"] = "Not a valid user.";
@@ -191,135 +135,7 @@ namespace fcConferenceManager.Controllers
         }
 
         [HttpPost]
-        // public ActionResult Index(UserModel model)
-        // {
-            // var baseUrl = ConfigurationManager.AppSettings["AppURL"].Replace("/forms", "");
-            // ViewBag.Baseurl = baseUrl;
-            // if (model.Password == null || model.UserName == null)
-            // {
-
-
-                // TempData["InvalidUser"] = "Please enter user name & password";
-                // return Redirect("~/Account/Portolo");
-
-            // }
-            // // var s = cbe.GetCBLoginInfo(model.UserName, model.Password);
-            // List<UserResponse> userList = new List<UserResponse>();
-
-            // try
-            // {
-                // using (SqlConnection con = new SqlConnection(config))
-                // {
-                    // using (SqlCommand cmd = new SqlCommand("SP_Login_Page", con))
-                    // {
-                        // cmd.CommandType = CommandType.StoredProcedure;
-                        // cmd.Parameters.AddWithValue("@UserName", model.UserName);
-                        // cmd.Parameters.AddWithValue("@Password", model.Password);
-                        // con.Open();
-                        // SqlDataReader reader = cmd.ExecuteReader();
-                        // if (reader.HasRows.ToString() == "True")
-                        // {
-                            // while (reader.Read())
-                            // {
-                                // UserResponse response = new UserResponse();
-                                // response.status = reader["Status"].ToString();
-                                // response.ID = int.Parse(reader["ID"].ToString());
-                                // response.salutation1 = reader["salutation1"].ToString();
-                                // response.firstname = reader["firstname"].ToString();
-                                // response.middlename = reader["middlename"].ToString();
-                                // response.lastname = reader["lastname"].ToString();
-                                // response.suffix = reader["suffix"].ToString();
-                                // response.nickname = reader["nickname"].ToString();
-                                // response.signinaccountid = reader["signinaccountid"].ToString();
-                                // response.MainEmailType = reader["MainEmailType"].ToString();
-                                // response.mainemail = reader["mainemail"].ToString();
-                                // response.Password = reader["Password"].ToString();
-                                // response.sendemailto = reader["SendEmailTo"].ToString();
-                                // response.skypeaddress = reader["skypeaddress"].ToString();
-                                // response.linkedinURL = reader["linkedinURL"].ToString();
-                                // response.country = reader["country"].ToString();
-                                // response.city = reader["city"].ToString();
-                                // response.address1 = reader["address1"].ToString();
-                                // response.address2 = reader["address2"].ToString();
-                                // response.name = reader["AssistantName"].ToString();
-                                // response.zipcode = double.Parse(reader["zipcode"].ToString());
-                                // response.State = reader["State"].ToString();
-                                // response.timezone = reader["timezone"].ToString();
-                                // response.countrycode = reader["countrycode"].ToString();
-                                // response.phonenumber = reader["phonenumber"].ToString();
-                                // response.extension = reader["extension"].ToString();
-                                // response.email = reader["email"].ToString();
-                                // response.jobTitle = reader["jobTitle"].ToString();
-                                // response.department = reader["department"].ToString();
-                                // response.organization = reader["organization"].ToString();
-                                // response.website = reader["website"].ToString();
-                                // response.degreesandcertifications = reader["degreesandcertifications"].ToString();
-                                // response.personalbiography = reader["personalbiography"].ToString();
-                                // response.aboutmyorganizationandmyrole = reader["aboutmyorganizationandmyrole"].ToString();
-                                // response.salutation2 = reader["salutation2"].ToString();
-                                // response.phonetype1 = reader["phonetype1"].ToString();
-                                // response.phonetype2 = reader["phonetype2"].ToString();
-                                // response.phone1 = reader["phone1"].ToString();
-                                // response.phone1extension = reader["phone1extension"].ToString();
-                                // response.phone2 = reader["phone2"].ToString();
-                                // response.phone2extension = reader["phone2extension"].ToString();
-                                // response.countryCodephone1 = reader["countryCodephone1"].ToString();
-                                // response.countryCodephone2 = reader["countryCodephone2"].ToString();
-                                // if (reader["Uimg"].ToString() == null || reader["Uimg"].ToString() == "")
-                                // {
-                                    // response.Uimg = baseUrl + "/User-images/empty%20image.png";//"https://localhost:44376/"+reader["Uimg"].ToString();
-                                // }
-                                // else
-                                // {
-                                    // response.Uimg = baseUrl + reader["Uimg"].ToString();
-                                // }
-                                // if (reader["CV"].ToString() == null || reader["CV"].ToString() == "")
-                                // {
-                                    // //response.CV =reader["CVfile"].ToString();
-                                // }
-                                // else
-                                // {
-                                    // response.CV = reader["CV"].ToString();
-                                // }
-                                // userList.Add(response);
-                            // }
-                        // }
-                        // reader.Close();
-                        // //cmd.ExecuteNonQuery();
-                        // con.Close();
-
-                    // }
-                // }
-                // var item = "1";//s.FirstOrDefault();
-                // if (userList[0].status == "Success")
-                // {
-                    // TempData["users"] = userList;
-                    // return RedirectToAction("Profile", "Account", userList);
-
-                // }
-                // else if (userList[0].status == "User Does not Exists")
-
-                // {
-                    // TempData["InvalidUser"] = "Not a valid user.";
-                    // return Redirect("~/Account/Portolo");
-                // }
-                // else
-                // {
-                    // ViewBag.Failedcount = item;
-                    // return Redirect("~/Account/Portolo");
-                // }
-                // var a = userList;
-            // }
-            // catch (Exception ex)
-            // {
-                // TempData["InvalidUser"] = "Not a valid user.";
-                // return Redirect("~/Account/Portolo");
-            // }
-            // return Redirect("~/Account/Portolo");
-        // }
-
-
-        //[HttpPost]
+        
         public List<UserResponse> GetUserProfile()
         {
             List<UserResponse> userList = new List<UserResponse>();
@@ -350,7 +166,7 @@ namespace fcConferenceManager.Controllers
 
 
 
-while (reader.Read())
+                            while (reader.Read())
                             {
                                 UserResponse response = new UserResponse();
 
@@ -523,6 +339,7 @@ while (reader.Read())
             List<UserResponse> response = GetUserProfile2();
             UserResponse user = new UserResponse();
             if (response.Count > 0)
+
             {
                 if (response[0].ID > 0)
                 {
@@ -588,6 +405,7 @@ while (reader.Read())
         {
             List<UserResponse> userList = new List<UserResponse>();
             try
+
             {
                 //var baseUrl = ConfigurationManager.AppSettings["AppURL"].Replace("/forms", "");
                 //ViewBag.Baseurl = baseUrl;
@@ -784,81 +602,76 @@ while (reader.Read())
         }        
 		[HttpPost]
         [ValidateInput(true)]
-        [CustomizedAuthorize]
+							 
         public JsonResult UpdateOrganisation(FormCollection updateorg)
         {
-            User_Login data = new User_Login();
-            FormsIdentity identity = (FormsIdentity)User.Identity;
-            data = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<User_Login>(identity.Ticket.UserData);
+            SqlConnection con = new SqlConnection(config);
+																  
+																																
 
-            clsOrganization cOrganization = new clsOrganization();
-            cOrganization.sqlConn = new SqlConnection(ReadConnectionString());
-            cOrganization.intOrganization_pKey = data.ParentOrganization_pKey;
-            cOrganization.LoadOrganization();
-            cOrganization.strOrganizationID = updateorg["txtOrgName"].ToString();
-            cOrganization.intOrganizationType_pKey = Convert.ToInt32(updateorg["cbSiteType"].ToString());
-            cOrganization.strOrganizationTypeID = updateorg["hiddencbSiteType"].ToString();
-            cOrganization.strParentOrgName = updateorg["txtParentOrgName"].ToString();
-            cOrganization.strPrimaryContactName = updateorg["txtPrimaryContactName"].ToString();
-            cOrganization.strPrimaryContactPhone = updateorg["txtPrimPhone"].ToString();
-            cOrganization.strPrimaryContactEmail = updateorg["txtPrimEmail"].ToString();
-            cOrganization.strPrimaryContactTitle = updateorg["txtPrimTitle"].ToString();
-            cOrganization.intCountry_Pkey = 0;
-            cOrganization.intState_Pkey = 0;
-            cOrganization.intTimezone_pKey = 0;
-            cOrganization.strTimezoneID = "";
+           string dbsql = String.Format(@"Update Organization_List set OrganizationID = '{0}', OrganizationType_pkey = {1}, ParentOrgName = '{2}', PrimaryContactName = '{3}', PrimaryContactPhone = '{4}', PrimaryContactEMail = '{5}', PrimaryContactTitle = '{6}', 
+                ZipCode = {7}, Email = '{8}', Email2 = '{9}', URL = '{10}', Address1 = '{11}', Address2 = '{12}', City = '{13}', State_pkey = {14}, Country_pKey = {15}, Timezone_Pkey = {16} where pKey = {17}",
+                updateorg["txtOrgName"].ToString(), updateorg["cbSiteType"], updateorg["txtParentOrgName"].ToString(), updateorg["txtPrimaryContactName"].ToString(), updateorg["txtPrimPhone"].ToString(), updateorg["txtPrimEmail"].ToString(), updateorg["txtPrimTitle"].ToString(),
+                updateorg["txtZip"], updateorg["txtEmail1"].ToString(), updateorg["txtEmail2"].ToString(), updateorg["txtURL"].ToString(), updateorg["txtAddress1"].ToString(), updateorg["txtAddress2"].ToString(), updateorg["txtCity"].ToString(),
+                updateorg["cbState"], updateorg["cbCountry"], updateorg["cbTimeZone"], updateorg["parentOrgId"]);
+																												 
+																						   
+																					  
+																								
+																						
+																						
+																						
+											  
+											
+											   
+											 
 
-            if (updateorg["cbCountry"].ToString() != "0")
-                cOrganization.intCountry_Pkey = Convert.ToInt32(updateorg["cbCountry"]);
+														 
+																						
 
-            if (updateorg["cbState"].ToString() != "0")
-                cOrganization.intState_Pkey = Convert.ToInt32(updateorg["cbState"]);
+													   
+																					
 
-            if (updateorg["cbTimeZone"] != "0")
-            {
-                cOrganization.intTimezone_pKey = Convert.ToInt32(updateorg["cbTimeZone"]);
-                cOrganization.strTimezoneID = updateorg["hiddenTimeZone"].ToString();
-            }
-            cOrganization.strZip = updateorg["txtZip"].ToString();
-            cOrganization.strTimezoneID = updateorg["cbTimeZone"].ToString();
-            cOrganization.strEmail2 = updateorg["txtEmail2"].ToString();
-            cOrganization.strEmail = updateorg["txtEmail1"].ToString();
-            cOrganization.strURL = updateorg["txtURL"].ToString();
-            cOrganization.strAddress1 = updateorg["txtAddress1"].ToString();
-            cOrganization.strAddress2 = updateorg["txtAddress2"].ToString();
-            cOrganization.strCity = updateorg["txtCity"].ToString();
-            cOrganization.strCountry = updateorg["hiddenCountry"].ToString();
+											   
+			 
+																						  
+																					 
+			 
+																  
+																			 
+																		
+																	   
+																  
+																			
+																			
+																	
+																			 
             string errorMsg = "";
-            if (!string.IsNullOrEmpty(cOrganization.strPrimaryContactEmail))
-                if (!clsUtility.CheckEmailFormat(cOrganization.strPrimaryContactEmail))
+            if (!string.IsNullOrEmpty(updateorg["txtPrimEmail"].ToString()))
+                if (!clsUtility.CheckEmailFormat(updateorg["txtPrimEmail"].ToString()))
                     errorMsg = "Invalid Email Address: Primary Contact Email \n Enter email, address in valid format";
 
-            if (!string.IsNullOrEmpty(cOrganization.strEmail2))
-                if (!clsUtility.CheckEmailFormat(cOrganization.strEmail2))
+            if (!string.IsNullOrEmpty(updateorg["txtEmail2"].ToString()))
+                if (!clsUtility.CheckEmailFormat(updateorg["txtEmail2"].ToString()))
                     errorMsg = "Invalid Email Address: Email2 \n Enter email, address in valid format";
 
 
-            if (!string.IsNullOrEmpty(cOrganization.strEmail))
-                if (!clsUtility.CheckEmailFormat(cOrganization.strEmail))
+            if (!string.IsNullOrEmpty(updateorg["txtEmail1"].ToString()))
+                if (!clsUtility.CheckEmailFormat(updateorg["txtEmail1"].ToString()))
                     errorMsg = "Invalid Email Address: Email1 \n Enter email, address in valid format";
 
             try
             {
                 if (errorMsg == "")
 			
-                {
-                    errorMsg = "Error Occurred While Updating Organization";
-                    if (cOrganization.SaveOrganization(cOrganization))
-                    {
-                        clsAccount cAccount = new clsAccount();
-                        clsSettings cSettings = ((clsSettings)Session["cSettings"]);
-                        cAccount.sqlConn = new SqlConnection(ReadConnectionString());
-                        cAccount.intAccount_PKey = data.Id;
-                        cAccount.LoadAccount();
-                        errorMsg = "Success";
-						 			
-                    }
-		
+              {
+                    SqlCommand cmd = new SqlCommand(dbsql, con);
+				
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+
+                    errorMsg = "Success";
                 }
             }
 
@@ -867,7 +680,7 @@ while (reader.Read())
                 errorMsg = ex.Message;
             }
             return Json(new { result = errorMsg }, JsonRequestBehavior.AllowGet);
-				
+	
 
         }
 
@@ -910,9 +723,9 @@ while (reader.Read())
             int userId = ((loginResponse)Session["User"]).Id;
             SqlConnection con = new SqlConnection(config);
             string dbquery = String.Format(@"select *, ot.OrganizationTypeID, st.StateID, C.CountryID from Organization_List ol Inner join SYS_OrganizationTypes ot on ol.OrganizationType_pkey = ot.pKey
-                                            Inner join SYS_States st on ol.State_pkey = st.pKey Inner join SYS_Countries C on ol.Country_pKey = C.pKey where ol.pKey = (Select ParentOrganization_pKey from Account_list where pKey = {0})", userId);
+Inner join SYS_States st on ol.State_pkey = st.pKey Inner join SYS_Countries C on ol.Country_pKey = C.pKey where ol.pKey = (Select ParentOrganization_pKey from Account_list where pKey = {0})", userId);
 											   
-								   
+		   
 
             con.Open();
             SqlCommand cmd = new SqlCommand(dbquery, con);
@@ -937,7 +750,7 @@ while (reader.Read())
             myOrganisation.phone = reader["PrimaryContactPhone"].ToString();
             myOrganisation.strEmail1 = reader["Email"].ToString();
             myOrganisation.strEmail2 = reader["Email2"].ToString();
-            myOrganisation.intTimezone_pKey = (int)reader["Timezone_pKey"];
+            myOrganisation.intTimezone_pKey = (reader["Timezone_pKey"].ToString() != "")?(int)reader["Timezone_pKey"]:0;
 
             ViewBag.SiteTypeTable = dba.BindSiteTypes();
             ViewBag.CountryTable = dba.BindCountry();

@@ -684,7 +684,7 @@ namespace fcConferenceManager.Controllers.Portolo
         }
 
         [HttpGet]
-        public ActionResult SearchTopic(string name, string description, string active, string excel)
+        public ActionResult SearchTopic(string name, string description, string active, string search)
         {
             SqlConnection con = new SqlConnection(ReadConnectionString());
             DataTable dt = new DataTable();
@@ -699,8 +699,9 @@ namespace fcConferenceManager.Controllers.Portolo
 
             ViewBag.Topics = dt;
             ViewBag.IsActive = active;
+            dt.Columns["IsActive"].ColumnName = "Status";
 
-            if (excel == "true")
+            if (search == "true")
             {
                 string FileName = String.Format("Topics_{0:yyMMdd_HH.mm}", DateTime.Now);
                 ExportToExcel(dt, FileName);
@@ -852,7 +853,7 @@ namespace fcConferenceManager.Controllers.Portolo
                 var searchlist = (from list in fileslist where list.FileName.StartsWith(search.Trim(), StringComparison.OrdinalIgnoreCase) select list).ToList();
                 return View(searchlist);
             }
-            ViewBag.AlertMessage = TempData["AlertMessage"];
+			ViewBag.AlertMessage = TempData["AlertMessage"];												
 
             return View(myFileUpload.FileList);
         }
@@ -895,24 +896,24 @@ namespace fcConferenceManager.Controllers.Portolo
         {
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             try
+            { 
+            using (SqlConnection con = new SqlConnection(config))
             {
-                using (SqlConnection con = new SqlConnection(config))
+                using (SqlCommand cmd = new SqlCommand("DeleteFile", con))
                 {
-                    using (SqlCommand cmd = new SqlCommand("DeleteFile", con))
-                    {
-                        con.Open();
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@pKey", pkey);
+                    con.Open();
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@pKey", pkey);
 
 
-                        cmd.ExecuteNonQuery();
-                        con.Close();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
 
-                    }
                 }
+            }
                 TempData["AlertMessage"] = "Deleted Successfully !!";
             }
-            catch(Exception)
+            catch (Exception)
             {
                 TempData["AlertMessage"] = "Unsuccessfull !!";
             }
@@ -975,8 +976,8 @@ namespace fcConferenceManager.Controllers.Portolo
                 var searchlist = (from list in uploadlist where list.Process.StartsWith(search.Trim(), StringComparison.OrdinalIgnoreCase) select list).ToList();
                 Session["searchlist"] = searchlist;
                 return View(searchlist);
-            }
-             ViewBag.Message  = TempData["Message"];
+            }			 					
+		    ViewBag.Message  = TempData["Message"];
             library.processList = uploadlist;
             return View(library.processList);
         }
@@ -1070,7 +1071,7 @@ namespace fcConferenceManager.Controllers.Portolo
                     cmd.Parameters.AddWithValue("@status", "Delete");
                     int result = cmd.ExecuteNonQuery();
                     con.Close();
-                    if (result == 1)
+                     if (result == 1)
                     {
                         TempData["Message"] = "Process Deleted Successfully";
                         ModelState.Clear();
@@ -1128,6 +1129,113 @@ namespace fcConferenceManager.Controllers.Portolo
             }
             
         }
+	    public ActionResult Reports(string reportId)
+        {
+            if ((Session["User"] == null) || !((loginResponse)Session["User"]).IsGlobalAdmin)
+                return Redirect("~/Account/Portolo");
+
+            if (reportId == null) return View("~/Views/Portolo/Report/Report.cshtml");
+
+            SqlConnection con = new SqlConnection(ReadConnectionString());
+            DataTable dt = new DataTable();
+            string dbquery = "";
+            dt.Clear();
+            con.Open();
+            SqlDataAdapter _db;
+
+            if (reportId == "1")
+            {
+                dbquery = "select a.Firstname, a.Lastname, a.Email, a.Title, a.Phone , o.OrganizationID from Account_list a inner join Organization_List  o on o.pKey = a.ParentOrganization_pKey where PortoloUser = 1";
+
+                _db = new SqlDataAdapter(dbquery, con);
+                _db.Fill(dt);
+                con.Close();
+                ViewBag.Reports = dt;
+                return PartialView("~/Views/Portolo/Report/_UserList.cshtml");
+            }
+
+            else if (reportId == "2")
+            {
+                dbquery = "select * from Portolo_ProductList";
+                _db = new SqlDataAdapter(dbquery, con);
+                _db.Fill(dt);
+                con.Close();
+                ViewBag.Reports = dt;
+                return PartialView("~/Views/Portolo/Report/_ProductList.cshtml");
+            }
+
+            return null;
+        }
+
+        [HttpPost]
+        public ActionResult SearchReportUser(FormCollection fields)
+        {
+            SqlConnection con = new SqlConnection(ReadConnectionString());
+            DataTable dt = new DataTable();
+            SqlDataAdapter _da;
+            con.Open();
+
+            ViewBag.name = fields["name"];
+            if (fields["reportId"] == "1")
+            {
+                string dbquery = String.Format(@"select a.Firstname, a.Lastname, a.Email, a.Title, a.Phone , o.OrganizationID from Account_list a inner join Organization_List  o on o.pKey = a.ParentOrganization_pKey where PortoloUser = 1
+                            and CONCAT(a.Firstname, ' ', a.Lastname) like '%{0}%' and a.Email like '%{1}%' and a.Title like '%{2}%' and o.OrganizationID like '%{3}%'", fields["name"].Trim(), fields["email"].Trim(), fields["titl"].Trim(), fields["org"].Trim());
+                _da = new SqlDataAdapter(dbquery, con);
+                _da.Fill(dt);
+                con.Close();
+                ViewBag.Reports = dt;
+                ViewBag.email = fields["email"];
+                ViewBag.titl = fields["titl"];
+                ViewBag.org = fields["org"];
+
+                return PartialView("~/Views/Portolo/Report/_UserList.cshtml");
+            }
+
+            if (fields["reportId"] == "2")
+            {
+                string dbquery = String.Format("select * from Portolo_ProductList where ProductName like '%{0}%' and Description like '%{1}%'", fields["name"].Trim(), fields["description"].Trim());
+                _da = new SqlDataAdapter(dbquery, con);
+                _da.Fill(dt);
+                ViewBag.Reports = dt;
+                ViewBag.description = fields["description"];
+                return PartialView("~/Views/Portolo/Report/_ProductList.cshtml");
+            }
+            con.Close();
+
+            return null;
+        }
+
+        [HttpGet]
+        public void DownloadReport(string name, string description, string email, string titl, string excel, string org, string reportId)
+        {
+            SqlConnection con = new SqlConnection(ReadConnectionString());
+            DataTable dt = new DataTable();
+            SqlDataAdapter _da;
+            con.Open();
+
+            if (reportId == "1")
+            {
+                string dbquery = String.Format(@"select a.Firstname, a.Lastname, a.Email, a.Title, a.Phone , o.OrganizationID from Account_list a inner join Organization_List  o on o.pKey = a.ParentOrganization_pKey where PortoloUser = 1
+                            and CONCAT(a.Firstname, ' ', a.Lastname) like '%{0}%' and a.Email like '%{1}%' and a.Title like '%{2}%' and o.OrganizationID like '%{3}%'", name.Trim(), email.Trim(), titl.Trim(), org.Trim());
+                _da = new SqlDataAdapter(dbquery, con);
+                _da.Fill(dt);
+            }
+
+            if (reportId == "2")
+            {
+                string dbquery = String.Format("select * from Portolo_ProductList where ProductName like '%{0}%' and Description like '%{1}%'", name.Trim(), description.Trim());
+                _da = new SqlDataAdapter(dbquery, con);
+                _da.Fill(dt);
+            }
+            con.Close();
+
+            if (excel == "true")
+            {
+                string FileName = String.Format("Report_{0:yyMMdd_HH.mm}", DateTime.Now);
+                ExportToExcel(dt, FileName);
+            }
+        }
+												
         public ActionResult DownloadFile(string filePath)
         {
 
@@ -1202,7 +1310,7 @@ namespace fcConferenceManager.Controllers.Portolo
             dt.Columns.Add("Name");
             dt.Columns.Add("Title");
             dt.Columns.Add("Description");
-            dt.Columns.Add("plan");
+            dt.Columns.Add("Plan");
             dt.Columns.Add("Due Date");
             dt.Columns.Add("Forecast");
             dt.Columns.Add("Category");
@@ -1267,7 +1375,7 @@ namespace fcConferenceManager.Controllers.Portolo
             baseUrl = baseUrl.TrimEnd('/');
             return baseUrl;
         }
- public ActionResult Process()
+        public ActionResult Process()
         {
             return View("~/Views/Portolo/Process.cshtml");
         }

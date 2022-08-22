@@ -102,9 +102,7 @@ namespace fcConferenceManager.Controllers
         [HttpPost]
         public ActionResult RegistrationSubmit(UserRequest request, HttpPostedFileBase file, HttpPostedFileBase CVfile,bool? save)
         {
-            string base64 = Request.Form["imgCropped"];            
-            byte[] bytes = base64 != "" ? Convert.FromBase64String(base64.Split(',')[1]) : null;
-            string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+           string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             using (SqlConnection con = new SqlConnection(config))
             {
                 using (SqlCommand cmd = new SqlCommand("SP_InsertRegistrationDataInAccountList", con))
@@ -155,6 +153,10 @@ namespace fcConferenceManager.Controllers
 
                     if ((file != null) && file.ContentLength > 0)
                     {
+						string base64 = Request.Form["imgCropped"];
+                        byte[] bytes = base64 != "" ? Convert.FromBase64String(base64.Split(',')[1]) : null;
+
+                        																					
                         loginResponse objlt = (loginResponse)Session["User"];
 
                         int Id = objlt.Id;
@@ -179,8 +181,10 @@ namespace fcConferenceManager.Controllers
                             {
                                 System.IO.File.Delete(imgPath);
                             }
-                            file.SaveAs(imgPath);
+                             //file.SaveAs(imgPath);
+                            System.IO.File.WriteAllBytes(imgPath, bytes);
                         }
+                        
                         cmd.Parameters.AddWithValue("@Uimg", "/Accountimages/" + file.FileName);
                     }
                     else

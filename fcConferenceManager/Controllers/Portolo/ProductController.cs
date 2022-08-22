@@ -96,7 +96,7 @@ namespace fcConferenceManager.Controllers.Portolo
         }
 
         [HttpGet]
-        public ActionResult SearchProduct(string name, string description, string excel)
+         public ActionResult SearchProduct(string name, string description, string search)
         {
             DataTable dt = new DataTable();
 
@@ -109,7 +109,7 @@ namespace fcConferenceManager.Controllers.Portolo
 
             ViewBag.Products = dt;
 
-            if (excel == "true")
+            if (search != "true")
             {
                 string FileName = String.Format("Products_{0:yyMMdd_HH.mm}", DateTime.Now);
                 ExportToExcel(dt, FileName);
