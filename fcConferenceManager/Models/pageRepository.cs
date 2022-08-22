@@ -59,42 +59,38 @@ namespace fcConferenceManager.Repository
             }
         }
 
-
-        public List<page> getPageDetailForExport(string Name, string URL, string Status, string EventType, string SortOrder)
+        public List<page> getPageDetailForExport(string Name, string URL, string Status, string EventType,string Type, string SortOrder)
         {
 
-            {
-                List<page> pageList = new List<page>();
+            List<page> pageList = new List<page>();
 
-
-
-                connection();
-                SqlCommand cmd;
-                cmd = new SqlCommand("GetPageDetails", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Name", Name);
-                cmd.Parameters.AddWithValue("@URL", URL);
-                cmd.Parameters.AddWithValue("@Status", Status);
-                cmd.Parameters.AddWithValue("@EventType", EventType);
-                string SortDirection = "A";
-                string x = SortOrder.Substring(SortOrder.Length - 4, 4);
-                if (x == "Desc")
+            connection();
+            SqlCommand cmd;
+            cmd = new SqlCommand("GetPageDetails", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Name", Name);
+            cmd.Parameters.AddWithValue("@URL", URL);
+            cmd.Parameters.AddWithValue("@Status", Status);
+            cmd.Parameters.AddWithValue("@EventType", EventType);
+            cmd.Parameters.AddWithValue("@PageType", Type);
+            string SortDirection = "A";
+            string x = SortOrder.Substring(SortOrder.Length - 4, 4);
+            if (x == "Desc")
                 {
-
                     SortDirection = "D";
                     SortOrder = SortOrder.Substring(0, SortOrder.Length - 4);
                 }
-                cmd.Parameters.AddWithValue("@SortDirection", SortDirection);
-                cmd.Parameters.AddWithValue("@SortOrder", SortOrder);
+            cmd.Parameters.AddWithValue("@SortDirection", SortDirection);
+            cmd.Parameters.AddWithValue("@SortOrder", SortOrder);
 
-                SqlDataAdapter sda = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
 
-                conn.Open();
-                sda.Fill(dt);
-                conn.Close();
+            conn.Open();
+            sda.Fill(dt);
+            conn.Close();
 
-                foreach (DataRow dr in dt.Rows)
+            foreach (DataRow dr in dt.Rows)
                 {
 
                     pageList.Add(
@@ -123,11 +119,11 @@ namespace fcConferenceManager.Repository
                     );
                 }
 
-                return pageList;
-            }
+            return pageList;
+            
         }
 
-        public List<page> getDetailFilterByNameURLStatusEventType(string Name, string URL, string Status, string EventType, string SortOrder)
+        public List<page> getDetailFilterByNameURLStatusEventType(string Name, string URL, string Status, string EventType,string Type, string SortOrder)
         {
             List<page> pageList = new List<page>();
             connection();
@@ -138,12 +134,12 @@ namespace fcConferenceManager.Repository
             cmd.Parameters.AddWithValue("@URL", URL);
             cmd.Parameters.AddWithValue("@Status", Status);
             cmd.Parameters.AddWithValue("@EventType", EventType);
+            cmd.Parameters.AddWithValue("@PageType", Type);
+
             string SortDirection = "A";
             string x = SortOrder.Substring(SortOrder.Length - 4, 4);
             if (x == "Desc")
             {
-
-
                 SortDirection = "D";
                 SortOrder = SortOrder.Substring(0, SortOrder.Length - 4);
             }
