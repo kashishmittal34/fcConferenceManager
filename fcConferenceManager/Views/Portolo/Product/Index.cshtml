@@ -99,8 +99,8 @@
             window.onload = function () {
                 alert("@ViewBag.InvalidExcel");
             };
-         </script>
-     }
+        </script>
+    }
     <section class="task-list-form">
         <div class="container">
             <div class="row">
@@ -143,12 +143,7 @@
                                     @Html.TextBox("description", null, new { @class = "form-control form-control-sm", @id = "description" })
                                 </div>
                             </div>
-                            <div class="col-lg-2">
-                                <div class="form-group">
-                                    <label> Price:</label>
-                                    <input type="number" name="price" class="form-control form-control-sm" value="@ViewBag.Price" />
-                                </div>
-                            </div>
+                            
                         </div>
                         <br />
                     }
@@ -189,7 +184,7 @@
             </div>
         </div>
 
-        </section>
+    </section>
 
     <div class="modal fade" id="modal-mrole" tabindex="-1" aria-labelledby="modalOne" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl align-top">
@@ -269,6 +264,11 @@
 
         });
 
+		 $("#ExcelBtn").click(function () {
+            var form = $(this).parents('form:first');
+            form.submit();
+        });
+								  
         $("#btnDelete").click(function (e) {
             debugger
             var checklist = [];
@@ -307,11 +307,11 @@
         function Openform() {
             $('#modal-mrole').modal('show');
         }
-        </script>
+    </script>
 
-        <link rel="stylesheet" href="../Scripts/jquery-ui.css" />
-        <script src="../Scripts/jquery-ui.js"></script>
-    </body>
+    <link rel="stylesheet" href="../Scripts/jquery-ui.css" />
+    <script src="../Scripts/jquery-ui.js"></script>
+</body>
 
 
 

@@ -83,7 +83,6 @@
     <Compile Include="Controllers\Portolo\FAQController.cs" />
     <Compile Include="Controllers\Portolo\InterestGroupController.cs" />
     <Compile Include="Controllers\Portolo\MasterPageController.cs" />
-    <Compile Include="Controllers\Portolo\PortoloConfigurationController.cs" />
     <Compile Include="Controllers\Portolo\PortoloController.cs" />
     <Compile Include="Controllers\Portolo\ProductController.cs" />
     <Compile Include="Controllers\Portolo\RegistrationController.cs" />
@@ -156,7 +155,6 @@
     <Compile Include="Models\Portolo\RegistrationSetting.cs" />
     <Compile Include="Models\Portolo\ScoreCard.cs" />
     <Compile Include="Models\Portolo\Study.cs" />
-    <Compile Include="Models\Portolo\Table_list_PageRepo.cs" />
     <Compile Include="Models\Portolo\TaskAddRequest.cs" />
     <Compile Include="Models\Portolo\TaskListRequest.cs" />
     <Compile Include="Models\Portolo\TasklistResponse.cs" />

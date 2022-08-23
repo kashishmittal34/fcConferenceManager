@@ -555,23 +555,30 @@ namespace fcConferenceManager.Controllers.Portolo
                     
                     for(int i = 0; i < result.Tables[0].Rows.Count; i++)
                     {
-                        string numString = result.Tables[0].Rows[i][1].ToString(); 
-                        bool number1 = false;
-                        bool canConvert = bool.TryParse(numString, out number1);
-                        if (canConvert == true)
+                        try
                         {
-                            string conn = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
-                            SqlConnection con = new SqlConnection(conn);
-                            string query = "Insert into Portolo_Topics(Title,Description,IsActive) Values('" + result.Tables[0].Rows[i][2].ToString() + "','" + result.Tables[0].Rows[i][3].ToString() + "','" + result.Tables[0].Rows[i][1].ToString() + "')";
-                            con.Open();
-                            SqlCommand cmd = new SqlCommand(query, con);
-                            cmd.ExecuteNonQuery();
-                            con.Close();
+                            string numString = result.Tables[0].Rows[i][1].ToString();
+                            bool number1 = false;
+                            bool canConvert = bool.TryParse(numString, out number1);
+                            if (canConvert == true)
+                            {
+                                string conn = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+                                SqlConnection con = new SqlConnection(conn);
+                                string query = "Insert into Portolo_Topics(Title,Description,IsActive) Values('" + result.Tables[0].Rows[i][2].ToString() + "','" + result.Tables[0].Rows[i][3].ToString() + "','" + result.Tables[0].Rows[i][1].ToString() + "')";
+                                con.Open();
+                                SqlCommand cmd = new SqlCommand(query, con);
+                                cmd.ExecuteNonQuery();
+                                con.Close();
+                            }
+                            else
+                            {
+                                TempData["InvalidExcel"] = "Invalid! Excel File";
+                                break;
+                            }
                         }
-                        else
+                        catch (Exception e)
                         {
-                            TempData["InvalidExcel"] = "Invalid! Excel File";
-                            break;
+                            TempData["InvalidExcel"] = "Invalid Excel File!" + e.Message;
                         }
                     }
                     return RedirectToAction("Topics", "Portolo");
