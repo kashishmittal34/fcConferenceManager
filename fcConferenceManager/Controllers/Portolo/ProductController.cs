@@ -241,9 +241,9 @@ namespace fcConferenceManager.Controllers.Portolo
                                 break;
                             }
                         }
-                        catch(Exception e)
+                        catch(Exception)
                         {
-                            TempData["InvalidExcel"] = "Invalid Excel File!" + e.Message ;
+                            TempData["InvalidExcel"] = "Invalid Excel File! Enter data in a Correct Format!!" ;
                         }
                     }
                     

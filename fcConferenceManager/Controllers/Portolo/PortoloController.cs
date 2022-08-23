@@ -420,9 +420,6 @@ namespace fcConferenceManager.Controllers.Portolo
             if (coll["ID"] != null)
             {
                 try
-
-
-
                 {
                     string strpkeys = "0";
                     int i = 0;
@@ -439,17 +436,11 @@ namespace fcConferenceManager.Controllers.Portolo
                             strpkeys = strpkeys + id.ToString() + ",";
                         }
                         msg = dba.Tasks_Detele(strpkeys);
-                    }
-                   
+                    }                  
                     commonreload();
                 }
-
-
-
-
                 catch (Exception)
                 {
-
                 }
             }
             TempData["Message"] = msg;
@@ -473,7 +464,6 @@ namespace fcConferenceManager.Controllers.Portolo
             con.Close();
             ViewBag.InvalidExcel = TempData["InvalidExcel"];
             ViewBag.Topics = dt;
-
             return View();
         }
 	[HttpPost]
@@ -576,9 +566,9 @@ namespace fcConferenceManager.Controllers.Portolo
                                 break;
                             }
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
-                            TempData["InvalidExcel"] = "Invalid Excel File!" + e.Message;
+                            TempData["InvalidExcel"] = "Invalid Excel File! Enter data in a Correct Format!!";
                         }
                     }
                     return RedirectToAction("Topics", "Portolo");
@@ -611,11 +601,9 @@ namespace fcConferenceManager.Controllers.Portolo
                 query = String.Format("Update Portolo_Topics Set Title = '{0}', Description = '{1}', isActive = '{2}' where TopicID = {3}", model.title, model.description, model.isActive, model.id);
 
             SqlCommand cmd = new SqlCommand(query, conn);
-
             conn.Open();
             cmd.ExecuteNonQuery();
             conn.Close();
-
             return RedirectToAction("Topics", "Portolo");
         }
 
@@ -645,15 +633,11 @@ namespace fcConferenceManager.Controllers.Portolo
         {
 			if (Session["User"] == null) return Redirect("~/Account/Portolo");																  
             SqlConnection con = new SqlConnection(ReadConnectionString());
-
             string dbquery = String.Format("delete from Portolo_Topics where TopicID in ({0}) ", ids);
             con.Open();
-
             SqlCommand cmd = new SqlCommand(dbquery, con);
-
             cmd.ExecuteNonQuery();
             con.Close();
-
             return RedirectToAction("Topics", "Portolo");
         }
 
