@@ -10,7 +10,7 @@ using System.Web;
 
 namespace fcConferenceManager.Models.Portolo
 {
-    public class ContactUs
+    public class PortoloContactUs
     {
         public int Id { get; set; }
         public string Role { get; set; }
@@ -28,6 +28,6 @@ namespace fcConferenceManager.Models.Portolo
         public string SecurityGroup { get; set; } = "";
         public string ImageSrc { get; set; } = string.Empty;
         public HttpPostedFileBase ProfileImage { get; set; }
-        public IList<ContactUs> ContactList { get; set; } 
+        public IList<PortoloContactUs> ContactList { get; set; } 
     }
 }

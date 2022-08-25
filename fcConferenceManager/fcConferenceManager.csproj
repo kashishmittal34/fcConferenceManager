@@ -2195,7 +2195,7 @@
     <Content Include="Images\ui-icons_cc0000_256x240.png" />
     <Content Include="Images\ui-icons_cd0a0a_256x240.png" />
     <Compile Include="Models\Portolo\ProcessLibrary.cs" />
-    <Compile Include="Models\Portolo\ContactUsModels.cs" />
+    <Compile Include="Models\Portolo\PortoloContactUs.cs" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\MAGIWeb-QA - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\MAGIWeb-QA - ReadOnly - FTP.pubxml" />

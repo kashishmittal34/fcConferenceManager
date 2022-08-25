@@ -19,14 +19,14 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         [CheckActiveEventAttribute]
         [HttpGet]
-        public ActionResult ContactUs(ContactUs contactUs)
+        public ActionResult PortoloContactUs(PortoloContactUs PortoloContactUs)
         {
-            contactUs.ContactList = GetContactDetails();
-            return View("~/Views/Portolo/Contact/ContactUs.cshtml", contactUs.ContactList);
+            PortoloContactUs.ContactList = GetContactDetails();
+            return View("~/Views/Portolo/Contact/PortoloContactUs.cshtml", PortoloContactUs.ContactList);
         }
-        private List<ContactUs> GetContactDetails()
+        private List<PortoloContactUs> GetContactDetails()
         {
-            List<ContactUs> librarylist = new List<ContactUs>();
+            List<PortoloContactUs> librarylist = new List<PortoloContactUs>();
             DataTable dtData = new DataTable();
             string query = "Select * from Portolo_PublicContacts";
             SqlConnection con = new SqlConnection(config);
@@ -37,7 +37,7 @@ namespace fcConferenceManager.Controllers.Portolo
             con.Close();
             foreach (DataRow dr in dtData.Rows)
             {
-                librarylist.Add(new ContactUs
+                librarylist.Add(new PortoloContactUs
                 {
                     Id = Convert.ToInt32(@dr["Id"]),
                     Role = @dr["Role"].ToString(),
@@ -53,21 +53,21 @@ namespace fcConferenceManager.Controllers.Portolo
             return librarylist;
         }
         [HttpGet]
-        public ActionResult PublicStaff(ContactUs contactUs)
+        public ActionResult PublicStaff(PortoloContactUs PortoloContactUs)
         {
-            contactUs.ContactList = GetContactDetails();
+            PortoloContactUs.ContactList = GetContactDetails();
             ViewBag.Message = TempData["Message"];
-            return View("~/Views/Portolo/Contact/PortoloPublicStaff.cshtml", contactUs);
+            return View("~/Views/Portolo/Contact/PortoloPublicStaff.cshtml", PortoloContactUs);
         }
         [HttpPost]
-        public ActionResult NewContacts(ContactUs contactUs)
+        public ActionResult NewContacts(PortoloContactUs PortoloContactUs)
         {
-            if (contactUs.ProfileImage != null)
+            if (PortoloContactUs.ProfileImage != null)
             {
 
-                contactUs.ImageSrc = GetFileName(contactUs.ProfileImage);
+                PortoloContactUs.ImageSrc = GetFileName(PortoloContactUs.ProfileImage);
             }
-            if (InsertContact(contactUs))
+            if (InsertContact(PortoloContactUs))
             {
                 TempData["Message"] = "Added New Contact Successfully !!";
                 return RedirectToAction("PublicStaff", "Contact");
@@ -78,7 +78,7 @@ namespace fcConferenceManager.Controllers.Portolo
             }
             return RedirectToAction("PublicStaff", "Contact");
         }
-        public bool InsertContact(ContactUs cont)
+        public bool InsertContact(PortoloContactUs cont)
         {
             using (SqlConnection con = new SqlConnection(config))
             {
@@ -108,7 +108,7 @@ namespace fcConferenceManager.Controllers.Portolo
             var contact = GetContactDetails().Find(x => x.Id.Equals(id));
             return Json(contact, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult UpdateContacts(ContactUs cont)
+        public ActionResult UpdateContacts(PortoloContactUs cont)
         {
             if (cont.ImageSrc == null)
             {
