@@ -52,9 +52,10 @@
                                     <li class="menu-item dropdown" @*class="menu-item dropdown"*@>
                                         <a class="nav__link mr-0" href="#">Contact</a>
                                         <ul class="sub-nav">
-                                            <li><a class="sub-nav__link" href="#">link 1</a></li>
-                                            <li><a class="sub-nav__link" href="#">link 2</a></li>
-                                            <li><a class="sub-nav__link" href="#">link 3 - long link - long link - long link</a></li>
+                                            <li><a class="sub-nav__link" href="~/Contact/ContactUs">Contact Us</a></li>
+                                            @*<li><a class="sub-nav__link" href="#">link 1</a></li>
+        <li><a class="sub-nav__link" href="#">link 2</a></li>
+        <li><a class="sub-nav__link" href="#">link 3 - long link - long link - long link</a></li>*@
                                         </ul>
                                     </li>
 		@if ((Session["User"] != null) && ((Elimar.Models.loginResponse)Session["User"]).IsGlobalAdmin)
@@ -85,6 +86,7 @@
                                             <li><a class="sub-nav__link" href="~/Configuration/ConfigurationSettings">System Configuration</a></li>
                                             <li><a class="sub-nav__link" href="#">Security Groups</a></li>
                                             <li><a class="sub-nav__link" href="#">System support/help </a></li>
+                                            <li><a class="sub-nav__link" href="~/Contact/PublicStaff">Portolo Public Staff</a></li>
                                         </ul>
                                     </li>
                                 </ul>

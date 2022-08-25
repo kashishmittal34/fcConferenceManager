@@ -1048,8 +1048,7 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         
         public ActionResult DeleteProcess(int pkey)
-        {
-            
+        {  
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             using (SqlConnection con = new SqlConnection(config))
             {
@@ -1077,8 +1076,6 @@ namespace fcConferenceManager.Controllers.Portolo
                     return Redirect(Request.UrlReferrer.ToString());
                 }
             }
-
-           
         }
         public JsonResult EditProcess(int? id)
         {

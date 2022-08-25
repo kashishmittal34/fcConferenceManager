@@ -77,6 +77,7 @@
     <Compile Include="Controllers\PagesController.cs" />
     <Compile Include="Controllers\Portolo\AccountController.cs" />
     <Compile Include="Controllers\Portolo\AddtaskController.cs" />
+    <Compile Include="Controllers\Portolo\ContactController.cs" />
     <Compile Include="Controllers\Portolo\DashboardController.cs" />
     <Compile Include="Controllers\Portolo\ElimarController.cs" />
     <Compile Include="Controllers\Portolo\ConfigurationController.cs" />
@@ -2194,6 +2195,7 @@
     <Content Include="Images\ui-icons_cc0000_256x240.png" />
     <Content Include="Images\ui-icons_cd0a0a_256x240.png" />
     <Compile Include="Models\Portolo\ProcessLibrary.cs" />
+    <Compile Include="Models\Portolo\ContactUsModels.cs" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\MAGIWeb-QA - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\MAGIWeb-QA - ReadOnly - FTP.pubxml" />
@@ -2276,9 +2278,6 @@
     <Content Include="Views\Shared\_PartialMySession.cshtml" />
     <Content Include="Views\Shared\_PartialPersonalEvents.cshtml" />
     <Content Include="Views\Shared\_PartialQuestionsGrid.cshtml" />
-    <Content Include="Views\Task\add-task.html" />
-    <Content Include="Views\Task\EditTask.html" />
-    <Content Include="Views\Task\Task.html" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Web.config" />
@@ -2406,53 +2405,8 @@
     <Content Include="Views\Portolo\FAQ\UserFAQ.cshtml" />
     <Content Include="Views\Portolo\ImportExcel.cshtml" />
     <Content Include="Views\Portolo\Configuration\PublicPage.cshtml" />
-    <Content Include="Views\Account\Index.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\MyOrganization.cshtml" />
-    <Content Include="Views\Account\Profile.cshtml" />
-    <Content Include="Views\Account\ProfilePage.cshtml" />
-    <Content Include="Views\Addtask\Add.cshtml" />
-    <Content Include="Views\AddTopic.cshtml" />
-    <Content Include="Views\Configuration\ConfigurationSettings.cshtml" />
-    <Content Include="Views\Configuration\PublicPage.cshtml" />
-    <Content Include="Views\CreateGroup\CreateGroup.cshtml" />
-    <Content Include="Views\Dashboard\Portolo.cshtml" />
-    <Content Include="Views\Dashboard\Scorecard.cshtml" />
-    <Content Include="Views\Elimar\Elimar - Copy.cshtml" />
-    <Content Include="Views\Elimar\Elimar.cshtml" />
-    <Content Include="Views\FAQ\AddQuestion.cshtml" />
-    <Content Include="Views\FAQ\FAQList.cshtml" />
-    <Content Include="Views\FAQ\UserFAQ.cshtml" />
-    <Content Include="Views\MasterPage\MasterPage.cshtml" />
-    <Content Include="Views\MyFiles.cshtml" />
-    <Content Include="Views\PortoloConfiguration\Index.cshtml" />
-    <Content Include="Views\PortoloConfiguration\Index2.cshtml" />
-    <Content Include="Views\PortoloConfiguration\lookupPartial.cshtml" />
-    <Content Include="Views\Process.cshtml" />
-    <Content Include="Views\ProcessLibrary.cshtml" />
-    <Content Include="Views\Product\AddProduct.cshtml" />
-    <Content Include="Views\Product\Index.cshtml" />
-    <Content Include="Views\Registration\Registration.cshtml" />
-    <Content Include="Views\Registration\RegistrationNew.cshtml" />
-    <Content Include="Views\Registration\Users.cshtml" />
-    <Content Include="Views\Report\Report.cshtml" />
-    <Content Include="Views\Report\_ProductList.cshtml" />
-    <Content Include="Views\Report\_UserList.cshtml" />
-    <Content Include="Views\Security\AddMember.cshtml" />
-    <Content Include="Views\Security\EditSecurityGroup.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LayoutCommon.cshtml" />
-    <Content Include="Views\Study\Add.cshtml" />
-    <Content Include="Views\Study\Study.cshtml" />
-    <Content Include="Views\Support\Help.cshtml" />
-    <Content Include="Views\Support\supportList.cshtml" />
-    <Content Include="Views\Task\AddTask.cshtml" />
-    <Content Include="Views\Task\CheckList.cshtml" />
-    <Content Include="Views\Task\Index.cshtml" />
-    <Content Include="Views\Task\TaskList.cshtml" />
-    <Content Include="Views\Task\tasklistnew.cshtml" />
-    <Content Include="Views\Topics.cshtml" />
-    <Content Include="Views\UserTopics.cshtml" />
     <Content Include="Views\Portolo\CreateGroup\CreateGroup.cshtml" />
     <Content Include="Views\Portolo\PortoloConfiguration\Index.cshtml" />
     <Content Include="Views\Portolo\PortoloConfiguration\Index2.cshtml" />
@@ -2460,6 +2414,8 @@
     <Content Include="Views\Portolo\Report\Report.cshtml" />
     <Content Include="Views\Portolo\Report\_ProductList.cshtml" />
     <Content Include="Views\Portolo\Report\_UserList.cshtml" />
+    <Content Include="Views\Portolo\Contact\ContactUs.cshtml" />
+    <Content Include="Views\Portolo\Contact\PortoloPublicStaff.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2471,7 +2427,6 @@
     <EmbeddedResource Include="Properties\licenses.licx" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ImagesUpload\" />
     <Folder Include="PortoloDocuments\" />
   </ItemGroup>
   <ItemGroup>
