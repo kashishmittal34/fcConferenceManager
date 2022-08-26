@@ -120,6 +120,8 @@ namespace fcConferenceManager.Controllers
         {
             loginResponse objlt = (loginResponse)Session["User"];
             if (objlt == null || !view) return Redirect("~/Account/Portolo");
+            nameSearch = !string.IsNullOrEmpty(nameSearch) ? nameSearch.Trim() : nameSearch;
+            emailSearch = !string.IsNullOrEmpty(emailSearch) ? emailSearch.Trim() : emailSearch;
             List<UserRequest> userList = new List<UserRequest>();
             string query = $"select * from Account_List a join Organization_List o on a.ParentOrganization_pKey = o.pKey where a.ContactName != '' order by a.ContactName; ";
             ViewData["NameFilter"] = nameSearch;
@@ -141,6 +143,7 @@ namespace fcConferenceManager.Controllers
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
                     con.Open();
+                    cmd.CommandTimeout = 0;
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {

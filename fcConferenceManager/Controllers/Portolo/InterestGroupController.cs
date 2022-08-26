@@ -26,70 +26,93 @@ namespace fcConferenceManager.Controllers
         }
         public ActionResult CreateGroup(bool? membersPage , string nameSort, int? pageNo, string nameSearch, string organizationSearch,string industry ,string answerFilter,string questionFilter , string groupFilter )
         {
-            
+            ViewData["Answer"] = answerFilter;
+            ViewBag.Answer = answerFilter;
+            answerFilter = !string.IsNullOrEmpty(answerFilter)? answerFilter.Replace('-', ' '):answerFilter;
             membersPage = membersPage != null ? membersPage : false;
             loginResponse objlt = (loginResponse)Session["User"];
             if (objlt == null) return Redirect("~/Account/Portolo");
             ViewBag.memmberPage = membersPage;
-            ViewBag.Answer = answerFilter;
+            
             if (membersPage == true)
             {
                 List<InterestGroup> groups = new List<InterestGroup>();
-                string query = $"select top 150 * from Account_List al join Organization_List ol on al.ParentOrganization_pKey = ol.pKey where al.ContactName != '' and al.ContactName like '%{nameSearch}%' and ol.OrganizationID like '%{organizationSearch}%'";
+                string query = $"select distinct top 150  * from Account_List al join Organization_List ol on al.ParentOrganization_pKey = ol.pKey where al.ContactName != '' and al.ContactName like '%{nameSearch}%' and ol.OrganizationID like '%{organizationSearch}%'";
+
+                nameSearch = !string.IsNullOrEmpty(nameSearch) ? nameSearch.Trim() : nameSearch;
+                organizationSearch = !string.IsNullOrEmpty(organizationSearch) ? organizationSearch.Trim() : organizationSearch;
+
 
                 ViewData["NameSortParm"] = String.IsNullOrEmpty(nameSort) ? "name_desc" : "";
                 ViewData["NameFilter"] = nameSearch;
                 ViewData["OrganizationFilter"] = organizationSearch;
                 ViewData["IndustryFilter"] = industry;
                 ViewData["Question"] = questionFilter;
-                ViewData["Answer"] = answerFilter;
+                
                 ViewData["Group"] = groupFilter;
+                ViewData["NameSortParm"] = String.IsNullOrEmpty(nameSort) ? "name_desc" : "";
 
                 if (!string.IsNullOrEmpty(industry) && industry!="0" && !string.IsNullOrEmpty(answerFilter) && answerFilter != "0" && !string.IsNullOrEmpty(groupFilter) && groupFilter!= "0")
                 {
-                    query = $"select top 150 * from Account_List al join Organization_List ol on al.ParentOrganization_pKey = ol.pKey join ExhibitorFeedbackForm_UserResponse er on er.Account_pkey = al.pKey join GroupMembers gm on gm.accountPkey = al.pKey where gm.groupPkey = {groupFilter} and al.ContactName != '' and al.Email is not null and ol.organizationType_pkey = {industry} and er.Response like '{answerFilter}' and al.ContactName like '%{nameSearch}%' and ol.OrganizationID like '%{organizationSearch}%'";
+                    query = $"select distinct top 150 al.pKey , max(al.ContactName) as contactName, max(al.Title) as title,max(Department) as department,max(ol.OrganizationID) as OrganizationID from Account_List al join Organization_List ol on al.ParentOrganization_pKey = ol.pKey join (select distinct account_pkey , response from ExhibitorFeedbackForm_UserResponse) er on er.Account_pkey = al.pKey join GroupMembers gm on gm.accountPkey = al.pKey where gm.groupPkey = {groupFilter} and al.ContactName != '' and al.Email is not null and ol.organizationType_pkey = {industry} and er.Response like '{answerFilter}' and al.ContactName like '%{nameSearch}%' and ol.OrganizationID like '%{organizationSearch}%' group by al.pKey";
                 }
                 
                 else if(!string.IsNullOrEmpty(industry) && industry != "0" && !string.IsNullOrEmpty(answerFilter) && answerFilter != "0")
                 {
-                    query = $"select top 150 * from Account_List al join Organization_List ol on al.ParentOrganization_pKey = ol.pKey join ExhibitorFeedbackForm_UserResponse er on er.Account_pkey = al.pKey where al.ContactName != '' and al.Email is not null and ol.organizationType_pkey = {industry} and er.Response like '{answerFilter}' and al.ContactName like '%{nameSearch}%' and ol.OrganizationID like '%{organizationSearch}%'";
+                    query = $"select top 150 al.pKey , max(al.ContactName) as contactName, max(al.Title) as title,max(Department) as department,max(ol.OrganizationID) as OrganizationID from Account_List al join Organization_List ol on al.ParentOrganization_pKey = ol.pKey join ExhibitorFeedbackForm_UserResponse er on er.Account_pkey = al.pKey where al.ContactName != '' and al.Email is not null and ol.organizationType_pkey = {industry} and er.Response like '{answerFilter}' and al.ContactName like '%{nameSearch}%' and ol.OrganizationID like '%{organizationSearch}%'  group by al.pKey";
                 }
                 else if (!string.IsNullOrEmpty(answerFilter) && answerFilter != "0" && !string.IsNullOrEmpty(groupFilter) && groupFilter != "0")
                 {
-                    query = $"select top 150 * from Account_List al join Organization_List ol on al.ParentOrganization_pKey = ol.pKey join ExhibitorFeedbackForm_UserResponse er on er.Account_pkey = al.pKey join GroupMembers gm on gm.accountPkey = al.pKey where gm.groupPkey = {groupFilter} and al.ContactName != '' and al.Email is not null and er.Response like '{answerFilter}' and al.ContactName like '%{nameSearch}%' and ol.OrganizationID like '%{organizationSearch}%'";
+                    query = $"select top 150 al.pKey , max(al.ContactName) as contactName, max(al.Title) as title,max(Department) as department,max(ol.OrganizationID) as OrganizationID from Account_List al join Organization_List ol on al.ParentOrganization_pKey = ol.pKey join ExhibitorFeedbackForm_UserResponse er on er.Account_pkey = al.pKey join GroupMembers gm on gm.accountPkey = al.pKey where gm.groupPkey = {groupFilter} and al.ContactName != '' and al.Email is not null and er.Response like '{answerFilter}' and al.ContactName like '%{nameSearch}%' and ol.OrganizationID like '%{organizationSearch}%' group by al.pKey";
                 }
                 else if (!string.IsNullOrEmpty(industry) && industry != "0" && !string.IsNullOrEmpty(groupFilter) && groupFilter != "0")
                 {
-                    query = $"select top 150 * from Account_List al join Organization_List ol on al.ParentOrganization_pKey = ol.pKey join GroupMembers gm on gm.accountPkey = al.pKey where gm.groupPkey = {groupFilter} and al.ContactName != '' and al.Email is not null and ol.organizationType_pkey = {industry} and  al.ContactName like '%{nameSearch}%' and ol.OrganizationID like '%{organizationSearch}%'";
+                    query = $"select distinct top 150  * from Account_List al join Organization_List ol on al.ParentOrganization_pKey = ol.pKey join GroupMembers gm on gm.accountPkey = al.pKey where gm.groupPkey = {groupFilter} and al.ContactName != '' and al.Email is not null and ol.organizationType_pkey = {industry} and  al.ContactName like '%{nameSearch}%' and ol.OrganizationID like '%{organizationSearch}%'";
                 }
                 else if (!string.IsNullOrEmpty(answerFilter) && answerFilter != "0")
                 {
-                    query = $"select top 150 * from Account_List al join Organization_List ol on al.ParentOrganization_pKey = ol.pKey join ExhibitorFeedbackForm_UserResponse er on er.Account_pkey = al.pKey where al.ContactName != '' and al.Email is not null and al.ContactName like '%{nameSearch}%' and ol.OrganizationID like '%{organizationSearch}%'";
+                    query = $"select top 150 al.pKey , max(al.ContactName) as contactName, max(al.Title) as title,max(Department) as department,max(ol.OrganizationID) as OrganizationID from Account_List al join Organization_List ol on al.ParentOrganization_pKey = ol.pKey join ExhibitorFeedbackForm_UserResponse er on er.Account_pkey = al.pKey where er.response like '%{answerFilter}%' and al.ContactName != '' and al.Email is not null and al.ContactName like '%{nameSearch}%' and ol.OrganizationID like '%{organizationSearch}%' group by al.pKey";
                 }
                 else if (!string.IsNullOrEmpty(industry) && industry != "0" )
                 {
-                    query = $"select top 150 * from Account_List al join Organization_List ol on al.ParentOrganization_pKey = ol.pKey where al.ContactName != '' and al.Email is not null and ol.organizationType_pkey = {industry} and al.ContactName like '%{nameSearch}%' and ol.OrganizationID like '%{organizationSearch}%'";
+                    query = $"select distinct top 150 * from Account_List al join Organization_List ol on al.ParentOrganization_pKey = ol.pKey where al.ContactName != '' and al.Email is not null and ol.organizationType_pkey = {industry} and al.ContactName like '%{nameSearch}%' and ol.OrganizationID like '%{organizationSearch}%'";
                 }
                 else if (!string.IsNullOrEmpty(groupFilter) && groupFilter != "0")
                 {
-                    query = $"select top 150 * from Account_List al join Organization_List ol on al.ParentOrganization_pKey = ol.pKey join GroupMembers gm on gm.accountPkey = al.pKey where gm.groupPkey = {groupFilter} and al.ContactName != '' and al.Email is not null and  al.ContactName like '%{nameSearch}%' and ol.OrganizationID like '%{organizationSearch}%'";
+                    query = $"select distinct top 150 * from Account_List al join Organization_List ol on al.ParentOrganization_pKey = ol.pKey join GroupMembers gm on gm.accountPkey = al.pKey where gm.groupPkey = {groupFilter} and al.ContactName != '' and al.Email is not null and  al.ContactName like '%{nameSearch}%' and ol.OrganizationID like '%{organizationSearch}%'";
                 }
-
-                //switch (nameSort)
-                //{
-                //    case "name_desc":
-                //        query += " order by ContactName desc";
-                //        break;
-                //    default:
-                //        query += " order by contactName";
-                //        break;
-                //}
+                if (!string.IsNullOrEmpty(answerFilter) && answerFilter != "0")
+                {
+                    switch (nameSort)
+                    {
+                        case "name_desc":
+                            query += " order by max(al.contactname) desc";
+                            break;
+                        default:
+                            query += " order by max(al.contactname)";
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (nameSort)
+                    {
+                        case "name_desc":
+                            query += " order by al.contactname desc";
+                            break;
+                        default:
+                            query += " order by al.contactname";
+                            break;
+                    }
+                }
+                query += " option(recompile)";
 
                 using (SqlConnection con = new SqlConnection(config))
                 {
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         con.Open();
+                        cmd.CommandTimeout = 0;
                         SqlDataReader reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
@@ -103,7 +126,6 @@ namespace fcConferenceManager.Controllers
                             group.MemberInfo = userRequest;
                             groups.Add(group);
                         }
-
                     }
                 }
                 foreach (var item in groups)

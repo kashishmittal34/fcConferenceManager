@@ -8,7 +8,8 @@ using System.Configuration;
 using Elimar.Models;
 using System.IO;
 using System;
-using ClosedXML.Excel;			 
+using ClosedXML.Excel;
+using MAGI_API.Models;			 
 
 namespace fcConferenceManager.Controllers
 {
@@ -16,22 +17,26 @@ namespace fcConferenceManager.Controllers
     {
         private string config;
         private string baseurl;
+		SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
+							   
         public RegistrationController()
         {
             config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             baseurl = ConfigurationManager.AppSettings["BaseURL"];
         }
-        public ActionResult Registration(int? userID, int? PortoloKey)
+        public ActionResult Registration(string userID)
         {
-        // var baseUrl = ConfigurationManager.AppSettings["AppURL"].Replace("/forms", "");
-        // ViewBag.Baseurl = baseUrl;
+            // var baseUrl = ConfigurationManager.AppSettings["AppURL"].Replace("/forms", "");
+            // ViewBag.Baseurl = baseUrl;
+            ViewBag.GlobalAdmin = ((loginResponse)Session["User"]).IsGlobalAdmin;
 
-        ViewBag.portolodropdown = getdropdownprtlo();
+													 
             List<UserResponse> userList = new List<UserResponse>();
             UserResponse user = new UserResponse();
-            if (userID > 0)
+            if (!string.IsNullOrEmpty(userID))
             {
-                userList = RegistrationList(userID, PortoloKey);
+                userList = RegistrationList(userID);
+                con.Open();
                 user.ID = userList[0].ID;
                 user.salutation1 = userList[0].salutation1;
                 user.firstname = userList[0].firstname;
@@ -42,7 +47,7 @@ namespace fcConferenceManager.Controllers
                 user.signinaccountid = userList[0].signinaccountid;
                 user.MainEmailType = userList[0].MainEmailType;
                 user.mainemail = userList[0].mainemail;
-                user.Password = userList[0].Password;
+													 
                 user.sendemailto = userList[0].sendemailto;
                 user.skypeaddress = userList[0].skypeaddress;
                 user.linkedinURL = userList[0].linkedinURL;
@@ -68,16 +73,17 @@ namespace fcConferenceManager.Controllers
                 user.email = userList[0].email;
                 user.jobTitle = userList[0].jobTitle;
                 user.department = userList[0].department;
-                user.organization = userList[0].organization;
+                user.organization = userList[0].orgName;
                 user.degreesandcertifications = userList[0].degreesandcertifications;
                 user.website = userList[0].website;
                 user.personalbiography = userList[0].personalbiography;
                 user.aboutmyorganizationandmyrole = userList[0].aboutmyorganizationandmyrole;
                 user.Uimg = userList[0].Uimg;
                 user.CV = userList[0].CV;
+                user.staffmember = userList[0].staffmember;
 				ViewBag.userImage = ConfigurationManager.AppSettings["AppURL"].Replace("/forms", "")+userList[0].Uimg;
-																									   
-                //user.Uimg = userList[0].portoloStatus;
+
+														
                 //function call to get the filename
                 // user.CV = "("+ Path.GetFileName(userList[0].CV).ToString()+")";
 
@@ -88,11 +94,20 @@ namespace fcConferenceManager.Controllers
         [HttpPost]
         public ActionResult RegistrationSubmit(UserRequest request, HttpPostedFileBase file, HttpPostedFileBase CVfile)
         {
-           // string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+																									  
             using (SqlConnection con = new SqlConnection(config))
             {
+                string query = String.Format(@"If NOT EXISTS (select pKey from Organization_List where OrganizationID = '{0}') Insert into Organization_List (OrganizationID)
+                                values ('{0}') select pkey from Organization_List where OrganizationID = '{0}'", request.organization);
+                con.Open();
+                SqlCommand qcmd = new SqlCommand(query, con);
+                SqlDataReader reader = qcmd.ExecuteReader();
+                reader.Read();
+
                 using (SqlCommand cmd = new SqlCommand("SP_InsertRegistrationData", con))
                 {
+                    SqlOperation sql = new SqlOperation();
+                    request.Password = sql.EncryptMD5(request.Password);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@id", request.ID);
                     cmd.Parameters.AddWithValue("@Salutation1", request.salutation1);
@@ -117,8 +132,8 @@ namespace fcConferenceManager.Controllers
                     cmd.Parameters.AddWithValue("@Timezone", request.timezone);
                     cmd.Parameters.AddWithValue("@PhoneType1", request.phonetype1);
                     cmd.Parameters.AddWithValue("@PhoneType2", request.phonetype2);
-                    cmd.Parameters.AddWithValue("@countryCodephone1", request.countryCodephone1 = "1");
-                    cmd.Parameters.AddWithValue("@countryCodephone2", request.countryCodephone2 = "1");
+                    //cmd.Parameters.AddWithValue("@countryCodephone1", request.countryCodephone1 = "1");
+                    //cmd.Parameters.AddWithValue("@countryCodephone2", request.countryCodephone2 = "1");
                     cmd.Parameters.AddWithValue("@phone1", request.phone1);
                     cmd.Parameters.AddWithValue("@phone1extension", request.phone1extension);
                     cmd.Parameters.AddWithValue("@phone2", request.phone2);
@@ -133,29 +148,35 @@ namespace fcConferenceManager.Controllers
                     cmd.Parameters.AddWithValue("@Department", request.department);
                     cmd.Parameters.AddWithValue("@Website", request.website);
                     cmd.Parameters.AddWithValue("@Degreesandcertifications", request.degreesandcertifications);
-                    cmd.Parameters.AddWithValue("@Organization", request.organization);
+                    cmd.Parameters.AddWithValue("@Organization_pkey", reader["Pkey"]);
                     cmd.Parameters.AddWithValue("@Personalbiography", request.personalbiography);
                     cmd.Parameters.AddWithValue("@Aboutmyorganizationandmyrole", request.aboutmyorganizationandmyrole);
+                    cmd.Parameters.AddWithValue("@StaffMember", request.staffmember);
+																 
+					 
+																		  
+																								   
+											 
 
-                    if ((file != null) && file.ContentLength > 0)
-                    {
-                        string filename = Path.GetFileName(file.FileName);
-                        string imgPath = Path.Combine(Server.MapPath("/UserDocuments/"), filename);
-                        file.SaveAs(imgPath);
+                    //if ((file != null) && file.ContentLength > 0)
+                    //{
+                    //    string filename = System.IO.Path.GetFileName(file.FileName);
+                    //    string imgPath = System.IO.Path.Combine(Server.MapPath("/UserDocuments/"), filename);
+                       
+                    //    file.SaveAs(imgPath);
 
-                        cmd.Parameters.AddWithValue("@Uimg", "/UserDocuments/" + file.FileName);
-
-                    }
-                    else
-                    {
-                        cmd.Parameters.AddWithValue("@Uimg", "");
-                    }
+                    //    cmd.Parameters.AddWithValue("@Uimg", "/UserDocuments/" + file.FileName);
+                    //}
+                    //else
+                    //{
+                    //    cmd.Parameters.AddWithValue("@Uimg", "");
+                    //}
 
                     if ((CVfile != null) && CVfile.ContentLength > 0)
 
                     {
-                        string filename = Path.GetFileName(CVfile.FileName);
-                        string CVPath = Path.Combine(Server.MapPath("/UserDocuments/"), filename);
+                        string filename = System.IO.Path.GetFileName(CVfile.FileName);
+                        string CVPath = System.IO.Path.Combine(Server.MapPath("/UserDocuments/"), filename);
                         CVfile.SaveAs(CVPath);
                         cmd.Parameters.AddWithValue("@CV", "/UserDocuments/" + CVfile.FileName);
                     }
@@ -163,9 +184,9 @@ namespace fcConferenceManager.Controllers
                     {
                         cmd.Parameters.AddWithValue("@CV", " ");
                     }
+                    reader.Close();
 
-
-                    con.Open();
+							   
                     cmd.ExecuteNonQuery();
                     con.Close();
                 }
@@ -173,16 +194,101 @@ namespace fcConferenceManager.Controllers
             return RedirectToAction("Profile", "Account");
 
         }
-        public ActionResult Users(int? id, int? PortoloKey = 0)
+        public ActionResult Users()
         {
             ModelState.Clear();
-            List<UserResponse> userList = RegistrationList(0, PortoloKey);
-            ViewBag.userList = userList;
-            ViewBag.DropdownSelected = PortoloKey;
-            return View("~/Views/Portolo/Registration/Users.cshtml", userList);
+																		  
+										
+												  
+																			   
 
+            DataTable dt = new DataTable();
+
+            string dbquery = @"Select al.pKey, s.SalutationID, al.Firstname, al.MiddleName, al.Lastname, al.Email, c.CountryID, al.Title, al.Department, o.OrganizationID, al.PersonalBio from Account_List al
+                    left join SYS_Salutations s on Al.Salutation_pKey = s.pKey left join SYS_Countries c on al.Country_pKey = c.pKey left join Organization_List o on o.pKey = al.ParentOrganization_pKey where PortoloUser = 1";
+            con.Open();
+            SqlDataAdapter _da = new SqlDataAdapter(dbquery, con);
+            _da.Fill(dt);
+            con.Close();
+
+            ViewBag.Users = dt;
+		 
+																					 
+											 
+			 
+																										  
+																	 
+				 
+																					   
+					 
+								   
+																	  
+																			  
+																			  
+											  
+									
+
+            return View("~/Views/Portolo/Registration/Users.cshtml");
+				 
+			 
+														   
         }
 
+		[HttpGet]
+        public ActionResult SearchUser(string fname, string lname, string email, string titl, string org, string search)
+        {
+            DataTable dt = new DataTable();
+
+            string dbquery = String.Format(@"Select al.pKey, s.SalutationID, al.Firstname, al.MiddleName, al.Lastname, al.Email, c.CountryID, al.Title, al.Department, o.OrganizationID, al.PersonalBio from Account_List al
+                    inner join SYS_Salutations s on Al.Salutation_pKey = s.pKey inner join SYS_Countries c on al.Country_pKey = c.pKey inner join Organization_List o on o.pKey = al.ParentOrganization_pKey where
+                    al.Firstname like '%{0}%' and al.Lastname like '%{1}%' and al.Email like '%{2}%' and al.Title like '%{3}%' and o.OrganizationID like '%{4}%' and PortoloUser = 1", fname.Trim(), lname.Trim(), email.Trim(), titl.Trim(), org.Trim());
+
+            con.Open();
+            SqlDataAdapter _da = new SqlDataAdapter(dbquery, con);
+            _da.Fill(dt);
+            con.Close();
+
+            ViewBag.Users = dt;
+
+            if (search != "true")
+		 
+																					 
+											 
+            {
+                string FileName = String.Format("Users_{0:yyMMdd_HH.mm}", DateTime.Now);
+                ExportToExcel(dt, FileName);
+            }
+																					   
+					 
+								   
+																	  
+																			  
+																			  
+											  
+									
+
+            return View("~/Views/Portolo/Registration/Users.cshtml");
+				 
+			 
+														   
+        }
+
+        [HttpPost]
+        public ActionResult DeleteUser(string ids)
+        {
+            if ((Session["User"] == null) || !((loginResponse)Session["User"]).IsGlobalAdmin)
+                return Redirect("~/Account/Portolo");
+
+            string dbquery = String.Format("delete from Account_List where Pkey in ({0})", ids);
+
+            con.Open();
+            SqlCommand cmd = new SqlCommand(dbquery, con);
+            cmd.ExecuteNonQuery();
+            con.Close();
+
+            return RedirectToActionPermanent("Users", "Registration");
+        }
+		 
 
         public ActionResult UpdatePortoloStatus(string primaryKey, int? PortoloID = 0)
         {
@@ -207,85 +313,88 @@ namespace fcConferenceManager.Controllers
             return Json(1, JsonRequestBehavior.AllowGet); ;
         }
 
-         public List<UserResponse> RegistrationList(int? id, int? PortoloKey )
-        {
-            if(PortoloKey==null)
-            {
-                PortoloKey = 0;
-            }
+       public List<UserResponse> RegistrationList(string id)
+		 
+								
+         {
+							   
+			 
             var baseUrl = ConfigurationManager.AppSettings["AppURL"];
             List<UserResponse> userList = new List<UserResponse>();
-           // string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+
             using (SqlConnection con = new SqlConnection(config))
             {
                 using (SqlCommand cmd = new SqlCommand("sp_GetRegisteredUserList", con))
                 {
+                    
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@id", id);
-                    cmd.Parameters.AddWithValue("@PortoloKey", PortoloKey);
+																		   
                     con.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
                         UserResponse response = new UserResponse();
-                        response.ID = int.Parse(reader["ID"].ToString());
-                        response.salutation1 = reader["salutation1"].ToString();
+                        response.ID = Convert.ToInt32(reader["pkey"].ToString());
+                        response.salutation1 = reader["Salutation_pKey"].ToString();
                         response.firstname = reader["firstname"].ToString();
                         response.middlename = reader["middlename"].ToString();
                         response.lastname = reader["lastname"].ToString();
                         response.suffix = reader["suffix"].ToString();
                         response.nickname = reader["nickname"].ToString();
-                        response.signinaccountid = reader["signinaccountid"].ToString();
-                        response.MainEmailType = reader["MainEmailType"].ToString();
-                        response.mainemail = reader["mainemail"].ToString();
-                        response.Password = reader["Password"].ToString();
-                        response.sendemailto = reader["SendEmailTo"].ToString();
-                        response.skypeaddress = reader["skypeaddress"].ToString();
-                        response.linkedinURL = reader["linkedinURL"].ToString();
-                        response.country = reader["country"].ToString();
+                        response.signinaccountid = reader["UL"].ToString();
+                        response.MainEmailType = reader["EmailSendOptions"].ToString();
+                        response.mainemail = reader["Email"].ToString();
+                        //response.Password = reader["Password"].ToString();
+                        response.sendemailto = reader["EmailFooter"].ToString();
+                        response.skypeaddress = reader["SkypeAddress"].ToString();
+                        response.linkedinURL = reader["LinkedInProfile"].ToString();
+                        response.country = reader["Country_pKey"].ToString();
                         response.city = reader["city"].ToString();
                         response.address1 = reader["address1"].ToString();
                         response.address2 = reader["address2"].ToString();
-                        response.name = reader["AssistantName"].ToString();
+                        response.name = reader["ContactName"].ToString();
                         response.zipcode = reader["zipcode"].ToString();
-                        response.State = reader["State"].ToString();
-                        response.timezone = reader["timezone"].ToString();
-                        response.countrycode = reader["countrycode"].ToString();
-                        response.phonenumber = reader["phonenumber"].ToString();
-                        response.extension = reader["extension"].ToString();
-                        response.email = reader["email"].ToString();
-                        response.jobTitle = reader["jobTitle"].ToString();
+                        response.State = reader["State_pKey"].ToString();
+                        response.timezone = reader["Timezone_pKey"].ToString();
+                        //response.countrycode = reader["countrycode"].ToString();
+                        response.phonenumber = reader["Phone"].ToString();
+                        response.extension = reader["AltExtension"].ToString();
+                        response.email = reader["Alt_Email"].ToString();
+                        response.jobTitle = reader["Title"].ToString();
                         response.department = reader["department"].ToString();
-                        response.organization = reader["organization"].ToString();
-                        response.website = reader["website"].ToString();
-                        response.degreesandcertifications = reader["degreesandcertifications"].ToString();
-                        response.personalbiography = reader["personalbiography"].ToString();
-                        response.aboutmyorganizationandmyrole = reader["aboutmyorganizationandmyrole"].ToString();
-                        response.salutation2 = reader["salutation2"].ToString();
-                        response.phonetype1 = reader["phonetype1"].ToString();
-                        response.phonetype2 = reader["phonetype2"].ToString();
-                        response.phone1 = reader["phone1"].ToString();
-                        response.phone1extension = reader["phone1extension"].ToString();
+                        response.organization = reader["ParentOrganization_pKey"].ToString();
+                        response.website = reader["url"].ToString();
+                        response.degreesandcertifications = reader["Degrees"].ToString();
+                        response.personalbiography = reader["PersonalBio"].ToString();
+                        response.aboutmyorganizationandmyrole = reader["AboutMe"].ToString();
+                        response.salutation2 = reader["AltSalutation_pKey"].ToString();
+                        response.phonetype1 = reader["oldPhoneType_pKey"].ToString();
+                        response.phonetype2 = reader["OldPhoneType2_pKey"].ToString();
+                        response.phone1 = reader["Phone_1"].ToString();
+                        response.phone1extension = reader["Phone1Ext"].ToString();
                         response.phone2 = reader["phone2"].ToString();
-                        response.phone2extension = reader["phone2extension"].ToString();
-                        response.countryCodephone1 = reader["countryCodephone1"].ToString();
-                        response.countryCodephone2 = reader["countryCodephone2"].ToString();
-                        response.portoloStatus = reader["PortoloStatus"].ToString();
-                        if (reader["Uimg"].ToString() == null || reader["Uimg"].ToString() == "")
-                        {
-                            response.Uimg = baseUrl + "/UserDocuments/emptyimage.png";//"https://localhost:44376/"+reader["Uimg"].ToString();
-                        }
-                        else
-                        {
-                            response.Uimg = baseUrl + reader["Uimg"].ToString();
-                        }
-                        if (reader["CV"].ToString() == null || reader["CV"].ToString() == "")
+                        response.phone2extension = reader["Phone2Ext"].ToString();
+                        response.orgName = reader["OrganizationID"].ToString();
+                        response.staffmember = (reader["staffmember"].ToString() != "")?(bool)reader["staffmember"]:false;
+                        //response.countryCodephone1 = reader["countryCodephone1"].ToString();
+                        //response.countryCodephone2 = reader["countryCodephone2"].ToString();
+                        //response.portoloStatus = reader["PortoloStatus"].ToString();
+                        //if (reader["Uimg"].ToString() == null || reader["Uimg"].ToString() == "")
+                        //{
+                        //    response.Uimg = baseUrl + "/UserDocuments/emptyimage.png";//"https://localhost:44376/"+reader["Uimg"].ToString();
+                        //}
+                        //else
+                        //{
+                        //    response.Uimg = baseUrl + reader["Uimg"].ToString();
+                        //}
+                        if (reader["CVFilename"].ToString() == null || reader["CVFilename"].ToString() == "")
                         {
                             //response.CV =reader["CVfile"].ToString();
                         }
                         else
                         {
-                            response.CV = reader["CV"].ToString();
+                            response.CV = reader["CVFilename"].ToString();
                         }
                         userList.Add(response);
                     }
@@ -378,7 +487,7 @@ namespace fcConferenceManager.Controllers
             dt.Columns.Add("Portolo Status");
 
             string FileName = String.Format("PublicTasks_{0:yyMMdd_HH.mm}", DateTime.Now);   
-            List<UserResponse> userList = RegistrationList(0, 0);//TempData["taskListResponse"]; 
+            List<UserResponse> userList = RegistrationList("0");//TempData["taskListResponse"]; 
 
             if (userList != null)
             {
@@ -407,7 +516,7 @@ namespace fcConferenceManager.Controllers
         {
             using (XLWorkbook wb = new XLWorkbook())
             {
-                wb.Worksheets.Add(dt, "Task_List");
+                wb.Worksheets.Add(dt, "User_List");
                 Response.Clear();
                 Response.Buffer = true;
                 Response.Charset = "";

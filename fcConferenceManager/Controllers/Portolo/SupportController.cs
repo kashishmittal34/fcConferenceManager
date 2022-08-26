@@ -103,12 +103,16 @@ namespace fcConferenceManager.Controllers
         }
         public ActionResult SupportList(string nameSort, int? pageNo,string nameSearch,string emailSearch)
         {
+           
             loginResponse objlt = (loginResponse)Session["User"];
             if (objlt == null) return Redirect("~/Account/Portolo");
 
             if (!view) return Redirect("~/Account/Portolo");
 
             ViewBag.AllowAdd = add;
+
+            nameSearch = !String.IsNullOrEmpty(nameSearch) ? nameSearch.Trim() : nameSearch;
+            emailSearch = !String.IsNullOrEmpty(emailSearch) ? emailSearch.Trim() : emailSearch;
 
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             string query = "select * from PortoloSupport";

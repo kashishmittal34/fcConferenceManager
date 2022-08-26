@@ -19,9 +19,7 @@ using System.IO;
 using fcConferenceManager.Models.Portolo;
 using System.Data.SqlClient;
 using OfficeOpenXml;
-using OfficeOpenXml.Table;
-using Microsoft.Ajax.Utilities;
-using Kendo.Mvc.Extensions;
+using OfficeOpenXml.Table;					
 //using PagedList.Mvc;
 //using PagedList;					
 
@@ -422,6 +420,9 @@ namespace fcConferenceManager.Controllers.Portolo
             if (coll["ID"] != null)
             {
                 try
+
+
+
                 {
                     string strpkeys = "0";
                     int i = 0;
@@ -438,11 +439,17 @@ namespace fcConferenceManager.Controllers.Portolo
                             strpkeys = strpkeys + id.ToString() + ",";
                         }
                         msg = dba.Tasks_Detele(strpkeys);
-                    }                  
+                    }
+                   
                     commonreload();
                 }
+
+
+
+
                 catch (Exception)
                 {
+
                 }
             }
             TempData["Message"] = msg;
@@ -466,6 +473,7 @@ namespace fcConferenceManager.Controllers.Portolo
             con.Close();
             ViewBag.InvalidExcel = TempData["InvalidExcel"];
             ViewBag.Topics = dt;
+
             return View();
         }
 	[HttpPost]
@@ -549,25 +557,25 @@ namespace fcConferenceManager.Controllers.Portolo
                     {
                         try
                         {
-                            string numString = result.Tables[0].Rows[i][1].ToString();
-                            bool number1 = false;
-                            bool canConvert = bool.TryParse(numString, out number1);
-                            if (canConvert == true)
-                            {
-                                string conn = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
-                                SqlConnection con = new SqlConnection(conn);
-                                string query = "Insert into Portolo_Topics(Title,Description,IsActive) Values('" + result.Tables[0].Rows[i][2].ToString() + "','" + result.Tables[0].Rows[i][3].ToString() + "','" + result.Tables[0].Rows[i][1].ToString() + "')";
-                                con.Open();
-                                SqlCommand cmd = new SqlCommand(query, con);
-                                cmd.ExecuteNonQuery();
-                                con.Close();
-                            }
-                            else
-                            {
-                                TempData["InvalidExcel"] = "Invalid! Excel File";
-                                break;
-                            }
+                        string numString = result.Tables[0].Rows[i][1].ToString(); 
+                        bool number1 = false;
+                        bool canConvert = bool.TryParse(numString, out number1);
+                        if (canConvert == true)
+                        {
+                            string conn = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+                            SqlConnection con = new SqlConnection(conn);
+                            string query = "Insert into Portolo_Topics(Title,Description,IsActive) Values('" + result.Tables[0].Rows[i][2].ToString() + "','" + result.Tables[0].Rows[i][3].ToString() + "','" + result.Tables[0].Rows[i][1].ToString() + "')";
+                            con.Open();
+                            SqlCommand cmd = new SqlCommand(query, con);
+                            cmd.ExecuteNonQuery();
+                            con.Close();
                         }
+                        else
+                        {
+                            TempData["InvalidExcel"] = "Invalid! Excel File";
+                            break;
+                        }
+                    }
                         catch (Exception)
                         {
                             TempData["InvalidExcel"] = "Invalid Excel File! Enter data in a Correct Format!!";
@@ -603,6 +611,7 @@ namespace fcConferenceManager.Controllers.Portolo
                 query = String.Format("Update Portolo_Topics Set Title = '{0}', Description = '{1}', isActive = '{2}' where TopicID = {3}", model.title, model.description, model.isActive, model.id);
 
             SqlCommand cmd = new SqlCommand(query, conn);
+
             conn.Open();
             cmd.ExecuteNonQuery();
             conn.Close();
@@ -694,7 +703,7 @@ namespace fcConferenceManager.Controllers.Portolo
             ViewBag.IsActive = active;
             dt.Columns["IsActive"].ColumnName = "Status";
 
-            if (search == "true")
+            if (search != "true")
             {
                 string FileName = String.Format("Topics_{0:yyMMdd_HH.mm}", DateTime.Now);
                 ExportToExcel(dt, FileName);
@@ -866,6 +875,7 @@ namespace fcConferenceManager.Controllers.Portolo
                 string path = Path.Combine(Server.MapPath("~/PortoloDocuments/"), ResourcefileName);
                 model.FileUrl = Url.Content(Path.Combine("~/PortoloDocuments/", ResourcefileName));
                 model.FileName = filename;
+
                 if (SaveFile(model))
                 {
                     files.SaveAs(path);
@@ -947,6 +957,7 @@ namespace fcConferenceManager.Controllers.Portolo
                     FileUrl = @dr["ResourcesFilePath"].ToString()
 
                 });
+
             }
             return uploadlist;
         }
@@ -957,7 +968,9 @@ namespace fcConferenceManager.Controllers.Portolo
         }
       public ActionResult ProcessLibrary(ProcessLibrary library,string search)
         {
+
             List<ProcessLibrary> uploadlist = GetProcessDetails();
+
             library.processList = uploadlist;
             if (!string.IsNullOrEmpty(search))
             {
@@ -972,11 +985,14 @@ namespace fcConferenceManager.Controllers.Portolo
         }
 
         [HttpPost]
+
         public ActionResult ProcessLibrary(string Process)
         {
             ProcessLibrary model = new ProcessLibrary();
-            List<ProcessLibrary> librarylist = GetProcessDetails();            
+            List<ProcessLibrary> librarylist = GetProcessDetails();
+            
             model.processList = librarylist;
+
             if (Process != null)
             {
                
@@ -1043,7 +1059,8 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         
         public ActionResult DeleteProcess(int pkey)
-        {  
+        {
+            
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             using (SqlConnection con = new SqlConnection(config))
             {
@@ -1076,7 +1093,8 @@ namespace fcConferenceManager.Controllers.Portolo
             return Json(customer, JsonRequestBehavior.AllowGet);
         }
         public ActionResult UpdateProcess(ProcessLibrary library)
-        {      
+        {
+           
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             using (SqlConnection con = new SqlConnection(config))
             {
@@ -1099,7 +1117,7 @@ namespace fcConferenceManager.Controllers.Portolo
                         ModelState.Clear();
                     }
                     con.Close();
-                    return Redirect(Request.UrlReferrer.ToString());
+                   return Redirect(Request.UrlReferrer.ToString());
                 }
             }
             
@@ -1149,6 +1167,7 @@ namespace fcConferenceManager.Controllers.Portolo
             DataTable dt = new DataTable();
             SqlDataAdapter _da;
             con.Open();
+
             ViewBag.name = fields["name"];
             if (fields["reportId"] == "1")
             {
@@ -1164,6 +1183,7 @@ namespace fcConferenceManager.Controllers.Portolo
 
                 return PartialView("~/Views/Portolo/Report/_UserList.cshtml");
             }
+
             if (fields["reportId"] == "2")
             {
                 string dbquery = String.Format("select * from Portolo_ProductList where ProductName like '%{0}%' and Description like '%{1}%'", fields["name"].Trim(), fields["description"].Trim());
@@ -1174,39 +1194,46 @@ namespace fcConferenceManager.Controllers.Portolo
                 return PartialView("~/Views/Portolo/Report/_ProductList.cshtml");
             }
             con.Close();
+
             return null;
         }
+
         [HttpGet]
-        public void DownloadReport(string name, string description, string email, string titl, string excel, string org, string reportId)
+        public void DownloadReport(string name, string description, string email, string titl, string org, string reportId)
         {
             SqlConnection con = new SqlConnection(ReadConnectionString());
             DataTable dt = new DataTable();
             SqlDataAdapter _da;
+            string FileName = string.Empty;
             con.Open();
+
             if (reportId == "1")
             {
                 string dbquery = String.Format(@"select a.Firstname, a.Lastname, a.Email, a.Title, a.Phone , o.OrganizationID from Account_list a inner join Organization_List  o on o.pKey = a.ParentOrganization_pKey where PortoloUser = 1
                             and CONCAT(a.Firstname, ' ', a.Lastname) like '%{0}%' and a.Email like '%{1}%' and a.Title like '%{2}%' and o.OrganizationID like '%{3}%'", name.Trim(), email.Trim(), titl.Trim(), org.Trim());
                 _da = new SqlDataAdapter(dbquery, con);
                 _da.Fill(dt);
+                FileName = String.Format("Users_{0:yyMMdd_HH.mm}", DateTime.Now);
             }
+
             if (reportId == "2")
             {
                 string dbquery = String.Format("select * from Portolo_ProductList where ProductName like '%{0}%' and Description like '%{1}%'", name.Trim(), description.Trim());
                 _da = new SqlDataAdapter(dbquery, con);
                 _da.Fill(dt);
+                FileName = String.Format("Products_{0:yyMMdd_HH.mm}", DateTime.Now);
             }
             con.Close();
-            if (excel == "true")
-            {
-                string FileName = String.Format("Report_{0:yyMMdd_HH.mm}", DateTime.Now);
-                ExportToExcel(dt, FileName);
-            }
+
+
+            ExportToExcel(dt, FileName);
         }
 												
         public ActionResult DownloadFile(string filePath)
         {
+
             string fullName = Server.MapPath("~" + filePath);
+
             var fileName = Path.GetFileName(fullName);
             byte[] fileBytes = GetFile(fullName);
             return File(

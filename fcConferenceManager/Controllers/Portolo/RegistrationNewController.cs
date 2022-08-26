@@ -159,9 +159,9 @@ namespace fcConferenceManager.Controllers
                         																					
                         loginResponse objlt = (loginResponse)Session["User"];
 
-                        int Id = objlt.Id;
-                        string filename = Id + "_img.jpg";
-                        //string filename = Path.GetFileName(file.FileName);
+                         //int Id = objlt.Id;
+                        string filename = request.ID + "_img.jpg";
+                       //string filename = Path.GetFileName(file.FileName);
                         string imgPath = Path.Combine(Server.MapPath("/Accountimages/"), filename);
                         if (bytes != null)
                         {
@@ -181,8 +181,8 @@ namespace fcConferenceManager.Controllers
                             {
                                 System.IO.File.Delete(imgPath);
                             }
-                             //file.SaveAs(imgPath);
-                            System.IO.File.WriteAllBytes(imgPath, bytes);
+                             file.SaveAs(imgPath);
+                            //System.IO.File.WriteAllBytes(imgPath, bytes);
                         }
                         
                         cmd.Parameters.AddWithValue("@Uimg", "/Accountimages/" + file.FileName);
@@ -275,7 +275,7 @@ namespace fcConferenceManager.Controllers
                     while (reader.Read())
                     {
                         UserResponse response = new UserResponse();
-                        response.ID = int.Parse(reader["ID"].ToString());
+                        response.ID = Convert.ToInt32(reader["ID"].ToString());
                         response.salutation1 = reader["salutation1"].ToString();
                         response.firstname = reader["firstname"].ToString();
                         response.middlename = reader["middlename"].ToString();
