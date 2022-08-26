@@ -36,13 +36,30 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
-            var phoneexp = /^\+?([0-9]{0,2})\)?[-. ]?([0-9]{0,3})[-. ]?([0-9]{0,3})[-. ]?([0-9]{0,4})$/;
+            var phoneexp = /^\+?([0-9]{0,2})\)?[-. ]?([0-9]{0,9})[-. ]?([0-9]{0,9})[-. ]?([0-9]{0,9})$/;
             $("#txtUpdatePhone").attr('maxlength', '16');
-            $('#SubmitButton').click(function () {
-                if ($('#txtUpdateRole').val().trim() == "" && $('#txtUpdateName').val().trim() == "" && $('#txtUpdatePhone').val().trim() == "" && $('#txtUpdateEmail').val().trim() == "" && $('#txtUpdateTitle').val().trim() == "") {
-                    alert("Any Field is Empty!");
+            $( '#SubmitButton').click(function () {
+                if ($('#txtUpdateRole').val().trim() === "") {
+                    alert("Please Enter Role!");
                     return false;
                 }
+                else if ($('#txtUpdateName').val().trim() === "") {
+                    alert("Please Enter Name!");
+                    return false;
+                }
+                else if ($('#txtUpdateTitle').val().trim() === "") {
+                    alert("Please Enter Title!");
+                    return false;
+                }
+                else if ($('#txtUpdatePhone').val().trim() === "") {
+                    alert("Please Enter Phone No!");
+                    return false;
+                }
+                else if ($('#txtUpdateEmail').val().trim() === "") {
+                    alert("Please Enter Email Id!");
+                    return false;
+                }
+
                 else if (!$('#txtUpdatePhone').val().match(phoneexp)) {
                     alert("Invalid Phone No.!");
                     return false;
@@ -67,12 +84,29 @@
     <script type="text/javascript">
         $(document).ready(function () {
             var phoneexp = /^\+?([0-9]{0,2})\)?[-. ]?([0-9]{0,3})[-. ]?([0-9]{0,3})[-. ]?([0-9]{0,4})$/;
-            $("#addPhone").attr('maxlength', '16');
+            $('#addPhone').attr('maxlength', '16');
             $('#addButton').click(function () {
-                if ($('#addRole').val().trim() == "" && $('#addName').val().trim() == "" && $('#addPhone').val().trim() == "" && $('#addEmail').val().trim() == "" && $('#addTitle').val().trim() == "") {
-                    alert("Please fill all Required Fields !");
+                if ($('#addRole').val().trim() === "") {
+                    alert("Please Enter Role!");
                     return false;
                 }
+                else if ($('#addName').val().trim() === "") {
+                    alert("Please Enter Name!");
+                    return false;
+                }
+                else if ($('#addTitle').val().trim() === "") {
+                    alert("Please Enter Title!");
+                    return false;
+                }
+                else if ($('#addPhone').val().trim() === "") {
+                    alert("Please Enter Phone No!");
+                    return false;
+                }
+                else if ($('#addEmail').val().trim() === "") {
+                    alert("Please Enter EmailId!");
+                    return false;
+                }
+               
                 else if (!$('#addPhone').val().match(phoneexp)) {
                     alert("Invalid Phone No.!");
                     return false;
@@ -243,15 +277,15 @@
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="Role" style="text-size-adjust:auto; font-size:larger"><b>Role:</b></label>
-                                                                <input type="text" class="form-control" id="addRole" name="Role" placeholder="Enter Role" required="">
-                                                                @Html.ValidationMessageFor(m => m.Role)
+                                                                <input type="text" class="form-control" id="addRole" name="Role" placeholder="Enter Role" required>
+                                                               <span class="error"></span>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="Name" style="text-size-adjust:auto; font-size:larger"><b>Name:</b></label>
-                                                                <input type="text" class="form-control" id="addName" name="Name" placeholder="Enter Name" required="">
-                                                                @Html.ValidationMessageFor(m => m.Name)
+                                                                <input type="text" class="form-control" id="addName" name="Name" placeholder="Enter Name" required>
+                                                                <span class="error"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -259,15 +293,15 @@
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="Title" style="text-size-adjust:auto; font-size:larger"><b>Title:</b></label>
-                                                                <input type="text" class="form-control" id="addTitle" name="Title" placeholder="Enter Title" required="">
-                                                                @Html.ValidationMessageFor(m => m.Title)
+                                                                <input type="text" class="form-control" id="addTitle" name="Title" placeholder="Enter Title" required>
+                                                                <span class="error"></span>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="Phone" style="text-size-adjust:auto; font-size:larger"><b>Phone:</b></label>
-                                                                <input type="text" class="form-control" id="addPhone" name="Phone" placeholder="Enter Phone(Eg:+91 123 456 7890)" required>
-                                                                @Html.ValidationMessageFor(m => m.Phone)
+                                                                <input type="text" class="form-control" id="addPhone" name="Phone" placeholder="Enter Phone" required>
+                                                                <span class="error"></span>
 
                                                             </div>
                                                         </div>
@@ -276,16 +310,16 @@
 
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="ProfileImage" style="text-size-adjust:auto; font-size:larger"><b>ProfileImage:</b></label>
+                                                                <label for="ProfileImage" style="text-size-adjust:auto; font-size:larger"><b>Profile Image:</b></label>
                                                                 <input type="file" class="form-control" id="addImage" name="ProfileImage" accept=".png,.jpg,.jpeg,.gif,.tif">
-                                                                @Html.ValidationMessageFor(m => m.ImageSrc)
+                                                                <span class="error"></span>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="Email" style="text-size-adjust:auto; font-size:larger"><b>Email:</b></label>
-                                                                <input type="email" class="form-control" id="addEmail" name="Email" placeholder="Enter Email" required="">
-                                                                @Html.ValidationMessageFor(m => m.Email)
+                                                                <input type="email" class="form-control" id="addEmail" name="Email" placeholder="Enter Email" required>
+                                                                <span class="error"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -321,15 +355,15 @@
                                                         <div class="form-group">
 
                                                             <label for="Role" style="text-size-adjust:auto; font-size:larger"><b>Role:</b></label>
-                                                            <input type="text" class="form-control" id="txtUpdateRole" name="Role" placeholder="Enter Role" required="">
-
+                                                            <input type="text" class="form-control" id="txtUpdateRole" name="Role" placeholder="Enter Role" required>
+                                                            <span class="error"></span>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="Name" style="text-size-adjust:auto; font-size:larger"><b>Name:</b></label>
-                                                            <input type="text" class="form-control" id="txtUpdateName" name="Name" placeholder="Enter Name" required="">
-
+                                                            <input type="text" class="form-control" id="txtUpdateName" name="Name" placeholder="Enter Name" required>
+                                                            <span class="error"></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -337,16 +371,15 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="Title" style="text-size-adjust:auto; font-size:larger"><b>Title:</b></label>
-                                                            <input type="text" class="form-control" id="txtUpdateTitle" name="Title" placeholder="Enter Title" required="">
-
+                                                            <input type="text" class="form-control" id="txtUpdateTitle" name="Title" placeholder="Enter Title" required>
+                                                            <span class="error"></span>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="Phone" style="text-size-adjust:auto; font-size:larger"><b>Phone:</b></label>
-                                                            <input type="text" class="form-control" id="txtUpdatePhone" name="Phone" placeholder="Enter Phone(Eg:+91 123 456 7890)" size="50" required>
-
-
+                                                            <input type="text" class="form-control" id="txtUpdatePhone" name="Phone" placeholder="Enter Phone" size="50" required>
+                                                            <span class="error"></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -354,16 +387,16 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <input type="hidden" id="ImageSrc" name="ImageSrc" />
-                                                            <label for="ProfileImage" style="text-size-adjust:auto; font-size:larger"><b>ProfileImage:</b></label>
+                                                            <label for="ProfileImage" style="text-size-adjust:auto; font-size:larger"><b>Profile Image:</b></label>
                                                             <input type="file" class="form-control" name="ProfileImage" id="UploadImage" accept=".png,.jpg,.jpeg,.gif,.tif">
-
+                                                            <span class="error"></span>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="Email" style="text-size-adjust:auto; font-size:larger"><b>Email:</b></label>
-                                                            <input type="email" class="form-control" id="txtUpdateEmail" name="Email" placeholder="Enter Email" required >
-
+                                                            <input type="email" class="form-control" id="txtUpdateEmail" name="Email" placeholder="Enter Email" required>
+                                                            <span class="error"></span>
                                                         </div>
                                                     </div>
                                                 </div>

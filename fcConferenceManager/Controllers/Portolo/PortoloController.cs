@@ -19,7 +19,9 @@ using System.IO;
 using fcConferenceManager.Models.Portolo;
 using System.Data.SqlClient;
 using OfficeOpenXml;
-using OfficeOpenXml.Table;					
+using OfficeOpenXml.Table;
+using Microsoft.Ajax.Utilities;
+using Kendo.Mvc.Extensions;
 //using PagedList.Mvc;
 //using PagedList;					
 
@@ -841,7 +843,7 @@ namespace fcConferenceManager.Controllers.Portolo
             ViewBag.apppath = apppath;
             if (!string.IsNullOrEmpty(search))
             {
-                var searchlist = (from list in fileslist where list.FileName.StartsWith(search.Trim(), StringComparison.OrdinalIgnoreCase) select list).ToList();
+                var searchlist = (from list in fileslist where  list.FileName.Contains(search.Trim().ToCamelCase()) || list.FileName.StartsWith(search.Trim(),StringComparison.OrdinalIgnoreCase)  select list).ToList();
                 return View(searchlist);
             }
 			ViewBag.AlertMessage = TempData["AlertMessage"];												
@@ -908,7 +910,6 @@ namespace fcConferenceManager.Controllers.Portolo
             {
                 TempData["AlertMessage"] = "Unsuccessfull !!";
             }
-
             return RedirectToAction("MyFiles", "Portolo");
         }
         private bool SaveFile(MyFileUpload model)
@@ -946,7 +947,6 @@ namespace fcConferenceManager.Controllers.Portolo
                     FileUrl = @dr["ResourcesFilePath"].ToString()
 
                 });
-
             }
             return uploadlist;
         }
@@ -957,9 +957,7 @@ namespace fcConferenceManager.Controllers.Portolo
         }
       public ActionResult ProcessLibrary(ProcessLibrary library,string search)
         {
-
             List<ProcessLibrary> uploadlist = GetProcessDetails();
-
             library.processList = uploadlist;
             if (!string.IsNullOrEmpty(search))
             {
@@ -974,14 +972,11 @@ namespace fcConferenceManager.Controllers.Portolo
         }
 
         [HttpPost]
-
         public ActionResult ProcessLibrary(string Process)
         {
             ProcessLibrary model = new ProcessLibrary();
-            List<ProcessLibrary> librarylist = GetProcessDetails();
-            
+            List<ProcessLibrary> librarylist = GetProcessDetails();            
             model.processList = librarylist;
-
             if (Process != null)
             {
                
@@ -1071,8 +1066,6 @@ namespace fcConferenceManager.Controllers.Portolo
                         TempData["Message"] = "Unsucessfull";
                         ModelState.Clear();
                     }
-
-
                     return Redirect(Request.UrlReferrer.ToString());
                 }
             }
@@ -1083,8 +1076,7 @@ namespace fcConferenceManager.Controllers.Portolo
             return Json(customer, JsonRequestBehavior.AllowGet);
         }
         public ActionResult UpdateProcess(ProcessLibrary library)
-        {
-           
+        {      
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             using (SqlConnection con = new SqlConnection(config))
             {
@@ -1107,12 +1099,7 @@ namespace fcConferenceManager.Controllers.Portolo
                         ModelState.Clear();
                     }
                     con.Close();
-                   
-                   return Redirect(Request.UrlReferrer.ToString());
-
-																								   
-
-
+                    return Redirect(Request.UrlReferrer.ToString());
                 }
             }
             
@@ -1162,7 +1149,6 @@ namespace fcConferenceManager.Controllers.Portolo
             DataTable dt = new DataTable();
             SqlDataAdapter _da;
             con.Open();
-
             ViewBag.name = fields["name"];
             if (fields["reportId"] == "1")
             {
@@ -1178,7 +1164,6 @@ namespace fcConferenceManager.Controllers.Portolo
 
                 return PartialView("~/Views/Portolo/Report/_UserList.cshtml");
             }
-
             if (fields["reportId"] == "2")
             {
                 string dbquery = String.Format("select * from Portolo_ProductList where ProductName like '%{0}%' and Description like '%{1}%'", fields["name"].Trim(), fields["description"].Trim());
@@ -1189,10 +1174,8 @@ namespace fcConferenceManager.Controllers.Portolo
                 return PartialView("~/Views/Portolo/Report/_ProductList.cshtml");
             }
             con.Close();
-
             return null;
         }
-
         [HttpGet]
         public void DownloadReport(string name, string description, string email, string titl, string excel, string org, string reportId)
         {
@@ -1200,7 +1183,6 @@ namespace fcConferenceManager.Controllers.Portolo
             DataTable dt = new DataTable();
             SqlDataAdapter _da;
             con.Open();
-
             if (reportId == "1")
             {
                 string dbquery = String.Format(@"select a.Firstname, a.Lastname, a.Email, a.Title, a.Phone , o.OrganizationID from Account_list a inner join Organization_List  o on o.pKey = a.ParentOrganization_pKey where PortoloUser = 1
@@ -1208,7 +1190,6 @@ namespace fcConferenceManager.Controllers.Portolo
                 _da = new SqlDataAdapter(dbquery, con);
                 _da.Fill(dt);
             }
-
             if (reportId == "2")
             {
                 string dbquery = String.Format("select * from Portolo_ProductList where ProductName like '%{0}%' and Description like '%{1}%'", name.Trim(), description.Trim());
@@ -1216,7 +1197,6 @@ namespace fcConferenceManager.Controllers.Portolo
                 _da.Fill(dt);
             }
             con.Close();
-
             if (excel == "true")
             {
                 string FileName = String.Format("Report_{0:yyMMdd_HH.mm}", DateTime.Now);
@@ -1226,9 +1206,7 @@ namespace fcConferenceManager.Controllers.Portolo
 												
         public ActionResult DownloadFile(string filePath)
         {
-
             string fullName = Server.MapPath("~" + filePath);
-
             var fileName = Path.GetFileName(fullName);
             byte[] fileBytes = GetFile(fullName);
             return File(
@@ -1268,6 +1246,7 @@ namespace fcConferenceManager.Controllers.Portolo
             if (Session["searchlist"] != null)
             {
                 list = (List<ProcessLibrary>)Session["searchlist"];
+                Session.Remove("searchlist");
             }
             if (list.Count > 0)
             {

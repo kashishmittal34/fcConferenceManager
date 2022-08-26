@@ -19,10 +19,10 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         [CheckActiveEventAttribute]
         [HttpGet]
-        public ActionResult PortoloContactUs(PortoloContactUs PortoloContactUs)
+        public ActionResult ContactUs(PortoloContactUs PortoloContactUs)
         {
             PortoloContactUs.ContactList = GetContactDetails();
-            return View("~/Views/Portolo/Contact/PortoloContactUs.cshtml", PortoloContactUs.ContactList);
+            return View("~/Views/Portolo/Contact/ContactUs.cshtml", PortoloContactUs.ContactList);
         }
         private List<PortoloContactUs> GetContactDetails()
         {
@@ -45,9 +45,7 @@ namespace fcConferenceManager.Controllers.Portolo
                     Phone = dr["Phone"].ToString(),
                     Email = dr["Email"].ToString(),
                     Title = dr["Title"].ToString(),
-                    ImageSrc = dr["ImageSource"].ToString(),
-                    SecurityGroup = dr["SecurityGroup"].ToString(),
-                    Department = dr["Department"].ToString()
+                    ImageSrc = dr["ImageSource"].ToString()
                 });
             }
             return librarylist;
