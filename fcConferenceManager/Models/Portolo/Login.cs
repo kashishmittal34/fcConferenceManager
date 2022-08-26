@@ -28,13 +28,14 @@ namespace Elimar.Models
         public string city { get; set; }
         public string zipcode { get; set; }
         public string jobTitle { get; set; }
-        public string organization { get; set; }
+        public int organizationId { get; set; }
         public string department { get; set; }
 		public string personalbiography { get; set; }											 
         public string Uimg { get; set; }
 		public string degrees { get; set; }
         public bool IsGlobalAdmin { get; set; }
-        
+        public bool staffmember { get; set; }
+        public string orgName { get; set; }
     }
 
     public class UserModel
@@ -96,6 +97,7 @@ namespace Elimar.Models
         [RegularExpression(@"([a-zA-Z0-9\s_\\.\-:])+(.png|.jpg|.gif)$", ErrorMessage = "Only Image files allowed.")]
         public string Uimg { get; set; }
         public string CV { get; set; }
+        public bool staffmember { get; set; }
 
         
 
@@ -104,7 +106,7 @@ namespace Elimar.Models
     public class UserResponse
     {
         public string status { get; set; }
-        public int ID { get; set; }
+        public Int32 ID { get; set; }
         public string salutation1 { get; set; }
         public string firstname { get; set; }
         public string middlename { get; set; }
@@ -158,7 +160,9 @@ namespace Elimar.Models
 
         public string salutationzID1 { get; set; }
 
-		public string suffixvalue { get; set; }									   
+		public string suffixvalue { get; set; }
+        public string orgName { get; set; }
+        public bool staffmember { get; set; }								   
     }
 
     public class getdropdownvalues

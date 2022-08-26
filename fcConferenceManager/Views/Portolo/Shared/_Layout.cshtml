@@ -39,24 +39,23 @@
                                 <!--  Menu compatible with wp_nav_menu  -->
                                 <ul id="primary-menu" class="menu nav-menu">
                                     <li class="menu-item current-menu-item"><a class="nav__link" href="#">Home</a></li>
-                                    <li class="menu-item dropdown" @*class="menu-item dropdown"*@>
-                                        <a class="nav__link" href="#">About</a>
-                                        <ul class="sub-nav">
-                                            <li><a class="sub-nav__link" href="~/Configuration/PublicPage?AboutUs=1">About Us</a></li>
-                                            @*<li><a class="sub-nav__link" href="#">link 1</a></li>
+                                    <li style="position:relative" class="menu-item current-menu-item" @*class="menu-item dropdown"*@>
+                                        <a class="nav__link" href="~/Configuration/PublicPage?AboutUs=1">About</a>
+                                       <!-- <ul class="sub-nav" style="position:absolute; ">
+                                            <li><a class="sub-nav__link" href="#">link 1</a></li>
                                             <li><a class="sub-nav__link" href="#">link 2</a></li>
-                                            <li><a class="sub-nav__link" href="#">link 3 - long link - long link - long link</a></li>*@
+                                            <li><a class="sub-nav__link" href="#">link 3 - long link - long link - long link</a></li>
                                         </ul>
+                                           -->
 
                                     </li>
-                                    <li class="menu-item dropdown" @*class="menu-item dropdown"*@>
-                                        <a class="nav__link mr-0" href="#">Contact</a>
-                                        <ul class="sub-nav">
-                                            <li><a class="sub-nav__link" href="~/Contact/ContactUs">Contact Us</a></li>
-                                            @*<li><a class="sub-nav__link" href="#">link 1</a></li>
-        <li><a class="sub-nav__link" href="#">link 2</a></li>
-        <li><a class="sub-nav__link" href="#">link 3 - long link - long link - long link</a></li>*@
-                                        </ul>
+                                    <li style="position:relative;" class="menu-item current-menu-item" @*class="menu-item dropdown"*@>
+                                        <a class="nav__link mr-0" href="~/Contact/ContactUs">Contact</a>
+                                        <!--<ul style="position:absolute;" class="sub-nav">
+                                            <li><a class="sub-nav__link" href="#">link 1</a></li>
+                                            <li><a class="sub-nav__link" href="#">link 2</a></li>
+                                            <li><a class="sub-nav__link" href="#">link 3 - long link - long link - long link</a></li>
+                                        </ul>-->
                                     </li>
 		@if ((Session["User"] != null) && ((Elimar.Models.loginResponse)Session["User"]).IsGlobalAdmin)
                                     {
@@ -68,7 +67,7 @@
                                                 <li><a class="sub-nav__link" href="~/Product/ProductList">Products</a></li>
                                                 <li><a class="sub-nav__link" href="~/FAQ/FAQList">FAQ</a></li>
                                                 <li><a class="sub-nav__link" href="~/Portolo/Reports">Reports</a></li>
-				   
+				                                <li><a class="sub-nav__link" href="~/Portolo/Process">Process</a></li>
 
 
 
@@ -76,19 +75,22 @@
                                             </ul>
                                         </li>
                                     }
+									
                                     <li class="menu-item current-menu-item">
                                         <a class="nav__link mr-0">Configuration</a>
-                                        <ul class="sub-nav">
-                                            <li><a class="sub-nav__link" href="#">Topics/Discussion groups</a></li>
+                                        <ul class="sub-nav" style="position:absolute; width:250px;">
+                                            <li><a class="sub-nav__link" href="~/InterestGroup/CreateGroup">Topics/Discussion groups</a></li>
                                             <li><a class="sub-nav__link" href="~/Portolo/ProcessLibrary">Process library</a></li>
                                             <li><a class="sub-nav__link" href="#">Performance </a></li>
                                             <li><a class="sub-nav__link" href="#">Optional Features</a></li>
                                             <li><a class="sub-nav__link" href="~/Configuration/ConfigurationSettings">System Configuration</a></li>
-                                            <li><a class="sub-nav__link" href="#">Security Groups</a></li>
-                                            <li><a class="sub-nav__link" href="#">System support/help </a></li>
-                                            <li><a class="sub-nav__link" href="~/Contact/PublicStaff">Portolo Public Staff</a></li>
+                                            <li><a class="sub-nav__link" href="~/Security/EditSecurityGroup">Security Groups</a></li>
+                                            <li><a class="sub-nav__link" href="~/Support/SupportList">System support/help </a></li>
+											<li><a class="sub-nav__link" href="~/Contact/PublicStaff">Portolo Public Staff</a></li>
+																					   
                                         </ul>
                                     </li>
+										
                                 </ul>
                             </div>
                         </nav>

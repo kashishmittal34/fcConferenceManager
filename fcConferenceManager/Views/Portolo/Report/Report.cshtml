@@ -112,7 +112,7 @@
                                 <table style="width:100%">
                                     <tr style="padding: 5px; background-color: orange;">
                                         <th>Select Report</th>
-                                        <th>Selected Report</th>
+                                        <th id="SelectedReport"><th>
                                     </tr>
                                     <tr style="height: 600px; text-align:left">
                                         <td style="vertical-align: top; border-right: 2px solid orange; width: 220px;">
@@ -187,7 +187,6 @@
                                             <td id="mod2" style="vertical-align: top; Padding:15px;">
                                                 <h5> No Report selected</h5>
                                             </td>
-
                                         }
                                         <td style="vertical-align: top; padding-left: 10px; font-size: 8pt; padding-top: 5px;">
                                             <div id="mod1"> </div>
@@ -231,9 +230,11 @@
         $(".card").on("click", ".PartialCheck", function () {
             $("#mod2").hide();
             var href = $(this).attr('value');
+            var list = $(this).text();
             $("#mod1").load(href);
             check = href;
             $('#ExcelBtn').prop('disabled', false);
+            $("#SelectedReport").text(list);
         });
 
         $("#ResetFields").click(function () {

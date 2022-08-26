@@ -216,6 +216,12 @@
             padding: 0px;
             overflow-x: hidden;
         }
+        .modal{
+            top:30%;
+        }
+        a:hover{
+            cursor:pointer;
+        }
     </style>
 </head>
 <body>
@@ -333,7 +339,7 @@
                         <button type="submit" class="btn p-0">
                             <i style="margin-right:10px;" class="fa fa-magnifying-glass fa-2x"></i>
                         </button>
-                        <a class="btn p-0" href="#"><i class="fa fa-rotate-left fa-2x"></i></a>
+                        <a class="btn p-0" href="~/InterestGroup/CreateGroup?membersPage=true"><i class="fa fa-rotate-left fa-2x"></i></a>
                     </div>
                 </div>
             </div>
@@ -344,7 +350,7 @@
                 <tr>
                     <th><input id="membermaincheckbox" type="checkbox" class="form-check-input" /></th>
                     <th>ID</th>
-                    <th>Name</th>
+                    <th><a style="color:white" href="~/InterestGroup/CreateGroup?nameSort=@ViewData["NameSortParm"]&membersPage=true&nameSearch=@ViewData["NameFilter"]&organizationSearch=@ViewData["OrganizationFilter"]&Industry=@ViewData["IndustryFilter"]&answerFilter=@ViewData["Answer"]&groupFilter=@ViewData["Group"]"><label>Name</label></a></th>
                     <th>Job Title</th>
                     <th>Department</th>
                     <th>Organization</th>

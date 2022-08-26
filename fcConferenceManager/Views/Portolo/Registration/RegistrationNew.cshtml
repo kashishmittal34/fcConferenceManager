@@ -4,49 +4,49 @@
     Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
 }
 <head>
-	 <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
     <script src="~/Scripts/modernizr-2.8.3.js"></script>
     <style>
-        .span
-        {
+        .span {
+		 
             display: inline-block;
             width: 75px;
             height: 38px;
         }
 
-        input
-        {
+        input {
+		 
             border: 1px solid black;
         }
 
-        td
-        {
+        td {
+		 
             padding-left: 5px
         }
 
-        table
-        {
+        table {
+		 
             border-collapse: separate;
             border-spacing: 0 1em;
         }
 
-        canvas
-        {
+        canvas {
+		 
             position: relative;
             width: 300px;
             height: 300px;
             overflow: auto;
         }
 
-        #result
-        {
+        #result {
+		 
             display: block;
             position: relative;
             margin-top: 40px;
         }
 
-        .face
-        {
+        .face {
+		 
             position: absolute;
             height: 0px;
             width: 0px;
@@ -128,24 +128,24 @@
     $("#image1").attr("src", imageurl);
     var data = filename.split(".")[1];
 
-       if (data.toLowerCase() != 'jpg' && data.toLowerCase() != 'png' && data.toLowerCase() != 'gif')
+    if (data.toLowerCase() != 'jpg' && data.toLowerCase() != 'png' && data.toLowerCase() != 'gif')
     {
         alert("Invalid file, Please select jpg,png,gif files");
         var filename = $("#userimageName").val().slice(1);
 
         $("#file").val('');
-         var imageurl = '@Url.Content("~")' + filename;
+        var imageurl = '@Url.Content("~")' + filename;
 
-    $("#image1").attr("src", imageurl);
+        $("#image1").attr("src", imageurl);
 
-    $("#result").attr("src", imageurl);
+        $("#result").attr("src", imageurl);
 
     return false;
-       }
+    }
 
-        }
+   }
 
-        function fileCheckdoc(elm)
+    function fileCheckdoc(elm)
    {
 
     var fn = String($(elm).val());
@@ -171,7 +171,7 @@
 
     function validateInputs(e) {
 
-var dd = $('#imgCropped').val($('#result').attr('src'));
+														
 
 
     var Salutation1 = $.trim($('#Salutation1').val());
@@ -312,7 +312,6 @@ var dd = $('#imgCropped').val($('#result').attr('src'));
                 }
                 $('#image1').hide();
                 $('#canvas').hide();
-
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     var image = new Image();
@@ -593,8 +592,8 @@ var dd = $('#imgCropped').val($('#result').attr('src'));
                                         <input class="form-control" type="text" style="display:none" id="userimageName" value="@Model.Uimg" />
 
 
-                                        <img class="form-control" alt="" id="result" src="@Url.Content(Model.Uimg)" style="display:  10px;" height="350" width="80" />
-
+                                        <!--<img class="form-control" alt="" id="result" src="@Url.Content(Model.Uimg)" style="display:  10px;" height="350" width="80" />
+                                        -->
 
 
 
@@ -602,7 +601,7 @@ var dd = $('#imgCropped').val($('#result').attr('src'));
                                         <table border="0" cellpadding="0" cellspacing="5">
                                             <tr>
                                                 <td>
-                                                    <img class="form-control" alt="" id="result" style="width:300px;height:300px;" src="@Model.Uimg" />
+                                                    <img class="form-control" alt="" id="image1" style="width:300px;height:300px;" src="@Model.Uimg" />
                                                 </td>
                                                 <td>
                                                     <canvas id="canvas" height="5" width="5" style="display:none;"></canvas>
@@ -653,7 +652,7 @@ var dd = $('#imgCropped').val($('#result').attr('src'));
 
 
 
-                                <div id="carbon-block" style="margin:30px auto"></div>
+																					  
                                 <label class="form-label" for="file">Upload Profile Picture</label>
 
 
@@ -663,7 +662,7 @@ var dd = $('#imgCropped').val($('#result').attr('src'));
 
 
 
-                                <input class="form-control" type='file' name="file" id="file" onchange="fileCheck(em);" />
+                                <input class="form-control" type='file' name="file" id="file" onchange="fileCheck(this);" />
 
 
 
@@ -732,7 +731,7 @@ var dd = $('#imgCropped').val($('#result').attr('src'));
                             <td style="padding-left: 5px">
                                 <span>Suffix:</span>
                                 <br>
-                                <div style="width:100px;" tabindex="0">                                    
+                                <div style="width:100px;" tabindex="0">
                                     @Html.DropDownList("Suffix", null, "(none)", new { @class = "form-select" })
                                 </div>
                             </td>
@@ -827,7 +826,7 @@ var dd = $('#imgCropped').val($('#result').attr('src'));
                                             <span style="color: #00008b; font-weight: bold">Mailing Address</span>
                                         </td>
                                     </tr>
-                                     <tr>
+                                    <tr>
                                         <td style="text-align: right">
                                             <span title="Selection required">Country:</span>
                                             @Model.country
@@ -835,12 +834,12 @@ var dd = $('#imgCropped').val($('#result').attr('src'));
                                         </td>
                                         <td style="padding-left: 5px; text-align: left">
                                             <div title="Selection required" style="width:260px;" tabindex="0">
-                                               
-																																
-																														  
-																																 
-																																	
-															
+											   
+								
+								
+								 
+								 
+			   
                                                 @Html.DropDownList("Country", null, "---Select Country----", new { @class = "form-select" })
                                             </div>
                                         </td>
@@ -875,13 +874,13 @@ var dd = $('#imgCropped').val($('#result').attr('src'));
                                         </td>
                                         <td style="padding-left: 5px; text-align: left">
                                             <div title="Selection required" style="width:260px;" tabindex="0">
-                                                
+												
 
-																															
-																																	  
-																															
-														 
-												   
+							   
+								   
+							   
+			   
+			   
                                                 @Html.DropDownList("State", null, "---Select State----", new { @class = "form-select" })
                                             </div>
 
@@ -901,12 +900,12 @@ var dd = $('#imgCropped').val($('#result').attr('src'));
                                         </td>
                                         <td style="padding-left: 5px; text-align: left">
                                             <div style="width:260px;" tabindex="0">
-                                              
-																																	  
-																																	  
-																																	   
-														 
-													   
+											  
+								   
+								   
+									
+			   
+				
                                                 @Html.DropDownList("Timezone", null, "---Select TimeZone----", new { @class = "form-select" })<br />
                                             </div>
                                         </td>
@@ -922,7 +921,7 @@ var dd = $('#imgCropped').val($('#result').attr('src'));
                                             <span>Phone 1:</span>
                                             <br>
                                             <div>
-                                                
+
                                                 @Html.DropDownList("PhoneType1", null, new { @class = "form-select-sm" })
                                                 <span>+</span>
                                                 <span>
@@ -942,7 +941,7 @@ var dd = $('#imgCropped').val($('#result').attr('src'));
                                             <div style="width:120px;" tabindex="0">
                                             </div>
                                             <div>
-                                               
+
                                                 @Html.DropDownList("PhoneType2", null, new { @class = "form-select-sm" })
                                                 <span>+</span>
                                                 <span>
