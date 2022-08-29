@@ -125,7 +125,7 @@ namespace fcConferenceManager.Controllers.Portolo
             
             SqlConnection con = new SqlConnection(config);
             con.Open();
-            query = "Select SettingValue from Portolo_ApplicationSettings where  SettingID = 'Upload_Account_Image'";
+            query = "Select SettingValue from Portolo_ApplicationSettings where  SettingID = 'Account Image'";
 
             SqlCommand command = new SqlCommand(query, con);
             if (command.ExecuteScalar() != null)
@@ -142,7 +142,7 @@ namespace fcConferenceManager.Controllers.Portolo
           
             SqlConnection con = new SqlConnection(config);
             con.Open();
-            query = "Select SettingValue from Portolo_ApplicationSettings where SettingID = 'Upload_Org_Image'";
+            query = "Select SettingValue from Portolo_ApplicationSettings where SettingID = 'Organization Image'";
             SqlCommand command = new SqlCommand(query, con);
             if (command.ExecuteScalar() != null)
             {
@@ -157,7 +157,7 @@ namespace fcConferenceManager.Controllers.Portolo
             string query = string.Empty;
            
             SqlConnection con = new SqlConnection(config);
-            query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where SettingID =  'Upload_Account_Image'";
+            query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where SettingID =  'Account Image'";
             con.Open();
             SqlCommand command = new SqlCommand(query, con);
             int numResult = command.ExecuteNonQuery();
@@ -173,7 +173,7 @@ namespace fcConferenceManager.Controllers.Portolo
             string query = string.Empty;
            
             SqlConnection con = new SqlConnection(config);
-            query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where SettingID = 'Upload_Org_Image'";
+            query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where SettingID = 'Organization Image'";
             con.Open();
             SqlCommand command = new SqlCommand(query, con);
             int numResult = command.ExecuteNonQuery();
@@ -287,7 +287,6 @@ namespace fcConferenceManager.Controllers.Portolo
        
         public PartialViewResult PublicPage(PublicContentPage publicContent)
         {
-            //string strContent = System.Web.HttpContext.Current.Request.Url.ToString();
             publicContent.AboutUs = GetAboutUsContent();
             publicContent.TermsOfUse = GetTermsOfUseContent();
             ViewBag.content = Request.QueryString["AboutUs"];
@@ -301,7 +300,7 @@ namespace fcConferenceManager.Controllers.Portolo
 
             SqlConnection con = new SqlConnection(config);
             con.Open();
-            query = "Select SettingValue from Portolo_ApplicationSettings where SettingID = 'AboutUs_Content'";
+            query = "Select SettingValue from Portolo_ApplicationSettings where SettingID = 'About Us Content'";
             SqlCommand command = new SqlCommand(query, con);
             if (command.ExecuteScalar() != null)
             {
@@ -318,7 +317,7 @@ namespace fcConferenceManager.Controllers.Portolo
 
             SqlConnection con = new SqlConnection(config);
             con.Open();
-            query = "Select SettingValue from Portolo_ApplicationSettings where SettingID = 'TermsOfUse_Content'";
+            query = "Select SettingValue from Portolo_ApplicationSettings where SettingID = 'Terms Of Use Content'";
             SqlCommand command = new SqlCommand(query, con);
             if (command.ExecuteScalar() != null)
             {
