@@ -14,8 +14,7 @@ using MAGI_API.Models;
 using MAGI_API.Security;			  
 using Newtonsoft.Json;
 //using Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Internal;
-using WebMatrix.WebData;
-using Windows.ApplicationModel.Email;					  
+				  
 namespace fcConferenceManager.Controllers
 {
     public class AccountController : Controller
@@ -617,46 +616,12 @@ namespace fcConferenceManager.Controllers
         public JsonResult UpdateOrganisation(FormCollection updateorg)
         {
             SqlConnection con = new SqlConnection(config);
-																  
-																																
-
             string dbsql = String.Format(@"Update Organization_List set OrganizationID = '{0}', OrganizationType_pkey = {1}, ParentOrgName = '{2}', PrimaryContactName = '{3}', PrimaryContactPhone = '{4}', PrimaryContactEMail = '{5}', PrimaryContactTitle = '{6}', 
                 ZipCode = {7}, Email = '{8}', Email2 = '{9}', URL = '{10}', Address1 = '{11}', Address2 = '{12}', City = '{13}', State_pkey = {14}, Country_pKey = {15}, Timezone_Pkey = {16} where pKey = {17}",
                 updateorg["txtOrgName"].ToString(), updateorg["cbSiteType"], updateorg["txtParentOrgName"].ToString(), updateorg["txtPrimaryContactName"].ToString(), updateorg["txtPrimPhone"].ToString(), updateorg["txtPrimEmail"].ToString(), updateorg["txtPrimTitle"].ToString(),
                 updateorg["txtZip"], updateorg["txtEmail1"].ToString(), updateorg["txtEmail2"].ToString(), updateorg["txtURL"].ToString(), updateorg["txtAddress1"].ToString(), updateorg["txtAddress2"].ToString(), updateorg["txtCity"].ToString(),
                 updateorg["cbState"], updateorg["cbCountry"], updateorg["cbTimeZone"], updateorg["parentOrgId"]);
-																															 
-																						   
-																					  
-																								
-																						
-																						
-																						
-											  
-											
-											   
-											 
-
-														 
-																						
-
-													   
-																					
-
-											   
-			 
-																						  
-																					 
-			 
-																  
-																			 
-																		
-																	   
-																  
-																			
-																			
-																	
-																			 
+																		 
             string errorMsg = "";
             if (!string.IsNullOrEmpty(updateorg["txtPrimEmail"].ToString()))
                 if (!clsUtility.CheckEmailFormat(updateorg["txtPrimEmail"].ToString()))
@@ -878,6 +843,4 @@ namespace fcConferenceManager.Controllers
  
 }
 
-    }
-
-}
+   
