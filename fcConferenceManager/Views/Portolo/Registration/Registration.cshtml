@@ -234,7 +234,7 @@
 <form action="/Registration/RegistrationSubmit" method="post" enctype="multipart/form-data" style="padding: 5px;">
     <input name="ID" value="@Model.ID" hidden />
     <div style="text-align:right;vertical-align:top">
-        @if (!string.IsNullOrEmpty(Model.ID))
+        @if (Model.ID != 0)
         {
             <input type="submit" id="Udateid" style="width:58px; font-weight: bold" value="Update" onclick="return validateInputs(event);" />
         }
@@ -458,7 +458,7 @@
 
 																												
 
-                        @if (string.IsNullOrEmpty(Model.ID))
+                         @if (Model.ID == 0)	
 						 
 																																	 
 

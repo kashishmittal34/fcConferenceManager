@@ -109,10 +109,10 @@
 
                             <a href="~/FAQ/FAQList"><i class="fa-solid fa-arrows-rotate"></i></a>
 
-                            <div class="controls">
-                                <a class="brdr-1 btn-sm" href="/FAQ/AddQuestion"> Create New</a>
+                             <div class="controls">
+                                <a class="brdr-1 btn" href="/FAQ/AddQuestion" style="height:33px"> Create New</a>
 
-                                <a class="brdr-1 btn-sm" href="" id="btnDelete" onclick="return confirm('Are you sure?')"><i class="fa fa-trash-o"></i> Delete</a>
+                                <a class="brdr-1 btn" href="" id="btnDelete" onclick="return confirm('Are you sure?')" style="height:33px"><i class="fa fa-trash-o"></i> Delete</a>
                             </div>
                         </div>
 
@@ -206,13 +206,15 @@
     </footer>
 
     <script>
-        $(document).ready(function () {
+       $(document).ready(function () {
             $("#table").dataTable({
                 paging: true, bFilter: true, ordering: true, searching: true, dom: 'tp', "order": [[0, "desc"]], pageLength: 50
             });
 
             $(".paginate_button").on("click", function () {
-                $("#select-all").prop('checked', false);
+                $(':checkbox').each(function () {
+                    this.checked = false;
+                });
             });
         });
 

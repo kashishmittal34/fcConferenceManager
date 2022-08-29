@@ -53,6 +53,8 @@
             background-color: transparent;
             /*border: 4px solid rgba(10,10,10,0.5);*/
         }
+            max-width:none;
+        }	
     </style>
     <script>
         $(document).ready(function () {
@@ -363,11 +365,10 @@
 
 
 
-                var x1 = parseInt(parseFloat($('#imgX1').val()) * parseFloat(w / w1)).toString();
-                var y1 = parseInt(parseFloat($('#imgY1').val()) * parseFloat(h / h1)).toString();
-                var width = parseInt(parseFloat($('#imgWidth').val()) * parseFloat(w / w1)).toString();
-                var height = parseInt(parseFloat($('#imgHeight').val()) * parseFloat(h / h1)).toString();
-
+                var x1 = parseFloat(parseFloat($('#imgX1').val()) * parseFloat(w / w1)).toString();
+                var y1 = parseFloat(parseFloat($('#imgY1').val()) * parseFloat(h / h1)).toString();
+                var width = parseFloat(parseFloat($('#imgWidth').val()) * parseFloat(w / w1)).toString();
+                var height = parseFloat(parseFloat($('#imgHeight').val()) * parseFloat(h / h1)).toString();
 
 
 

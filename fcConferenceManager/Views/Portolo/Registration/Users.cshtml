@@ -112,8 +112,8 @@
                             <a href="~/Registration/Users"><i class="fa-solid fa-arrows-rotate"></i></a>
 
                             <div class="controls">
-                                <a class="brdr-1 btn-sm" href="/Registration/Registration"> Join Portolo</a>
-                                <a class="brdr-1 btn-sm" href="" id="btnDelete" onclick="return confirm('Are you sure?')"><i class="fa fa-trash-o"></i> Delete</a>
+                                <a class="brdr-1 btn" href="/Registration/Registration" style="width:98px;height:33px;"> Join Portolo</a>
+                                <a class="brdr-1 btn" href="" id="btnDelete" onclick="return confirm('Are you sure?')" style="width:98px;height:33px;"><i class="fa fa-trash-o"></i> Delete</a>
                             </div>
                         </div>
 
@@ -197,9 +197,7 @@
                                                 <td> @item["OrganizationID"]</td>
                                                 <td> @item["PersonalBio"] </td>
                                                 <td>
-                                                    @Html.ActionLink("Edit", "Registration", new {userID = @item["pKey"]}) | 
-                                                    @Html.ActionLink("Details", "Details", new {id = item["pKey"] }) |
-                                                    @Html.ActionLink("Delete", "DeleteUser", new {userID = @item["pkey"] })
+                                                    @Html.ActionLink("Edit", "Registration", new {userID = @item["pKey"]})
                                                 </td>
                                             </tr>
                                         }
@@ -221,7 +219,9 @@
         });
 
         $(".paginate_button").on("click", function () {
-            $("#select-all").prop('checked', false);
+            $(':checkbox').each(function () {
+                this.checked = false;
+            });
         });
     });
 

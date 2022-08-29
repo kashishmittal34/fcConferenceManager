@@ -109,10 +109,9 @@
                         <div class="control-icons">
                             <h2>Topic List</h2>
 
-
-                            <a href="~/portolo/TopicsDownloadExcel"><i class="fa-solid fa-download" title="Download Excel"></i></a>
-	
-
+                            <a id="ExcelBtn" style="border-color: white; border: none;background-color:white">
+                                <i class="fa-solid fa-download" title="Download Excel"></i>
+                            </a>
 
                             <button type="submit" id="SearchBtn" name="search" value="true" style="border-color: white; border: none;background-color:white" title="Search">
                                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -120,12 +119,12 @@
                             <a href="~/Portolo/Topics"><i class="fa-solid fa-arrows-rotate"></i></a>
 
                             <div class="controls">
-                                <button type="button" class="brdr-1 btn-sm" data-toggle="modal" data-target="#model-mrole" onclick="Openform()" @*style="margin-right:20px;*@>
+                                <a type="button" class="brdr-1 btn" data-toggle="modal" data-target="#model-mrole" onclick="Openform()" style="height:33px;">
                                     ImportExcel
-                                </button>
-                                <a class="brdr-1 btn-sm" href="/Portolo/AddTopic"> Create New</a>
+                                </a>
+                                <a class="brdr-1 btn" href="/Portolo/AddTopic" style="height:33px;"> Create New</a>
 
-                                <a class="brdr-1 btn-sm" href="" id="btnDelete" onclick="return confirm('Are you sure?')"><i class="fa fa-trash-o"></i> Delete</a>
+                                <a class="brdr-1 btn" href="" id="btnDelete" onclick="return confirm('Are you sure?')" style="height:33px;"><i class="fa fa-trash-o"></i> Delete</a>
                             </div>
                         </div>
 
@@ -156,9 +155,6 @@
                         </div>
 		 
                     }
-
-
-
                     <br />
 
                     <div class="card">
@@ -178,10 +174,8 @@
                                 <tbody>
                                     @if (ViewBag.Topics != null)
                                     {
-                                                         foreach (var item in ViewBag.Topics.Rows)
+                                        foreach (var item in ViewBag.Topics.Rows)
                                         {
-	   
-   
                                             <tr>
                                                 <td><input type="checkbox" name="ID" value="@item["TopicID"]" class="custom-checkbox chkCheckBoxId" /> </td>
                                                 <td> @item["Title"] </td>
@@ -196,12 +190,10 @@
                                                 }
                                                 <td style="text-align:center"><a href="/Portolo/EditTopic/@item["TopicID"]"> Edit</a></td>
                                             </tr>
-
                                         }
                                     }
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>
@@ -225,7 +217,6 @@
                                     <div class="col-md-8">
                                         <div class="form-group row">
                                             <label class="control-label" style="font-size:20px"><b>Import Excel:</b></label>
-
                                             <br />
                                             <br />
 
@@ -251,7 +242,9 @@
             });
 
             $(".paginate_button").on("click", function () {
-                $("#select-all").prop('checked', false);
+                $(':checkbox').each(function () {
+                    this.checked = false;
+                });
             });
         });
 

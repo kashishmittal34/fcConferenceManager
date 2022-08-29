@@ -76,20 +76,29 @@
                 <div class="col-lg-12">
                     <div class="form-wrap card">
                         <H2>PORTOLO <span>LOGIN</span></H2>
-                        @using (Html.BeginForm("Login", "Account",new {redirectTo = ViewBag.rediret }, FormMethod.Post))
+                       @using (Html.BeginForm("Login", "Account", FormMethod.Post))
                         {
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Username</label>
                                 @*@Html.EditorFor(model => model.UserName, new { @class = "form-control" })*@
-                                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", id = "id_username" } })
 
                                 @Html.ValidationMessageFor(model => model.UserName)
                             </div>
-                            <div class="form-group mb-4">
-                                <label for="exampleInputPassword1">Password</label>
-                                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { type = "password", @class = "form-control" } })
+														 
+																				   
+																																					 
 
-                                @Html.ValidationMessageFor(model => model.Password)
+                            <div class="form-group mb-4 ">
+                                <div>
+
+                                    <label for="exampleInputPassword1">Password</label>
+                                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { type = "password", @class = "form-control", id = "id_password" } })
+                                    <img src="~/images/icons/eye.gif" id="togglePassword" style="margin-left: 235px; cursor: pointer;" alt="eye" />
+
+
+                                    @Html.ValidationMessageFor(model => model.Password)
+                                </div>
                             </div>
                             <div class="form-group error">
                                 @if (@ViewBag.Failedcount != null)
@@ -106,12 +115,65 @@
                             </div>
 
                             <input type="submit" value="Login" class="btn btn-primary" />
-                        }                        
+                            <label class="checkbox">
+                                <input type="checkbox" value="remember-me" id="remember_me"> Remember me next time
+                            </label>
+                            <div class="justify-content-center d-flex flex-wrap">
+                                @*<a href="/WizardJoin?BA=1" class="m-2 mt-0 mb-0">Create account?</a>*@
+                                <a id="cmdGetHelp" href="#" class="m-2 mt-0 mb-0">Need help signing in?</a>
+                                <a href="javascript:void(0)" id="ForgetPass" class="m-2 mt-0 mb-0" style="display:none;">Forgot your password?</a>
+                                @*<a href="javascript:void(0)" id="cmdSignInWithPasscode" class="m-2 mt-0 mb-0">Sign in with passcode</a>*@
+                                <a href="~/Registrationnew/Registration">Create account?</a>
+                            </div>
+                        }                
                     </div>
                 </div>
             </div>
         </div>
     </section>
+	 <div class="modal fade" id="modelRwNeedHelp" tabindex="-1" aria-labelledby="modelRwNeedHelp" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modalBlueHeader">
+                    <h5 class="modal-title">Need help signing in?</h5>
+                    <div>
+                        <button id="NeedHelpProceed" type="button" style="color:orange" class="btn btnYellow">Proceed</button>
+                        <button id="NeedHelpCancel" type="button" style="color:orange" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row p-2">
+                        <div class="col-xs-12 mb-1">
+                            <div class="form-check">
+                                <input class="form-check-input rdMargintop" type="radio" value="0" name="rblNeedHelp" id="rblNeedHelp1" checked>
+                                <label class="form-check-label" for="rblNeedHelp1"> Send email to reset password </label>
+                            </div>
+                            @*<div class="form-check">
+                                    <input class="form-check-input rdMargintop" type="radio" value="1" name="rblNeedHelp" id="rblNeedHelp2">
+                                    <label class="form-check-label" for="rblNeedHelp2"> Send passcode by email message </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input rdMargintop" type="radio" value="3" name="rblNeedHelp" id="rblNeedHelp4">
+                                    <label class="form-check-label" for="rblNeedHelp4"> Send passcode by text message </label>
+                                </div>*@
+                            @*<div class="form-check">
+                                    <input class="form-check-input rdMargintop" type="radio" value="2" name="rblNeedHelp" id="rblNeedHelp3">
+                                    <label class="form-check-label" for="rblNeedHelp3"> Send email to MAGI Support </label>
+                                </div>*@
+                        </div>
+                        <div class="col-xs-12 mt-1 mb-2">
+                            <label class="mb-2 mb-lg-0">Enter your email address or user ID:</label>
+                            <input type="text" id="txtEmailAddressNeedHelp" name="txtEmailAddressNeedHelp" style="width: 100%; padding: 12px 20px; margin: 8px 0; border: 3px solid #ccc; " class="txtRequired Font11" value="" tabindex="0" />
+                            @*<input type="text"/>*@
+                        </div>
+                        @*<div class="col-md-12 mt-1">
+                                <p>For assistance from MAGI Support, <a href="/Home/SignInHelp" class="">click here</a>.</p>
+                            </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>																												
     <footer>
         <div class="container">
             <div class="row">
@@ -129,6 +191,9 @@
             crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+    <script src="~/Scripts/jquery-3.5.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/CustomScript/_common.js"></script>
     <script>
         $(document).ready(function () {
             // Toggle menu on click
@@ -139,7 +204,104 @@
             function toggleBodyClass(className) {
                 document.body.classList.toggle(className);
             }
+        });
 
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#id_password');
+
+        togglePassword.addEventListener('click', function (e) {
+            // toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+           
+            // toggle the eye slash icon
+            //this.classList.toggle('fa-eye-slash');
+            if (type == "password") {
+                togglePassword.src = "/images/icons/eye.gif";
+            } else {
+
+                togglePassword.src = "/images/icons/hideeye.PNG";
+            }
+        });
+
+        
+    </script>
+
+    <script>
+        $(function () {
+            if (localStorage.chkbx && localStorage.chkbx != '') {
+                $('#remember_me').attr('checked', 'checked');
+                $('#id_username').val(localStorage.usrname);
+                $('#id_password').val(localStorage.pass);
+            } else {
+                $('#remember_me').removeAttr('checked');
+                $('#id_username').val('');
+                $('#id_password').val('');
+            }
+
+            $('#remember_me').click(function () {
+
+                if ($('#remember_me').is(':checked')) {
+                    // save username and password
+                    localStorage.usrname = $('#id_username').val();
+                    localStorage.pass = $('#id_password').val();
+                    localStorage.chkbx = $('#remember_me').val();
+                } else {
+                    localStorage.usrname = '';
+                    localStorage.pass = '';
+                    localStorage.chkbx = '';
+                }
+            });
+        });
+
+    </script>
+    <script>
+
+        $('#ForgetPass').click(function () {
+            if ($('#id_username').val().trim().indexOf("@@") !== -1)
+                $('#txtEmailAddress').val($('#id_username').val());
+            else
+                $('#txtEmailAddress').val("")
+            $('#modelRWPass').modal('show');
+        });
+
+        $('#cmdGetHelp,#cmdGetHelpPCode').click(function (e) {
+            e.preventDefault();
+            $('input[name="rblNeedHelp"][value="0"]').prop("checked", "checked");
+            var id = $('#id_username').val();
+            if (id.indexOf('@@') > -1)
+                $('#txtEmailAddressNeedHelp').val(id);
+            else
+                $('#txtEmailAddressNeedHelp').val("");
+            $('#modelRwNeedHelp').modal('show');
+        });
+
+        $('#NeedHelpProceed').click(function (e) {
+
+            $.ajax({
+                url: "/Account/Emailcheck",
+                type: "POST",
+                data: {
+                    Email: $('#txtEmailAddressNeedHelp').val(),
+
+                },
+
+                success: function (result) {
+
+                    if (result != "\"False\"") {
+                        alert('Mail is send');
+                    }
+                    else {
+
+                        alert('User does not Exist');
+                    }
+                    location.reload();
+                },
+                error: function (result) {
+
+                    alert('error');
+                }
+            });
         });
     </script>
 </body>

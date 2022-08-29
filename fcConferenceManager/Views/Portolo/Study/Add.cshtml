@@ -20,7 +20,6 @@
     }
 </style>
 <body>
-
     <section class="task-list-form">
         <div class="container">
             <div class="row">
@@ -34,8 +33,8 @@
                             <h2> Add Material </h2>
 
                             <div class="controls">
-                                <input type="submit" name="Save" value="Save" id="idSave" class="brdr-1 btn-sm" onclick="return validateInputs(event);">
-                                <a href="~/Study/Study" class="brdr-1 btn-sm" style="padding:7px 5px"> Cancel </a>
+                                <input type="submit" name="Save" value="Save" id="idSave" class="brdr-1 btn" onclick="return validateInputs(event);" style="height:33px">
+                                <a href="~/Study/Study" class="brdr-1 btn" style="padding:7px 5px; height:33px;"> Cancel </a>
                                 @Html.HiddenFor(model => model.UserId)
                             </div>
 
@@ -55,7 +54,6 @@
                                     <div class="form-group">
                                         <label>File:</label>
                                         <input type="file" name="file"/>
-
                                     </div>
                                     @if (Model.FileName != "" && Model.FileName != null)
                                     {

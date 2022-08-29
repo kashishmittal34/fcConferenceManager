@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Elimar.Models.SecurityGroup>
+@{
+    Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
+}
+<script>
+    $(document).ready(function () {
+        $("#addToGroup").click(function () {
+            var groupName = $("#groupName").val().trim();
+            debugger;
+            if (groupName == "") {
+                return alert("please enter modal name");
+            }
+            debugger;
+            $.get("AddGroup", { groupName }, function (data) {
+                debugger;
+                if (data.StatusCode == 404) {
+                    return alert("Group already exist");
+                }
+                else if (data.StatusCode == 200) {
+                    window.location.reload();
+                }
+            });
+        });
+    });
+</script>
+<style>
+    a{
+        color:black;
+    }
+</style>
+<div>
+    <button data-bs-toggle="modal" data-bs-target="#AddGroupmodal" style="float:right;" class="btn btn-outline-warning my-2">Add new group</button>
+</div>
+<div class="modal fade" id="AddGroupmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div style="background-color: dimgrey; color:white;" class="modal-header p-1">
+                <h5 class="modal-title" id="exampleModalLabel">Add Group </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label>Group Name</label>
+                <input id="groupName" class="form-control" type="text" />
+            </div>
+            <div class="modal-footer p-1">
+                <button id="addToGroup" type="button" class="btn btn-outline-warning">Save changes</button>
+                <button type="button" class="btn btn-outline-warning" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table">
+    <thead style="background-color:dimgrey; color:white;">
+        <tr>
+            <th>ID</th>
+            <th>Group Name</th>
+            <th>Description</th>
+            <th>Members</th>
+            <th>Members count</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model) 
+        {
+            <tr>
+                <td>@item.SecurtiyGroupPkey</td>
+                <td style="width:300px;">@item.Name</td>
+                <td style="width:600px;">@item.Description</td>
+                <td style="width:600px;">@string.Join(", ", item.members.Select(member => member.AccountName).ToList())</td>
+                <td overflow:auto;">@item.members.Count</td>
+                <td><a href="~/Security/EditSecurityGroup?PK=@item.SecurtiyGroupPkey"><i class="fa-solid fa-gear"></i></a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br/>
+<br/>
+<br/>

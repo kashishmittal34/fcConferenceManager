@@ -2417,6 +2417,7 @@
     <Content Include="Views\Portolo\Contact\ContactUs.cshtml" />
     <Content Include="Views\Portolo\Contact\PortoloPublicStaff.cshtml" />
     <Content Include="Views\Portolo\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Portolo\Security\SecurityGroup.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -219,7 +219,9 @@
             });
 
             $(".paginate_button").on("click", function () {
-                $("#select-all").prop('checked', false);
+                $(':checkbox').each(function () {
+                    this.checked = false;
+                });
             });
 
             $('#ExcelBtn').prop('disabled', true);

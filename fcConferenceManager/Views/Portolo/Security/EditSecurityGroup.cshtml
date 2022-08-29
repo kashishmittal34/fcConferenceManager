@@ -81,6 +81,17 @@
                     window.top.location.reload();
                 }
             });
+            var model = {
+                name: $("#groupName").val(),
+                description: $("#groupDescription").val()
+            }
+            debugger;
+            $.ajax({
+                URL: "/Security/EditSecurityGroup",
+                traditional: true,
+                type: "POST",
+                data: { securityGroup : model }
+            });
         });
 
         $("#apply").click(function () {
@@ -119,7 +130,7 @@
                 $(".members").find('input[type=checkbox]').prop('checked', false);
             }
         });
-    })
+    });
 
 </script>
 
@@ -127,7 +138,8 @@
 <div>
     <iframe id="frame" style="position: absolute; left: 10%; top: 23%; height: 70%; width: 83%; display: none; border: 2px solid cornflowerblue" src="~/Security/AddMember?PK=@Model.SecurtiyGroupPkey"></iframe>
 </div>
-<div class="container-fluid">
+<form  action="~/Security/EditSecurityGroup" method="post" enctype="multipart/form-data" class="container-fluid">
+    <input value="@Model.SecurtiyGroupPkey" name="SecurtiyGroupPkey" hidden/>
     <div class="row" style="background-color:lightskyblue;">
         <div class="col-12">
             <span style="font-size:30px;color:darkblue">Security Group : @Model.Name</span>
@@ -142,9 +154,9 @@
         <div class="col-6">
             <span style="color:blue; font-size:20px;">Description</span><br />
             <label style="font-size:12px">Name</label><br />
-            <input style="border-left:5px solid blue ; width:500px;" class="form-control" value="@Model.Name" readonly />
+            <input id="groupName" style="border-left:5px solid blue ; width:500px;" class="form-control" value="@Model.Name" name="name"  />
             <label style="font-size:12px">Description</label><br />
-            <textarea class="form-control" style="width: 500px; resize:none;height:100px;">@Model.Description</textarea><br />
+            <textarea id="groupDescription" class="form-control" name="description" style="width: 500px; resize:none;height:100px;">@Model.Description</textarea><br />
             <label class="form-control" style="background-color:cornflowerblue; width:300px; color:white">Members</label>
             <div class="row">
                 <div class="col">
@@ -234,7 +246,7 @@
             </table>
         </div>
     </div>
-</div>
+</form>
 
 
 
