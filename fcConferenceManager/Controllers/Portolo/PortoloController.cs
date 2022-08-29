@@ -416,9 +416,6 @@ namespace fcConferenceManager.Controllers.Portolo
             if (coll["ID"] != null)
             {
                 try
-
-
-
                 {
                     string strpkeys = "0";
                     int i = 0;
