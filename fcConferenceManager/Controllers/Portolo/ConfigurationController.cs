@@ -160,9 +160,7 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         private bool UploadOrgImages(string model)
         {
-
             string query = string.Empty;
-
             SqlConnection con = new SqlConnection(config);
             query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where SettingID = 'Organization Image'";
             con.Open();
