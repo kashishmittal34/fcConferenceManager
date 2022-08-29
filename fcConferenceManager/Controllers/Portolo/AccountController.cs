@@ -4,22 +4,23 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Net;
-using System.Net.Mail;		 
+using System.Net.Mail;
 using System.Web.Mvc;
 using System.Web.Security;
 using Elimar.Models;
 using fcConferenceManager.Models.Portolo;
-using fcConferenceManager.Models;										 
+using fcConferenceManager.Models;
 using MAGI_API.Models;
-using MAGI_API.Security;			  
+using MAGI_API.Security;
 using Newtonsoft.Json;
 //using Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Internal;
-				  
+//using WebMatrix.WebData;
+//using Windows.ApplicationModel.Email;					  
 namespace fcConferenceManager.Controllers
 {
     public class AccountController : Controller
     {
-		static SqlOperation repository = new SqlOperation();													
+        static SqlOperation repository = new SqlOperation();
         private string config;
         private string baseurl;
 
@@ -47,7 +48,7 @@ namespace fcConferenceManager.Controllers
         public ActionResult Login(UserModel model, string redirectTo)
         {
             var Baseurl = baseurl;
-            ViewBag.Baseurl = Baseurl;						  
+            ViewBag.Baseurl = Baseurl;
             loginResponse response = new loginResponse();
             if (model.Password == null || model.UserName == null)
             {
@@ -58,7 +59,7 @@ namespace fcConferenceManager.Controllers
 
             try
             {
-                
+
                 DataTable table = null;
                 using (SqlConnection con = new SqlConnection(config))
                 {
@@ -81,7 +82,7 @@ namespace fcConferenceManager.Controllers
                             if (val==false)
                             {
                                 response.Id = Convert.ToInt32(dr["pKey"]);
-                                response.salutation1 = dr["Salutation_pKey"].ToString(); 
+                                response.salutation1 = dr["Salutation_pKey"].ToString();
                                 response.firstname = dr["Firstname"].ToString();
                                 response.middlename = dr["MiddleName"].ToString();
                                 response.lastname = dr["Lastname"].ToString();
@@ -98,7 +99,7 @@ namespace fcConferenceManager.Controllers
                                 response.personalbiography = dr["PersonalBio"].ToString();
                                 response.Uimg = baseurl + "/Accountimages/" + dr["imgpath"].ToString();
                                 response.degrees = dr["Degrees"].ToString();
-                                response.IsGlobalAdmin = (dr["GlobalAdministrator"].ToString() != "")? (bool)dr["GlobalAdministrator"]:false;
+                                response.IsGlobalAdmin = (dr["GlobalAdministrator"].ToString() != "") ? (bool)dr["GlobalAdministrator"] : false;
                                 response.orgName = dr["OrganizationID"].ToString();
                             }
                             else
@@ -117,9 +118,9 @@ namespace fcConferenceManager.Controllers
                         con.Close();
                         Session["User"] = response;
                         Session["FirstName"] = response.firstname;
-                        Session["LastName"] = response.lastname;																  
+                        Session["LastName"] = response.lastname;
                     }
-                   if (redirectTo != null) return Redirect("~/" + redirectTo);
+                    if (redirectTo != null) return Redirect("~/" + redirectTo);
 
                     return Redirect("~/Dashboard/Portolo");
 
@@ -143,7 +144,7 @@ namespace fcConferenceManager.Controllers
         }
 
         [HttpPost]
-        
+
         public List<UserResponse> GetUserProfile()
         {
             List<UserResponse> userList = new List<UserResponse>();
@@ -176,23 +177,23 @@ namespace fcConferenceManager.Controllers
 
                             while (reader.Read())
                             {
-                                UserResponse response = new UserResponse();     
+                                UserResponse response = new UserResponse();
 
-							   
-                                response.ID =Convert.ToInt32(reader["pKey"].ToString());
+
+                                response.ID = Convert.ToInt32(reader["pKey"].ToString());
                                 response.salutation1 = reader["Salutation_pKey"].ToString();
                                 response.firstname = reader["Firstname"].ToString();
                                 response.middlename = reader["MiddleName"].ToString();
                                 response.lastname = reader["Lastname"].ToString();
-                               // response.suffix = reader["suffix"].ToString();
-                               // response.nickname = reader["nickname"].ToString();
-                               // response.signinaccountid = reader["signinaccountid"].ToString();
-                               // response.MainEmailType = reader["MainEmailType"].ToString();
+                                // response.suffix = reader["suffix"].ToString();
+                                // response.nickname = reader["nickname"].ToString();
+                                // response.signinaccountid = reader["signinaccountid"].ToString();
+                                // response.MainEmailType = reader["MainEmailType"].ToString();
                                 response.mainemail = reader["Email"].ToString();
-                               // response.Password = reader["Password"].ToString();
-                               // response.sendemailto = reader["SendEmailTo"].ToString();
+                                // response.Password = reader["Password"].ToString();
+                                // response.sendemailto = reader["SendEmailTo"].ToString();
                                 response.skypeaddress = reader["SkypeAddress"].ToString();
-                              //  response.linkedinURL = reader["linkedinURL"].ToString();
+                                //  response.linkedinURL = reader["linkedinURL"].ToString();
                                 response.country = reader["CountryID"].ToString();
                                 response.city = reader["City"].ToString();
                                 //response.address1 = reader["address1"].ToString();
@@ -237,9 +238,9 @@ namespace fcConferenceManager.Controllers
                                 //{
 
                                 //    response.CV = reader["CV"].ToString();
-									 					   
+
                                 //}
-								 
+
                                 userList.Add(response);
                             }
                         }
@@ -252,12 +253,12 @@ namespace fcConferenceManager.Controllers
 
 
             }
-            
+
             catch (Exception)
             {
                 if (Session["User"] == null)
                 {
-                        Redirect("~/Account/Portolo");
+                    Redirect("~/Account/Portolo");
                 }
 
             }
@@ -285,7 +286,7 @@ namespace fcConferenceManager.Controllers
             UserResponse user = new UserResponse();
             if (response.Count > 0)
             {
-                if (Convert.ToInt32(response[0].ID)!=0)
+                if (Convert.ToInt32(response[0].ID) != 0)
                 {
 
                     user.ID = response[0].ID;
@@ -343,7 +344,7 @@ namespace fcConferenceManager.Controllers
             }
         }
         public ActionResult ProfilePage()
-           {
+        {
             loginResponse objlt = (loginResponse)Session["User"];
             if (objlt == null) return Redirect("~/Account/Portolo?redirectTo=/Account/ProfilePage");
             List<UserResponse> response = GetUserProfile2();
@@ -351,7 +352,7 @@ namespace fcConferenceManager.Controllers
             if (response.Count > 0)
 
             {
-                if (Convert.ToInt32(response[0].ID)!=0)
+                if (Convert.ToInt32(response[0].ID) != 0)
                 {
                     user.ID = response[0].ID;
                     user.salutation1 = response[0].salutation1;
@@ -396,7 +397,7 @@ namespace fcConferenceManager.Controllers
                     user.aboutmyorganizationandmyrole = response[0].aboutmyorganizationandmyrole;
                     user.Uimg = response[0].Uimg;
                     user.CV = response[0].CV;
-                    user.salutationzID1 = response[0].salutationzID1;												 
+                    user.salutationzID1 = response[0].salutationzID1;
                     return View("~/Views/Portolo/Account/ProfilePage.cshtml", user);
                 }
                 return View("~/Views/Portolo/Account/ProfilePage.cshtml", user);
@@ -412,6 +413,7 @@ namespace fcConferenceManager.Controllers
         [HttpPost]
         public List<UserResponse> GetUserProfile2()
 
+
         {
             List<UserResponse> userList = new List<UserResponse>();
             try
@@ -421,11 +423,11 @@ namespace fcConferenceManager.Controllers
                 //ViewBag.Baseurl = baseUrl;
                 loginResponse objlt = (loginResponse)Session["User"];
                 int Id = objlt.Id;
-               // int Id = 10324;
+                // int Id = 10324;
                 // var s = cbe.GetCBLoginInfo(model.UserName, model.Password);
 
 
-                 UserResponse response = new UserResponse();
+                UserResponse response = new UserResponse();
                 using (SqlConnection con = new SqlConnection(config))
                 {
                     using (SqlCommand cmd = new SqlCommand("SP_GetUserProfileFromAccountList", con))
@@ -445,7 +447,7 @@ namespace fcConferenceManager.Controllers
                                 response.firstname = reader["firstname"].ToString();
                                 response.middlename = reader["middlename"].ToString();
                                 response.lastname = reader["lastname"].ToString();
-								response.suffixvalue = reader["suffixvalue"].ToString();
+                                response.suffixvalue = reader["suffixvalue"].ToString();
                                 response.nickname = reader["nickname"].ToString();
                                 response.signinaccountid = reader["signinaccountid"].ToString();
                                 response.MainEmailType = reader["MainEmailType"].ToString();
@@ -482,7 +484,7 @@ namespace fcConferenceManager.Controllers
                                 response.countryCodephone1 = reader["countryCodephone1"].ToString();
                                 response.countryCodephone2 = reader["countryCodephone2"].ToString();
                                 response.salutationzID1 = reader["salutationzID1"].ToString();
-															  
+
                                 if (reader["Uimg"].ToString() == null || reader["Uimg"].ToString() == "")
                                 {
                                     response.Uimg = baseurl + "/User-images/empty%20image.png";//"https://localhost:44376/"+reader["Uimg"].ToString();
@@ -508,8 +510,8 @@ namespace fcConferenceManager.Controllers
 
                         con.Close();
 
-                   }
-                    
+                    }
+
                     //if (response.State == "" || response.State==null )
                     //{
                     //    response.State = "0";
@@ -534,8 +536,8 @@ namespace fcConferenceManager.Controllers
                     //        reader.Close();
                     //        con.Close();
                     //    }
-                    
-                    
+
+
                     //query = $"select * from SYS_Countries where pKey = {int.Parse(response.country)};";
                     //using (SqlCommand cmd = new SqlCommand(query, con))
                     //{
@@ -598,8 +600,8 @@ namespace fcConferenceManager.Controllers
             return userList;
 
         }
-		public JsonResult BindTimeZones(string Country_Pkey)
-										  
+        public JsonResult BindTimeZones(string Country_Pkey)
+
         {
             DataTable ds = dba.BindTimeZones(Country_Pkey);
             List<SelectListItem> timezoneList = new List<SelectListItem>();
@@ -609,10 +611,10 @@ namespace fcConferenceManager.Controllers
             }
 
             return Json(timezoneList, JsonRequestBehavior.AllowGet);
-        }        
-		[HttpPost]
+        }
+        [HttpPost]
         [ValidateInput(true)]
-							 
+
         public JsonResult UpdateOrganisation(FormCollection updateorg)
         {
             SqlConnection con = new SqlConnection(config);
@@ -621,7 +623,7 @@ namespace fcConferenceManager.Controllers
                 updateorg["txtOrgName"].ToString(), updateorg["cbSiteType"], updateorg["txtParentOrgName"].ToString(), updateorg["txtPrimaryContactName"].ToString(), updateorg["txtPrimPhone"].ToString(), updateorg["txtPrimEmail"].ToString(), updateorg["txtPrimTitle"].ToString(),
                 updateorg["txtZip"], updateorg["txtEmail1"].ToString(), updateorg["txtEmail2"].ToString(), updateorg["txtURL"].ToString(), updateorg["txtAddress1"].ToString(), updateorg["txtAddress2"].ToString(), updateorg["txtCity"].ToString(),
                 updateorg["cbState"], updateorg["cbCountry"], updateorg["cbTimeZone"], updateorg["parentOrgId"]);
-																		 
+
             string errorMsg = "";
             if (!string.IsNullOrEmpty(updateorg["txtPrimEmail"].ToString()))
                 if (!clsUtility.CheckEmailFormat(updateorg["txtPrimEmail"].ToString()))
@@ -639,14 +641,14 @@ namespace fcConferenceManager.Controllers
             try
             {
                 if (errorMsg == "")
-			
-              {
+
+                {
                     SqlCommand cmd = new SqlCommand(dbsql, con);
-																	  
+
                     con.Open();
                     cmd.ExecuteNonQuery();
                     con.Close();
-		
+
                     errorMsg = "Success";
                 }
             }
@@ -656,9 +658,10 @@ namespace fcConferenceManager.Controllers
                 errorMsg = ex.Message;
             }
             return Json(new { result = errorMsg }, JsonRequestBehavior.AllowGet);
-	
+
 
         }
+
 
         internal static string ReadConnectionString()
         {
@@ -685,7 +688,7 @@ namespace fcConferenceManager.Controllers
             {
                 // TODO: Add delete logic here
 
-                return Redirect("~/Account/Index");												
+                return Redirect("~/Account/Index");
             }
             catch
             {
@@ -693,15 +696,15 @@ namespace fcConferenceManager.Controllers
             }
 
         }
-        
-		public ActionResult MyOrganization()
+
+        public ActionResult MyOrganization()
         {
             int orgId = ((loginResponse)Session["User"]).organizationId;
             SqlConnection con = new SqlConnection(config);
             string dbquery = String.Format(@"select *, ot.OrganizationTypeID, st.StateID, C.CountryID from Organization_List ol left join SYS_OrganizationTypes ot on ol.OrganizationType_pkey = ot.pKey
                 left join SYS_States st on ol.State_pkey = st.pKey left join SYS_Countries C on ol.Country_pKey = C.pKey where ol.pKey = {0}", orgId);
-											   
-	 
+
+
 
             con.Open();
             SqlCommand cmd = new SqlCommand(dbquery, con);
@@ -726,7 +729,7 @@ namespace fcConferenceManager.Controllers
             myOrganisation.phone = reader["PrimaryContactPhone"].ToString();
             myOrganisation.strEmail1 = reader["Email"].ToString();
             myOrganisation.strEmail2 = reader["Email2"].ToString();
-            myOrganisation.intTimezone_pKey = (reader["Timezone_pKey"].ToString() != "")?(int)reader["Timezone_pKey"]:0;
+            myOrganisation.intTimezone_pKey = (reader["Timezone_pKey"].ToString() != "") ? (int)reader["Timezone_pKey"] : 0;
 
             ViewBag.SiteTypeTable = dba.BindSiteTypes();
             ViewBag.CountryTable = dba.BindCountry();
@@ -743,7 +746,7 @@ namespace fcConferenceManager.Controllers
             var ckeck = "False";
             using (SqlConnection con = new SqlConnection(config))
             {
-                
+
                 using (SqlCommand cmd = new SqlCommand("SP_CheckUserEmail", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -753,37 +756,37 @@ namespace fcConferenceManager.Controllers
                     while (reader.Read())
                     {
                         Email = reader["Username"].ToString();
-                        
+
                     }
 
                     if (Email != ckeck)
                     {
                         string url = baseurl + "/Account/ResetPassword";
-                       
+
                         var subject = "Password Reset Request";
-                              var body = "Hi " + ", <br/> You recently requested to reset your password for your account. Click the link below to reset it. " 
+                        var body = "Hi " + ", <br/> You recently requested to reset your password for your account. Click the link below to reset it. "
 
-                                   + url + "</br>" +
+                             + url + "</br>" +
 
-                             "  <br/>If you did not request a password reset, please ignore this email or reply to let us know.<br/><br/> Thank you";
+                       "  <br/>If you did not request a password reset, please ignore this email or reply to let us know.<br/><br/> Thank you";
 
-                              SendEmail(Email, body, subject);
-                             // TempData["Message"] = msg;
+                        SendEmail(Email, body, subject);
+                        // TempData["Message"] = msg;
                     }
 
                     reader.Close();
                     //cmd.ExecuteNonQuery();
                     con.Close();
                 }
-               
+
             }
             return JsonConvert.SerializeObject(Email);
             //return JsonConvert.DeserializeObject<string>(Email); ;
         }
 
-       public ActionResult SendEmail(string Email , string body , string subject)
+        public ActionResult SendEmail(string Email, string body, string subject)
         {
-            
+
             using (MailMessage mm = new MailMessage("Your Email Address", Email))
             {
                 mm.Subject = subject;
@@ -800,9 +803,9 @@ namespace fcConferenceManager.Controllers
                 smtp.Send(mm);
 
             }
-           
+
             return View("~/Views/Portolo/Account/Login.cshtml");
-       }
+        }
 
 
         public ActionResult ResetPassordbyEmail(string Confirmpassword)
@@ -812,35 +815,34 @@ namespace fcConferenceManager.Controllers
             var Email = Session["UserEmail"];
             try
             {
-              using (SqlConnection con = new SqlConnection(config))
-              {
-                using (SqlCommand cmd = new SqlCommand("SP_ResetPassword", con))
+                using (SqlConnection con = new SqlConnection(config))
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;               
-                    cmd.Parameters.AddWithValue("@Up", passwordencryption);
-                    cmd.Parameters.AddWithValue("@Email", Email);
-                    con.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    using (SqlCommand cmd = new SqlCommand("SP_ResetPassword", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Up", passwordencryption);
+                        cmd.Parameters.AddWithValue("@Email", Email);
+                        con.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
 
-                    reader.Close();
-                    //cmd.ExecuteNonQuery();
-                    con.Close();
+                        reader.Close();
+                        //cmd.ExecuteNonQuery();
+                        con.Close();
 
+                    }
                 }
-              }
             }
             catch (Exception ex)
             {
                 return Redirect("~/Account/Portolo");
             }
-                    return Redirect("~/Account/Portolo");
+            return Redirect("~/Account/Portolo");
         }
         public ActionResult ResetPassword()
         {
             return View("~/Views/Portolo/Account/ResetPassword.cshtml");
-        }  
+        }
     }
- 
+
 }
 
-   
