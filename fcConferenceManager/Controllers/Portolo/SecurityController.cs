@@ -4,11 +4,13 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Security;
 using ClosedXML.Excel;
 using Elimar.Models;
 using fcConferenceManager.Models;
+using HttpPostAttribute = System.Web.Mvc.HttpPostAttribute;
 
 namespace fcConferenceManager.Controllers
 {
@@ -46,6 +48,56 @@ namespace fcConferenceManager.Controllers
                 }
             }
         }
+        public ActionResult SecurityGroup()
+        {
+            List<SecurityGroup> groupList = new List<SecurityGroup>();
+            string query = $"select * from SecurityGroup_List ";
+            using (SqlConnection con = new SqlConnection(config))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        SecurityGroup securityGroup = new SecurityGroup();
+                        securityGroup.Name = reader["SecurityGroupID"].ToString();
+                        securityGroup.Description = reader["Description"].ToString();
+                        securityGroup.SecurtiyGroupPkey = int.Parse(reader["pKey"].ToString());
+                        groupList.Add(securityGroup);
+                    }
+                    reader.Close();
+                    con.Close();
+                }
+            }
+
+            foreach (var group in groupList)
+            {
+                query = $"select * from SecurityGroup_Members SM join account_list al on SM.Account_pKey = al.pKey where SM.SecurityGroup_pKey =  {group.SecurtiyGroupPkey}";
+                List<SecurityGroupMember> memberList = new List<SecurityGroupMember>();
+                using (SqlConnection con = new SqlConnection(config))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            SecurityGroupMember member = new SecurityGroupMember();
+                            member.AccountID = int.Parse(reader["Account_pKey"].ToString());
+                            member.AccountName = reader["FirstName"].ToString() + reader["LastName"].ToString();
+                            memberList.Add(member);
+                        }
+                        reader.Close();
+                        con.Close();
+                    }
+                }
+                group.members = memberList;
+            }
+
+            return View("~/Views/Portolo/Security/SecurityGroup.cshtml", groupList);
+        }
+
 
         public ActionResult EditSecurityGroup(int? PK)
         {
@@ -63,6 +115,7 @@ namespace fcConferenceManager.Controllers
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
+                        securityGroup.SecurtiyGroupPkey = (int)PK;
                         securityGroup.Name = reader["SecurityGroupID"].ToString();
                         securityGroup.Description = reader["Description"].ToString();
                     }
@@ -115,6 +168,12 @@ namespace fcConferenceManager.Controllers
             securityGroup.ComponentList = componentList;
             securityGroup.members = securityGroupMemberList;
             return View("~/Views/Portolo/Security/EditSecurityGroup.cshtml",securityGroup);
+        }
+
+        [HttpPost]
+        public ActionResult EditSecurityGroup([FromBody] SecurityGroup securityGroup)
+        {
+            return RedirectToAction("SecurityGroup");
         }
         public ActionResult AddMember(int? PK ,int? pageNo, string nameSearch, string emailSearch)
         {
@@ -249,6 +308,22 @@ namespace fcConferenceManager.Controllers
                     }
                 }
             }
+        }
+        public JsonResult AddGroup(string groupName)
+        {
+            int row;
+            string query = $"if (not exists(select pKey from SecurityGroup_List where SecurityGroupID = '{groupName}')) begin insert into SecurityGroup_List (SecurityGroupID) values ('{groupName}') end;";
+            using (SqlConnection con = new SqlConnection(config))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    con.Open();
+                    row = cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+            }
+            if (row == 1) return Json(new HttpStatusCodeResult(System.Net.HttpStatusCode.OK), JsonRequestBehavior.AllowGet);
+            return Json(new HttpStatusCodeResult(System.Net.HttpStatusCode.NotFound), JsonRequestBehavior.AllowGet);
         }
     }
 }
