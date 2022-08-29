@@ -64,7 +64,6 @@ namespace fcConferenceManager.Controllers.Portolo
                     System.IO.File.Delete(filepath);
                 }
                 AccountImg.SaveAs(path);
-
                 model.AccountImg = filepath;
                 TempData["Message"] = "Uploaded Successfully !!";
             }
@@ -74,7 +73,6 @@ namespace fcConferenceManager.Controllers.Portolo
             }
             if (UploadAccountImages(model.AccountImg))
             {
-
                 return RedirectToAction("ConfigurationSettings", "Configuration");
             }
             else
@@ -108,8 +106,6 @@ namespace fcConferenceManager.Controllers.Portolo
             }
             if (UploadOrgImages(model.OrganizationImg))
             {
-
-               
                 return RedirectToAction("ConfigurationSettings", "Configuration");
             }
             else
@@ -120,9 +116,7 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         public string GetAccountName()
         {
-            string query = string.Empty , accountname = string.Empty;
-            
-            
+            string query = string.Empty, accountname = string.Empty;
             SqlConnection con = new SqlConnection(config);
             con.Open();
             query = "Select SettingValue from Portolo_ApplicationSettings where  SettingID = 'Account Image'";
@@ -139,7 +133,6 @@ namespace fcConferenceManager.Controllers.Portolo
         {
             string query = string.Empty, orgname = string.Empty;
             DataTable dt = new DataTable();
-          
             SqlConnection con = new SqlConnection(config);
             con.Open();
             query = "Select SettingValue from Portolo_ApplicationSettings where SettingID = 'Organization Image'";
@@ -153,9 +146,7 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         private bool UploadAccountImages(string model)
         {
-
             string query = string.Empty;
-           
             SqlConnection con = new SqlConnection(config);
             query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where SettingID =  'Account Image'";
             con.Open();
@@ -171,7 +162,7 @@ namespace fcConferenceManager.Controllers.Portolo
         {
 
             string query = string.Empty;
-           
+
             SqlConnection con = new SqlConnection(config);
             query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where SettingID = 'Organization Image'";
             con.Open();
@@ -206,7 +197,6 @@ namespace fcConferenceManager.Controllers.Portolo
             }
             return setlist;
         }
-
         public JsonResult EditSetting(int? id)
         {
             var customer = GetSettingDetails().Find(x => x.pkey.Equals(id));
@@ -235,24 +225,17 @@ namespace fcConferenceManager.Controllers.Portolo
                         ModelState.Clear();
                     }
                     con.Close();
-
-
                     return Redirect(Request.UrlReferrer.ToString());
-
                 }
             }
-
         }
         public byte[] ExporttoExcel(DataTable table, string filename)
         {
-
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             ExcelPackage pack = new ExcelPackage();
             ExcelWorksheet ws = pack.Workbook.Worksheets.Add(filename);
             ws.Cells["A2"].LoadFromDataTable(table, true, TableStyles.Medium12);
-
             return pack.GetAsByteArray();
-
         }
         public ActionResult Download()
         {
@@ -263,7 +246,6 @@ namespace fcConferenceManager.Controllers.Portolo
             dt.Columns.Add("S.No");
             dt.Columns.Add("Setting Id");
             dt.Columns.Add("Value");
-
             if (list.Count > 0)
             {
                 foreach (var item in list)
@@ -274,7 +256,7 @@ namespace fcConferenceManager.Controllers.Portolo
                     dataRow["Value"] = item.SettingValue;
                     dt.Rows.Add(dataRow);
                 }
-                var exportbytes = ExporttoExcel(dt, reportname);    
+                var exportbytes = ExporttoExcel(dt, reportname);
                 return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
             }
             else
@@ -282,22 +264,18 @@ namespace fcConferenceManager.Controllers.Portolo
                 TempData["Message"] = "No Data to Export";
                 return RedirectToAction("ConfigurationSettings", "Configuration");
             }
-
         }
-       
         public PartialViewResult PublicPage(PublicContentPage publicContent)
         {
             publicContent.AboutUs = GetAboutUsContent();
             publicContent.TermsOfUse = GetTermsOfUseContent();
             ViewBag.content = Request.QueryString["AboutUs"];
-
-            return PartialView("~/Views/Portolo/Configuration/PublicPage.cshtml",publicContent);
+            return PartialView("~/Views/Portolo/Configuration/PublicPage.cshtml", publicContent);
         }
         public string GetAboutUsContent()
         {
             string query = string.Empty, aboutUs = string.Empty;
             DataTable dt = new DataTable();
-
             SqlConnection con = new SqlConnection(config);
             con.Open();
             query = "Select SettingValue from Portolo_ApplicationSettings where SettingID = 'About Us Content'";
@@ -314,7 +292,6 @@ namespace fcConferenceManager.Controllers.Portolo
         {
             string query = string.Empty, terms = string.Empty;
             DataTable dt = new DataTable();
-
             SqlConnection con = new SqlConnection(config);
             con.Open();
             query = "Select SettingValue from Portolo_ApplicationSettings where SettingID = 'Terms Of Use Content'";
