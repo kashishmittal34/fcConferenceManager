@@ -285,11 +285,47 @@ namespace fcConferenceManager.Controllers.Portolo
 
         }
        
-        public PartialViewResult PublicPage()
+        public PartialViewResult PublicPage(PublicContentPage publicContent)
         {
             //string strContent = System.Web.HttpContext.Current.Request.Url.ToString();
+            publicContent.AboutUs = GetAboutUsContent();
+            publicContent.TermsOfUse = GetTermsOfUseContent();
             ViewBag.content = Request.QueryString["AboutUs"];
-            return PartialView("~/Views/Portolo/Configuration/PublicPage.cshtml");
+
+            return PartialView("~/Views/Portolo/Configuration/PublicPage.cshtml",publicContent);
+        }
+        public string GetAboutUsContent()
+        {
+            string query = string.Empty, aboutUs = string.Empty;
+            DataTable dt = new DataTable();
+
+            SqlConnection con = new SqlConnection(config);
+            con.Open();
+            query = "Select SettingValue from Portolo_ApplicationSettings where SettingID = 'AboutUs_Content'";
+            SqlCommand command = new SqlCommand(query, con);
+            if (command.ExecuteScalar() != null)
+            {
+                aboutUs = command.ExecuteScalar().ToString();
+            }
+            con.Close();
+            return aboutUs;
+        }
+
+        public string GetTermsOfUseContent()
+        {
+            string query = string.Empty, terms = string.Empty;
+            DataTable dt = new DataTable();
+
+            SqlConnection con = new SqlConnection(config);
+            con.Open();
+            query = "Select SettingValue from Portolo_ApplicationSettings where SettingID = 'TermsOfUse_Content'";
+            SqlCommand command = new SqlCommand(query, con);
+            if (command.ExecuteScalar() != null)
+            {
+                terms = command.ExecuteScalar().ToString();
+            }
+            con.Close();
+            return terms;
         }
     }
 }

@@ -24,4 +24,9 @@ namespace fcConferenceManager.Models.Portolo
         public string OrganizationImgUrl { get; set; }
         public IList<ApplicationSetting> SettingList { get; set; }
     }
+    public class PublicContentPage
+    {
+        public string AboutUs { get; set; }
+        public string TermsOfUse { get; set; }  
+    }
 }
