@@ -5,7 +5,6 @@ using ExcelDataReader;
 using fcConferenceManager.Models;
 using fcConferenceManager.Models.Portolo;
 using HandleMultipleButtonInMVC.CustomAttribute;
-using Kendo.Mvc.Extensions;
 using MAGI_API.Models;
 using OfficeOpenXml;
 using OfficeOpenXml.Table;
@@ -15,10 +14,8 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Telerik.Web.UI;
 //using PagedList.Mvc;
 //using PagedList;					
 
@@ -939,7 +936,7 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         private List<MyFileUpload> GetFileDetails()
         {
-           
+
             List<MyFileUpload> uploadlist = new List<MyFileUpload>();
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             DataTable dtData = new DataTable();
@@ -947,7 +944,7 @@ namespace fcConferenceManager.Controllers.Portolo
             con.Open();
             SqlCommand command = new SqlCommand("getuploadfiles", con);
             command.CommandType = CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@search","");
+            command.Parameters.AddWithValue("@search", "");
             SqlDataAdapter da = new SqlDataAdapter(command);
             da.Fill(dtData);
             con.Close();
@@ -1092,7 +1089,7 @@ namespace fcConferenceManager.Controllers.Portolo
             List<ProcessLibrary> librarylist = new List<ProcessLibrary>();
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             DataTable dtData = new DataTable();
-            string query = "Select * from Sys_PortoloProcess where ProcessId like '%"+search+"%' " ;
+            string query = "Select * from Sys_PortoloProcess where ProcessId like '%" + search + "%' ";
             SqlConnection con = new SqlConnection(config);
             con.Open();
             SqlCommand command = new SqlCommand(query, con);
