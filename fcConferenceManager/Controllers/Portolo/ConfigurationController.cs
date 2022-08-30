@@ -176,7 +176,7 @@ namespace fcConferenceManager.Controllers.Portolo
         {
             List<ApplicationSetting> setlist = new List<ApplicationSetting>();
             DataTable dtData = new DataTable();
-            string query = "Select * from Portolo_ApplicationSettings";
+            string query = "SELECT REPLICATE('0',5-LEN(RTRIM(pkey))) + RTRIM(pkey) as pKey , SettingValue,SettingID  from Portolo_ApplicationSettings";
             SqlConnection con = new SqlConnection(config);
             con.Open();
             SqlCommand command = new SqlCommand(query, con);
@@ -187,7 +187,7 @@ namespace fcConferenceManager.Controllers.Portolo
             {
                 setlist.Add(new ApplicationSetting
                 {
-                    pkey = Convert.ToInt32(@dr["pKey"]),
+                    pkey = @dr["pKey"].ToString(),
                     SettingID = @dr["SettingID"].ToString(),
                     SettingValue = dr["SettingValue"].ToString()
                 });

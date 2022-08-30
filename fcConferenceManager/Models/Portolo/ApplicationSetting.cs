@@ -10,7 +10,7 @@ namespace fcConferenceManager.Models.Portolo
 {
     public class ApplicationSetting
     {
-        public int pkey { get; set; }
+        public string pkey { get; set; }
         public string SettingID { get; set; }
         public string SettingValue { get; set; }
         

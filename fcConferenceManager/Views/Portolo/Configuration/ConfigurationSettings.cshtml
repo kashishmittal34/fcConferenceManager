@@ -96,18 +96,17 @@
         th {
             color: lightyellow;
         }
-
         #DataTable {
-            border: solid black 2px;
-            border-color: orange;
-            border-radius: 10px 40px 40px 10px;
-            border-collapse: collapse;
+            /*border: solid black 2px;
+            border-color:orange;*/
+            border-radius: 40px;
+           /* border-collapse: collapse;*/
         }
-
+       
         #uploadtable {
-            border: solid black 2px;
-            border-color: orange;
-            border-radius: 10px 40px 40px 10px;
+            /* border: solid black 2px;
+            border-color: orange;*/
+            border-radius: 40px;
             border-collapse: collapse;
         }
 
@@ -176,15 +175,15 @@
                                 firstText: "<< First", previousText: "< Prev", nextText: "Next >", lastText: "Last >>",
                                 htmlAttributes: new { id = "DataTable" },
                                 columns: grid.Columns(
-                                 grid.Column("pkey", header: "Id", canSort: true),
-                                 grid.Column("SettingID", header: "Setting Id", canSort: true),
-                                 grid.Column("SettingValue", header: "Value", canSort: true),
-                                 grid.Column(header: "Edit", format:
-                                                    @<text>
-                                                        <a class="btn" onclick="GetDetails(@item.pkey)">
-                                                            <i class="fa fa-edit" style="color:orange"></i>
-                                                        </a>
-                                                    </text>)));
+                                 grid.Column("pkey", header: "Id", canSort: true ),
+                                  grid.Column("SettingID", header: "Setting Id", canSort: true),
+                                  grid.Column("SettingValue", header: "Value", canSort: true),
+                                    grid.Column(header: "Edit", format:
+                                                @<text>
+                                                    <a class="btn" onclick="GetDetails(@item.pkey)">
+                                                        <i class="fa fa-edit" style="color:orange"></i>
+                                                    </a>
+                                                </text>)));
                                 @Html.Hidden("dir", grid.SortDirection)
                                 @Html.Hidden("col", grid.SortColumn)
 
@@ -207,8 +206,8 @@
                             <table id="uploadtable" class="table table-bordered ">
                                 <thead>
                                     <tr>
-                                        <th style="text-align:center">  Personal Image </th>
-                                        <th style="text-align:center">  Organization Image</th>
+                                        <th style="text-align:center">  Default Profile Image </th>
+                                        <th style="text-align:center"> Default Organization Image</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -231,7 +230,7 @@
                                                     <div class="form-control-plaintext">
                                                         <input class="btn btn-block pull-left" type="file" name="AccountImg" accept=".png,.jpg,.jpeg,.gif,.tif" id="ActImg" />
                                                         <button type="submit" class="brdr-1 btn-sm btn-orange" id="Apply">Save</button>
-                                                        <button type="submit" class="brdr-1 btn-sm pull-right">Reset</button>
+                                                        <button hidden="hidden" type="submit" class="brdr-1 btn-sm pull-right">Reset</button>
                                                     </div>
                                                 </div>
                                             </td>
@@ -254,7 +253,7 @@
                                                     <div class="form-control-plaintext">
                                                         <input class="btn btn-block pull-left" type="file" name="OrganizationImg" accept=".png,.jpg,.jpeg,.gif,.tif" id="OrgImg" />
                                                         <button type="submit" class="brdr-1 btn-sm btn-orange " id="Insert">Save</button>
-                                                        <button type="submit" class="brdr-1 btn-sm pull-right">Reset</button>
+                                                        <button hidden="hidden" class="brdr-1 btn-sm pull-right">Reset</button>
                                                     </div>
                                                 </div>
                                             </td>
