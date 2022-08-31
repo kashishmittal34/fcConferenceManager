@@ -82,14 +82,14 @@ namespace fcConferenceManager.Controllers
                 user.website = userList[0].website;
                 user.personalbiography = userList[0].personalbiography;
                 user.aboutmyorganizationandmyrole = userList[0].aboutmyorganizationandmyrole;
-                user.Uimg = userList[0].Uimg;
+                user.Uimg = userList[0].Uimg;              
                 user.CV = userList[0].CV;
                 user.countrypkey = userList[0].countrypkey;
                 user.state_pkey = userList[0].state_pkey;
                 user.salutationzID1 = userList[0].salutationzID1;
                 user.suffixvalue= userList[0].suffixvalue;
-                ViewBag.userImage = baseurl + userList[0].Uimg;
-
+                //ViewBag.userImage = baseurl + userList[0].Uimg;
+                ViewBag.userImage = Session["AccountImage"].ToString();
                 //user.Uimg = userList[0].portoloStatus;
                 //function call to get the filename
                 // user.CV = "("+ Path.GetFileName(userList[0].CV).ToString()+")";
@@ -324,6 +324,7 @@ namespace fcConferenceManager.Controllers
                         if (reader["Uimg"].ToString() == null || reader["Uimg"].ToString() == "")
                         {
                             response.Uimg = baseurl + "/UserDocuments/emptyimage.png";//"https://localhost:44376/"+reader["Uimg"].ToString();
+                            response.Uimg = Session["AccountImage"].ToString();
                         }
                         else
                         {

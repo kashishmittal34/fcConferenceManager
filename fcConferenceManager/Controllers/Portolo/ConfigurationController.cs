@@ -15,8 +15,12 @@ using System.Web.Mvc;
 
 namespace fcConferenceManager.Controllers.Portolo
 {
-    [CheckActiveEventAttribute]
-    public class ConfigurationController : Controller
+   
+    public interface IConfigurationController
+    {
+       string GetAccountName();
+    }
+    public class ConfigurationController : Controller, IConfigurationController
     {
         DBAccessLayer dba = new DBAccessLayer();
         static SqlOperation repository = new SqlOperation();
@@ -119,7 +123,7 @@ namespace fcConferenceManager.Controllers.Portolo
             string query = string.Empty, accountname = string.Empty;
             SqlConnection con = new SqlConnection(config);
             con.Open();
-            query = "Select SettingValue from Portolo_ApplicationSettings where  SettingID = 'Account Image'";
+            query = "Select SettingValue from Portolo_ApplicationSettings where pKey = 1";
 
             SqlCommand command = new SqlCommand(query, con);
             if (command.ExecuteScalar() != null)
@@ -135,7 +139,7 @@ namespace fcConferenceManager.Controllers.Portolo
             DataTable dt = new DataTable();
             SqlConnection con = new SqlConnection(config);
             con.Open();
-            query = "Select SettingValue from Portolo_ApplicationSettings where SettingID = 'Organization Image'";
+            query = "Select SettingValue from Portolo_ApplicationSettings where pKey = 2";
             SqlCommand command = new SqlCommand(query, con);
             if (command.ExecuteScalar() != null)
             {
@@ -148,7 +152,7 @@ namespace fcConferenceManager.Controllers.Portolo
         {
             string query = string.Empty;
             SqlConnection con = new SqlConnection(config);
-            query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where SettingID =  'Account Image'";
+            query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where pKey =  '1'";
             con.Open();
             SqlCommand command = new SqlCommand(query, con);
             int numResult = command.ExecuteNonQuery();
@@ -162,7 +166,7 @@ namespace fcConferenceManager.Controllers.Portolo
         {
             string query = string.Empty;
             SqlConnection con = new SqlConnection(config);
-            query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where SettingID = 'Organization Image'";
+            query = "Update Portolo_ApplicationSettings set SettingValue = '" + model + "' where pKey = '2'";
             con.Open();
             SqlCommand command = new SqlCommand(query, con);
             int numResult = command.ExecuteNonQuery();
@@ -187,7 +191,30 @@ namespace fcConferenceManager.Controllers.Portolo
             {
                 setlist.Add(new ApplicationSetting
                 {
-                    pkey = @dr["pKey"].ToString(),
+                    pkey = @dr["pKey"].ToString(),                  
+                    SettingID = @dr["SettingID"].ToString(),
+                    SettingValue = dr["SettingValue"].ToString()
+                });
+
+            }
+            return setlist;
+        }
+        private List<ApplicationSettingTemp> GetEditDetails()
+        {
+            List<ApplicationSettingTemp> setlist = new List<ApplicationSettingTemp>();
+            DataTable dtData = new DataTable();
+            string query = "SELECT *  from Portolo_ApplicationSettings";
+            SqlConnection con = new SqlConnection(config);
+            con.Open();
+            SqlCommand command = new SqlCommand(query, con);
+            SqlDataAdapter da = new SqlDataAdapter(command);
+            da.Fill(dtData);
+            con.Close();
+            foreach (DataRow dr in dtData.Rows)
+            {
+                setlist.Add(new ApplicationSettingTemp
+                {
+                    pkey = Convert.ToInt32(@dr["pKey"]),
                     SettingID = @dr["SettingID"].ToString(),
                     SettingValue = dr["SettingValue"].ToString()
                 });
@@ -197,7 +224,7 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         public JsonResult EditSetting(int? id)
         {
-            var customer = GetSettingDetails().Find(x => x.pkey.Equals(id));
+            var customer = GetEditDetails().Find(x => x.pkey.Equals(id));
             return Json(customer, JsonRequestBehavior.AllowGet);
         }
         public ActionResult UpdateSetting(ApplicationSetting setting)
@@ -272,33 +299,50 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         public string GetAboutUsContent()
         {
+            const int aboutUsPkey = 3;
             string query = string.Empty, aboutUs = string.Empty;
-            DataTable dt = new DataTable();
-            SqlConnection con = new SqlConnection(config);
-            con.Open();
-            query = "Select SettingValue from Portolo_ApplicationSettings where SettingID = 'About Us Content'";
-            SqlCommand command = new SqlCommand(query, con);
-            if (command.ExecuteScalar() != null)
+            try
             {
-                aboutUs = command.ExecuteScalar().ToString();
+
+                DataTable dt = new DataTable();
+                SqlConnection con = new SqlConnection(config);
+                con.Open();
+                query = "Select SettingValue from Portolo_ApplicationSettings where pKey = '" + aboutUsPkey + "'";
+                SqlCommand command = new SqlCommand(query, con);
+                if (command.ExecuteScalar() != null)
+                {
+                    aboutUs = command.ExecuteScalar().ToString();
+                }
+                con.Close();
             }
-            con.Close();
+            catch
+            {
+                TempData["Message"] = "There is some Error!";
+            }
             return aboutUs;
         }
 
         public string GetTermsOfUseContent()
         {
+            const int TermsPkey = 4;
             string query = string.Empty, terms = string.Empty;
-            DataTable dt = new DataTable();
-            SqlConnection con = new SqlConnection(config);
-            con.Open();
-            query = "Select SettingValue from Portolo_ApplicationSettings where SettingID = 'Terms Of Use Content'";
-            SqlCommand command = new SqlCommand(query, con);
-            if (command.ExecuteScalar() != null)
+            try
             {
-                terms = command.ExecuteScalar().ToString();
+                DataTable dt = new DataTable();
+                SqlConnection con = new SqlConnection(config);
+                con.Open();
+                query = "Select SettingValue from Portolo_ApplicationSettings where pKey = '" + TermsPkey + "'";
+                SqlCommand command = new SqlCommand(query, con);
+                if (command.ExecuteScalar() != null)
+                {
+                    terms = command.ExecuteScalar().ToString();
+                }
+                con.Close();
             }
-            con.Close();
+            catch
+            {
+                TempData["Message"] = "There is some Error!";
+            }
             return terms;
         }
     }

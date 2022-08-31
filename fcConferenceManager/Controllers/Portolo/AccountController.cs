@@ -13,6 +13,7 @@ using fcConferenceManager.Models;
 using MAGI_API.Models;
 using MAGI_API.Security;
 using Newtonsoft.Json;
+using fcConferenceManager.Controllers.Portolo;
 //using Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Internal;
 //using WebMatrix.WebData;
 //using Windows.ApplicationModel.Email;					  
@@ -23,7 +24,7 @@ namespace fcConferenceManager.Controllers
         static SqlOperation repository = new SqlOperation();
         private string config;
         private string baseurl;
-
+        IConfigurationController configuration = new ConfigurationController();
         public AccountController()
         {
             config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
@@ -116,12 +117,14 @@ namespace fcConferenceManager.Controllers
                         reader.Close();
                         //cmd.ExecuteNonQuery();
                         con.Close();
+
                         Session["User"] = response;
                         Session["FirstName"] = response.firstname;
                         Session["LastName"] = response.lastname;
                     }
                     if (redirectTo != null) return Redirect("~/" + redirectTo);
-
+                   
+                    Session["AccountImage"] = configuration.GetAccountName();
                     return Redirect("~/Dashboard/Portolo");
 
                 }
@@ -170,11 +173,6 @@ namespace fcConferenceManager.Controllers
                         SqlDataReader reader = cmd.ExecuteReader();
                         if (reader.HasRows.ToString() == "True")
                         {
-
-
-
-
-
                             while (reader.Read())
                             {
                                 UserResponse response = new UserResponse();
@@ -225,10 +223,12 @@ namespace fcConferenceManager.Controllers
                                 if (reader["imgpath"].ToString() == null || reader["imgpath"].ToString() == "")
                                 {
                                     response.Uimg = baseurl + "/User-images/empty%20image.png";//"https://localhost:44376/"+reader["Uimg"].ToString();
+                                    response.Uimg = Session["AccountImage"].ToString();
                                 }
-                                else
+                                else 
                                 {
                                     response.Uimg = baseurl + "/Accountimages/" + reader["imgpath"].ToString();
+
                                 }
                                 //if (reader["CV"].ToString() == null || reader["CV"].ToString() == "")
                                 //{
@@ -488,12 +488,14 @@ namespace fcConferenceManager.Controllers
                                 if (reader["Uimg"].ToString() == null || reader["Uimg"].ToString() == "")
                                 {
                                     response.Uimg = baseurl + "/User-images/empty%20image.png";//"https://localhost:44376/"+reader["Uimg"].ToString();
+                                    response.Uimg = Session["AccountImage"].ToString();
                                 }
                                 else
                                 {
                                     string filename = Id + "_img.jpg";
                                     //baseurl + "Accountimages/" + dr["imgpath"].ToString();
                                     response.Uimg = baseurl + "/Accountimages/" + filename;
+                                    
                                 }
                                 if (reader["CV"].ToString() == null || reader["CV"].ToString() == "")
                                 {

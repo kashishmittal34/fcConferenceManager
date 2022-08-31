@@ -10,7 +10,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <script>
+    <script type="text/javascript">
+        
         function GetDetails(id) {
             $.ajax({
                 url: "/Configuration/EditSetting/" + id,
@@ -34,6 +35,7 @@
             $('#SubmitButton').click(function () {
                 if ($('#txtUpdateName').val().trim() == "") {
                     alert("There is no value in textbox");
+                    return false;
                 }
             });
         });
@@ -118,13 +120,6 @@
             border-color: black;
             border: solid;
         }
-
-        .row:after {
-            content: "";
-            display: table;
-            clear: both;
-        }
-
         #ActImg, #OrgImg {
             align-content: center;
         }
@@ -175,7 +170,7 @@
                                 firstText: "<< First", previousText: "< Prev", nextText: "Next >", lastText: "Last >>",
                                 htmlAttributes: new { id = "DataTable" },
                                 columns: grid.Columns(
-                                 grid.Column("pkey", header: "Id", canSort: true ),
+                                 grid.Column("pkey", header: "Id", canSort: true),
                                   grid.Column("SettingID", header: "Setting Id", canSort: true),
                                   grid.Column("SettingValue", header: "Value", canSort: true),
                                     grid.Column(header: "Edit", format:
