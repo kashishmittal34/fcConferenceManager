@@ -28,7 +28,8 @@ namespace fcConferenceManager.Controllers
         {
             // var baseUrl = ConfigurationManager.AppSettings["AppURL"].Replace("/forms", "");
             // ViewBag.Baseurl = baseUrl;
-            ViewBag.GlobalAdmin = ((loginResponse)Session["User"]).IsGlobalAdmin;
+			if (Session["User"] != null)
+                ViewBag.GlobalAdmin = ((loginResponse)Session["User"]).IsGlobalAdmin;
 
 													 
             List<UserResponse> userList = new List<UserResponse>();

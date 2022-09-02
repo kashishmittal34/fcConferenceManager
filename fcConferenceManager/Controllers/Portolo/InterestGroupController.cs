@@ -13,16 +13,98 @@ using fcConferenceManager.Models;
 using MAGI_API.Models;
 using MAGI_API.Security;
 using Microsoft.Ajax.Utilities;
+using PagedList;
+using Telerik.Web.UI.com.hisoftware.api2;
+using static fcConferenceManager.Models.ChatModel;
 
 namespace fcConferenceManager.Controllers
 {
     public class InterestGroupController : Controller
     {
         readonly string config;
+        readonly bool groupView;
+        readonly bool groupAdd;
+        readonly bool groupEdit;
+        readonly bool groupDelete;
+        readonly bool memberView;
+        readonly bool memberAdd;
+        readonly bool memberEdit;
+        readonly bool memberDelete;
+        readonly int account;
 
         public InterestGroupController()
         {
             config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+            loginResponse objlt = (loginResponse)System.Web.HttpContext.Current.Session["User"];
+
+            if (objlt != null)
+            {
+                config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+
+                string query = $"select * from Account_List where GlobalAdministrator = 1 and pKey = {objlt.Id};";
+
+                using (SqlConnection con = new SqlConnection(config))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        if (reader.Read())
+                        {
+                            groupView = true;
+                            groupAdd = true;
+                            groupEdit = true;
+                            groupDelete = true;
+                            memberView = true;
+                            memberAdd = true;
+                            memberDelete = true;
+                            memberEdit = true;
+                            return;
+                        }
+                        reader.Close();
+                        con.Close();
+                    }
+                }
+
+                query = $"select * from SecurityGroup_Members sm join Privilage_listForPortolo pl on pl.SecurityGroupPkey = sm.SecurityGroup_pKey where sm.Account_pKey = {objlt.Id} and pl.PrivilageID = 'InterestGroup';";
+
+                using (SqlConnection con = new SqlConnection(config))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            groupView = groupView || bool.Parse(reader["AllowView"].ToString());
+                            groupAdd = groupAdd || bool.Parse(reader["AllowAdd"].ToString());
+                            groupEdit = groupEdit || bool.Parse(reader["AllowEdit"].ToString());
+                            groupDelete = groupDelete || bool.Parse(reader["AllowDelete"].ToString());
+                        }
+                        reader.Close();
+                        con.Close();
+                    }
+                }
+                query = $"select * from SecurityGroup_Members sm join Privilage_listForPortolo pl on pl.SecurityGroupPkey = sm.SecurityGroup_pKey where sm.Account_pKey = {objlt.Id} and pl.PrivilageID = 'InterestGroupMembers';";
+
+                using (SqlConnection con = new SqlConnection(config))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            memberView = memberView || bool.Parse(reader["AllowView"].ToString());
+                            memberAdd = memberAdd || bool.Parse(reader["AllowAdd"].ToString());
+                            memberEdit = memberEdit || bool.Parse(reader["AllowEdit"].ToString());
+                            memberDelete = memberDelete || bool.Parse(reader["AllowDelete"].ToString());
+                        }
+                        reader.Close();
+                        con.Close();
+                    }
+                }
+            }
         }
         public ActionResult CreateGroup(bool? membersPage , string nameSort, int? pageNo, string nameSearch, string organizationSearch,string industry ,string answerFilter,string questionFilter , string groupFilter )
         {
@@ -33,22 +115,32 @@ namespace fcConferenceManager.Controllers
             loginResponse objlt = (loginResponse)Session["User"];
             if (objlt == null) return Redirect("~/Account/Portolo");
             ViewBag.memmberPage = membersPage;
-            
+            if (!groupView && !memberView) return Redirect("~/Account/Portolo");
+            ViewData["memberView"] = memberView;
+            ViewData["memberAdd"] = memberAdd;
+            ViewData["memberEdit"] = memberEdit;
+            ViewData["memberDelete"] = memberDelete;
+            ViewData["groupView"] = groupView;
+            ViewData["groupAdd"] = groupAdd;
+            ViewData["groupEdit"] = groupEdit;
+            ViewData["groupDelete"] = groupDelete;
+
             if (membersPage == true)
             {
+                if (!memberView) return RedirectToAction("Creategroup");
                 List<InterestGroup> groups = new List<InterestGroup>();
-                string query = $"select distinct top 150  * from Account_List al join Organization_List ol on al.ParentOrganization_pKey = ol.pKey where al.ContactName != '' and al.ContactName like '%{nameSearch}%' and ol.OrganizationID like '%{organizationSearch}%'";
-
+                
                 nameSearch = !string.IsNullOrEmpty(nameSearch) ? nameSearch.Trim() : nameSearch;
                 organizationSearch = !string.IsNullOrEmpty(organizationSearch) ? organizationSearch.Trim() : organizationSearch;
 
+                string query = $"select distinct top 150  * from Account_List al join Organization_List ol on al.ParentOrganization_pKey = ol.pKey where al.ContactName != '' and al.ContactName like '%{nameSearch}%' and ol.OrganizationID like '%{organizationSearch}%'";
 
                 ViewData["NameSortParm"] = String.IsNullOrEmpty(nameSort) ? "name_desc" : "";
                 ViewData["NameFilter"] = nameSearch;
                 ViewData["OrganizationFilter"] = organizationSearch;
                 ViewData["IndustryFilter"] = industry;
                 ViewData["Question"] = questionFilter;
-                
+                ViewData["Page"] = pageNo;
                 ViewData["Group"] = groupFilter;
                 ViewData["NameSortParm"] = String.IsNullOrEmpty(nameSort) ? "name_desc" : "";
 
@@ -130,6 +222,7 @@ namespace fcConferenceManager.Controllers
                 }
                 foreach (var item in groups)
                 {
+                    
                     query = $"select *  from GroupMembers gm join TestGroup tg on gm.groupPkey = tg.pKey where gm.accountPkey = {item.MemberInfo.ID}";
                     item.GroupName = "";
                     item.NoOfMembers = 0;
@@ -149,27 +242,33 @@ namespace fcConferenceManager.Controllers
                     }
                     if(item.GroupName.Length != 0)item.GroupName =  item.GroupName.Substring(0, item.GroupName.Length - 2);
                 }
+                int pageIndex = 1;
+                pageIndex = pageNo.HasValue ? Convert.ToInt32(pageNo) : 1;
+                int pageSize = 40;
+                IPagedList<InterestGroup> users = null;
+                users = groups.ToPagedList(pageIndex, pageSize);
+
 
                 //paging
-                ViewBag.Pages = 1;
-                ViewBag.Page = pageNo == null ? 1 : pageNo;
-                ViewBag.firstPage = ViewBag.Page <= 3 ? 1 : ViewBag.Page - 3;
-                int count = groups.Count;
-                int noOfPages = count % 25 == 0 ? count / 25 : count / 25 + 1;
-                if (count < 25) noOfPages = 1;
-                ViewBag.lastPage = noOfPages < 5 ? noOfPages : ViewBag.firstPage + 4;
-                ViewBag.noOfPage = noOfPages;
-                ViewBag.lastPage = ViewBag.lastPage > noOfPages ? noOfPages : ViewBag.lastPage;
+                //ViewBag.Pages = 1;
+                //ViewBag.Page = pageNo == null ? 1 : pageNo;
+                //ViewBag.firstPage = ViewBag.Page <= 3 ? 1 : ViewBag.Page - 3;
+                //int count = groups.Count;
+                //int noOfPages = count % 25 == 0 ? count / 25 : count / 25 + 1;
+                //if (count < 25) noOfPages = 1;
+                //ViewBag.lastPage = noOfPages < 5 ? noOfPages : ViewBag.firstPage + 4;
+                //ViewBag.noOfPage = noOfPages;
+                //ViewBag.lastPage = ViewBag.lastPage > noOfPages ? noOfPages : ViewBag.lastPage;
 
 
-                if (count > 25)
-                {
-                    int start = (int)(pageNo != null ? (pageNo - 1) * 25 : 0);
-                    int end = start + 25 > count ? count % 25 : 25;
+                //if (count > 25)
+                //{
+                //    int start = (int)(pageNo != null ? (pageNo - 1) * 25 : 0);
+                //    int end = start + 25 > count ? count % 25 : 25;
 
-                    groups = groups.GetRange(start, end);
-                    ViewBag.Pages = noOfPages;
-                }
+                //    groups = groups.GetRange(start, end);
+                //    ViewBag.Pages = noOfPages;
+                //}
 
                 ViewBag.Industry = Industry();
                 ViewBag.QuestionFilter = Questions();
@@ -181,10 +280,11 @@ namespace fcConferenceManager.Controllers
                 List<SelectListItem> groupdata = Group();
                 groupdata.RemoveAt(0);
                 ViewBag.GroupData = groupdata;
-                return View("~/Views/Portolo/createGroup/CreateGroup.cshtml", groups);
+                return View("~/Views/Portolo/createGroup/CreateGroup.cshtml", users);
             }
             else
             {
+                if (!groupView) return RedirectToAction("Creategroup", new {membersPage =  true});
                 
                 List<InterestGroup> groups = new List<InterestGroup>();
                 string query = "select * from testgroup";
@@ -203,7 +303,10 @@ namespace fcConferenceManager.Controllers
                         }
                     }
                 }
-                return View("~/Views/Portolo/createGroup/CreateGroup.cshtml", groups);
+                IPagedList<InterestGroup> users = null;
+                users = groups.ToPagedList(1, 10);
+
+                return View("~/Views/Portolo/createGroup/CreateGroup.cshtml", users);
             }
         }
         public List<SelectListItem> Industry()

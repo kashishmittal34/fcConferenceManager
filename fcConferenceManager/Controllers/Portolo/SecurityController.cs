@@ -11,6 +11,8 @@ using ClosedXML.Excel;
 using Elimar.Models;
 using fcConferenceManager.Models;
 using HttpPostAttribute = System.Web.Mvc.HttpPostAttribute;
+using PagedList;
+using Telerik.Web.UI;
 
 namespace fcConferenceManager.Controllers
 {
@@ -29,7 +31,7 @@ namespace fcConferenceManager.Controllers
             {
                 string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
 
-                string query = $"select * from Account_List where GlobalAdministrator = 1 and pKey = {objlt.Id};";
+                string query = $"select * from Account_List where StaffMember = 1 and pKey = {objlt.Id};";
 
                 using (SqlConnection con = new SqlConnection(config))
                 {
@@ -50,6 +52,8 @@ namespace fcConferenceManager.Controllers
         }
         public ActionResult SecurityGroup()
         {
+            loginResponse objlt = (loginResponse)Session["User"];
+            if (objlt == null || !view) return Redirect("~/Account/Portolo");
             List<SecurityGroup> groupList = new List<SecurityGroup>();
             string query = $"select * from SecurityGroup_List ";
             using (SqlConnection con = new SqlConnection(config))
@@ -85,7 +89,7 @@ namespace fcConferenceManager.Controllers
                         {
                             SecurityGroupMember member = new SecurityGroupMember();
                             member.AccountID = int.Parse(reader["Account_pKey"].ToString());
-                            member.AccountName = reader["FirstName"].ToString() + reader["LastName"].ToString();
+                            member.AccountName = reader["FirstName"].ToString()+ " " + reader["LastName"].ToString();
                             memberList.Add(member);
                         }
                         reader.Close();
@@ -123,7 +127,7 @@ namespace fcConferenceManager.Controllers
                     con.Close();
                 }
             }
-            List<Component>componentList = new List<Component>();
+            List<Component> componentList = new List<Component>();
             query = $"select * from Privilage_listForPortolo where SecurityGroupPkey={PK}";
             using (SqlConnection con = new SqlConnection(config))
             {
@@ -155,7 +159,7 @@ namespace fcConferenceManager.Controllers
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        SecurityGroupMember securityGroupMember = new SecurityGroupMember();    
+                        SecurityGroupMember securityGroupMember = new SecurityGroupMember();
                         securityGroupMember.AccountName = reader["contactName"].ToString();
                         securityGroupMember.AccountID = int.Parse(reader["Account_pKey"].ToString());
                         securityGroupMember.Activated = true;
@@ -167,15 +171,25 @@ namespace fcConferenceManager.Controllers
             }
             securityGroup.ComponentList = componentList;
             securityGroup.members = securityGroupMemberList;
-            return View("~/Views/Portolo/Security/EditSecurityGroup.cshtml",securityGroup);
+            return View("~/Views/Portolo/Security/EditSecurityGroup.cshtml", securityGroup);
         }
 
         [HttpPost]
-        public ActionResult EditSecurityGroup([FromBody] SecurityGroup securityGroup)
+        public ActionResult EditSecurityGroup([FromBody] SecurityGroup group)
         {
+            string query = $"update SecurityGroup_List set SecurityGroupID = '{group.Name}' , Description = '{group.Description}' where pKey = {group.SecurtiyGroupPkey};";
+            using (SqlConnection con = new SqlConnection(config))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+            }
             return RedirectToAction("SecurityGroup");
         }
-        public ActionResult AddMember(int? PK ,int? pageNo, string nameSearch, string emailSearch)
+        public ActionResult AddMember(int? PK, int? page, string nameSearch, string emailSearch)
         {
             loginResponse objlt = (loginResponse)Session["User"];
             if (objlt == null || !view) return Redirect("~/Account/Portolo");
@@ -217,34 +231,41 @@ namespace fcConferenceManager.Controllers
                     con.Close();
                 }
             }
-            ViewBag.Pages = 1;
-            ViewBag.Page = pageNo == null ? 1 : pageNo;
-            ViewBag.firstPage = ViewBag.Page <= 3 ? 1 : ViewBag.Page - 3;
-            int count = userList.Count;
-            int noOfPages = count % 40 == 0 ? count / 40 : count / 40 + 1;
-            ViewBag.lastPage = noOfPages < 5 ? noOfPages : ViewBag.firstPage + 4;
-            ViewBag.noOfPage = noOfPages;
-            ViewBag.lastPage = ViewBag.lastPage > noOfPages ? noOfPages : ViewBag.lastPage;
-
-            PK = PK != null?PK:46 ;
+            int pageIndex = 1;
+            pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+            int pageSize = 40;
+            IPagedList<UserRequest> users = null;
+            users = userList.ToPagedList(pageIndex,pageSize);
+            PK = PK != null ? PK : 46;
             ViewData["PK"] = PK;
-            if (count > 40)
-            {
+            //ViewBag.Pages = 1;
+            //ViewBag.Page = pageNo == null ? 1 : pageNo;
+            //ViewBag.firstPage = ViewBag.Page <= 3 ? 1 : ViewBag.Page - 3;
+            //int count = userList.Count;
+            //int noOfPages = count % 40 == 0 ? count / 40 : count / 40 + 1;
+            //ViewBag.lastPage = noOfPages < 5 ? noOfPages : ViewBag.firstPage + 4;
+            //ViewBag.noOfPage = noOfPages;
+            //ViewBag.lastPage = ViewBag.lastPage > noOfPages ? noOfPages : ViewBag.lastPage;
 
-                int start = (int)(pageNo != null ? (pageNo - 1) * 40 : 0);
-                int end = start + 40 > count ? count % 40 : 40;
+            //PK = PK != null ? PK : 46;
+            //ViewData["PK"] = PK;
+            //if (count > 40)
+            //{
 
-                userList = userList.GetRange(start, end);
-                ViewBag.Pages = noOfPages;
-            }
-            return View("~/Views/Portolo/Security/AddMember.cshtml",userList);
+            //    int start = (int)(pageNo != null ? (pageNo - 1) * 40 : 0);
+            //    int end = start + 40 > count ? count % 40 : 40;
+
+            //    userList = userList.GetRange(start, end);
+            //    ViewBag.Pages = noOfPages;
+            //}
+            return View("~/Views/Portolo/Security/AddMember.cshtml", users);
         }
         [HttpPost]
-        public ActionResult AddMember(int? PK,int[] arrayOfValues)
+        public ActionResult AddMember(int? PK, int[] arrayOfValues)
         {
-            if(arrayOfValues != null)
+            if (arrayOfValues != null)
             {
-                foreach(var item in arrayOfValues)
+                foreach (var item in arrayOfValues)
                 {
                     using (SqlConnection con = new SqlConnection(config))
                     {
@@ -300,7 +321,7 @@ namespace fcConferenceManager.Controllers
                     using (SqlConnection con = new SqlConnection(config))
                     {
                         using (SqlCommand cmd = new SqlCommand(query, con))
-                        {                            
+                        {
                             con.Open();
                             cmd.ExecuteNonQuery();
                             con.Close();
@@ -311,19 +332,50 @@ namespace fcConferenceManager.Controllers
         }
         public JsonResult AddGroup(string groupName)
         {
-            int row;
-            string query = $"if (not exists(select pKey from SecurityGroup_List where SecurityGroupID = '{groupName}')) begin insert into SecurityGroup_List (SecurityGroupID) values ('{groupName}') end;";
+            int row = 0;
+            string query = $"if (not exists(select pKey from SecurityGroup_List where SecurityGroupID = '{groupName}')) begin insert into SecurityGroup_List (SecurityGroupID) values ('{groupName}')  select SCOPE_IDENTITY() end;";
             using (SqlConnection con = new SqlConnection(config))
             {
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
                     con.Open();
-                    row = cmd.ExecuteNonQuery();
+                    row = int.Parse(cmd.ExecuteScalar().ToString());
                     con.Close();
                 }
             }
-            if (row == 1) return Json(new HttpStatusCodeResult(System.Net.HttpStatusCode.OK), JsonRequestBehavior.AllowGet);
+            if (row > 0)
+            {
+                using (SqlConnection con = new SqlConnection(config))
+                {
+                    using (SqlCommand cmd = new SqlCommand("AddSecurityPage", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@id", row);
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                }
+                return Json(new HttpStatusCodeResult(System.Net.HttpStatusCode.OK), JsonRequestBehavior.AllowGet);
+            }
             return Json(new HttpStatusCodeResult(System.Net.HttpStatusCode.NotFound), JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public void RemoveGroup(string[] groups)
+        {
+            foreach (var group in groups)
+            {
+                string query = $"delete SecurityGroup_List where pKey = {group}";
+                using (SqlConnection con = new SqlConnection(config))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                }
+            }
         }
     }
 }

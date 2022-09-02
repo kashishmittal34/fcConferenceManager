@@ -20,7 +20,7 @@ namespace fcConferenceManager.Controllers.Portolo
         // GET: FAQ
         public ActionResult FAQList()
         {
-            if ((Session["User"] == null) || !((loginResponse)Session["User"]).IsGlobalAdmin)
+            if ((Session["User"] == null) || !((loginResponse)Session["User"]).IsGlobalAdmin || !((loginResponse)Session["User"]).staffmember)
                 return Redirect("~/Account/Portolo");
 
             DataTable dt = new DataTable();
@@ -39,7 +39,7 @@ namespace fcConferenceManager.Controllers.Portolo
 
         public ActionResult AddQuestion(FAQ model)
         {
-            if ((Session["User"] == null) || !((loginResponse)Session["User"]).IsGlobalAdmin)
+            if ((Session["User"] == null) || !((loginResponse)Session["User"]).IsGlobalAdmin || !((loginResponse)Session["User"]).staffmember)
                 return Redirect("~/Account/Portolo");
 
             if (model.Question == null)
@@ -65,7 +65,7 @@ namespace fcConferenceManager.Controllers.Portolo
 
         public ActionResult EditQuestion(int id)
         {
-            if ((Session["User"] == null) || !((loginResponse)Session["User"]).IsGlobalAdmin)
+            if ((Session["User"] == null) || !((loginResponse)Session["User"]).IsGlobalAdmin || !((loginResponse)Session["User"]).staffmember)
                 return Redirect("~/Account/Portolo");
 
             string dbquery = "select * from Portolo_FAQ where Id = " + id;
@@ -88,7 +88,7 @@ namespace fcConferenceManager.Controllers.Portolo
         [HttpPost]
         public ActionResult DeleteQuestion(string ids)
         {
-            if ((Session["User"] == null) || !((loginResponse)Session["User"]).IsGlobalAdmin)
+            if ((Session["User"] == null) || !((loginResponse)Session["User"]).IsGlobalAdmin || !((loginResponse)Session["User"]).staffmember)
                 return Redirect("~/Account/Portolo");
 
             string dbquery = String.Format("delete from Portolo_FAQ where Id in ({0}) ", ids);
@@ -209,9 +209,10 @@ namespace fcConferenceManager.Controllers.Portolo
         [HttpPost]
         public JsonResult PostQuestion(string question)
         {
-            int Id = ((Elimar.Models.loginResponse)Session["User"]).Id;
-
-            string query = $"Insert into Portolo_userFAQ values ({Id}, '{question}')";
+            var response = ((loginResponse)Session["User"]);
+            string name = response.firstname + ' ' + response.lastname;
+            string email = response.mainemail;
+            string query = $"Insert into PortoloSupport (name, email, subject, description) values ('{name}', '{email}', 'FAQ Question', '{question}')";
 
             con.Open();
 

@@ -1,21 +1,24 @@
-﻿
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using Elimar.Models;
 using ExcelDataReader;
-using fcConferenceManager.Models;
-using fcConferenceManager.Models.Portolo;
-using HandleMultipleButtonInMVC.CustomAttribute;
-using MAGI_API.Models;
-using OfficeOpenXml;
-using OfficeOpenXml.Table;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
-using System.IO;
+using MAGI_API.Models;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Data;
+using System.Web.Security;
+using fcConferenceManager.Models;
+using MAGI_API.Security;
+using System.Threading.Tasks;
+using HandleMultipleButtonInMVC.CustomAttribute;
+using System.IO;
+using fcConferenceManager.Models.Portolo;
+using System.Data.SqlClient;
+using OfficeOpenXml;
+using OfficeOpenXml.Table;					
 //using PagedList.Mvc;
 //using PagedList;					
 
@@ -27,12 +30,12 @@ namespace fcConferenceManager.Controllers.Portolo
         DBAccessLayer dba = new DBAccessLayer();
         static SqlOperation repository = new SqlOperation();
 
-        bool view;
+		bool view;
         bool add;
         bool edit;
         bool delete;
-        int account;
-        public PortoloController()
+        int account;		  
+	  public PortoloController()
         {
             loginResponse objlt = (loginResponse)System.Web.HttpContext.Current.Session["User"];
 
@@ -40,7 +43,7 @@ namespace fcConferenceManager.Controllers.Portolo
             {
                 string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
 
-                string query = $"select * from Account_List where GlobalAdministrator = 1 and pKey = {objlt.Id};";
+				string query = $"select * from Account_List where GlobalAdministrator = 1 and pKey = {objlt.Id};";
 
                 using (SqlConnection con = new SqlConnection(config))
                 {
@@ -59,8 +62,8 @@ namespace fcConferenceManager.Controllers.Portolo
                         reader.Close();
                         con.Close();
                     }
-                }
-                query = $"select * from SecurityGroup_Members sm join Privilage_listForPortolo pl on pl.SecurityGroupPkey = sm.SecurityGroup_pKey where sm.Account_pKey = {objlt.Id} and pl.PrivilageID = 'TaskList';";
+                }																								  
+                 query = $"select * from SecurityGroup_Members sm join Privilage_listForPortolo pl on pl.SecurityGroupPkey = sm.SecurityGroup_pKey where sm.Account_pKey = {objlt.Id} and pl.PrivilageID = 'TaskList';";
 
                 using (SqlConnection con = new SqlConnection(config))
                 {
@@ -81,7 +84,7 @@ namespace fcConferenceManager.Controllers.Portolo
                     }
                 }
             }
-        }
+        }							  						 
         internal static string ReadConnectionString()
         {
 
@@ -140,7 +143,7 @@ namespace fcConferenceManager.Controllers.Portolo
             }
             return selectListItems;
         }
-        private List<SelectListItem> PortoloTaskRepeat_Select_ALL()
+		private List<SelectListItem> PortoloTaskRepeat_Select_ALL()
         {
             List<SelectListItem> selectListItems = new List<SelectListItem>();
             DataTable dt = new DataTable();
@@ -152,7 +155,7 @@ namespace fcConferenceManager.Controllers.Portolo
             }
             return selectListItems;
         }
-
+														   
 
 
         public ActionResult TaskList(List<TaskListResponse> taskListResponse)
@@ -185,7 +188,7 @@ namespace fcConferenceManager.Controllers.Portolo
                 else
                 {
                     //TempData.Keep("request");
-                    TaskListRequest taskListRequest1 = new TaskListRequest();
+                    TaskListRequest taskListRequest1 =new TaskListRequest();
                     ViewBag.Request = taskListRequest1;
 
                 }
@@ -210,7 +213,7 @@ namespace fcConferenceManager.Controllers.Portolo
         public ActionResult TaskListfilter(TaskListRequest request)
         {
 
-            if (Session["User"] == null)
+			if (Session["User"] == null)
             {
                 Redirect("~/Account/Portolo");
             }
@@ -294,8 +297,8 @@ namespace fcConferenceManager.Controllers.Portolo
             ViewBag.TaskList = TaskCategoriesList();
             ViewBag.TaskStatus = TaskStatuses_Select_All();
             ViewBag.RepeatTask = TaskRepeat_Select_ALL();
-            ViewBag.PortoloRepeatTask = PortoloTaskRepeat_Select_ALL();
-
+			ViewBag.PortoloRepeatTask = PortoloTaskRepeat_Select_ALL();
+					  
             ViewBag.Request = obj;
             ViewBag.Baseurl = ConfigurationManager.AppSettings["AppURL"];
             TempData["taskListResponse"] = MainList;
@@ -433,7 +436,7 @@ namespace fcConferenceManager.Controllers.Portolo
                         }
                         msg = dba.Tasks_Detele(strpkeys);
                     }
-
+                   
                     commonreload();
                 }
 
@@ -459,7 +462,7 @@ namespace fcConferenceManager.Controllers.Portolo
             SqlConnection con = new SqlConnection(ReadConnectionString());
             DataTable dt = new DataTable();
 
-            string dbquery = " select TopicID, Title, Description, IsActive from Portolo_Topics";
+            string dbquery = " select TopicID, Title, Description, Cast(Case When IsActive=1 Then 'Active' Else 'Inactive' END AS varchar(10)) as Status from Portolo_Topics";
             con.Open();
             SqlDataAdapter _da = new SqlDataAdapter(dbquery, con);
             _da.Fill(dt);
@@ -469,125 +472,125 @@ namespace fcConferenceManager.Controllers.Portolo
 
             return View();
         }
-        [HttpPost]
-
-        public ActionResult ImportExcel(HttpPostedFileBase files)
+	[HttpPost]
+       
+    public ActionResult ImportExcel(HttpPostedFileBase files)
+    {
+        if(ModelState.IsValid)
         {
-            if (ModelState.IsValid)
+            if(files != null && files.ContentLength >  0)
             {
-                if (files != null && files.ContentLength > 0)
+                Stream stream = files.InputStream;
+                IExcelDataReader reader = null;
+                if(files.FileName.EndsWith(".xls"))
                 {
-                    Stream stream = files.InputStream;
-                    IExcelDataReader reader = null;
-                    if (files.FileName.EndsWith(".xls"))
+                    string filename = files.FileName;
+                    string path = Server.MapPath("~/PortoloDocuments/" + filename);
+                    if (System.IO.File.Exists(path))
                     {
-                        string filename = files.FileName;
-                        string path = Server.MapPath("~/PortoloDocuments/" + filename);
-                        if (System.IO.File.Exists(path))
-                        {
-                            System.IO.File.Delete(path);
-                        }
-                        files.SaveAs(path);
-
-                        reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                        System.IO.File.Delete(path);
                     }
-                    else if (files.FileName.EndsWith(".xlsx"))
-                    {
-                        string filename = files.FileName;
-                        string path = Server.MapPath("~/PortoloDocuments/" + filename);
-                        if (System.IO.File.Exists(path))
-                        {
-                            System.IO.File.Delete(path);
-                        }
-                        files.SaveAs(path);
-                        reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("File", "This file format is not supported");
-                        return RedirectToAction("Topics", "Portolo");
-                    }
-                    int fieldCount = reader.FieldCount;
-                    int rowCount = reader.RowCount;
-                    DataTable dt = new DataTable();
-                    DataRow row;
-                    DataTable dt_ = new DataTable();
-                    DataSet ds = new DataSet();
-                    ds = reader.AsDataSet();
-                    try
-                    {
+                    files.SaveAs(path);
 
-                        dt_ = ds.Tables[0];
-
-                        for (int i = 0; i < dt_.Columns.Count; i++)
+                    reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                }
+                else if(files.FileName.EndsWith(".xlsx"))
+                {
+                    string filename = files.FileName;
+                    string path = Server.MapPath("~/PortoloDocuments/" + filename);
+                    if (System.IO.File.Exists(path))
+                    {
+                        System.IO.File.Delete(path);
+                    }
+                    files.SaveAs(path);
+                    reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+                }
+                else
+                {
+                    ModelState.AddModelError("File", "This file format is not supported");
+                    return RedirectToAction("Topics","Portolo");
+                }
+                int fieldCount = reader.FieldCount;
+                int rowCount = reader.RowCount;
+                DataTable dt = new DataTable();
+                DataRow row;
+                DataTable dt_ = new DataTable();
+                DataSet ds = new DataSet();
+                ds = reader.AsDataSet();
+                try
+                {
+                 
+                    dt_ = ds.Tables[0];
+                        
+                    for(int i=0; i<dt_.Columns.Count; i++)
+                    {
+                        dt.Columns.Add(dt_.Rows[0][i].ToString());
+                    }
+                    int rowCounter = 0;
+                    for(int rows = 1; rows < dt_.Rows.Count; rows++)
+                    {
+                        row = dt.NewRow();
+         for(int col = 0; col<dt_.Columns.Count; col++)
                         {
-                            dt.Columns.Add(dt_.Rows[0][i].ToString());
+                            row[col] = dt_.Rows[rows][col].ToString();
+                            rowCounter++;
                         }
-                        int rowCounter = 0;
-                        for (int rows = 1; rows < dt_.Rows.Count; rows++)
+                        dt.Rows.Add(row);
+						 
+                    }
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError("File", "Unable to upload file");
+                    return RedirectToAction("Topics", "Portolo");
+                }
+                DataSet result = new DataSet();
+                result.Tables.Add(dt);
+                reader.Close();
+                reader.Dispose();
+                DataTable dataTable = result.Tables[0];
+                    
+                for (int i = 0; i < result.Tables[0].Rows.Count; i++)
+                {
+                    try						   
+                    {
+                        string numString = result.Tables[0].Rows[i][1].ToString();
+                        bool number1 = false;
+                        bool canConvert = bool.TryParse(numString, out number1);
+                        if (canConvert == true)
                         {
-                            row = dt.NewRow();
-                            for (int col = 0; col < dt_.Columns.Count; col++)
-                            {
-                                row[col] = dt_.Rows[rows][col].ToString();
-                                rowCounter++;
-                            }
-                            dt.Rows.Add(row);
+                            string conn = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+                            SqlConnection con = new SqlConnection(conn);
+                            string query = "Insert into Portolo_Topics(Title,Description,IsActive) Values('" + result.Tables[0].Rows[i][2].ToString() + "','" + result.Tables[0].Rows[i][3].ToString() + "','" + result.Tables[0].Rows[i][1].ToString() + "')";
+                            con.Open();
+                            SqlCommand cmd = new SqlCommand(query, con);
+                            cmd.ExecuteNonQuery();
+                            con.Close();
+                        }
+                        else
+                        {
+                            TempData["InvalidExcel"] = "Invalid! Excel File";
+                            break;
                         }
                     }
                     catch (Exception)
                     {
-                        ModelState.AddModelError("File", "Unable to upload file");
-                        return RedirectToAction("Topics", "Portolo");
-                    }
-                    DataSet result = new DataSet();
-                    result.Tables.Add(dt);
-                    reader.Close();
-                    reader.Dispose();
-                    DataTable dataTable = result.Tables[0];
-
-                    for (int i = 0; i < result.Tables[0].Rows.Count; i++)
-                    {
-                        try
-                        {
-                            string numString = result.Tables[0].Rows[i][1].ToString();
-                            bool number1 = false;
-                            bool canConvert = bool.TryParse(numString, out number1);
-                            if (canConvert == true)
-                            {
-                                string conn = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
-                                SqlConnection con = new SqlConnection(conn);
-                                string query = "Insert into Portolo_Topics(Title,Description,IsActive) Values('" + result.Tables[0].Rows[i][2].ToString() + "','" + result.Tables[0].Rows[i][3].ToString() + "','" + result.Tables[0].Rows[i][1].ToString() + "')";
-                                con.Open();
-                                SqlCommand cmd = new SqlCommand(query, con);
-                                cmd.ExecuteNonQuery();
-                                con.Close();
-                            }
-                            else
-                            {
-                                TempData["InvalidExcel"] = "Invalid! Excel File";
-                                break;
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            TempData["InvalidExcel"] = "Invalid Excel File! Enter data in a Correct Format!!";
-                        }
-                    }
-                    return RedirectToAction("Topics", "Portolo");
+                        TempData["InvalidExcel"] = "Invalid Excel File! Enter data in a Correct Format!!";				  
+                    }															 
                 }
-                else
-                {
-                    ModelState.AddModelError("File", "Please upload your file");
-                }
-
+                return RedirectToAction("Topics", "Portolo");
             }
-            return View();
+            else
+            {
+                ModelState.AddModelError("File","Please upload your file");
+            }
         }
+        return View();
+    }			  		  
 
         public ActionResult AddTopic(Topic model)
         {
-            if (Session["User"] == null) return Redirect("~/Account/Portolo");
+		    if (Session["User"] == null) return Redirect("~/Account/Portolo");
             if (model.title == null)
                 return View();
 
@@ -613,7 +616,7 @@ namespace fcConferenceManager.Controllers.Portolo
 
         public ActionResult EditTopic(string id)
         {
-            if (Session["User"] == null) return Redirect("~/Account/Portolo");
+		    if (Session["User"] == null) return Redirect("~/Account/Portolo");
             SqlConnection con = new SqlConnection(ReadConnectionString());
 
             string dbquery = " select * from Portolo_Topics where TopicID = " + id;
@@ -635,7 +638,7 @@ namespace fcConferenceManager.Controllers.Portolo
         [HttpPost]
         public ActionResult DeleteTopic(string ids)
         {
-            if (Session["User"] == null) return Redirect("~/Account/Portolo");
+			if (Session["User"] == null) return Redirect("~/Account/Portolo");																  
             SqlConnection con = new SqlConnection(ReadConnectionString());
             string dbquery = String.Format("delete from Portolo_Topics where TopicID in ({0}) ", ids);
             con.Open();
@@ -647,13 +650,13 @@ namespace fcConferenceManager.Controllers.Portolo
 
         public ActionResult UserTopics()
         {
-            if (Session["User"] == null)
+			if (Session["User"] == null)
             {
                 Redirect("~/Account/Portolo");
             }
             int Id = ((loginResponse)Session["User"]).Id;
             DataTable dt = new DataTable();
-
+																																	 
             SqlConnection con = new SqlConnection(ReadConnectionString());
 
             string dbquery = String.Format("Select * from Portolo_Topics where IsActive = 1");
@@ -681,10 +684,10 @@ namespace fcConferenceManager.Controllers.Portolo
         [HttpGet]
         public ActionResult SearchTopic(string name, string description, string active, string search)
         {
-            SqlConnection con = new SqlConnection(ReadConnectionString());
+           SqlConnection con = new SqlConnection(ReadConnectionString());
             DataTable dt = new DataTable();
 
-            string dbquery = String.Format("select TopicID, Title, Description, IsActive from Portolo_Topics where Title like '%{0}%' and Description like '%{1}%'", name.Trim(), description.Trim());
+            string dbquery = String.Format("select TopicID, Title, Description, Cast(Case When IsActive=1 Then 'Active' Else 'Inactive' END AS varchar(10)) as Status from Portolo_Topics where Title like '%{0}%' and Description like '%{1}%'", name.Trim(), description.Trim());
             if (active != "")
                 dbquery += String.Format("and IsActive = '{0}'", active);
             con.Open();
@@ -694,10 +697,10 @@ namespace fcConferenceManager.Controllers.Portolo
 
             ViewBag.Topics = dt;
             ViewBag.IsActive = active;
-            dt.Columns["IsActive"].ColumnName = "Status";
+														 
 
             if (search != "true")
-            {
+            { 
                 string FileName = String.Format("Topics_{0:yyMMdd_HH.mm}", DateTime.Now);
                 ExportToExcel(dt, FileName);
             }
@@ -707,10 +710,10 @@ namespace fcConferenceManager.Controllers.Portolo
         }
 
         [HttpGet]
-
+							 
         public ActionResult UserSearchTopic(string name, string description)
         {
-            if (Session["User"] == null)
+			if (Session["User"] == null)
             {
                 Redirect("~/Account/Portolo");
             }
@@ -742,13 +745,13 @@ namespace fcConferenceManager.Controllers.Portolo
 
         public ActionResult SaveUserTopic(string[] ids, string selectall = "")
         {
-            if (Session["User"] == null)
+			if (Session["User"] == null)
             {
                 Redirect("~/Account/Portolo");
-            }
+            }				   
             int userId = ((loginResponse)Session["User"]).Id;
             SqlConnection con = new SqlConnection(ReadConnectionString());
-
+																																		 
             con.Open();
             string dbquery = "";
 
@@ -806,10 +809,10 @@ namespace fcConferenceManager.Controllers.Portolo
         public ActionResult commonreload()
         {
 
-            if (Session["User"] == null)
+			if (Session["User"] == null)
             {
                 Redirect("~/Account/Portolo");
-            }
+            }							
             TaskListRequest taskListRequest = new TaskListRequest();
             taskListRequest.active = null;
             taskListRequest.category = "0";
@@ -933,7 +936,7 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         private List<MyFileUpload> GetFileDetails()
         {
-
+           
             List<MyFileUpload> uploadlist = new List<MyFileUpload>();
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             DataTable dtData = new DataTable();
@@ -941,7 +944,7 @@ namespace fcConferenceManager.Controllers.Portolo
             con.Open();
             SqlCommand command = new SqlCommand("getuploadfiles", con);
             command.CommandType = CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@search", "");
+            command.Parameters.AddWithValue("@search","");
             SqlDataAdapter da = new SqlDataAdapter(command);
             da.Fill(dtData);
             con.Close();
@@ -958,7 +961,7 @@ namespace fcConferenceManager.Controllers.Portolo
             }
             return uploadlist;
         }
-        private List<MyFileUpload> GetSearchDetails(string search)
+		private List<MyFileUpload> GetSearchDetails(string search)
         {
             List<MyFileUpload> uploadlist = new List<MyFileUpload>();
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
@@ -989,13 +992,13 @@ namespace fcConferenceManager.Controllers.Portolo
             var customer = GetFileDetails().Find(x => x.FileId.Equals(id));
             return Json(customer, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult ProcessLibrary(ProcessLibrary library, string search)
+      public ActionResult ProcessLibrary(ProcessLibrary library,string search)
         {
 
             List<ProcessLibrary> uploadlist = GetProcessDetails();
 
             library.processList = uploadlist;
-            if (!string.IsNullOrEmpty(search))
+           if (!string.IsNullOrEmpty(search))
             {
                 ViewBag.search = search;
                 //var searchlist = (from list in uploadlist where list.Process.Contains(search.Trim())|| list.Process.StartsWith(search.Trim(), StringComparison.OrdinalIgnoreCase) select list).ToList();
@@ -1014,12 +1017,12 @@ namespace fcConferenceManager.Controllers.Portolo
         {
             ProcessLibrary model = new ProcessLibrary();
             List<ProcessLibrary> librarylist = GetProcessDetails();
-
+            
             model.processList = librarylist;
 
             if (Process != null)
             {
-
+               
                 model.Process = Process;
                 if (SaveProcess(model))
                 {
@@ -1060,7 +1063,7 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         private List<ProcessLibrary> GetProcessDetails()
         {
-            List<ProcessLibrary> librarylist = new List<ProcessLibrary>();
+            List<ProcessLibrary> librarylist = new List<ProcessLibrary>(); 
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             DataTable dtData = new DataTable();
             string query = "Select * from Sys_PortoloProcess";
@@ -1106,7 +1109,7 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         public ActionResult DeleteProcess(int pkey)
         {
-
+            
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             using (SqlConnection con = new SqlConnection(config))
             {
@@ -1119,7 +1122,7 @@ namespace fcConferenceManager.Controllers.Portolo
                     cmd.Parameters.AddWithValue("@status", "Delete");
                     int result = cmd.ExecuteNonQuery();
                     con.Close();
-                    if (result == 1)
+                     if (result == 1)
                     {
                         TempData["Message"] = "Process Deleted Successfully";
                         ModelState.Clear();
@@ -1140,7 +1143,7 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         public ActionResult UpdateProcess(ProcessLibrary library)
         {
-
+           
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             using (SqlConnection con = new SqlConnection(config))
             {
@@ -1151,7 +1154,7 @@ namespace fcConferenceManager.Controllers.Portolo
                     cmd.Parameters.AddWithValue("@pkey", library.pkey);
                     cmd.Parameters.AddWithValue("@Process", library.Process.Trim());
                     cmd.Parameters.AddWithValue("@status", "Update");
-                    int result = cmd.ExecuteNonQuery();
+                        int result = cmd.ExecuteNonQuery();
                     if (result == 1)
                     {
                         TempData["Message"] = "Process Updated Successfully";
@@ -1163,12 +1166,12 @@ namespace fcConferenceManager.Controllers.Portolo
                         ModelState.Clear();
                     }
                     con.Close();
-                    return Redirect(Request.UrlReferrer.ToString());
+                   return Redirect(Request.UrlReferrer.ToString());
                 }
             }
-
+            
         }
-        public ActionResult Reports(string reportId)
+	    public ActionResult Reports(string reportId)
         {
             if ((Session["User"] == null) || !((loginResponse)Session["User"]).IsGlobalAdmin)
                 return Redirect("~/Account/Portolo");
@@ -1274,7 +1277,7 @@ namespace fcConferenceManager.Controllers.Portolo
 
             ExportToExcel(dt, FileName);
         }
-
+												
         public ActionResult DownloadFile(string filePath)
         {
 
@@ -1296,8 +1299,8 @@ namespace fcConferenceManager.Controllers.Portolo
                 throw new System.IO.IOException(s);
             return data;
         }
-        #region ExportExcel
-        public byte[] ExporttoExcel(DataTable table, string filename)
+	#region ExportExcel
+       public byte[] ExporttoExcel(DataTable table, string filename)
         {
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -1307,11 +1310,11 @@ namespace fcConferenceManager.Controllers.Portolo
             return pack.GetAsByteArray();
 
         }
-        public ActionResult Download()
+         public ActionResult Download()
         {
             string reportname = $"ProcessLibrary_{DateTime.Now.ToString("yyyyMMddHHmmssfff")}.xlsx";
             var list = GetProcessDetails();
-
+											
             DataTable dt = new DataTable();
             dt.Clear();
             dt.Columns.Add("S.No");
@@ -1319,7 +1322,7 @@ namespace fcConferenceManager.Controllers.Portolo
             if (Session["searchlist"] != null)
             {
                 list = (List<ProcessLibrary>)Session["searchlist"];
-                Session.Remove("searchlist");
+                Session.Remove("searchlist");											 
             }
             if (list.Count > 0)
             {
@@ -1342,7 +1345,7 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         #endregion					   
 
-        public void DownloadExcel()
+        public void DownloadExcel()										   
         {
             DataTable dt = new DataTable();
             dt.Clear();
@@ -1440,6 +1443,6 @@ namespace fcConferenceManager.Controllers.Portolo
 }
 
 
-
+    
 
 
