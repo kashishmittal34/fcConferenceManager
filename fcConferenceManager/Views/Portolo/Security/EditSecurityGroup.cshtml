@@ -1,5 +1,4 @@
-﻿
-@model Elimar.Models.SecurityGroup
+﻿@model Elimar.Models.SecurityGroup
 @{
     Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
 }
@@ -7,19 +6,23 @@
     textarea, input {
         max-width: none;
     }
-    a{
-        color:black;
+
+    a {
+        color: black;
     }
+
     i {
         display: inline-block;
-        border-radius: 60px;
+        border-radius: 40px;
         box-shadow: 0 0 2px #888;
-        padding: 0.5em 0.6em;
+        padding: 0.3em 0.4em 0.2em 0.4em;
         margin: 4px;
-        background-color: cornflowerblue;
+        background-color: #ffbb33;
+        color: whitesmoke;
     }
-    i,a:hover{
-        cursor:pointer;
+
+    i, a:hover {
+        cursor: pointer;
     }
 
     td, tr {
@@ -30,7 +33,7 @@
 <script type="text/javascript" language="javascript">
     function select(a) {
         //$(selector).siblings("input: checkbox").prop('checked', true);
-        
+
         var ok = a.id;
         debugger;
         $("#" + ok).find('input[type=checkbox]').prop('checked', true);
@@ -70,7 +73,6 @@
             var PK = @Model.SecurtiyGroupPkey;
             $("#component input:checkbox:checked").each(function () {
                 array.push($(this).val());
-                debugger;
             });
             $.ajax({
                 url: "/Security/ChangeComponent",
@@ -78,28 +80,14 @@
                 data: { 'components': array, 'PK': PK },
                 success: function (response) {
                     debugger;
-                    window.top.location.reload();
                 }
             });
-            var model = {
-                name: $("#groupName").val(),
-                description: $("#groupDescription").val()
-            }
-            debugger;
-            $.ajax({
-                URL: "/Security/EditSecurityGroup",
-                traditional: true,
-                type: "POST",
-                data: { securityGroup : model }
-            });
         });
-
         $("#apply").click(function () {
             var array = [];
             var PK = @Model.SecurtiyGroupPkey;
             $("#component input:checkbox:checked").each(function () {
                 array.push($(this).val());
-                debugger;
             });
             $.ajax({
                 url: "/Security/ChangeComponent",
@@ -107,9 +95,29 @@
                 data: { 'components': array, 'PK': PK },
                 success: function (response) {
                     debugger;
-                    window.top.location.reload();
                 }
             });
+            var name = $("#Name").val();
+            var description = $("#Description").val();
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "/Security/EditSecurityGroup",
+                traditional: true,
+                data: {
+                    'Name': name,
+                    'Description': description,
+                    'SecurtiyGroupPkey': $("#SecurtiyGroupPkey").val(),
+                },
+                success: function (response) {
+                    debugger;
+
+                }
+            });
+            setTimeout(
+                function () {
+                    location.reload();
+                }, 1000);
         });
         $("#export").click(function () {
             debugger;
@@ -136,28 +144,27 @@
 
 
 <div>
-    <iframe id="frame" style="position: absolute; left: 10%; top: 23%; height: 70%; width: 83%; display: none; border: 2px solid cornflowerblue" src="~/Security/AddMember?PK=@Model.SecurtiyGroupPkey"></iframe>
+    <iframe id="frame" style="position: absolute; left: 8%; top: 19%; height: 70%; width: 83%; display: none; border: 2px solid #6e6c6c" src="~/Security/AddMember?PK=@Model.SecurtiyGroupPkey"></iframe>
 </div>
-<form  action="~/Security/EditSecurityGroup" method="post" enctype="multipart/form-data" class="container-fluid">
-    <input value="@Model.SecurtiyGroupPkey" name="SecurtiyGroupPkey" hidden/>
-    <div class="row" style="background-color:lightskyblue;">
+<form action="~/Security/EditSecurityGroup" method="post" enctype="multipart/form-data" class="container">
+    <input value="@Model.SecurtiyGroupPkey" id="SecurtiyGroupPkey" name="SecurtiyGroupPkey" hidden />
+    <div class="row" >
         <div class="col-12">
-            <span style="font-size:30px;color:darkblue">Security Group : @Model.Name</span>
+            <span style="font-size: 30px; color: #FF8800">Security Group: @Model.Name</span>
             <div style="float:right; align-content:center ">
                 <input id="apply" type="button" style="width: 70px; padding: 2px; background-color: white;" class="btn btn-outline-warning" value="Apply" />
                 <input id="save" type="submit" style="width: 70px; padding: 2px; background-color: white; " class="btn btn-outline-warning" value="Save" />
-                <input id="cancel" type="button" style="width: 70px; padding:2px; background-color: white; " class="btn btn-outline-warning" value="cancel" />
+                <a href="~/security/Securitygroup"><input id="cancel" type="button" style="width: 70px; padding:2px; background-color: white; " class="btn btn-outline-warning" value="cancel" /></a>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-6">
-            <span style="color:blue; font-size:20px;">Description</span><br />
-            <label style="font-size:12px">Name</label><br />
-            <input id="groupName" style="border-left:5px solid blue ; width:500px;" class="form-control" value="@Model.Name" name="name"  />
+            <label style="font-size:12px">Name</label><br/>
+            <input id="Name" style="border-left: 5px solid #FF8800; width: 500px;" class="form-control" value="@Model.Name" name="Name" />
             <label style="font-size:12px">Description</label><br />
-            <textarea id="groupDescription" class="form-control" name="description" style="width: 500px; resize:none;height:100px;">@Model.Description</textarea><br />
-            <label class="form-control" style="background-color:cornflowerblue; width:300px; color:white">Members</label>
+            <textarea id="Description" class="form-control" name="Description" style="width: 500px; resize:none;height:100px;">@Model.Description</textarea><br />
+            <label class="form-control px-1" style="border:none; font-size:18px; width:300px; color:black">Members</label>
             <div class="row">
                 <div class="col">
                     <a href="#" id="add"><i class="fa-solid fa-plus"></i></a>
@@ -167,8 +174,8 @@
             </div>
             <table id="members" class="table table-striped">
                 <thead>
-                    <tr style="background-color:cornflowerblue; color:white;">
-                        <td  style="width:50px"><input id="memberCheckbox" class="form-check-input" type="checkbox"/></td>
+                    <tr style="background-color: #6e6c6c; color: white;">
+                        <td style="width:50px"><input id="memberCheckbox" class="form-check-input" type="checkbox" /></td>
                         <td style="width:100px"><lable>ID</lable></td>
                         <td style="width:300px"><lable>Name</lable></td>
                         <td style="width:100px"><lable>Activated</lable></td>
@@ -186,27 +193,29 @@
                     }
                 </tbody>
             </table>
+            <br /><br /> <br />
         </div>
-        <div class="col-1">
+        <br /><br /> <br />
+        <div class="col-2">
 
         </div>
         <div class="col-4">
-            <span style="color:darkblue;font-size:20px;">Components rights</span>
-            <table id="component" style="border: 1px solid cornflowerblue; " class="table table-striped">
+            <span style="color: #FF8800; font-size: 20px;">Pages</span>
+            <table id="component" style="border: 1px solid #6e6c6c; " class="table table-striped">
                 <thead>
                     <tr>
-                        <th style="background-color:cornflowerblue; color:white">Component</th>
-                        <th style="background-color:cornflowerblue; color:white">View</th>
-                        <th style="background-color:cornflowerblue; color:white">Add</th>
-                        <th style="background-color:cornflowerblue; color:white">Edit</th>
-                        <th style="background-color:cornflowerblue; color:white">Delete</th>
+                        <th style="background-color: #6e6c6c; color: white">Page</th>
+                        <th style="background-color: #6e6c6c; color: white">View</th>
+                        <th style="background-color: #6e6c6c; color: white">Add</th>
+                        <th style="background-color: #6e6c6c; color: white">Edit</th>
+                        <th style="background-color: #6e6c6c; color: white">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
                     @{foreach (var item in Model.ComponentList)
                         {
                             <tr id="@item.ComponentName">
-                                <td><a href="#" onclick="select(@item.ComponentName.ToString())" >@item.ComponentName</a></td>
+                                <td><a href="#" onclick="select(@item.ComponentName.ToString())">@item.ComponentName</a></td>
                                 @if (item.AllowView)
                                 {
                                     <td><input value="@item.ComponentName+AllowView" class="form-check-input" type="checkbox" checked /></td>
@@ -247,11 +256,3 @@
         </div>
     </div>
 </form>
-
-
-
-
-
-
-
-

@@ -147,7 +147,6 @@
                             <h2> @ViewBag.HeadingTitle </h2>
                             
                             <div class="controls">
-
                                 <input type="submit" name="submit" value="Apply" id="idApply" class="brdr-1 btn-sm" onclick="return validateInputs(event);">
                                 <input type="submit" name="Save" value="Save" id="idSave" class="brdr-1 btn-sm" onclick="return validateInputs(event);">
                                 @*<a href="~/Portolo/TaskList" class="brdr-1 btn-sm" style = "background-color:white;" >Cancel</a>*@
@@ -271,7 +270,6 @@
                                                                 </label>
                                                             </div>
                                                         </div>
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -281,7 +279,6 @@
                                             <div class="form-group">
                                                 <textarea rows="5" cols="100" type="text" class="form-control" value="@Model.taskListResponse.Tips" name="Tips" id="Tips" maxlength="2000">@Model.taskListResponse.Tips</textarea>
                                             </div>
-
 
                                         </div>
                                         <div class="tab-pane p-5" id="instruction">
@@ -293,13 +290,13 @@
                                             <textarea rows="5" cols="100" style="width:1100px ; height:200px" type="text" class="form-control" value="@Model.taskListResponse.Notes" name="Notes" id="Notes" maxlength="2000">@Model.taskListResponse.Notes</textarea>
                                         </div>
                                         <div class="tab-pane p-5" id="resources">
-                                            
+
                                             <input type="hidden" name="hiddenResources" value="@Model.taskListResponse.Resources" />
                                             <input type="hidden" name="hiddenResourcesFileNames" value="@Model.taskListResponse.ResourcesFileName" />
 
                                             @Html.TextBoxFor(model => model.files, "", new { @type = "file", @multiple = "multiple", id = "file" })
 
-
+                                            <a id="removeFile"><i class="fa-solid fa-trash"></i> </a>
                                             @if (Model.taskListResponse.pKey != null && Model.taskListResponse.pKey != "")
                                             {
                                                 <button name="submit" type="submit" style="border-width: thin;" id="process" value="Upload">
@@ -316,7 +313,7 @@
                                                 <label for="exampleFormControlSelect1"> @Model.taskListResponse.Resources</label>
 
                                                 @*<a style="color:black" href="@Url.Action("DeleteImage", new { id = @Model.taskListResponse.pKey }).Replace("Portolo", "Task")"> <i class="fa-solid fa-trash"></i></a>*@
-                                                <a id="removeFile"><i class="fa-solid fa-trash"></i> </a>
+
                                             }
 
                                             <textarea rows="1" cols="100" type="text" style="display:none" class="form-control" value="@Model.taskListResponse.Resources" name="Resources" id="Resources" maxlength="2000">@Model.taskListResponse.Resources</textarea>
@@ -349,7 +346,7 @@
 
                                                             </td>
                                                             <td>
-                                                                <button style="border-width: thin; width: 87px; " class="brdr-1 btn-sm" value="@item.pkey" id="deleteresourcefile" onclick=funcDeletResourcefile(@item.pkey,@item.PublicTaskID,"Resource")>Delete</button>
+                                                                <a value="@item.pkey" id="deleteresourcefile" onclick=funcDeletResourcefile(@item.pkey,@item.PublicTaskID,"Resource")> <i class="fa fa-trash" style="color: orange;"></i></a>
                                                             </td>
                                                         </tr>
                                                     }
@@ -371,20 +368,19 @@
     <script type="text/javascript" src="//js.nicedit.com/nicEdit-latest.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+            
             var url = document.location.href;
-
+            
             const myArray = url.split("#");
             if ((myArray.length) > 1) {
                 var name = myArray[1];
                 if (name == "resources") {
                     resourcesShow()
                 }
-            }
+            } 
         })
-
         function Planningshow() {
             $("#planning").show();
-
             $("#instruction").hide();
             $("#notes").hide();
             $("#resources").hide();
@@ -405,7 +401,6 @@
             var ID = $("#tips-tab");
             updateclass(ID);
             return false;
-
         }
 
         function instructionShow() {
@@ -435,7 +430,7 @@
         }
 
         function resourcesShow() {
-
+            
             $("#planning").hide();
             $("#planning").attr("style", "display:none !important");
             $("#instruction").hide();
@@ -445,7 +440,6 @@
             var ID = $("#resources-tab");
             updateclass(ID);
             return false;
-
         }
 
         function updateclass(ID) {
@@ -457,7 +451,6 @@
 
             $(ID).removeClass().addClass('nav-link active');
         }
-
 
         function funcDeletResourcefile(pkey, publicTaskId, source)
         {
@@ -510,38 +503,62 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
             crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-    <script>
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
+        <script src="~/Scripts/jquery-3.5.1.min.js"></script>
+        <script>
             $.noConflict(false);
             $(document).ready(function () {
+                //for the delete icon show
+                $('#removeFile').hide();
+                $('#process').hide();
                 // Toggle menu on click
                 $("#menu-toggler").click(function () {
                     toggleBodyClass("menu-active");
                 });
 
                 function toggleBodyClass(className) {
-                    
+
                     document.body.classList.toggle(className);
                 }
-
-                if ("@ViewBag.Source" == "source") {
-
+                
+                if ("@ViewBag.Source" == "Source") {
+                    
                     resourcesShow();
                 }
                 else
                 {
-                    Planningshow();
+                  Planningshow();
                 }
+                if ($('#file').get(0).files.length === 0) {
 
+                    resourcesShow();
+                }
+               
             });
         $.noConflict(true)
-			 
+
+
         //this is for the delete icon on add task page in resource tab
         $('#removeFile').on('click', function () {
-			
-            $('#file').val("")
+
+            $('#file').val("");
+            $('#removeFile').hide();
+            $('#process').hide();
         })
-    </script>
+
+        //for the alert
+            
+        $("#process").click(function () {
+            if ($('#file').get(0).files.length === 0) {
+                alert("Choose file please!");
+                return false;
+            }
+        });
+           //for the delete icon show
+            $("#file").change(function () {
+                $('#removeFile').show();
+                $('#process').show();
+            });
+        </script>
 
 </body>

@@ -15,7 +15,7 @@
 <script type="text/javascript" language="javascript">
     $(document).ready(function () {
         var array = [];
-        var PK = '@ViewData["PK"]' 
+        var PK = '@ViewData["PK"]'
         debugger;
         $("#save").click(function () {
 
@@ -38,7 +38,7 @@
             });
         });
         $("#cancel").click(function () {
-            window.top.location.reload();         
+            window.top.location.reload();
         });
     });
 </script>
@@ -48,14 +48,15 @@
     th {
         background-color: cornflowerblue;
     }
-    a{
-        color:black;
-        text-decoration:none;
+
+    a {
+        color: black;
+        text-decoration: none;
     }
 </style>
 <div id="main" class="container-fluid">
-    <div style="background-color: lightskyblue ">
-        <span style="color:darkblue;font-size:20px;margin:auto;">Choose Members</span>
+    <div style=" ">
+        <span style="color: #FF8800; font-size: 25px; margin: auto; ">Choose Members</span>
         <div style="float:right; align-content:center; ">
             <input id="save" type="submit" style="width: 70px; padding: 2px; background-color: white; " class="btn btn-outline-warning" value="Save" />
             <input id="cancel" type="button" style="width: 70px; padding:2px; background-color: white; " class="btn btn-outline-warning" value="cancel" />
@@ -63,6 +64,7 @@
     </div>
 
     <form asp-action="AddMember" method="get" style="display:inline-block">
+        <input name="PK" value="@ViewData["PK"]" hidden />
         <div class="row" style="margin-top:10px;margin-bottom:10px">
             <div class="col">
                 <label style="font-size:10px;">Name</label>
@@ -79,11 +81,11 @@
         </div>
     </form>
 
-    
-    <div style="max-height: 70%; overflow: auto; border: 2px solid cornflowerblue">
+
+    <div style="max-height: 70%; overflow: auto; border: 2px solid #6e6c6c">
         <table style="margin:auto;" class="table table-responsive table-striped">
             <thead>
-                <tr style="background-color:cornflowerblue; color:white;">
+                <tr style="background-color: #6e6c6c; color: white;">
                     <th><input class="form-check-input" type="checkbox" disabled /></th>
                     <th>ID</th>
                     <th>Name</th>
@@ -112,7 +114,7 @@
         {
             if (ViewBag.Page == i)
             {
-                <a style="text-align:center; font-size:20px;margin-left:20px; color:deepskyblue" href="~/Security/AddMember?pageNo=@i&nameSearch=@ViewData["NameFilter"]&emailSearch=@ViewData["EmailFilter"]">@i</a>
+                <a style="text-align: center; font-size: 20px; margin-left: 20px; color: #FF8800" href="~/Security/AddMember?pageNo=@i&nameSearch=@ViewData["NameFilter"]&emailSearch=@ViewData["EmailFilter"]">@i</a>
             }
             else
             {

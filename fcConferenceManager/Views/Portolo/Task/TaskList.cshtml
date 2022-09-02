@@ -150,7 +150,7 @@
                                     <label for="exampleFormControlSelect1"></label>
                                     @*<input type="date" class="form-control form-control-sm">*@
                                     <label for="exampleFormControlSelect1">From:</label>
-                                    <input type="text" class="form-control form-control-sm" name="duedate" id="datepicker" value="@String.Format("{0:D}", @ViewBag.Request.duedate !=null?ViewBag.Request.duedate:DateTime.Now.ToString("MM\\/dd\\/yyyy"))"
+                                    <input type="text" class="form-control form-control-sm" name="duedate" id="datepicker" @*value="@String.Format("{0:D}", @ViewBag.Request.duedate !=null?ViewBag.Request.duedate:DateTime.Now.ToString("MM\\/dd\\/yyyy"))"*@
                                            placeholder="mm/dd/yy" readonly="readonly" />
                                     <input type="text" style="display: none" value="@ViewBag.Request.duedate" name="duedate" id="duedatehidden" />
                                 </div>
@@ -372,9 +372,8 @@
         var primarykey = [];
 
 
-        debugger;
         $("#select-all").click(function (event) {
-            debugger;
+           
             if (this.checked) {
                 primarykey.length = 0;
                 // Iterate each checkbox
@@ -391,8 +390,6 @@
                 });
             }
         });
-
-
 
         var checkids = "";
 

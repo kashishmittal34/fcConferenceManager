@@ -180,14 +180,7 @@
                                                 <td><input type="checkbox" name="ID" value="@item["TopicID"]" class="custom-checkbox chkCheckBoxId" /> </td>
                                                 <td> @item["Title"] </td>
                                                 <td> @item["Description"] </td>
-                                                @if (item[3] != false)
-                                                {
-                                                    <td>Active</td>
-                                                }
-                                                else
-                                                {
-                                                    <td>Inactive</td>
-                                                }
+                                                <td> @item["Status"] </td>
                                                 <td style="text-align:center"><a href="/Portolo/EditTopic/@item["TopicID"]"> Edit</a></td>
                                             </tr>
                                         }

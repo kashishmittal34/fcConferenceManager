@@ -1,8 +1,9 @@
-﻿@model IEnumerable<Elimar.Models.InterestGroup>
+﻿@model PagedList.IPagedList<Elimar.Models.InterestGroup>
+@using PagedList.Mvc;
 @{
     Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
 }
-
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <head>
     <script>
         $(document).ready(function () {
@@ -34,8 +35,10 @@
                 }
             });
             $("#addGroup").click(function () {
+                var groupName = $("#groupName").val().trim();
+                debugger;
                 if ($("#groupName").val().trim() == "") {
-                    window.location.reload();
+                    return alert("Please enter the group name");
                 }
                 debugger;
                 $.ajax({
@@ -87,7 +90,7 @@
             $("#EditGroup").click(function () {
                 var val = $("#EditGroupModal").find('input').val();
                 if (val.trim() == "") {
-                    alert("Please enter proper group name");
+                    alert("Please enter the group name");
                     return;
                 }
                 debugger;
@@ -110,7 +113,7 @@
 
             $("#saveToGroup").click(function (e) {
                 var array = [];
-                $("#members input:checkbox:checked").each(function () {
+                $("#membercheckbox input:checkbox:checked").each(function () {
                     array.push($(this).val());
                 });
                 var val = $("#AddToGroupModal").find('select :selected').val();
@@ -146,9 +149,16 @@
                 $("#GroupList").empty();
                 var groupName = $(this).closest('td').siblings().get(6).innerHTML;
                 account = $(this).closest('td').siblings().get(1).innerHTML;
+                var members = $(this).closest('td').siblings().get(7).innerHTML;
+                debugger;
+                if (members == "0") {
+                    location.reload();
+                    alert("No member found");
+                    return;
+                }
                 var groups = groupName.split(',');
                 for (var i = 0; i < groups.length ; i++) {
-                    $("#GroupList").append("<tr><td>" + groups[i].toString().trim() + "</td><td class = removeFromGroup ><button style='float: right' class ='btn btn-outline-secondary my-1 ' type='button'>remove</button></td></tr>")
+                    $("#GroupList").append("<tr><td>" + groups[i].toString().trim() + "</td><td class = removeFromGroup ><button style='float: right' class ='btn btn-outline-warning my-1 ' type='button'>Remove</button></td></tr>")
                 }
             });
 
@@ -176,62 +186,96 @@
         });
     </script>
     <style>
+        a:hover {
+            color: #ffbb33;
+            cursor:pointer;
+        }
+
         .active {
-            background: cornflowerblue;
+            background: #6e6c6c;
             color: white;
         }
-        a{
-            color:inherit;
+
+        a {
+            color: inherit;
         }
-        i:hover{
-            cursor:pointer;
+
+        i:hover {
+            cursor: pointer;
         }
+
         i {
-            color: cornflowerblue;
-            font-size:20px;
+            color: #ffbb33;
+            font-size: 20px;
         }
+
         thead {
-            background: cornflowerblue;
+            background: #6e6c6c;
             color: white;
         }
-        .form-lable{
-            font-size:12px;
+
+        .form-lable {
+            font-size: 12px;
         }
-        input{
-            max-width:none;
+
+        input {
+            max-width: none;
         }
+
         #addToGroup {
-            background-color: #c6c5ff;
+            background-color: #ffc10787;
         }
-        #addToGroup:hover {
-            background-color: cornflowerblue;
-            color:white;
+
+            #addToGroup:hover {
+                background-color: #ffbb33;
+                color: white;
+            }
+
+        .btn:hover {
+            cursor: pointer;
         }
-        .btn:hover{
-            cursor:pointer;
-        }
+
         html, body {
             width: 100%;
             margin: 0px;
             padding: 0px;
             overflow-x: hidden;
         }
-        .modal{
-            top:30%;
+
+        .modal {
+            top: 30%;
         }
-        a:hover{
-            cursor:pointer;
+
+        a:hover {
+            cursor: pointer;
+        }
+
+        .modal-header {
+            background-color: #6e6c6c;
+            color: white
+        }
+        td,th{
+            text-align : center;
+        }
+        .modal td{
+            text-align:left;
         }
     </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <span style="color:darkblue; font-size:25px;">Manage Interest Groups</span>
-        <div style="border-bottom: solid cornflowerblue 2px;">
+    <div class="container">
+        <span style="color: #FF8800; font-size: 35px;">Manage Interest Groups</span>
+        <div style="border-bottom: solid #6e6c6c 2px; ">
             <table style="margin-top: 8px; background-color: whitesmoke; ">
                 <tr style=" font-size:16px; ">
-                    <td id="interestGroups" class="active" style="padding: 6px 6px 2px 6px; cursor:pointer; ">@Html.ActionLink("Interest Group", "CreateGroup", new { membersPage = false })</td>
-                    <td id="groupMembers" style="padding: 6px 6px 2px 6px; cursor: pointer; ">@Html.ActionLink("Group Members", "CreateGroup", new { membersPage = true })</td>
+                    @if ((bool)@ViewData["groupView"])
+                    {
+                        <td id="interestGroups" class="active" style="padding: 6px 6px 2px 6px; cursor:pointer; ">@Html.ActionLink("Interest Group", "CreateGroup", new { membersPage = false })</td>
+                    }
+                    @if ((bool)@ViewData["memberView"])
+                    {
+                        <td id="groupMembers" style="padding: 6px 6px 2px 6px; cursor: pointer; ">@Html.ActionLink("Group Members", "CreateGroup", new { membersPage = true })</td>
+                    }
                 </tr>
             </table>
         </div>
@@ -239,15 +283,21 @@
         {
             <div id="group" style="margin-top:2px;">
                 <div style="margin-top:10px;">
-                    <button class="btn p-0" data-bs-toggle="modal" data-bs-target="#AddGroupModal">
-                        <i class="fa-solid fa-plus-circle"></i>
-                    </button>
-                    <a href="#" class="btn p-0"><i id="removeGroup" class="fa-solid fa-minus-circle "></i></a>
-                </div>
+                    @if ((bool)@ViewData["groupAdd"])
+                    {
+                        <button class="btn p-0" data-bs-toggle="modal" data-bs-target="#AddGroupModal">
+                            <i class="fa-solid fa-plus-circle"></i>
+                        </button>
+                    }
+                    @if ((bool)@ViewData["groupDelete"])
+                    {
+                        <a href="#" class="btn p-0"><i id="removeGroup" class="fa-solid fa-minus-circle "></i></a>
+                    }
+                    </div>
                 <div class="modal fade" id="AddGroupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <div style="background-color:cornflowerblue" class="modal-header p-1">
+                            <div style="background-color: #6e6c6c; color:white" class="modal-header p-1">
                                 <h5 class="modal-title" id="exampleModalLabel">New Group</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
@@ -257,7 +307,7 @@
                             </div>
                             <div class="modal-footer p-1">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button id="addGroup" type="button" class="btn btn-primary">Save changes</button>
+                                <button id="addGroup" type="button" class="btn btn-outline-warning">Save</button>
                             </div>
                         </div>
                     </div>
@@ -265,20 +315,32 @@
                 <table class="table table-striped" style="width:50%;">
                     <thead>
                         <tr class="active">
-                            <th style="width:50px; padding-left:10px;"><input id="mainGroupCheck" type="checkbox" class="form-check-input" /></th>
+                            @if ((bool)@ViewData["groupEdit"])
+                            {
+                                <th style="width:50px; padding-left:10px;"><input id="mainGroupCheck" type="checkbox" /></th>
+                            }
                             <th>Group Name</th>
                             <th>No. Of Members</th>
-                            <th>Edit</th>
+                            @if ((bool)@ViewData["groupEdit"])
+                            {
+                                <th>Edit</th>
+                            }
                         </tr>
                     </thead>
                     <tbody id="groups">
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td style="padding-left: 10px;"><input type="checkbox" value="@item.GroupName" /></td>
+                                @if ((bool)@ViewData["groupEdit"])
+                                {
+                                    <td style="padding-left: 10px;"><input type="checkbox" value="@item.GroupName" /></td>
+                                }
                                 <td>@item.GroupName</td>
                                 <td>@item.NoOfMembers</td>
-                                <td><button class="btn p-0" data-bs-toggle="modal" data-bs-target="#EditGroupModal" id="@item.GroupName.Trim()"><i  class="fa-solid fa-gear editGroupIcon"></i></button></td>
+                                @if ((bool)@ViewData["groupEdit"])
+                                {
+                                    <td><button class="btn p-0" data-bs-toggle="modal" data-bs-target="#EditGroupModal" id="@item.GroupName.Trim()"><i class="fa-solid fa-gear editGroupIcon"></i></button></td>
+                                }
                             </tr>
                         }
                     </tbody>
@@ -286,7 +348,7 @@
                 <div class="modal fade" id="EditGroupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <div style="background-color:cornflowerblue" class="modal-header p-1">
+                            <div style="background-color: #6e6c6c; color:white" class="modal-header p-1">
                                 <h5 class="modal-title" id="exampleModalLabel">Edit Group Name</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
@@ -296,7 +358,7 @@
                             </div>
                             <div class="modal-footer p-1">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button id="EditGroup" type="button" class="btn btn-primary">Save changes</button>
+                                <button id="EditGroup" type="button" class="btn btn-outline-warning">Save</button>
                             </div>
                         </div>
                     </div>
@@ -309,31 +371,31 @@
         <form class="input-group-sm py-2" asp-action="CreateGroup" method="get">
             <input hidden value="@(ViewBag.memmberPage.ToString().ToLower())" name="membersPage" />
             <div class=" row">
-                <div class="col">
-                    <span class="form-lable">Last Name, First Name</span><br />
+                <div class="col-2">
+                    <span class="form-lable">Last Name, First Name:</span><br />
                     <input class="form-control" id="nameSearch" name="nameSearch" value="@ViewData["NameFilter"]" />
                 </div>
                 <div class="col-2">
-                    <span class="form-lable">Organization</span><br />
+                    <span class="form-lable">Organization:</span><br />
                     <input class="form-control" id="organizationSearch" name="organizationSearch" value="@ViewData["OrganizationFilter"]" />
                 </div>
                 <div class="col">
-                    <span class="form-lable">Industry Sector</span><br />
+                    <span class="form-lable">Industry Sector:</span><br />
                     @Html.DropDownList("Industry", null, new { @class = "form-select" })
                 </div>
                 <div class="col">
-                    <span class="form-lable">Questions</span><br />
+                    <span class="form-lable">Questions:</span><br />
                     @Html.DropDownList("questionFilter", null, new { @class = "form-select" })
                 </div>
                 <div class="col">
-                    <span class="form-lable">Answers</span><br />
+                    <span class="form-lable">Answers:</span><br />
                     @Html.DropDownList("answerFilter", null, new { @class = "form-select" })
                 </div>
                 <div class="col">
-                    <span class="form-lable"> Group Name:</span><br />
+                    <span class="form-lable">Group Name:</span><br />
                     @Html.DropDownList("groupFilter", null, new { @class = "form-select" })
                 </div>
-                <div class="col-5" style="position:relative">
+                <div class="col-4" style="position:relative">
                     <div style="position:absolute; bottom:0;">
                         <!--<i style="margin-right:10px;" class="fa fa-magnifying-glass fa-2x"><button type="submit"></button></i>-->
                         <button type="submit" class="btn p-0">
@@ -344,59 +406,80 @@
                 </div>
             </div>
         </form>
-        <button id="addToGroup" type="button" class="btn my-1" data-bs-toggle="modal" data-bs-target="#AddToGroupModal">Add To Group</button>
-        <table id="members" style="border: 2px solid cornflowerblue " class=" table table-striped">
+        @if ((bool)@ViewData["memberAdd"])
+        {
+            <button id="addToGroup" type="button" class="btn my-1" data-bs-toggle="modal" data-bs-target="#AddToGroupModal">Add To Group</button>
+        }
+        <table id="members" style="border: 2px solid #6e6c6c " class=" table table-striped">
             <thead>
                 <tr>
-                    <th><input id="membermaincheckbox" type="checkbox" class="form-check-input" /></th>
+                    @if ((bool)@ViewData["memberAdd"])
+                    {
+                        <th><input id="membermaincheckbox" type="checkbox" /></th>
+                    }
                     <th>ID</th>
-                    <th><a style="color:white" href="~/InterestGroup/CreateGroup?nameSort=@ViewData["NameSortParm"]&membersPage=true&nameSearch=@ViewData["NameFilter"]&organizationSearch=@ViewData["OrganizationFilter"]&Industry=@ViewData["IndustryFilter"]&answerFilter=@ViewData["Answer"]&groupFilter=@ViewData["Group"]"><label>Name</label></a></th>
+                    <th><a style="color:white" href="~/InterestGroup/CreateGroup?pageNo=@ViewData["Page"]&nameSort=@ViewData["NameSortParm"]&membersPage=true&nameSearch=@ViewData["NameFilter"]&organizationSearch=@ViewData["OrganizationFilter"]&Industry=@ViewData["IndustryFilter"]&answerFilter=@ViewData["Answer"]&groupFilter=@ViewData["Group"]"><label>Name</label></a></th>
                     <th>Job Title</th>
                     <th>Department</th>
                     <th>Organization</th>
                     <th>Groups</th>
                     <th>No of Members</th>
-                    <th>Edit</th>
+                    @if ((bool)@ViewData["memberDelete"])
+                    {
+                        <th>Edit</th>
+                    }
                 </tr>
             </thead>
             <tbody id="membercheckbox">
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td><input type="checkbox" value="@item.MemberInfo.ID" class="form-check-input" /></td>
-                        <td id="accountID">@item.MemberInfo.ID</td>
-                        <td>@item.MemberInfo.name</td>
-                        <td>@item.MemberInfo.jobTitle</td>
-                        <td>@item.MemberInfo.department</td>
-                        <td>@item.MemberInfo.organization</td>
-                        <td id="groupsName">@item.GroupName</td>
-                        <td>@item.NoOfMembers</td>
-                        <td class="editMemberGroup"><button class="btn p-0" data-bs-toggle="modal" data-bs-target="#RemoveGroupModal"><i class="fa-solid fa-gear "></i></button></td>
+                        @if ((bool)@ViewData["memberAdd"])
+                        {
+                            <td><input type="checkbox" value="@item.MemberInfo.ID"  /></td>
+                        }
+                        <td style="width:100px;" id="accountID">@item.MemberInfo.ID</td>
+                        <td style="width:300px;">@item.MemberInfo.name</td>
+                        <td style="width:300px;">@item.MemberInfo.jobTitle</td>
+                        <td style="width:300px;">@item.MemberInfo.department</td>
+                        <td style="width:400px;">@item.MemberInfo.organization</td>
+                        <td style="width:400px;" id="groupsName">@item.GroupName</td>
+                        <td class="px-5" style="text-align : right">@item.NoOfMembers</td>
+                        @if ((bool)@ViewData["memberDelete"])
+                        {
+                            <td class="editMemberGroup"><button class="btn p-0" data-bs-toggle="modal" data-bs-target="#RemoveGroupModal"><i class="fa-solid fa-gear "></i></button></td>
+                        }
                     </tr>
                 }
             </tbody>
         </table>
-        <div class="container d-inline " style="position:absolute;left:40%;">
-            <span style="font-size:30px">Pages</span>
-            <a style="align-self:center; font-size:20px; margin-left:20px; margin-bottom:30px;" href="~/interestGroup/CreateGroup?pageNo=1&membersPage=true&nameSearch=@ViewData["NameFilter"]&organizationSearch=@ViewData["OrganizationFilter"]&Industry=@ViewData["IndustryFilter"]&answerFilter=@ViewData["Answer"]&groupFilter=@ViewData["Group"]"><<</a>
+        <div id='Paging' style="text-align:center">
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+            of @Model.PageCount
+
+            @Html.PagedListPager(Model, page => Url.Action("CreateGroup", new { pageNo = page, membersPage = true, nameSearch = @ViewData["NameFilter"], organizationSearch = @ViewData["OrganizationFilter"], Industry = @ViewData["IndustryFilter"], answerFilter = @ViewData["Answer"], groupFilter = @ViewData["Group"], questionFilter = @ViewData["Question"] }))
+        </div>
+        @*<div class="container d-inline " style="position:absolute;left:40%;">
+            <span style="font-size:20px">Pages</span>
+            <a style="align-self:center; font-size:15px; margin-left:10px; margin-bottom:30px;" href="~/interestGroup/CreateGroup?pageNo=1&membersPage=true&nameSearch=@ViewData["NameFilter"]&organizationSearch=@ViewData["OrganizationFilter"]&Industry=@ViewData["IndustryFilter"]&answerFilter=@ViewData["Answer"]&groupFilter=@ViewData["Group"]"><<</a>
             @for (int i = ViewBag.firstPage; i <= ViewBag.lastPage; i++)
             {
                 if (ViewBag.Page == i)
                 {
-                    <a style="text-align:center; font-size:30px;margin-left:20px; color:orangered" href="~//interestGroup/CreateGroup?pageNo=@i&membersPage=true&nameSearch=@ViewData["NameFilter"]&organizationSearch=@ViewData["OrganizationFilter"]&Industry=@ViewData["IndustryFilter"]&answerFilter=@ViewData["Answer"]&groupFilter=@ViewData["Group"]">@i</a>
+                    <a style="text-align:center; font-size:20px;margin-left:10px; color:orangered" href="~//interestGroup/CreateGroup?pageNo=@i&membersPage=true&nameSearch=@ViewData["NameFilter"]&organizationSearch=@ViewData["OrganizationFilter"]&Industry=@ViewData["IndustryFilter"]&answerFilter=@ViewData["Answer"]&groupFilter=@ViewData["Group"]">@i</a>
                 }
                 else
                 {
-                    <a style="text-align:center; font-size:30px;margin-left:20px; color:black" href="~/interestGroup/CreateGroup?pageNo=@i&membersPage=true&nameSearch=@ViewData["NameFilter"]&organizationSearch=@ViewData["OrganizationFilter"]&Industry=@ViewData["IndustryFilter"]&answerFilter=@ViewData["Answer"]&groupFilter=@ViewData["Group"]">@i</a>
+                    <a style="text-align:center; font-size:20px;margin-left:10px; color:black" href="~/interestGroup/CreateGroup?pageNo=@i&membersPage=true&nameSearch=@ViewData["NameFilter"]&organizationSearch=@ViewData["OrganizationFilter"]&Industry=@ViewData["IndustryFilter"]&answerFilter=@ViewData["Answer"]&groupFilter=@ViewData["Group"]">@i</a>
                 }
             }
-            <a style="align-self:center; font-size:20px; margin-left:20px; margin-bottom:30px;" href="~/interestGroup/CreateGroup?pageNo=@ViewBag.noOfPage&membersPage=true&nameSearch=@ViewData["NameFilter"]&organizationSearch=@ViewData["OrganizationFilter"]&Industry=@ViewData["IndustryFilter"]&answerFilter=@ViewData["Answer"]&groupFilter=@ViewData["Group"]">>></a>
-        </div>
+            <a style="align-self:center; font-size:15px; margin-left:10px; margin-bottom:30px;" href="~/interestGroup/CreateGroup?pageNo=@ViewBag.noOfPage&membersPage=true&nameSearch=@ViewData["NameFilter"]&organizationSearch=@ViewData["OrganizationFilter"]&Industry=@ViewData["IndustryFilter"]&answerFilter=@ViewData["Answer"]&groupFilter=@ViewData["Group"]">>></a>
+        </div>*@
         <div class="modal fade" id="AddToGroupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div style="background-color:cornflowerblue" class="modal-header p-1">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Group Name</h5>
+                    <div style="background-color: #6e6c6c; color:white" class="modal-header p-1">
+                        <h5 class="modal-title" id="exampleModalLabel">Add To Group</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -405,7 +488,7 @@
                     </div>
                     <div class="modal-footer p-1">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button id="saveToGroup" type="button" class="btn btn-primary">Save changes</button>
+                        <button id="saveToGroup" type="button" class="btn btn-outline-warning">Save</button>
                     </div>
                 </div>
             </div>
@@ -413,14 +496,13 @@
         <div class="modal fade" id="RemoveGroupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content ">
-                    <div style="background-color:cornflowerblue" class="modal-header p-1">
-                        <h5 class="modal-title" id="exampleModalLabel">Remove From groups</h5>
+                    <div style="background-color: #6e6c6c; color:white" class="modal-header p-1">
+                        <h5 class="modal-title" id="exampleModalLabel">Remove From group</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body py-1">
                         <h5 class="modal-title"> Group Name</h5>
                         <table class="table" id="GroupList">
-
                         </table>
                     </div>
                 </div>
@@ -432,5 +514,5 @@
     </div>
         }
     </div>
-    <br/>
+    <br />
 </body>

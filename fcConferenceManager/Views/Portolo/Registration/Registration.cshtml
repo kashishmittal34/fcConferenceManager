@@ -70,7 +70,7 @@
 
     function validateInputs(e) {
 
-			 
+
     var Salutation1 = $.trim($('#Salutation1').val());
     var firstName = $.trim($('#firstNameid').val());
     var LastName = $.trim($('#LastName').val());
@@ -118,13 +118,13 @@
         return false;
     }
 
-    else if (Password == "" && "@string.IsNullOrEmpty(Model.ID)" != "False")
+    else if (Password == "" && "@Model.ID" == "0")
     {
         $("#Password").focus();
         alert("Please Fill Password");
         return false;
     }
-    else if (ConfirmPassword == "" && "@string.IsNullOrEmpty(Model.ID)" != "False")
+    else if (ConfirmPassword == "" && "@Model.ID" == "0")
     {
         $("#ConfirmPassword").focus();
         alert("Please Fill Confirm Password");
@@ -354,8 +354,8 @@
                 <tr>
                     <td style="padding-left: 5px;">
                         <span></span>
-                    </td>
-					 
+                    </td>		 
+	  
 										  
 
                     <td style="padding-left: 5px">
@@ -369,30 +369,30 @@
                             </select>
                         </div>
 
-									
+		 
 
 
-					
-
-
-
-													  
-
-
-																
-
-
-																								
-
-
-																								   
-
-
-																								   
+	 
 
 
 
-							 
+			   
+
+
+				
+
+
+						
+
+
+						   
+
+
+						   
+
+
+
+		
 
 
                     <td style="padding-left: 5px">
@@ -456,15 +456,15 @@
 
                         <input type="email" class="form-control form-control-sm" name="MainEmail" value="@Model.mainemail" required id="MainEmail" />
 
-																												
-
-                         @if (Model.ID == 0)	
-						 
-																																	 
-
-																																		 
-						 
 							
+
+                        @if (Model.ID == 0)		
+	   
+								  
+
+								   
+	   
+	   
                         {
                             <span>Password:</span>
 
@@ -824,78 +824,110 @@
     <div>
 
 
-        <div style="padding-top: 10px; padding-left: 10px;">
-            <span style="color: #00008b; font-weight: bold">Professional Information</span>
-        </div>
+    <div style="padding-top: 10px; padding-left: 10px;">
+        <span style="color: #00008b; font-weight: bold">Professional Information</span>
+    </div>
 
+    <div>
+																						   
+			  
+
+    <div style="vertical-align: top; float: left; padding-left: 10px">
         <div>
-
-            <div style="vertical-align: top; float: left; padding-left: 10px">
-                <div>
-
-
-                    <div style="float: left">
-
-                        <span>Job Title:</span>
-                        <br>
-                        <input type="text" class="form-control form-control-sm" value="@Model.jobTitle" name="jobtitle" id="jobtitle" required />
-                    </div>
-                    <div style="float: left; padding-left: 5px">
-                        <span>Department:</span>
-                        <br>
-                        <input type="text" class="form-control form-control-sm" value="@Model.department" name="Department" />
-                    </div>
-                    <div style="float: left; padding-left: 5px">
-                        <span>Organization:</span>
-                        <br>
-                        <input type="text" class="form-control form-control-sm" name="Organization" value="@Model.organization" id="Organization" required />
-
-                    </div>
-                </div>
-                <div style="float: left; padding-left: 5px;">
-                    <span>Degrees and Certifications:</span>
-                    <br>
-                    <input type="text" class="form-control form-control-sm" value="@Model.degreesandcertifications" name="degreesandcertifications" />
-
-                </div>
-                <div style="float: left; padding-left: 0px">
-                    <span>Website:</span>
-                    <br>
-                    <input type="text" class="form-control form-control-sm" value="@Model.website" name="Website" />
-
-                </div>
-                <div style="float: left; padding-left: 8px">
-                    <span style="color: black; font-weight: bold">CV @Model.CV</span>
-                    <br>
-                    <input type="file" name="CVfile" value="Upload" id="CVfile" onchange="fileCheckdoc(this);" />
-                </div>
-                <div>
-                    <div style="float: left;" class="cvp">
-                        <div style="float: left;" class="cvp">
-                            <span>Personal Biography:</span>
-                            <br>
-                            <textarea name="personalbiography" value="@Model.personalbiography" rows="100" cols="10000" style="height: 150px; max-width: 686px; " maxlength="600">@Model.personalbiography</textarea>
-                            <br />
-                            <lable style="width:100%"> About My Organization And My Role:</lable>
-                            <br>
-
-                            <textarea name="aboutmyorganizationandmyrole" value="@Model.aboutmyorganizationandmyrole" rows="100" cols="100" style="height: 150px; max-width: 686px; " maxlength="500">@Model.aboutmyorganizationandmyrole</textarea>
-                        </div>
-                        <div></div>
-                        <br />
-
-                        <div style="visibility:hidden">0</div>
-
-                    </div>
-
-                    <div style="padding-left: 5px; vertical-align: top; float: left;" class="spel">
-
-
-
-                    </div>
-                </div>
+            <div style="float: left">
+                <span>Job Title:</span>
+                <br>
+                <input type="text" class="form-control form-control-sm" value="@Model.jobTitle" name="jobtitle" id="jobtitle" required />
+            </div>
+            <div style="float: left; padding-left: 5px">
+                <span>Department:</span>
+                <br>
+                <input type="text" class="form-control form-control-sm" value="@Model.department" name="Department" />
+            </div>
+            <div style="float: left; padding-left: 5px">
+                <span>Organization:</span>
+                <br>
+                <input type="text" class="form-control form-control-sm" name="Organization" value="@Model.organization" id="Organization" required />
 
             </div>
+        </div>
+        <div style="float: left; padding-left: 5px;">
+            <span>Degrees and Certifications:</span>
+            <br>
+            <input type="text" class="form-control form-control-sm" value="@Model.degreesandcertifications" name="degreesandcertifications" />
+
+        </div>
+        <div style="float: left; padding-left: 0px">
+            <span>Website:</span>
+            <br>
+            <input type="text" class="form-control form-control-sm" value="@Model.website" name="Website" />
+
+											 
+
+											   
+							
+																																				 
+        </div>
+        <div style="float: left; padding-left: 8px">
+            <span style="color: black; font-weight: bold">CV @Model.CV</span>
+							
+																															  
+						  
+																
+												  
+            <br>
+            <input type="file" name="CVfile" value="Upload" id="CVfile" onchange="fileCheckdoc(this);" />
+
+        </div>
+        <div>
+            <div style="float: left;" class="cvp">
+                <div style="float: left;" class="cvp">
+                    <span>Personal Biography:</span>
+                    <br>
+                    <textarea name="personalbiography" value="@Model.personalbiography" rows="100" cols="10000" style="height: 150px; max-width: 686px; " maxlength="600">@Model.personalbiography</textarea>
+                    <br />
+                    <lable style="width:100%"> About My Organization And My Role:</lable>
+															
+										 
+                    <br>
+																													
+
+                    <textarea name="aboutmyorganizationandmyrole" value="@Model.aboutmyorganizationandmyrole" rows="100" cols="100" style="height: 150px; max-width: 686px; " maxlength="500">@Model.aboutmyorganizationandmyrole</textarea>
+                </div>
+                <div></div>
+																					 
+						
+																												 
+					  
+					 
+														  
+															  
+															
+								
+																																																					 
+                <br />
+																								 
+								
+
+                <div style="visibility:hidden">0</div>
+							  
+								   
+							  
+
+            </div>
+
+						  
+
+            <div style="padding-left: 5px; vertical-align: top; float: left;" class="spel">
+
+
+
+						  
+					  
+
+            </div>
+        </div>
+    </div>
         </div>
     </div>
 </form>

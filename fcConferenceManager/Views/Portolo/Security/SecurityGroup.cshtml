@@ -21,6 +21,38 @@
                 }
             });
         });
+        $("#removeGroup").click(function () {
+            var groups = [];
+            $("#groups input:checkbox:checked").each(function () {
+                groups.push($(this).val());
+            });
+            if (groups.length == 0) {
+                alert("please select any group to remove");
+                return;
+            }
+            debugger;
+            $.ajax({
+                url: "/Security/RemoveGroup",
+                type: "POST",
+                traditional: true,
+                data: { 'groups': groups },
+                success: function (response) {
+                    window.location.reload();
+                }
+            });
+        })
+        $("#mainCheckbox").change(function () {
+            debugger;
+            if ($("#mainCheckbox").is(':checked')) {
+                $("#groups").find('input[type=checkbox]').prop('checked', true);
+                debugger;
+            }
+            else {
+                $("#groups").find('input[type=checkbox]').prop('checked', false);
+                debugger;
+            }
+        })
+
     });
 </script>
 <style>
@@ -28,52 +60,57 @@
         color:black;
     }
 </style>
-<div>
-    <button data-bs-toggle="modal" data-bs-target="#AddGroupmodal" style="float:right;" class="btn btn-outline-warning my-2">Add new group</button>
-</div>
-<div class="modal fade" id="AddGroupmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div style="background-color: dimgrey; color:white;" class="modal-header p-1">
-                <h5 class="modal-title" id="exampleModalLabel">Add Group </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <label>Group Name</label>
-                <input id="groupName" class="form-control" type="text" />
-            </div>
-            <div class="modal-footer p-1">
-                <button id="addToGroup" type="button" class="btn btn-outline-warning">Save changes</button>
-                <button type="button" class="btn btn-outline-warning" data-bs-dismiss="modal">Close</button>
+<div class="container">
+    <div>
+        <button data-bs-toggle="modal" data-bs-target="#AddGroupmodal" style="float:right;" class="btn btn-outline-warning my-2">Add new group</button>
+        <button id="removeGroup" style="float:right;" class="btn btn-outline-secondary my-2 mx-2">Delete group</button>
+    </div>
+    <div class="modal fade" id="AddGroupmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div style="background-color: dimgrey; color:white;" class="modal-header p-1">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Group </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label>Group Name</label>
+                    <input id="groupName" class="form-control" type="text" />
+                </div>
+                <div class="modal-footer p-1">
+                    <button id="addToGroup" type="button" class="btn btn-outline-warning">Save</button>
+                    <button type="button" class="btn btn-outline-warning" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<table class="table">
-    <thead style="background-color:dimgrey; color:white;">
-        <tr>
-            <th>ID</th>
-            <th>Group Name</th>
-            <th>Description</th>
-            <th>Members</th>
-            <th>Members count</th>
-            <th>Edit</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var item in Model) 
-        {
+    <table style="border: 2px solid #6e6c6c " class="table">
+        <thead style="background-color:dimgrey; color:white;">
             <tr>
-                <td>@item.SecurtiyGroupPkey</td>
-                <td style="width:300px;">@item.Name</td>
-                <td style="width:600px;">@item.Description</td>
-                <td style="width:600px;">@string.Join(", ", item.members.Select(member => member.AccountName).ToList())</td>
-                <td overflow:auto;">@item.members.Count</td>
-                <td><a href="~/Security/EditSecurityGroup?PK=@item.SecurtiyGroupPkey"><i class="fa-solid fa-gear"></i></a></td>
+                <th><input type="checkbox" id="mainCheckbox" /></th>
+                <th>ID</th>
+                <th>Group Name</th>
+                <th>Description</th>
+                <th>Members</th>
+                <th style="width:200px;">Members count</th>
+                <th>Edit</th>
             </tr>
-        }
-    </tbody>
-</table>
-<br/>
-<br/>
-<br/>
+        </thead>
+        <tbody id="groups">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><input type="checkbox"  value="@item.SecurtiyGroupPkey" /></td>
+                    <td style="width:50px;">@item.SecurtiyGroupPkey</td>
+                    <td style="width:300px;">@item.Name</td>
+                    <td style="width:500px;">@item.Description</td>
+                    <td style="width:800px;">@string.Join(", ", item.members.Select(member => member.AccountName).ToList())</td>
+                    <td style="text-align:center;">@item.members.Count</td>
+                    <td><a href="~/Security/EditSecurityGroup?PK=@item.SecurtiyGroupPkey"><i class="fa-solid fa-gear"></i></a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+    <br />
+    <br />
+</div>

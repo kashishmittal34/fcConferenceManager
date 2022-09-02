@@ -57,7 +57,7 @@
                                             <li><a class="sub-nav__link" href="#">link 3 - long link - long link - long link</a></li>
                                         </ul>-->
                                     </li>
-		@if ((Session["User"] != null) && ((Elimar.Models.loginResponse)Session["User"]).IsGlobalAdmin)
+		@if ((Session["User"] != null) && (((Elimar.Models.loginResponse)Session["User"]).IsGlobalAdmin || ((Elimar.Models.loginResponse)Session["User"]).staffmember))
                                     {
                                         <li class="menu-item current-menu-item">
                                             <a class="nav__link mr-0" href="#">Pages</a>
