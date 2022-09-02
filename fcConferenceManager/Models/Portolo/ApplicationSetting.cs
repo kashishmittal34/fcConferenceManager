@@ -6,22 +6,21 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
+using System.Web.Mvc;
 
 namespace fcConferenceManager.Models.Portolo
 {
     public class ApplicationSetting
     {     
         public string pkey { get; set; }
+        public int Id { get; set; }
         public string SettingID { get; set; }
+        [AllowHtml]
+        [Display(Name = "SettingValue")]
         public string SettingValue { get; set; }
 
     }
-    public class ApplicationSettingTemp
-    {
-        public int pkey { get; set; }
-        public string SettingID { get; set; }
-        public string SettingValue { get; set; }
-    }
+   
     public class ApplicationSettingViewModel
     {
         public string AccountImg { get; set; }

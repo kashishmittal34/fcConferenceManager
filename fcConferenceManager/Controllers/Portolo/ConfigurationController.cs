@@ -180,7 +180,7 @@ namespace fcConferenceManager.Controllers.Portolo
         {
             List<ApplicationSetting> setlist = new List<ApplicationSetting>();
             DataTable dtData = new DataTable();
-            string query = "SELECT REPLICATE('0',5-LEN(RTRIM(pkey))) + RTRIM(pkey) as pKey , SettingValue,SettingID  from Portolo_ApplicationSettings";
+            string query = "SELECT REPLICATE('0',5-LEN(RTRIM(pkey))) + RTRIM(pkey) as PrimaryKey , SettingValue,SettingID ,pKey from Portolo_ApplicationSettings ORDER BY pKey OFFSET 2 ROWS FETCH  next 2000 ROWS only";
             SqlConnection con = new SqlConnection(config);
             con.Open();
             SqlCommand command = new SqlCommand(query, con);
@@ -191,17 +191,18 @@ namespace fcConferenceManager.Controllers.Portolo
             {
                 setlist.Add(new ApplicationSetting
                 {
-                    pkey = @dr["pKey"].ToString(),                  
+                    pkey = @dr["PrimaryKey"].ToString(),                  
                     SettingID = @dr["SettingID"].ToString(),
-                    SettingValue = dr["SettingValue"].ToString()
+                    SettingValue = dr["SettingValue"].ToString(),
+                    Id = Convert.ToInt32(@dr["pKey"]),
                 });
 
             }
             return setlist;
         }
-        private List<ApplicationSettingTemp> GetEditDetails()
+        private List<ApplicationSetting> GetEditDetails()
         {
-            List<ApplicationSettingTemp> setlist = new List<ApplicationSettingTemp>();
+            List<ApplicationSetting> setlist = new List<ApplicationSetting>();
             DataTable dtData = new DataTable();
             string query = "SELECT *  from Portolo_ApplicationSettings";
             SqlConnection con = new SqlConnection(config);
@@ -212,9 +213,9 @@ namespace fcConferenceManager.Controllers.Portolo
             con.Close();
             foreach (DataRow dr in dtData.Rows)
             {
-                setlist.Add(new ApplicationSettingTemp
+                setlist.Add(new ApplicationSetting
                 {
-                    pkey = Convert.ToInt32(@dr["pKey"]),
+                    Id = Convert.ToInt32(@dr["pKey"]),
                     SettingID = @dr["SettingID"].ToString(),
                     SettingValue = dr["SettingValue"].ToString()
                 });
@@ -222,11 +223,16 @@ namespace fcConferenceManager.Controllers.Portolo
             }
             return setlist;
         }
-        public JsonResult EditSetting(int? id)
+        public ActionResult EditSetting(int id)
         {
-            var customer = GetEditDetails().Find(x => x.pkey.Equals(id));
+            var customer = GetEditDetails().Find(x => x.Id.Equals(id));
+            if(id == 3 || id==4)
+            {
+                return RedirectToAction("TextEditor",customer); 
+            }
             return Json(customer, JsonRequestBehavior.AllowGet);
         }
+        [HttpPost]
         public ActionResult UpdateSetting(ApplicationSetting setting)
         {
             using (SqlConnection con = new SqlConnection(config))
@@ -235,7 +241,7 @@ namespace fcConferenceManager.Controllers.Portolo
                 {
                     con.Open();
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@pkey", setting.pkey);
+                    cmd.Parameters.AddWithValue("@pkey", setting.Id);
                     cmd.Parameters.AddWithValue("@Value", setting.SettingValue.Trim());
                     cmd.Parameters.AddWithValue("@status", "Update");
                     int result = cmd.ExecuteNonQuery();
@@ -250,6 +256,10 @@ namespace fcConferenceManager.Controllers.Portolo
                         ModelState.Clear();
                     }
                     con.Close();
+                    if(setting.Id <=4)
+                    {
+                        return RedirectToAction("ConfigurationSettings");
+                    }
                     return Redirect(Request.UrlReferrer.ToString());
                 }
             }
@@ -344,6 +354,10 @@ namespace fcConferenceManager.Controllers.Portolo
                 TempData["Message"] = "There is some Error!";
             }
             return terms;
+        }
+        public ActionResult TextEditor( ApplicationSetting applicationSetting)
+        {
+            return View("~/Views/Portolo/TextEditor.cshtml", applicationSetting);
         }
     }
 }

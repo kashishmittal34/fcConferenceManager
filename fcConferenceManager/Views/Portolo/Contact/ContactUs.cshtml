@@ -12,8 +12,8 @@
 
     .grid {
         display: grid;
-        grid-template-columns: repeat(3,400px); /* 3 columns */
-        grid-template-rows: repeat(3,400px); /* 3 rows  */
+        grid-template-columns: repeat(4,320px); /* 3 columns */
+        grid-template-rows: repeat(3,300px); /* 3 rows  */
         grid-gap: 30px 30px; /* 50 pixels of space added between rows and 30 pixels added between columns  */
     }
 
@@ -27,8 +27,8 @@
     }
 
     .unique {
-        width: 250px;
-        height: 250px;
+        width: 150px;
+        height: 150px;
         border-radius: 10px;
         box-shadow: rgb(50 50 93 / 25%) 0px 6px 12px -2px, rgb(0 0 0 / 30%) 0px 3px 7px -3px;
     }
@@ -48,6 +48,8 @@
                                 <tr style="text-align:justify">
                                     <td style="vertical-align: top; font-size: 15px; padding-top: 5px;">
                                         <div class="grid">
+                                            
+
                                             @if (Model.Count > 0)
                                             {
                                                 foreach (var item in Model)

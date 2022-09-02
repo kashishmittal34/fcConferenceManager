@@ -36,7 +36,8 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
-            var phoneexp = /^\+?([0-9]{0,2})\)?[-. ]?([0-9]{0,9})[-. ]?([0-9]{0,9})[-. ]?([0-9]{0,9})$/;
+            var phoneexp = /^[\+]?[\(]?([0-9]{0,3})[\)]?[-. ]?([0-9]{0,9})[-. ]?([0-9]{0,4})[-. ]?([0-9]{0,4})$/;
+            /*var phoneexp = /^[\+]?[(]?[0-9]{0,3}[)]?[-.]?[0-9]{0,3}[-.]?[0-9]{4,6}$/;*/
             $("#txtUpdatePhone").attr('maxlength', '16');
             $( '#SubmitButton').click(function () {
                 if ($('#txtUpdateRole').val().trim() === "") {
@@ -83,7 +84,7 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
-            var phoneexp = /^\+?([0-9]{0,2})\)?[-. ]?([0-9]{0,3})[-. ]?([0-9]{0,3})[-. ]?([0-9]{0,4})$/;
+            var phoneexp = /^[\+]?[\(]?([0-9]{0,3})[\)]?[-. ]?([0-9]{0,9})[-. ]?([0-9]{0,4})[-. ]?([0-9]{0,4})$/;
             $('#addPhone').attr('maxlength', '16');
             $('#addButton').click(function () {
                 if ($('#addRole').val().trim() === "") {

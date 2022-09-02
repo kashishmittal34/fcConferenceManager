@@ -124,7 +124,7 @@ namespace fcConferenceManager.Controllers
                     }
                     if (redirectTo != null) return Redirect("~/" + redirectTo);
                    
-                    Session["AccountImage"] = configuration.GetAccountName();
+                     Session["AccountImage"] = configuration.GetAccountName();
                     return Redirect("~/Dashboard/Portolo");
 
                 }
@@ -222,7 +222,7 @@ namespace fcConferenceManager.Controllers
                                 //response.countryCodephone2 = reader["countryCodephone2"].ToString();
                                 if (reader["imgpath"].ToString() == null || reader["imgpath"].ToString() == "")
                                 {
-                                    response.Uimg = baseurl + "/User-images/empty%20image.png";//"https://localhost:44376/"+reader["Uimg"].ToString();
+                                    //response.Uimg = baseurl + "/User-images/empty%20image.png";//"https://localhost:44376/"+reader["Uimg"].ToString();
                                     response.Uimg = Session["AccountImage"].ToString();
                                 }
                                 else 
