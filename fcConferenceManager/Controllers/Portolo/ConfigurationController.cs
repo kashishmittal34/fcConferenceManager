@@ -223,13 +223,10 @@ namespace fcConferenceManager.Controllers.Portolo
             }
             return setlist;
         }
-        public ActionResult EditSetting(int id)
+        public JsonResult EditSetting(int id)
         {
             var customer = GetEditDetails().Find(x => x.Id.Equals(id));
-            if(id == 3 || id==4)
-            {
-                return RedirectToAction("TextEditor",customer); 
-            }
+           
             return Json(customer, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
@@ -355,9 +352,12 @@ namespace fcConferenceManager.Controllers.Portolo
             }
             return terms;
         }
-        public ActionResult TextEditor( ApplicationSetting applicationSetting)
+        public ActionResult TextEditor( int?id)
         {
-            return View("~/Views/Portolo/TextEditor.cshtml", applicationSetting);
+            ViewBag.Application = GetEditDetails().Find(x => x.Id.Equals(id)); 
+            return View("~/Views/Portolo/TextEditor.cshtml");
         }
+       
+
     }
 }

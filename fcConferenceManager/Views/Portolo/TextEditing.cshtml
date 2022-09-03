@@ -4,58 +4,74 @@
     ViewBag.Title = "Text Editor";
     Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
 }
-
+<script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js"></script>
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">
 <body>
     <section class="task-list-form center">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
+        <div class="container center">
+            <div class="row center">
+                <div class="hidden" style="display: none;">
+                    <div class="note-popover popover in note-link-popover bottom hidden" style="display: none;">  <div class="arrow">  <div class="popover-content note-children-container"><span>&nbsp;</span><div class="note-btn-group btn-group note-link"><button type="button" class="note-btn btn btn-default btn-sm" tabindex="-1" title="" data-bs-original-title="Edit" aria-label="Edit"><i class="note-icon-link"></i></button><button type="button" class="note-btn btn btn-default btn-sm" tabindex="-1" title="" data-bs-original-title="Unlink" aria-label="Unlink"><i class="note-icon-chain-broken"></i></button></div></div></div></div>
+                    <div class="note-popover popover in note-image-popover bottom hidden" style="display: none;">  <div class="arrow">  <div class="popover-content note-children-container"><div class="note-btn-group btn-group note-imagesize"><button type="button" class="note-btn btn btn-default btn-sm" tabindex="-1" title="" data-bs-original-title="Resize Full"><span class="note-fontsize-10">100%</span></button><button type="button" class="note-btn btn btn-default btn-sm" tabindex="-1" title="" data-bs-original-title="Resize Half"><span class="note-fontsize-10">50%</span></button><button type="button" class="note-btn btn btn-default btn-sm" tabindex="-1" title="" data-bs-original-title="Resize Quarter"><span class="note-fontsize-10">25%</span></button></div><div class="note-btn-group btn-group note-float"><button type="button" class="note-btn btn btn-default btn-sm" tabindex="-1" title="" data-bs-original-title="Float Left" aria-label="Float Left"><i class="note-icon-align-left"></i></button><button type="button" class="note-btn btn btn-default btn-sm" tabindex="-1" title="" data-bs-original-title="Float Right" aria-label="Float Right"><i class="note-icon-align-right"></i></button><button type="button" class="note-btn btn btn-default btn-sm" tabindex="-1" title="" data-bs-original-title="Float None" aria-label="Float None" aria-describedby="tooltip628821"><i class="note-icon-align-justify"></i></button></div><div class="note-btn-group btn-group note-remove"><button type="button" class="note-btn btn btn-default btn-sm" tabindex="-1" title="" data-bs-original-title="Remove Image" aria-label="Remove Image" aria-describedby="tooltip169975"><i class="note-icon-trash"></i></button></div></div></div></div>
+                </div>
+                <div class="col-lg-12 ">
                     <h2> @ViewBag.Title</h2>
                     <section id="loginForm ">
                         @using (Html.BeginForm("UpdateSetting", "Configuration", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                         {
-                            @Html.AntiForgeryToken()  <hr />
+                            @Html.AntiForgeryToken() <hr />
                             <div class="form-group">
-                                <label class="col-md-4 control-label"> SettingValue</label>
+                                <h5>SettingValue</h5> <br />
                                 <div class="col-md-8">
                                     <div class="input-group">
                                         @Html.HiddenFor(m => m.Id)
-                                        @Html.TextAreaFor(m => m.SettingValue, new { rows = "20", style = "resize:none;width:400px;", placeholder = Html.DisplayNameFor(m => m.SettingValue), @class = "form-control input-lg textarea-editor" })
+                                        @Html.TextAreaFor(m => m.SettingValue, new { rows = "20", style = "resize:none;width:500px;", placeholder = Html.DisplayNameFor(m => m.SettingValue), @class = "form-control input-lg textarea-editor", @id = "Value" })
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <div class="col-md-offset-2 col-md-10">
-                                    <input type="submit" class="btn btn-default" />
+                                <div class="col-md-offset-2 col-md-10 ">
+                                    <div class="pull-right">
+                                        <input type="submit" id="SubmitButton" class="btn-sm brdr-1 " />
+                                    </div>
                                 </div>
                             </div>
                         }
                     </section>
                 </div>
             </div>
-            </div>
-        </section>
+        </div>
+    </section>
 </body>
-<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js"></script>
-<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">
+
+
 <script type="text/javascript">
     $(document).ready(function () {
         // Initialize Editor
-        $('.textarea-editor').summernote({
-            height: 300, // set editor height
+        $('.textarea-editor')({
+            height: 400, // set editor height
             minHeight: null, // set minimum height of editor
             maxHeight: null, // set maximum height of editor
             focus: true // set focus to editable area after initializing summernote
         });
     });
-    //$(document).ready(function () {
+    $(document).ready(function () {
 
-    //    var uri = window.location.toString();
-    //    if (uri.indexOf("?") > 0) {
-    //        var clean_uri = uri.substring(0, uri.indexOf("?"));
-    //        window.history.replaceState({}, document.title, clean_uri);
-    //    }
+        var uri = window.location.toString();
+        if (uri.indexOf("?") > 0) {
+            var clean_uri = uri.substring(0, uri.indexOf("?"));
+            window.history.replaceState({}, document.title, clean_uri);
+        }
 
-    //});
+    });
+    $(document).ready(function () {
+        $('#SubmitButton').click(function () {
+            if ($('#Value').val().trim() == "") {
+                alert("There is no value in textbox");
+                return false;
+            }
+        });
+    });
 </script>

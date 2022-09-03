@@ -384,11 +384,11 @@
     <Reference Include="StackExchange.Redis, Version=2.0.0.0, Culture=neutral, PublicKeyToken=c219ff1ca8c2ce46, processorArchitecture=MSIL">
       <HintPath>..\packages\StackExchange.Redis.2.2.88\lib\net472\StackExchange.Redis.dll</HintPath>
     </Reference>
-    <Reference Include="Syncfusion.EJ2">
-      <HintPath>..\Libraries\Syncfusion.EJ2.dll</HintPath>
+    <Reference Include="Syncfusion.EJ2, Version=20.2500.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.EJ2.MVC5.20.2.0.46\lib\net45\Syncfusion.EJ2.dll</HintPath>
     </Reference>
-    <Reference Include="Syncfusion.Licensing">
-      <HintPath>..\Libraries\Syncfusion.Licensing.dll</HintPath>
+    <Reference Include="Syncfusion.Licensing, Version=20.2460.0.46, Culture=neutral, PublicKeyToken=632609b4d040f6b4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Licensing.20.2.0.46\lib\net46\Syncfusion.Licensing.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -579,6 +579,25 @@
     <Content Include="Content\components.css" />
     <Content Include="Content\core.css" />
     <Content Include="Content\Core1.css" />
+    <Content Include="Content\ej2\bootstrap-dark.css" />
+    <Content Include="Content\ej2\bootstrap.css" />
+    <Content Include="Content\ej2\bootstrap4.css" />
+    <Content Include="Content\ej2\bootstrap5-dark.css" />
+    <Content Include="Content\ej2\bootstrap5.css" />
+    <Content Include="Content\ej2\compatibility\bootstrap.css" />
+    <Content Include="Content\ej2\compatibility\bootstrap4.css" />
+    <Content Include="Content\ej2\compatibility\fabric.css" />
+    <Content Include="Content\ej2\compatibility\highcontrast.css" />
+    <Content Include="Content\ej2\compatibility\material.css" />
+    <Content Include="Content\ej2\fabric-dark.css" />
+    <Content Include="Content\ej2\fabric.css" />
+    <Content Include="Content\ej2\fluent-dark.css" />
+    <Content Include="Content\ej2\fluent.css" />
+    <Content Include="Content\ej2\highcontrast.css" />
+    <Content Include="Content\ej2\material-dark.css" />
+    <Content Include="Content\ej2\material.css" />
+    <Content Include="Content\ej2\tailwind-dark.css" />
+    <Content Include="Content\ej2\tailwind.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fonts\glyphs\KendoUIGlyphs.svg" />
     <Content Include="Content\fonts\icomoon.svg" />
@@ -2195,6 +2214,11 @@
     <Content Include="Images\ui-icons_cd0a0a_256x240.png" />
     <Compile Include="Models\Portolo\ProcessLibrary.cs" />
     <Compile Include="Models\Portolo\PortoloContactUs.cs" />
+    <Content Include="Content\ej2\compatibility\material.scss" />
+    <Content Include="Content\ej2\compatibility\highcontrast.scss" />
+    <Content Include="Content\ej2\compatibility\fabric.scss" />
+    <Content Include="Content\ej2\compatibility\bootstrap4.scss" />
+    <Content Include="Content\ej2\compatibility\bootstrap.scss" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\MAGIWeb-QA - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\MAGIWeb-QA - ReadOnly - FTP.pubxml" />
