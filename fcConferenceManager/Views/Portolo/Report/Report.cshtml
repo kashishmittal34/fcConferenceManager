@@ -1,6 +1,4 @@
-﻿@*@model IEnumerable<fcConferenceManager.Models.Portolo.Topic>*@
-
-@{
+﻿@{
     ViewBag.Title = "Reports";
     Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
 }
@@ -97,14 +95,15 @@
                     <form id="formFields" action="" method="get">
                         <div class="control-icons">
                             <h2>Reports</h2>
-                            <button type="submit" id="ExcelBtn" name="excel" value="true" style="border-color: white; border: none;background-color:white">
+                            <button id="SubmitBtn"></button>
+                            <button id="ExcelBtn" name="excel" value="true" style="border-color: white; border: none;background-color:white">
                                 <i class="fa-solid fa-download" title="Download Excel"></i>
                             </button>
 
                             <a id="SearchBtn" value="Search" title="Search">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </a>
-                            <a href="#" id="ResetFields"><i class="fa-solid fa-arrows-rotate"></i></a>
+                            <a href="#" id="ResetFields" title="Reset"><i class="fa-solid fa-arrows-rotate"></i></a>
                         </div>
 
                         <div class="card">
@@ -118,17 +117,24 @@
                                         <td style="vertical-align: top; border-right: 2px solid orange; width: 220px;">
                                             <div style="overflow:auto;font-size:10pt;height:600px;width:250px;overflow-x: hidden;">
                                                 <table>
-                                                    <tr>
-                                                        <td style="width:20px;">
-                                                            <i class="fas fa-caret-right" style="color: #ed6c31"></i>
-                                                            <ul style="display:none">
-                                                                <li><a class="PartialCheck" href="#" value="/Portolo/Reports?reportId=1" style="color:black">Users List</a></li>
-                                                                <li><a class="PartialCheck" href="#" value="/Portolo/Reports?reportId=2" style="color:black">Products List</a></li>
-                                                            </ul>
-                                                        </td>
-                                                        <td><b>Users</b></td>
-                                                    </tr>
-
+                                                    @foreach (var cat in ViewBag.category.Rows)
+                                                    {
+                                                        <tr>
+                                                            <td style="width:20px;">
+                                                                <i class="fas fa-caret-right" style="color: #ed6c31"></i>
+                                                                <ul style="display:none">
+                                                                    @foreach (var report in ViewBag.Reports.Rows)
+                                                                    {
+                                                                        if (report["Category_pkey"] == cat["pkey"])
+                                                                        {
+                                                                            <li><a class="PartialCheck" href="#" name="@((bool)report["IsStatic"])" value="@report["redirect"]" data-toggle="tooltip" title="@report["Tooltip"]" style="color:black">@report["report"]</a></li>
+                                                                        }
+                                                                    }
+                                                                </ul>
+                                                            </td>
+                                                            <td><b>@cat["Category"]</b></td>
+                                                        </tr>
+                                                    }
                                                 </table>
                                             </div>
                                         </td>
@@ -181,12 +187,27 @@
 
         $(".card").on("click", ".PartialCheck", function () {
             $("#mod2").hide();
-            var href = $(this).attr('value');
+            var IsStatic = $(this).attr('name');
             var list = $(this).text();
-            $("#mod1").load(href);
-            check = href;
+            var href = $(this).attr('value');
+            if (IsStatic != "name") {
+                $(window).attr("location", href);
+            }
+            else {     
+                $("#mod1").load(href);
+                check = href;
+                $("#SelectedReport").text(list);
+            }
             $('#ExcelBtn').prop('disabled', false);
-            $("#SelectedReport").text(list);
+            
+        });
+
+        $('#formFields').on('keyup keypress', function (e) {
+            var keyCode = e.keyCode || e.which;
+            if (keyCode === 13) {
+                e.preventDefault();
+                return false;
+            }
         });
 
         $("#ResetFields").click(function () {

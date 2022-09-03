@@ -32,11 +32,8 @@
 <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
 <script type="text/javascript" language="javascript">
     function select(a) {
-        //$(selector).siblings("input: checkbox").prop('checked', true);
-
-        var ok = a.id;
         debugger;
-        $("#" + ok).find('input[type=checkbox]').prop('checked', true);
+        $("#" + a).find('input[type=checkbox]').prop('checked', true);
     }
 </script>
 <script type="text/javascript" language="javascript">
@@ -175,7 +172,7 @@
             <table id="members" class="table table-striped">
                 <thead>
                     <tr style="background-color: #6e6c6c; color: white;">
-                        <td style="width:50px"><input id="memberCheckbox" class="form-check-input" type="checkbox" /></td>
+                        <td style="width:50px"><input id="memberCheckbox"  type="checkbox" /></td>
                         <td style="width:100px"><lable>ID</lable></td>
                         <td style="width:300px"><lable>Name</lable></td>
                         <td style="width:100px"><lable>Activated</lable></td>
@@ -185,7 +182,7 @@
                     @foreach (var item in Model.members)
                     {
                         <tr class="members">
-                            <td><input value="@item.AccountID" class="form-check-input" type="checkbox" /></td>
+                            <td><input value="@item.AccountID" type="checkbox" /></td>
                             <td>@item.AccountID</td>
                             <td>@item.AccountName</td>
                             <td>@item.Activated</td>
@@ -214,39 +211,39 @@
                 <tbody>
                     @{foreach (var item in Model.ComponentList)
                         {
-                            <tr id="@item.ComponentName">
-                                <td><a href="#" onclick="select(@item.ComponentName.ToString())">@item.ComponentName</a></td>
+                            <tr id="@item.ComponentPkey">
+                                <td><a href="#" onclick="select(@item.ComponentPkey)">@item.ComponentName</a></td>
                                 @if (item.AllowView)
                                 {
-                                    <td><input value="@item.ComponentName+AllowView" class="form-check-input" type="checkbox" checked /></td>
+                                    <td><input value="@item.ComponentName+AllowView"  type="checkbox" checked /></td>
                                 }
                                 else
                                 {
-                                    <td><input value="@item.ComponentName+AllowView" class="form-check-input" type="checkbox" /></td>
+                                    <td><input value="@item.ComponentName+AllowView" type="checkbox" /></td>
                                 }
                                 @if (item.AllowAdd)
                                 {
-                                    <td><input value="@item.ComponentName+AllowAdd" class="form-check-input" type="checkbox" checked /></td>
+                                    <td><input value="@item.ComponentName+AllowAdd" type="checkbox" checked /></td>
                                 }
                                 else
                                 {
-                                    <td><input value="@item.ComponentName+AllowAdd" class="form-check-input" type="checkbox" /></td>
+                                    <td><input value="@item.ComponentName+AllowAdd" type="checkbox" /></td>
                                 }
                                 @if (item.AllowEdit)
                                 {
-                                    <td><input value="@item.ComponentName+AllowEdit" class="form-check-input" type="checkbox" checked /></td>
+                                    <td><input value="@item.ComponentName+AllowEdit"  type="checkbox" checked /></td>
                                 }
                                 else
                                 {
-                                    <td><input value="@item.ComponentName+AllowEdit" class="form-check-input" type="checkbox" /></td>
+                                    <td><input value="@item.ComponentName+AllowEdit"  type="checkbox" /></td>
                                 }
                                 @if (item.AllowDelete)
                                 {
-                                    <td><input value="@item.ComponentName+AllowDelete" class="form-check-input" type="checkbox" checked /></td>
+                                    <td><input value="@item.ComponentName+AllowDelete"  type="checkbox" checked /></td>
                                 }
                                 else
                                 {
-                                    <td><input value="@item.ComponentName+AllowDelete" class="form-check-input" type="checkbox" /></td>
+                                    <td><input value="@item.ComponentName+AllowDelete" type="checkbox" /></td>
                                 }
                             </tr>
                         }

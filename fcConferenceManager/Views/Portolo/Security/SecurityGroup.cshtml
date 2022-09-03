@@ -59,11 +59,14 @@
     a{
         color:black;
     }
+    i {
+        color: #ffbb33;
+    }
 </style>
 <div class="container">
     <div>
-        <button data-bs-toggle="modal" data-bs-target="#AddGroupmodal" style="float:right;" class="btn btn-outline-warning my-2">Add new group</button>
         <button id="removeGroup" style="float:right;" class="btn btn-outline-secondary my-2 mx-2">Delete group</button>
+        <button data-bs-toggle="modal" data-bs-target="#AddGroupmodal" style="float:right;" class="btn btn-outline-warning my-2">Add new group</button>
     </div>
     <div class="modal fade" id="AddGroupmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -78,7 +81,7 @@
                 </div>
                 <div class="modal-footer p-1">
                     <button id="addToGroup" type="button" class="btn btn-outline-warning">Save</button>
-                    <button type="button" class="btn btn-outline-warning" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

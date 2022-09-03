@@ -1,7 +1,9 @@
-﻿@model IEnumerable<Elimar.Models.UserRequest>
+﻿@using PagedList.Mvc
+@model  PagedList.IPagedList<Elimar.Models.UserRequest>
 @{
     Layout = null;
 }
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <style>
     html, body {
         width: 100%;
@@ -9,6 +11,33 @@
         margin: 0px;
         padding: 0px;
         overflow-x: hidden;
+    }
+
+    ul.pagination {
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+    }
+
+    li {
+        display: inline;
+    }
+
+        li a {
+            color: black;
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+        }
+
+    ul.pagination li a.active {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    ul.pagination li a:hover:not(.active) {
+        background-color: #ddd;
     }
 </style>
 <script src="~/Scripts/jquery-3.6.0.min.js"></script>
@@ -37,11 +66,52 @@
                 }
             });
         });
+        $("#mainCheckbox").change(function () {
+            if ($("#mainCheckbox").is(':checked')) {
+                debugger;
+                $("#members").find('input[type=checkbox]').prop('checked', true);
+            }
+            else {
+                $("#members").find('input[type=checkbox]').prop('checked', false);
+            }
+        })
         $("#cancel").click(function () {
             window.top.location.reload();
         });
+        $("li").click(function () {
+            debugger;
+            $.blockUI({
+                message: '<h1>Loading...</h1>',
+
+                css: {
+                    border: 'none',
+                    padding: '15px',
+                    backgroundColor: '#000',
+                    opacity: .6,
+                    color:'#FFFF'
+                }
+            });
+        })
+        $("button[type=submit]").click(function () {
+            debugger;
+            $.blockUI({
+                message: '<h1>Loading...</h1>',
+
+                css: {
+                    border: 'none',
+                    padding: '15px',
+                    backgroundColor: '#000',
+                    opacity: .6,
+                    color: '#FFFF'
+                }
+            });
+        })
+
     });
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js" integrity="sha512-eYSzo+20ajZMRsjxB6L7eyqo5kuXuS2+wEbbOkpaur+sA2shQameiJiWEzCIDwJqaB0a4a6tCuEvCOBHUg3Skg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
 <link rel="stylesheet" href="~/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
@@ -86,18 +156,18 @@
         <table style="margin:auto;" class="table table-responsive table-striped">
             <thead>
                 <tr style="background-color: #6e6c6c; color: white;">
-                    <th><input class="form-check-input" type="checkbox" disabled /></th>
+                    <th><input type="checkbox" id="mainCheckbox" /></th>
                     <th>ID</th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Organization</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="members">
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td><input class="form-check-input" type="checkbox" value="@item.ID" /></td>
+                    <tr >
+                        <td><input type="checkbox" value="@item.ID" /></td>
                         <td>@item.ID</td>
                         <td>@item.name</td>
                         <td>@item.email</td>
@@ -107,22 +177,30 @@
             </tbody>
         </table>
     </div>
-    <div class="container d-inline " style="position:absolute;left:35%;">
-        <span style="font-size:20px">Pages</span>
-        <a style="align-self:center; font-size:20px; margin-left:20px; margin-bottom:30px;" href="~/Security/AddMember"><<</a>
-        @for (int i = ViewBag.firstPage; i <= ViewBag.lastPage; i++)
-        {
-            if (ViewBag.Page == i)
+    @*<div class="container d-inline " style="position:absolute;left:35%;">
+            <span style="font-size:20px">Pages</span>
+            <a style="align-self:center; font-size:20px; margin-left:20px; margin-bottom:30px;" href="~/Security/AddMember"><<</a>
+            @for (int i = ViewBag.firstPage; i <= ViewBag.lastPage; i++)
             {
-                <a style="text-align: center; font-size: 20px; margin-left: 20px; color: #FF8800" href="~/Security/AddMember?pageNo=@i&nameSearch=@ViewData["NameFilter"]&emailSearch=@ViewData["EmailFilter"]">@i</a>
+                if (ViewBag.Page == i)
+                {
+                    <a style="text-align: center; font-size: 20px; margin-left: 20px; color: #FF8800" href="~/Security/AddMember?pageNo=@i&nameSearch=@ViewData["NameFilter"]&emailSearch=@ViewData["EmailFilter"]">@i</a>
+                }
+                else
+                {
+                    <a style="text-align:center; font-size:20px;margin-left:20px; color:black" href="~/Security/AddMember?pageNo=@i&nameSearch=@ViewData["NameFilter"]&emailSearch=@ViewData["EmailFilter"]">@i</a>
+                }
             }
-            else
-            {
-                <a style="text-align:center; font-size:20px;margin-left:20px; color:black" href="~/Security/AddMember?pageNo=@i&nameSearch=@ViewData["NameFilter"]&emailSearch=@ViewData["EmailFilter"]">@i</a>
-            }
-        }
-        <a style="align-self:center; font-size:20px; margin-left:20px; margin-bottom:30px;" href="~/Security/AddMember?pageNo=@ViewBag.noOfPage&nameSearch=@ViewData["NameFilter"]&emailSearch=@ViewData["EmailFilter"]">>></a>
-    </div>
+            <a style="align-self:center; font-size:20px; margin-left:20px; margin-bottom:30px;" href="~/Security/AddMember?pageNo=@ViewBag.noOfPage&nameSearch=@ViewData["NameFilter"]&emailSearch=@ViewData["EmailFilter"]">>></a>
+        </div>*@
+
+</div>
+
+<div id='Paging' style="text-align:center">
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+    of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("AddMember", new { page, nameSearch = @ViewData["NameFilter"] , emailSearch = @ViewData["EmailFilter"] }))
 </div>
 
 <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>

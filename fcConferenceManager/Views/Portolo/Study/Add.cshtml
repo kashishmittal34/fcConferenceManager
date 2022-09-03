@@ -6,11 +6,9 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
 <head>
-
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=, initial-scale=1.0">
-
 </head>
 
 <style>
@@ -19,6 +17,7 @@
         opacity: 1;
     }
 </style>
+
 <body>
     <section class="task-list-form">
         <div class="container">
@@ -27,17 +26,16 @@
                     <form action="/Study/Edit" method="post" enctype="multipart/form-data" onsubmit="validateInputs(e);">
                         @Html.HiddenFor(model => model.pkey)
                         @Html.HiddenFor(model => model.FilePath)
-                        @Html.HiddenFor(model=> model.FileName)
+                        @Html.HiddenFor(model => model.FileName)
                         
                         <div class="control-icons">
                             <h2> Add Material </h2>
 
                             <div class="controls">
                                 <input type="submit" name="Save" value="Save" id="idSave" class="brdr-1 btn" onclick="return validateInputs(event);" style="height:33px">
-                                <a href="~/Study/Study" class="brdr-1 btn" style="padding:7px 5px; height:33px;"> Cancel </a>
+                                <a href="~/Study/Study" class="brdr-1 btn" style="height:33px;"> Cancel </a>
                                 @Html.HiddenFor(model => model.UserId)
                             </div>
-
                         </div>
                         <div class="row">
                             <div class="col-lg-12">
@@ -83,10 +81,11 @@
 
 <script type="text/javascript" language="javascript">
 
+    $('input').keypress(function (event) { return event.keyCode != 13; });
+
     function validateInputs(e) {
         
         var title = $.trim($('#title').val());
-        var description = $.trim($('#description').val());
         if (title == "") {
             $("#title").focus();
 

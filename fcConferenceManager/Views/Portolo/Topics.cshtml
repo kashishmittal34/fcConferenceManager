@@ -109,6 +109,8 @@
                         <div class="control-icons">
                             <h2>Topic List</h2>
 
+                            <input id="ExcelIds" type="hidden" name="ids" value="" />
+
                             <a id="ExcelBtn" style="border-color: white; border: none;background-color:white">
                                 <i class="fa-solid fa-download" title="Download Excel"></i>
                             </a>
@@ -178,10 +180,10 @@
                                         {
                                             <tr>
                                                 <td><input type="checkbox" name="ID" value="@item["TopicID"]" class="custom-checkbox chkCheckBoxId" /> </td>
-                                                <td> @item["Title"] </td>
+                                                <td style="width:350px"> @item["Topic Name"] </td>
                                                 <td> @item["Description"] </td>
                                                 <td> @item["Status"] </td>
-                                                <td style="text-align:center"><a href="/Portolo/EditTopic/@item["TopicID"]"> Edit</a></td>
+                                                <td style="text-align:center;"><a href="/Portolo/EditTopic/@item["TopicID"]"><i class="fa-solid fa-edit" style="color:orange"></i></a></td>
                                             </tr>
                                         }
                                     }
@@ -265,6 +267,13 @@
 
         $("#ExcelBtn").click(function () {
             var form = $(this).parents('form:first');
+            var checklist = [];
+            $(':checkbox:checked').each(function () {
+                if (this.value != "on")
+                    checklist.push(this.value);
+            });
+            var ids = checklist.join(", ");
+            $("#ExcelIds").val(ids);
             form.submit();
         });
 

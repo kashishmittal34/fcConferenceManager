@@ -4,34 +4,36 @@
     Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
 }
 <head>
-    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
-    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+    @*<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+        <script src="~/Scripts/modernizr-2.8.3.js"></script>*@
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+    </script>
     <style>
         .span {
-		 
+   
             display: inline-block;
             width: 75px;
             height: 38px;
         }
 
         input {
-		 
+   
             border: 1px solid black;
         }
 
         td {
-		 
+   
             padding-left: 5px
         }
 
         table {
-		 
+   
             border-collapse: separate;
             border-spacing: 0 1em;
         }
 
         canvas {
-		 
+   
             position: relative;
             width: 300px;
             height: 300px;
@@ -39,22 +41,23 @@
         }
 
         #result {
-		 
+   
             display: block;
             position: relative;
             margin-top: 40px;
         }
 
         .face {
-		 
+   
             position: absolute;
             height: 0px;
             width: 0px;
             background-color: transparent;
             /*border: 4px solid rgba(10,10,10,0.5);*/
         }
-            max-width:none;
-        }	
+
+        /*  max-width:none;
+        }*/
     </style>
     <script>
         $(document).ready(function () {
@@ -96,9 +99,13 @@
                     });
                 }
             });
+
+           
+            $("#result").hide();
+           
         });
         $(window).on('load', function () {
-        var dd = 22;
+					
 
 
 
@@ -112,16 +119,21 @@
             $("#Suffix option[value=@Model.suffix]").attr("selected", "selected");
             $("#PhoneType1 option[value=@Model.phonetype1]").attr("selected", "selected");
             $("#PhoneType2 option[value=@Model.phonetype2]").attr("selected","selected");
-    });
+        });
+
+
+       
     </script>
     <script type="text/javascript" language="javascript">
     $(document).ready(function () {
        var imageurl = '@Url.Content(ViewBag.Baseurl + "/User-images/empty image.png")';
     $("#result").attr("src", imageurl);
     });
+
+      
    function fileCheck(elm)
    {
-
+    $("#result").show();
     var fn = String($(elm).val());
     var filename = fn.match(/[^\\/]*$/)[0]; // remove C:\fakename
     var imageurl = '@Url.Content("~/User-images/imagename")';
@@ -142,6 +154,8 @@
 
         $("#result").attr("src", imageurl);
 
+       
+       
     return false;
     }
 
@@ -173,7 +187,7 @@
 
     function validateInputs(e) {
 
-														
+        var dd = $('#imgCropped').val($('#result').attr('src'));
 
 
     var Salutation1 = $.trim($('#Salutation1').val());
@@ -326,12 +340,14 @@
                     }
                     image.src = e.target.result;
                     $('#image1').show();
+                   
                     $('#image1').attr("src", e.target.result);
                     $('#image1').Jcrop({
                         onChange: SetCoordinates,
                         onSelect: SetCoordinates
                     });
                     $('#lbl1').text("Info -: Crop Image if you want");
+                   
                 }
                 reader.readAsDataURL($(this)[0].files[0]);
 
@@ -339,6 +355,7 @@
             });
 
             $('#btnCrop').click(function () {
+                
                 window.console && console.log(h);
                 var h1 = $(".jcrop-holder").height() != null ? $(".jcrop-holder").height() : 300;
                 var w1 = $(".jcrop-holder").width() != null ? $(".jcrop-holder").width() : 300;
@@ -445,10 +462,14 @@
                 }
                 img.src = $('#image1').attr("src");
                 $('#lbl1').text("Cropped Image Saved");
+                
+               
             });
         });
-
+        
         function SetCoordinates(c) {
+           
+           
             $('#imgX1').val(c.x);
             $('#imgY1').val(c.y);
             $('#imgWidth').val(c.w);
@@ -456,7 +477,7 @@
             $('#btnCrop').show();
         };
 
-
+       
 
 
 
@@ -473,6 +494,7 @@
 
 
     <script type="text/javascript">
+       
         var imageCropWidth = 0;
         var imageCropHeight = 0;
         var cropPointX = 0;
@@ -498,6 +520,7 @@
             $('#lblheight').text(imageCropHeight + "px");
         }
         function setCoordsandImageSize(e) {
+           
             imageCropWidth = e.w;
             imageCropHeight = e.h;
             cropPointX = e.x;
@@ -515,6 +538,7 @@
             showCroppedImage();
         }
         function showCroppedImage() {
+           
             var X1 = cropPointX;
             var Y1 = cropPointY;
             var width = imageCropWidth;
@@ -528,14 +552,17 @@
                 $('#cropped').val(canvas.toDataURL());
             };
             img.src = $('#image').attr("src");
+
         }
         function readFile(input) {
+           
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
                 if (jcropApi != null) {
                     jcropApi.destroy();
                 }
                 reader.onload = function (e) {
+                   
                     $('#image').attr('src', "");
                     var img = $('#image').attr('src', e.target.result);
                     var width = img[0].width;
@@ -544,14 +571,22 @@
 
                     $('#lblheight').text(height + "px");
                     initCrop();
+                   
                 }
                 reader.readAsDataURL(input.files[0]);
+               
             }
+           
         }
+
         $('#flphoto').change(function () {
+           
             readFile(this)
         });
+
+
     </script>
+   
 
 </head>
 
@@ -593,8 +628,8 @@
                                         <input class="form-control" type="text" style="display:none" id="userimageName" value="@Model.Uimg" />
 
 
-                                        <!--<img class="form-control" alt="" id="result" src="@Url.Content(Model.Uimg)" style="display:  10px;" height="350" width="80" />
-                                        -->
+                                        <img class="form-control" alt="" id="result" src="@Url.Content(Model.Uimg)" style="display:  10px;" height="350" width="80" />
+                                        
 
 
 
@@ -631,6 +666,7 @@
                             </div>
 
                             <div>
+									  
 
 
 
@@ -652,8 +688,7 @@
 
 
 
-
-																					  
+					   
                                 <label class="form-label" for="file">Upload Profile Picture</label>
 
 
@@ -830,17 +865,17 @@
                                     <tr>
                                         <td style="text-align: right">
                                             <span title="Selection required">Country:</span>
-                                            @Model.country
-                                            @Model.countrypkey
+                                           
+															  
                                         </td>
                                         <td style="padding-left: 5px; text-align: left">
                                             <div title="Selection required" style="width:260px;" tabindex="0">
 											   
 								
-								
-								 
-								 
-			   
+		
+		 
+		 
+	  
                                                 @Html.DropDownList("Country", null, "---Select Country----", new { @class = "form-select" })
                                             </div>
                                         </td>
@@ -872,16 +907,17 @@
                                     <tr>
                                         <td style="text-align: right">
                                             <span title="Selection required" class=" span">State:</span>
+                                           
                                         </td>
                                         <td style="padding-left: 5px; text-align: left">
                                             <div title="Selection required" style="width:260px;" tabindex="0">
 												
 
-							   
-								   
-							   
-			   
-			   
+		  
+		   
+		  
+	  
+	  
                                                 @Html.DropDownList("State", null, "---Select State----", new { @class = "form-select" })
                                             </div>
 
@@ -898,15 +934,16 @@
                                     <tr>
                                         <td style="text-align: right">
                                             <span>Time zone:</span>
+                                            
                                         </td>
                                         <td style="padding-left: 5px; text-align: left">
                                             <div style="width:260px;" tabindex="0">
 											  
-								   
-								   
-									
-			   
-				
+		   
+		   
+		 
+	  
+	
                                                 @Html.DropDownList("Timezone", null, "---Select TimeZone----", new { @class = "form-select" })<br />
                                             </div>
                                         </td>

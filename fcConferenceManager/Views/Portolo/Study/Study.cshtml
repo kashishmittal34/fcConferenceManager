@@ -140,11 +140,11 @@
                                                     <td style="text-align:center">
                                                         @if (@item["FilePath"] != "")
                                                         {
-                                                            <a href="@item["FilePath"]" download title="Download"><i class="fas fa-cloud-download"></i></a>
+                                                            <a href="@item["FilePath"]" download title="Download"><i class="fas fa-cloud-download" style="color:orange"></i></a>
                                                         }
                                                     </td>
-                                                    <td style="padding-top:10px; text-align:center"><a href="/Study/Edit/@item["pkey"]"> Edit</a></td>
-                                                    <td><input type="button" class="brdr-1 btn-sm cmdView" id="@item["FileDescription"]" href="#" value="View" /></td>
+                                                    <td style="text-align:center;"><a href="/Study/Edit/@item["pkey"]"><i class="fa-solid fa-edit" style="color:orange"></i></a></td>
+                                                    <td><input type="button" class="brdr-1 cmdView"  id="@item["FileDescription"]" href="#" value="View" /></td>
                                                 </tr>
                                             }
                                         }
