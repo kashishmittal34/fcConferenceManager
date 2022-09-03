@@ -81,26 +81,34 @@
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Username</label>
                                 @*@Html.EditorFor(model => model.UserName, new { @class = "form-control" })*@
-                                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", id = "id_username" } })
+                                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", id = "id_username", style = "width: 94%; float:left" } })
 
-                                @Html.ValidationMessageFor(model => model.UserName)
-                            </div>
-														 
 																				   
-																																					 
+								  
+			   
+					   
+									  
 
-                            <div class="form-group mb-4 ">
-                                <div>
+                                @*@Html.ValidationMessageFor(model => model.UserName)*@
+									 
 
-                                    <label for="exampleInputPassword1">Password</label>
-                                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { type = "password", @class = "form-control", id = "id_password" } })
-                                    <img src="~/images/icons/eye.gif" id="togglePassword" style="margin-left: 235px; cursor: pointer;" alt="eye" />
+                            </div>					 
+						<br />		
+                            <div class="form-group mb-6 ">
+                                <div  >
 
+                                    <label  for="exampleInputPassword1">Password</label>
+                                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { type = "password", @class = "form-control", id = "id_password",style="width: 94%; float:left" } })
 
                                     @Html.ValidationMessageFor(model => model.Password)
+                                
+                                </div>
+                                <div style="width: 5%; float:right">
+                                    <img src="~/images/icons/eye.gif" id="togglePassword" @*style="margin-left: 235px; cursor: pointer;"*@ alt="eye" />
+
                                 </div>
                             </div>
-                            <div class="form-group error">
+                            <div class="form-group error" style="margin:45px">
                                 @if (@ViewBag.Failedcount != null)
                                 {
 
@@ -113,8 +121,9 @@
                                     <label> @ViewBag.NotValidUser</label>
                                 }
                             </div>
-
-                            <input type="submit" value="Login" class="btn btn-primary" />
+                            
+                                <input type="submit" value="Login" class="btn btn-primary" />
+                          
                             <label class="checkbox">
                                 <input type="checkbox" value="remember-me" id="remember_me"> Remember me next time
                             </label>
@@ -137,16 +146,17 @@
                 <div class="modal-header modalBlueHeader">
                     <h5 class="modal-title">Need help signing in?</h5>
                     <div>
-                        <button id="NeedHelpProceed" type="button" style="color:orange" class="btn btnYellow">Proceed</button>
-                        <button id="NeedHelpCancel" type="button" style="color:orange" class="btn" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        <button id="NeedHelpProceed" type="button" style="border-width:thin"  @*class="btn btnYellow"*@>Proceed</button>
+                        
+                        <button id="NeedHelpCancel" type="button" style="border-width:thin" @*class="btn"*@ data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                     </div>
                 </div>
                 <div class="modal-body p-0">
                     <div class="row p-2">
                         <div class="col-xs-12 mb-1">
-                            <div class="form-check">
-                                <input class="form-check-input rdMargintop" type="radio" value="0" name="rblNeedHelp" id="rblNeedHelp1" checked>
-                                <label class="form-check-label" for="rblNeedHelp1"> Send email to reset password </label>
+                            <div @*class="form-check"*@ style="padding-left: -0.5em;">
+                                @*<input class="form-check-input rdMargintop" type="radio" value="0" name="rblNeedHelp" id="rblNeedHelp1" checked>*@
+                                <label @*class="form-check-label"*@ padding-left: 0.5em; for="rblNeedHelp1"> Send email to reset password: </label>
                             </div>
                             @*<div class="form-check">
                                     <input class="form-check-input rdMargintop" type="radio" value="1" name="rblNeedHelp" id="rblNeedHelp2">
@@ -162,7 +172,7 @@
                                 </div>*@
                         </div>
                         <div class="col-xs-12 mt-1 mb-2">
-                            <label class="mb-2 mb-lg-0">Enter your email address or user ID:</label>
+                            <label class="mb-2 mb-lg-0">Enter your email address:</label>
                             <input type="text" id="txtEmailAddressNeedHelp" name="txtEmailAddressNeedHelp" style="width: 100%; padding: 12px 20px; margin: 8px 0; border: 3px solid #ccc; " class="txtRequired Font11" value="" tabindex="0" />
                             @*<input type="text"/>*@
                         </div>
@@ -288,7 +298,7 @@
 
                 success: function (result) {
 
-                    if (result != "\"False\"") {
+                    if (result != "\"\"") {
                         alert('Mail is send');
                     }
                     else {

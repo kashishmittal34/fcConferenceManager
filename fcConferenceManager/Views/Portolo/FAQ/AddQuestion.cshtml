@@ -33,7 +33,7 @@
 
                             <div class="controls">
                                 <input type="submit" name="Save" value="Save" id="idSave" class="brdr-1 btn" onclick="return validateInputs(event);">
-                                <a href="~/FAQ/FAQList" class="brdr-1 btn" style="padding:7px 5px; height:33px;"> Cancel </a>
+                                <a href="~/FAQ/FAQList" class="brdr-1 btn" style="height:33px;"> Cancel </a>
                             </div>
 
                         </div>
@@ -78,6 +78,8 @@
 </body>
 
 <script type="text/javascript" language="javascript">
+
+    $('input').keypress(function (event) { return event.keyCode != 13; });
 
     function validateInputs(e) {
 
