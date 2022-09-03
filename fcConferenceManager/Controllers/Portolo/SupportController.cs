@@ -8,6 +8,8 @@ using System.Configuration;
 using Elimar.Models;
 using System.IO;
 using System;
+using PagedList;
+using static fcConferenceManager.Models.ChatModel;
 
 namespace fcConferenceManager.Controllers
 {
@@ -47,7 +49,7 @@ namespace fcConferenceManager.Controllers
                     }
                 }
 
-                query = $"select * from SecurityGroup_Members sm join Privilage_listForPortolo pl on pl.SecurityGroupPkey = sm.SecurityGroup_pKey where sm.Account_pKey = {objlt.Id} and pl.PrivilageID = 'SupportList';";
+                query = $"select * from Portolo_SecurityGroupMembers sm join Privilage_listForPortolo pl on pl.SecurityGroupPkey = sm.SecurityGroup_pKey where sm.Account_pKey = {objlt.Id} and pl.PrivilageID = 'Support List';";
 
                 using (SqlConnection con = new SqlConnection(config))
                 {
@@ -164,28 +166,36 @@ namespace fcConferenceManager.Controllers
                     con.Close();
                 }
             }
+
+            int pageIndex = 1;
+            pageIndex = pageNo.HasValue ? Convert.ToInt32(pageNo) : 1;
+            int pageSize = 5;
+            IPagedList<Help> users = null;
+            users = helpList.ToPagedList(pageIndex, pageSize);
+
+
             //int count = 5;
             //pageNo = pageNo==null?0:pageNo;
             //helpList = helpList.GetRange((int)(pageNo * 5), count);
 
-            ViewBag.Pages = 1;
-            ViewBag.Page = pageNo == null ? 1 : pageNo;
-            ViewBag.firstPage = ViewBag.Page <= 3 ? 1 : ViewBag.Page - 3;
-            int count = helpList.ToList().Count;
-            int noOfPages = count % 5 == 0 ? count / 5 : count / 5 + 1;
-            ViewBag.lastPage = noOfPages < 5 ? noOfPages : ViewBag.firstPage + 4;
+            //ViewBag.Pages = 1;
+            //ViewBag.Page = pageNo == null ? 1 : pageNo;
+            //ViewBag.firstPage = ViewBag.Page <= 3 ? 1 : ViewBag.Page - 3;
+            //int count = helpList.ToList().Count;
+            //int noOfPages = count % 5 == 0 ? count / 5 : count / 5 + 1;
+            //ViewBag.lastPage = noOfPages < 5 ? noOfPages : ViewBag.firstPage + 4;
 
 
-            if (count > 5)
-            {
-                int start = (int)(pageNo != null ? (pageNo - 1) * 5 : 0);
-                int end = start + 5 > count ? count % 5 : 5;
+            //if (count > 5)
+            //{
+            //    int start = (int)(pageNo != null ? (pageNo - 1) * 5 : 0);
+            //    int end = start + 5 > count ? count % 5 : 5;
 
-                helpList = helpList.GetRange(start, end);
-                ViewBag.Pages = noOfPages;
-            }
+            //    helpList = helpList.GetRange(start, end);
+            //    ViewBag.Pages = noOfPages;
+            //}
 
-            return View("~/Views/Portolo/support/supportList.cshtml", helpList);
+            return View("~/Views/Portolo/support/supportList.cshtml", users);
         }
 
         [HttpPost]

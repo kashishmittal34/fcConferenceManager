@@ -462,7 +462,7 @@ namespace fcConferenceManager.Controllers.Portolo
             SqlConnection con = new SqlConnection(ReadConnectionString());
             DataTable dt = new DataTable();
 
-            string dbquery = " select TopicID, Title, Description, Cast(Case When IsActive=1 Then 'Active' Else 'Inactive' END AS varchar(10)) as Status from Portolo_Topics";
+            string dbquery = " select TopicID, Title as 'Topic Name', Description, Cast(Case When IsActive=1 Then 'Active' Else 'Inactive' END AS varchar(10)) as Status from Portolo_Topics";
             con.Open();
             SqlDataAdapter _da = new SqlDataAdapter(dbquery, con);
             _da.Fill(dt);
@@ -530,7 +530,7 @@ namespace fcConferenceManager.Controllers.Portolo
                     for(int rows = 1; rows < dt_.Rows.Count; rows++)
                     {
                         row = dt.NewRow();
-         for(int col = 0; col<dt_.Columns.Count; col++)
+                        for(int col = 0; col<dt_.Columns.Count; col++)
                         {
                             row[col] = dt_.Rows[rows][col].ToString();
                             rowCounter++;
@@ -576,7 +576,7 @@ namespace fcConferenceManager.Controllers.Portolo
                     catch (Exception)
                     {
                         TempData["InvalidExcel"] = "Invalid Excel File! Enter data in a Correct Format!!";				  
-                    }															 
+                    }
                 }
                 return RedirectToAction("Topics", "Portolo");
             }
@@ -682,14 +682,18 @@ namespace fcConferenceManager.Controllers.Portolo
         }
 
         [HttpGet]
-        public ActionResult SearchTopic(string name, string description, string active, string search)
+        public ActionResult SearchTopic(string name, string description, string active, string search, string ids)
         {
-           SqlConnection con = new SqlConnection(ReadConnectionString());
+            SqlConnection con = new SqlConnection(ReadConnectionString());
             DataTable dt = new DataTable();
 
-            string dbquery = String.Format("select TopicID, Title, Description, Cast(Case When IsActive=1 Then 'Active' Else 'Inactive' END AS varchar(10)) as Status from Portolo_Topics where Title like '%{0}%' and Description like '%{1}%'", name.Trim(), description.Trim());
+            string dbquery = String.Format("select TopicID, Title as 'Topic Name', Description, Cast(Case When IsActive=1 Then 'Active' Else 'Inactive' END AS varchar(10)) as Status from Portolo_Topics where Title like '%{0}%' and Description like '%{1}%'", name.Trim(), description.Trim());
             if (active != "")
                 dbquery += String.Format("and IsActive = '{0}'", active);
+
+            if (ids != "")
+                dbquery += String.Format("and TopicID in ({0})", ids);
+
             con.Open();
             SqlDataAdapter _da = new SqlDataAdapter(dbquery, con);
             _da.Fill(dt);
@@ -702,7 +706,7 @@ namespace fcConferenceManager.Controllers.Portolo
             if (search != "true")
             { 
                 string FileName = String.Format("Topics_{0:yyMMdd_HH.mm}", DateTime.Now);
-                ExportToExcel(dt, FileName);
+                ExportToExcel(dt, FileName, "Topic_List");
             }
 
             return View("~/Views/Portolo/Topics.cshtml");
@@ -786,23 +790,7 @@ namespace fcConferenceManager.Controllers.Portolo
             con.Close();
             return View();
         }
-
-        public void TopicsDownloadExcel()
-        {
-            SqlConnection con = new SqlConnection(ReadConnectionString());
-            DataTable dt = new DataTable();
-
-            dt.Clear();
-
-            string dbquery = "select TopicID, IsActive, Title as 'Topic Name', Description from Portolo_Topics";
-            con.Open();
-            SqlDataAdapter _da = new SqlDataAdapter(dbquery, con);
-            _da.Fill(dt);
-            con.Close();
-
-            string FileName = String.Format("Topics_{0:yyMMdd_HH.mm}", DateTime.Now);
-            ExportToExcel(dt, FileName);
-        }
+        
         [HttpPost]
         [AllowAnonymous]
         [AllowMultipleButton(Name = "action", Argument = "Reset")]
@@ -1000,12 +988,12 @@ namespace fcConferenceManager.Controllers.Portolo
             library.processList = uploadlist;
            if (!string.IsNullOrEmpty(search))
             {
-                ViewBag.search = search;
+				ViewBag.search = search;						
                 //var searchlist = (from list in uploadlist where list.Process.Contains(search.Trim())|| list.Process.StartsWith(search.Trim(), StringComparison.OrdinalIgnoreCase) select list).ToList();
                 var searchlist = GetProcessSearchDetails(search.Trim());
                 Session["searchlist"] = searchlist;
                 return View(searchlist);
-            }
+            }			 					
             ViewBag.Message = TempData["Message"];
             library.processList = uploadlist;
             return View(library.processList);
@@ -1176,9 +1164,25 @@ namespace fcConferenceManager.Controllers.Portolo
             if ((Session["User"] == null) || !((loginResponse)Session["User"]).IsGlobalAdmin)
                 return Redirect("~/Account/Portolo");
 
-            if (reportId == null) return View("~/Views/Portolo/Report/Report.cshtml");
-
             SqlConnection con = new SqlConnection(ReadConnectionString());
+
+            DataTable rtable = new DataTable();
+            string query = "select * from Sys_PortoloReport where IsActive = 1";
+            SqlDataAdapter da = new SqlDataAdapter(query, con);
+            da.Fill(rtable);
+
+            ViewBag.Reports = rtable;
+
+            DataTable ctable = new DataTable();
+            string cquery = "select * from Sys_PortoloReportCategory";
+            SqlDataAdapter dc = new SqlDataAdapter(cquery, con);
+            dc.Fill(ctable);
+
+            ViewBag.category = ctable;
+
+            if (reportId == null) return View("~/Views/Portolo/Report/Report.cshtml");
+            
+																		  
             DataTable dt = new DataTable();
             string dbquery = "";
             dt.Clear();
@@ -1252,6 +1256,7 @@ namespace fcConferenceManager.Controllers.Portolo
         {
             SqlConnection con = new SqlConnection(ReadConnectionString());
             DataTable dt = new DataTable();
+			string sname = "";				  
             SqlDataAdapter _da;
             string FileName = string.Empty;
             con.Open();
@@ -1263,6 +1268,7 @@ namespace fcConferenceManager.Controllers.Portolo
                 _da = new SqlDataAdapter(dbquery, con);
                 _da.Fill(dt);
                 FileName = String.Format("Users_{0:yyMMdd_HH.mm}", DateTime.Now);
+				sname = "User_List";					
             }
 
             if (reportId == "2")
@@ -1271,11 +1277,12 @@ namespace fcConferenceManager.Controllers.Portolo
                 _da = new SqlDataAdapter(dbquery, con);
                 _da.Fill(dt);
                 FileName = String.Format("Products_{0:yyMMdd_HH.mm}", DateTime.Now);
+				sname = "Product_List";					   
             }
             con.Close();
 
 
-            ExportToExcel(dt, FileName);
+             ExportToExcel(dt, FileName, sname);
         }
 												
         public ActionResult DownloadFile(string filePath)
@@ -1326,7 +1333,7 @@ namespace fcConferenceManager.Controllers.Portolo
             }
             if (list.Count > 0)
             {
-                foreach (var item in list)
+                foreach(var item in list)
                 {
                     DataRow dataRow = dt.NewRow();
                     dataRow["S.No"] = item.pkey;
@@ -1383,14 +1390,14 @@ namespace fcConferenceManager.Controllers.Portolo
                     dt.Rows.Add(exceldata);
                 }
             }
-            ExportToExcel(dt, FileName);
+             ExportToExcel(dt, FileName, "PublicTask_List");
 
         }
-        private void ExportToExcel(DataTable dt, string fileName)
+        private void ExportToExcel(DataTable dt, string fileName, string sheetname)
         {
             using (XLWorkbook wb = new XLWorkbook())
             {
-                wb.Worksheets.Add(dt, "List");
+                wb.Worksheets.Add(dt, sheetname);
                 Response.Clear();
                 Response.Buffer = true;
                 Response.Charset = "";

@@ -55,7 +55,7 @@ namespace fcConferenceManager.Controllers
             loginResponse objlt = (loginResponse)Session["User"];
             if (objlt == null || !view) return Redirect("~/Account/Portolo");
             List<SecurityGroup> groupList = new List<SecurityGroup>();
-            string query = $"select * from SecurityGroup_List ";
+            string query = $"select * from Portolo_SecurityGroup ";
             using (SqlConnection con = new SqlConnection(config))
             {
                 using (SqlCommand cmd = new SqlCommand(query, con))
@@ -77,7 +77,7 @@ namespace fcConferenceManager.Controllers
 
             foreach (var group in groupList)
             {
-                query = $"select * from SecurityGroup_Members SM join account_list al on SM.Account_pKey = al.pKey where SM.SecurityGroup_pKey =  {group.SecurtiyGroupPkey}";
+                query = $"select * from Portolo_SecurityGroupMembers SM join account_list al on SM.Account_pKey = al.pKey where SM.SecurityGroup_pKey =  {group.SecurtiyGroupPkey}";
                 List<SecurityGroupMember> memberList = new List<SecurityGroupMember>();
                 using (SqlConnection con = new SqlConnection(config))
                 {
@@ -110,7 +110,7 @@ namespace fcConferenceManager.Controllers
             PK = PK != null ? PK : 46;
             SecurityGroup securityGroup = new SecurityGroup();
             securityGroup.SecurtiyGroupPkey = (int)PK;
-            string query = $"select * from SecurityGroup_List where pKey = {PK}";
+            string query = $"select * from Portolo_SecurityGroup where pKey = {PK}";
             using (SqlConnection con = new SqlConnection(config))
             {
                 using (SqlCommand cmd = new SqlCommand(query, con))
@@ -138,6 +138,7 @@ namespace fcConferenceManager.Controllers
                     while (reader.Read())
                     {
                         Component component = new Component();
+                        component.ComponentPkey = int.Parse(reader["pKey"].ToString());
                         component.ComponentName = reader["PrivilageID"].ToString();
                         component.AllowView = bool.Parse(reader["AllowView"].ToString());
                         component.AllowAdd = bool.Parse(reader["AllowAdd"].ToString());
@@ -150,7 +151,7 @@ namespace fcConferenceManager.Controllers
                 }
             }
             List<SecurityGroupMember> securityGroupMemberList = new List<SecurityGroupMember>();
-            query = $"select * from SecurityGroup_Members SM join account_list al on SM.Account_pKey = al.pKey where SM.SecurityGroup_pKey = {PK}; ";
+            query = $"select * from Portolo_SecurityGroupMembers SM join account_list al on SM.Account_pKey = al.pKey where SM.SecurityGroup_pKey = {PK}; ";
             using (SqlConnection con = new SqlConnection(config))
             {
                 using (SqlCommand cmd = new SqlCommand(query, con))
@@ -177,7 +178,7 @@ namespace fcConferenceManager.Controllers
         [HttpPost]
         public ActionResult EditSecurityGroup([FromBody] SecurityGroup group)
         {
-            string query = $"update SecurityGroup_List set SecurityGroupID = '{group.Name}' , Description = '{group.Description}' where pKey = {group.SecurtiyGroupPkey};";
+            string query = $"update Portolo_SecurityGroup set SecurityGroupID = '{group.Name}' , Description = '{group.Description}' where pKey = {group.SecurtiyGroupPkey};";
             using (SqlConnection con = new SqlConnection(config))
             {
                 using (SqlCommand cmd = new SqlCommand(query, con))
@@ -269,7 +270,7 @@ namespace fcConferenceManager.Controllers
                 {
                     using (SqlConnection con = new SqlConnection(config))
                     {
-                        string query = $"If not exists (select pKey from SecurityGroup_Members where Account_pKey={item} and SecurityGroup_pKey={PK} ) begin Insert into SecurityGroup_Members(Account_pKey, SecurityGroup_pKey) values({item}, {PK}) end; ";
+                        string query = $"If not exists (select pKey from Portolo_SecurityGroupMembers where Account_pKey={item} and SecurityGroup_pKey={PK} ) begin Insert into Portolo_SecurityGroupMembers(Account_pKey, SecurityGroup_pKey) values({item}, {PK}) end; ";
                         using (SqlCommand cmd = new SqlCommand(query, con))
                         {
                             con.Open();
@@ -289,7 +290,7 @@ namespace fcConferenceManager.Controllers
                 {
                     using (SqlConnection con = new SqlConnection(config))
                     {
-                        string query = $"delete from SecurityGroup_Members where Account_pKey ={item} and SecurityGroup_pKey={PK} ; ";
+                        string query = $"delete from Portolo_SecurityGroupMembers where Account_pKey ={item} and SecurityGroup_pKey={PK} ; ";
                         using (SqlCommand cmd = new SqlCommand(query, con))
                         {
                             con.Open();
@@ -333,7 +334,7 @@ namespace fcConferenceManager.Controllers
         public JsonResult AddGroup(string groupName)
         {
             int row = 0;
-            string query = $"if (not exists(select pKey from SecurityGroup_List where SecurityGroupID = '{groupName}')) begin insert into SecurityGroup_List (SecurityGroupID) values ('{groupName}')  select SCOPE_IDENTITY() end;";
+            string query = $"if (not exists(select pKey from Portolo_SecurityGroup where SecurityGroupID = '{groupName}')) begin insert into Portolo_SecurityGroup (SecurityGroupID) values ('{groupName}')  select SCOPE_IDENTITY() end;";
             using (SqlConnection con = new SqlConnection(config))
             {
                 using (SqlCommand cmd = new SqlCommand(query, con))
@@ -365,7 +366,7 @@ namespace fcConferenceManager.Controllers
         {
             foreach (var group in groups)
             {
-                string query = $"delete SecurityGroup_List where pKey = {group}";
+                string query = $"delete Portolo_SecurityGroup where pKey = {group}";
                 using (SqlConnection con = new SqlConnection(config))
                 {
                     using (SqlCommand cmd = new SqlCommand(query, con))

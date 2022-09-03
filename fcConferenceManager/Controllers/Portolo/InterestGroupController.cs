@@ -66,7 +66,7 @@ namespace fcConferenceManager.Controllers
                     }
                 }
 
-                query = $"select * from SecurityGroup_Members sm join Privilage_listForPortolo pl on pl.SecurityGroupPkey = sm.SecurityGroup_pKey where sm.Account_pKey = {objlt.Id} and pl.PrivilageID = 'InterestGroup';";
+                query = $"select * from Portolo_SecurityGroupMembers sm join Privilage_listForPortolo pl on pl.SecurityGroupPkey = sm.SecurityGroup_pKey where sm.Account_pKey = {objlt.Id} and pl.PrivilageID = 'Interest Group';";
 
                 using (SqlConnection con = new SqlConnection(config))
                 {
@@ -85,7 +85,7 @@ namespace fcConferenceManager.Controllers
                         con.Close();
                     }
                 }
-                query = $"select * from SecurityGroup_Members sm join Privilage_listForPortolo pl on pl.SecurityGroupPkey = sm.SecurityGroup_pKey where sm.Account_pKey = {objlt.Id} and pl.PrivilageID = 'InterestGroupMembers';";
+                query = $"select * from Portolo_SecurityGroupMembers sm join Privilage_listForPortolo pl on pl.SecurityGroupPkey = sm.SecurityGroup_pKey where sm.Account_pKey = {objlt.Id} and pl.PrivilageID = 'Interest Group Members';";
 
                 using (SqlConnection con = new SqlConnection(config))
                 {

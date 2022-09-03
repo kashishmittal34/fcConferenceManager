@@ -24,7 +24,7 @@ namespace fcConferenceManager.Controllers
             ViewBag.Baseurl = ConfigurationManager.AppSettings["AppURL"];
 
 
-            ViewBag.userprofile = Session["User"];
+           ViewBag.userprofile = Session["User"];
             ViewBag.AccountImage = Session["AccountImage"].ToString();
             var a = Session["User"];
             return View("~/Views/Portolo/Dashboard/Portolo.cshtml");
