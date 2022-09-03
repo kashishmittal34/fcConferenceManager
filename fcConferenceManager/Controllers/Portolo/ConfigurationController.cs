@@ -354,8 +354,10 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         public ActionResult TextEditor( int?id)
         {
-            ViewBag.Application = GetEditDetails().Find(x => x.Id.Equals(id)); 
-            return View("~/Views/Portolo/TextEditor.cshtml");
+            var applicationSetting = GetEditDetails().Find(x => x.Id.Equals(id));
+            ViewBag.Application = applicationSetting;
+            ApplicationSetting application = applicationSetting;
+            return View("~/Views/Portolo/TextEditor.cshtml",application);
         }
        
 
