@@ -74,40 +74,40 @@
                 var DueDate = $("#datepicker3").val();//Year, Month, Date
                 var ForecastDate = $("#datepicker4").val();
 
-                //if (DueDate != null && DueDate != "") {
+                if (DueDate != null && DueDate != "") {
 
-                //    if (CurrTime > DueDate) {
-                //        alert("Due date should be greater than today");
-                //        $("#datepicker3").val("");
-                //        return false;
-                //    }
+                    if (CurrTime > DueDate) {
+                        alert("Due date should be greater than today");
+                        $("#datepicker3").val("");
+                        return false;
+                    }
 
-                //    if (PlanDate != null && DueDate <= PlanDate) {
-                //        alert("Due date should be greater than plan date");
-                //        $("#datepicker3").val("");
-                //        return false;
-                //    }
-                //}
+                    //if (PlanDate != null && DueDate <= PlanDate) {
+                    //    alert("Due date should be greater than plan date");
+                    //    $("#datepicker3").val("");
+                    //    return false;
+                    //}
+                }
 
-                //if (ForecastDate != null && ForecastDate != "") {
-                //    if (CurrTime > ForecastDate) {
-                //        alert("Forecast date should be greater than today");
-                //        $("#datepicker4").val("");
-                //        return false;
-                //    }
+                if (ForecastDate != null && ForecastDate != "") {
+                    if (CurrTime > ForecastDate) {
+                        alert("Forecast date should be greater than today");
+                        $("#datepicker4").val("");
+                        return false;
+                    }
 
-                //    if (PlanDate != null && ForecastDate <= PlanDate) {
-                //        alert("Forecast date should be greater than Plan date");
-                //        $("#datepicker4").val("");
-                //        return false;
-                //    }
+                    //if (PlanDate != null && ForecastDate <= PlanDate) {
+                    //    alert("Forecast date should be greater than Plan date");
+                    //    $("#datepicker4").val("");
+                    //    return false;
+                    //}
 
                     //if (DueDate != null && ForecastDate <= DueDate) {
                     //    alert("Forecast date should be greater than due date");
                     //    $("#datepicker4").val("");
                     //    return false;
                     //}
-               // }
+                }
             }
     </script>
     <script type="text/javascript">
@@ -205,20 +205,20 @@
                                                         <div class="form-group">
                                                             <label for="exampleFormControlSelect1">Plan Dates:</label>
 
-                                                            <input type="text" id="datepicker2" class="form-control form-control-sm" placeholder="mm/dd/yy" value="@String.Format("{0:MM\\/dd\\/yy}",Model.taskListResponse.plan)" name="plandate" onchange="CompareDate()" />
+                                                            <input type="text" id="datepicker2" class="form-control form-control-sm" placeholder="mm/dd/yy" value="@String.Format("{0:MM\\/dd\\/yy}",Model.taskListResponse.plan)" name="plandate" onchange="CompareDate()"   readonly="readonly"  style="background-color:white"/>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-3">
                                                         <div class="form-group">
                                                             <label for="exampleFormControlSelect1">Due Date:</label>
                                                             @*<input type="date" >*@
-                                                            <input type="text" class="form-control form-control-sm" id="datepicker3" placeholder="mm/dd/yy" value="@String.Format("{0:MM\\/dd\\/yy}",Model.taskListResponse.duedate)" name="duedate" onchange="CompareDate()" />
+                                                            <input type="text" class="form-control form-control-sm" id="datepicker3" placeholder="mm/dd/yy" value="@String.Format("{0:MM\\/dd\\/yy}",Model.taskListResponse.duedate)" name="duedate" onchange="CompareDate()"   readonly="readonly"  style="background-color:white"/>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-3">
                                                         <div class="form-group">
                                                             <label for="exampleFormControlSelect1">Forecast:</label>
-                                                            <input type="text" id="datepicker4" class="form-control form-control-sm" placeholder="mm/dd/yy" value="@String.Format("{0:MM\\/dd\\/yy}",Model.taskListResponse.forecast)" name="forecast" onchange="CompareDate()" />
+                                                            <input type="text" id="datepicker4" class="form-control form-control-sm" placeholder="mm/dd/yy" value="@String.Format("{0:MM\\/dd\\/yy}",Model.taskListResponse.forecast)" name="forecast" onchange="CompareDate()"  readonly="readonly"  style="background-color:white"/>
                                                         </div>
                                                     </div>
 
@@ -454,6 +454,12 @@
 
         function funcDeletResourcefile(pkey, publicTaskId, source)
         {
+            if (confirm("Are You Sure?")) {
+                // do stuff
+            } else {
+                
+                return false;
+            }
                 $.ajax({
                     type: "POST",
                     url: "@ViewBag.Baseurl/Task/DeleteResourceFile",
@@ -461,14 +467,17 @@
 
                         pkey: pkey,
                         source:source
-                    },
+                    } ,
                     success: function (result) {
-
+                       
+                          
+                        debugger;
                         var baseUrl = "@Url.Action("EditTask", "Task", new { id = "PublicTaskId" })";
                         baseUrl = baseUrl.replace("PublicTaskId", publicTaskId);
                         window.location.href = baseUrl;
-                        alert("Resource File Deleted Successfully!")
+                        
                         resourcesShow();
+                        
                         return false;
                     },
                     error: function (result) {
@@ -520,7 +529,7 @@
 
                     document.body.classList.toggle(className);
                 }
-                
+                debugger;
                 if ("@ViewBag.Source" == "Source") {
                     
                     resourcesShow();
@@ -528,10 +537,6 @@
                 else
                 {
                   Planningshow();
-                }
-                if ($('#file').get(0).files.length === 0) {
-
-                    resourcesShow();
                 }
                
             });

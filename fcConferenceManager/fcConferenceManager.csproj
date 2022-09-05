@@ -2558,6 +2558,7 @@
     <Content Include="Views\Portolo\Security\SecurityGroup.cshtml" />
     <Content Include="Views\Portolo\EditConfigurationText.cshtml" />
     <Content Include="Scripts\tinymce\langs\README.md" />
+    <Content Include="Views\Portolo\TextEditor.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

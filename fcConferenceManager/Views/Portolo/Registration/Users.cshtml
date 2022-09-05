@@ -96,7 +96,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    @using (Html.BeginForm("SearchUser", "Registration", FormMethod.Get))
+                    @using (Html.BeginForm("SearchUser", "RegistrationNew", FormMethod.Get))
                     {
                         <div class="control-icons">
                             <h2>Portolo Users</h2>
@@ -112,7 +112,7 @@
                             <a href="~/Registration/Users"><i class="fa-solid fa-arrows-rotate"></i></a>
 
                             <div class="controls">
-                                <a class="brdr-1 btn" href="/Registration/Registration" style="width:98px;height:33px;"> Join Portolo</a>
+                                <a class="brdr-1 btn" href="/RegistrationNew/Registration" style="width:98px;height:33px;"> Join Portolo</a>
                                 <a class="brdr-1 btn" href="" id="btnDelete" onclick="return confirm('Are you sure?')" style="width:98px;height:33px;"><i class="fa fa-trash-o"></i> Delete</a>
                             </div>
                         </div>
@@ -197,7 +197,7 @@
                                                 <td> @item["OrganizationID"]</td>
                                                 <td> @item["PersonalBio"] </td>
                                                 <td>
-                                                    @Html.ActionLink("Edit", "Registration", new {userID = @item["pKey"]})
+                                                    <a href="/RegistrationNew/Registration?userID=@item["pKey"]">Edit</a>
                                                 </td>
                                             </tr>
                                         }
@@ -262,7 +262,7 @@
             alert("Please select at least one topic to delete");
         else {
             $.ajax({
-                url: "/Registration/DeleteUser",
+                url: "/RegistrationNew/DeleteUser",
                 type: "POST",
                 data: { ids: ids }
             });

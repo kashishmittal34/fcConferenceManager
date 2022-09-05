@@ -95,7 +95,6 @@
                     <form id="formFields" action="" method="get">
                         <div class="control-icons">
                             <h2>Reports</h2>
-                            <button id="SubmitBtn"></button>
                             <button id="ExcelBtn" name="excel" value="true" style="border-color: white; border: none;background-color:white">
                                 <i class="fa-solid fa-download" title="Download Excel"></i>
                             </button>
@@ -156,7 +155,6 @@
             </div>
         </div>
     </section>
-
 
     <footer>
         <div class="container">
@@ -224,7 +222,6 @@
         });
 
         $(".card").on("click", ".fa-caret-right", function () {
-
             $(this).closest("tr").after("<tr><td></td><td colspan = '999'>" + $(this).next().html() + "</td></tr>");
             $(this).removeClass('fa-caret-right');
             $(this).addClass('fa-caret-down');

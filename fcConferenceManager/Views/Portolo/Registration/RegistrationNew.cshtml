@@ -56,15 +56,19 @@
             /*border: 4px solid rgba(10,10,10,0.5);*/
         }
 
-        /*  max-width:none;
-        }*/
+       img{
+            max-width:none;
+        }
+        i:hover	{
+            cursor:pointer;
+        }
     </style>
     <script>
         $(document).ready(function () {
             $("#Saveid").click(function () {
                 $("#save").val(true);
             })
-            $("#Organization").select2();
+            //$("#Organization").select2();
             $("#Country").change(function () {
 
                 var id = $(this).val();
@@ -112,7 +116,7 @@
         $("#Country option[value=@Model.countrypkey]").attr("selected","selected");
         $("#State option[value=@Model.state_pkey]").attr("selected","selected");
         $("#Timezone option[value=@Model.timezone]").attr("selected","selected");
-        $("#Organization option[value=@Model.organization]").attr("selected", true);
+        //$("#Organization option[value=@Model.organization]").attr("selected", true);
         var org = $('#Organization :selected').text();
         $("#select2-Organization-container").text(org);
             $("#Salutation1 option[value=@Model.salutation1]").attr("selected", "selected");
@@ -133,7 +137,6 @@
       
    function fileCheck(elm)
    {
-    $("#result").show();
     var fn = String($(elm).val());
     var filename = fn.match(/[^\\/]*$/)[0]; // remove C:\fakename
     var imageurl = '@Url.Content("~/User-images/imagename")';
@@ -186,10 +189,6 @@
    }
 
     function validateInputs(e) {
-
-        var dd = $('#imgCropped').val($('#result').attr('src'));
-
-
     var Salutation1 = $.trim($('#Salutation1').val());
     var firstName = $.trim($('#firstNameid').val());
     var LastName = $.trim($('#LastName').val());
@@ -288,6 +287,16 @@
     alert("Please Fill ZIP code");
     return false;
     }
+	else if (/^[a-zA-Z()]+$/.test(zipcode)) {
+        $("#zipcode").focus();
+        alert("Wrong ZIP code");
+        return false;
+    }
+    else if (zipcode.length > 10) {
+        $("#zipcode").focus();
+        alert("zipcode length can not be more than 10 digits");
+        return false;
+    }					  
     else if (jobtitle == "") {
     $("#jobtitle").focus();
     alert("Please Fill Job Title");
@@ -319,6 +328,10 @@
 
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
+			$("#removeImage").click(function () {
+                $("#image1").attr('src', '/UserDocuments/no-person.jpg');
+                $("#remove").val('true');
+            })										  
             var h;
             var w;
             $("#file").change(function () {
@@ -612,7 +625,7 @@
             <table style="float:left" class="col-3">
                 <tbody>
                     <tr>
-                        <td style="text-align: center; padding: 0px">
+                        <td style=" padding: 0px">
                             <div>
                                 @if (Model.Uimg == null)
 
@@ -628,8 +641,8 @@
                                         <input class="form-control" type="text" style="display:none" id="userimageName" value="@Model.Uimg" />
 
 
-                                        <img class="form-control" alt="" id="result" src="@Url.Content(Model.Uimg)" style="display:  10px;" height="350" width="80" />
-                                        
+                                        <!--<img class="form-control" alt="" id="result" src="@Url.Content(Model.Uimg)" style="display:  10px;" height="350" width="80" />
+                                        -->
 
 
 
@@ -637,7 +650,7 @@
                                         <table border="0" cellpadding="0" cellspacing="5">
                                             <tr>
                                                 <td>
-                                                    <img class="form-control" alt="" id="image1" style="width:300px;height:300px;" src="@Model.Uimg" />
+                                                    <img alt="" id="image1" style="width:300px;height:300px;" src="@Model.Uimg" />
                                                 </td>
                                                 <td>
                                                     <canvas id="canvas" height="5" width="5" style="display:none;"></canvas>
@@ -689,7 +702,8 @@
 
 
 					   
-                                <label class="form-label" for="file">Upload Profile Picture</label>
+                                 <label class="form-label" for="file">Upload Profile Picture</label>
+                                <div style="display: flex; justify-content: space-between;">
 
 
 
@@ -697,9 +711,10 @@
 
 
 
-
-                                <input class="form-control" type='file' name="file" id="file" onchange="fileCheck(this);" />
-
+                                    <input style="display: inline-block;" class="form-control px-0" type='file' name="file" id="file" onchange="fileCheck(this);" />
+                                    <i id="removeImage" style="display: inline-block;" class="fa-solid fa-trash  mx-2 fa-2x" title="Remove image"></i>
+                                    <input hidden type="text" name="removeImage" id="remove" value=""/>
+                                </div>
 
 
 
@@ -882,7 +897,7 @@
                                     </tr>
                                     <tr>
                                         <td style="text-align: right">
-                                            <span class="span">Address 1:</span>
+                                            <span >Address 1:</span>
                                         </td>
                                         <td style="padding-left: 5px; text-align: left">
                                             <input class="form-control" type="text" value="@Model.address1" name="Address1" required id="Address1" />
@@ -890,7 +905,7 @@
                                     </tr>
                                     <tr>
                                         <td style="text-align: right">
-                                            <span class=" span">Address 2:</span>
+                                            <span >Address 2:</span>
                                         </td>
                                         <td style="padding-left: 5px; text-align: left">
                                             <input class="form-control" type="text" value="@Model.address2" name="Address2" />
@@ -898,7 +913,7 @@
                                     </tr>
                                     <tr>
                                         <td style="text-align: right">
-                                            <span class="span">City:</span>
+                                            <span >City:</span>
                                         </td>
                                         <td style="padding-left: 5px; text-align: left">
                                             <input class="form-control" type="text" value="@Model.city" name="city" required id="city" />
@@ -906,18 +921,18 @@
                                     </tr>
                                     <tr>
                                         <td style="text-align: right">
-                                            <span title="Selection required" class=" span">State:</span>
-                                           
+                                            <span title="Selection required" >State:</span>
+										   
                                         </td>
                                         <td style="padding-left: 5px; text-align: left">
                                             <div title="Selection required" style="width:260px;" tabindex="0">
-												
+			
 
-		  
-		   
-		  
-	  
-	  
+	
+	 
+	
+   
+   
                                                 @Html.DropDownList("State", null, "---Select State----", new { @class = "form-select" })
                                             </div>
 
@@ -925,7 +940,7 @@
                                     </tr>
                                     <tr>
                                         <td style="text-align: right">
-                                            <span class="span">ZIP code:</span>
+                                            <span >ZIP code:</span>
                                         </td>
                                         <td style="padding-left: 5px; text-align: left">
                                             <input class="form-control" type="text" value="@Model.zipcode" name="zipcode" id="zipcode" required />
@@ -933,21 +948,33 @@
                                     </tr>
                                     <tr>
                                         <td style="text-align: right">
-                                            <span>Time zone:</span>
-                                            
+                                            <span class="span">Time zone:</span>
+											
                                         </td>
                                         <td style="padding-left: 5px; text-align: left">
                                             <div style="width:260px;" tabindex="0">
-											  
-		   
-		   
-		 
-	  
-	
+			 
+	 
+	 
+   
+   
+ 
                                                 @Html.DropDownList("Timezone", null, "---Select TimeZone----", new { @class = "form-select" })<br />
                                             </div>
                                         </td>
                                     </tr>
+                                    {
+                                        <tr>
+                                            <td style="text-align: right">
+                                                <span>Staff Member:</span>
+                                            </td>
+                                            <td style="padding-left: 5px; text-align: left">
+                                                <div style="width:260px;" tabindex="0">
+                                                    @Html.CheckBoxFor(model => model.staffmember)
+                                                </div>
+                                            </td>
+                                        </tr>
+                                     }    						 
                                 </tbody>
                             </table>
                         </td>
@@ -957,13 +984,15 @@
                                     <tr>
                                         <td>
                                             <span>Phone 1:</span>
+
+                                            <span class="mx-5">Country Code:</span> 
                                             <br>
                                             <div>
 
                                                 @Html.DropDownList("PhoneType1", null, new { @class = "form-select-sm" })
                                                 <span>+</span>
                                                 <span>
-                                                    <input class="form-control-sm" type="number" required name="countryCodephone1" value="1" disabled="disabled" />
+                                                    <input class="form-control-sm countryCode" type="number" required name="countryCodephone1"  value="@ViewBag.CountryCode" disabled />
                                                 </span>
                                                 <input class="form-control-sm" type="number" value="@Model.phone1" name="phone1" id="phone1" />  <span>x</span>
                                                 <span>
@@ -975,6 +1004,7 @@
                                     <tr>
                                         <td>
                                             <span>Phone 2:</span>
+                                            <span class="mx-5">Country Code:</span>
                                             <br>
                                             <div style="width:120px;" tabindex="0">
                                             </div>
@@ -983,7 +1013,7 @@
                                                 @Html.DropDownList("PhoneType2", null, new { @class = "form-select-sm" })
                                                 <span>+</span>
                                                 <span>
-                                                    <input class="form-control-sm" type="number" name="countryCodephone2" value="1" disabled="disabled" />
+                                                    <input class="form-control-sm countryCode" type="number" name="countryCodephone2" value="@ViewBag.CountryCode" disabled />
                                                 </span>
                                                 <input class="form-control-sm" type="number" value="@Model.phone2" name="phone2" />  <span>x</span>
                                                 <span>
@@ -1016,13 +1046,13 @@
         </div>
         <div>
             <div style="padding-top: 10px; padding-left: 10px;">
-                <span style="color: #00008b; font-weight: bold">Professional Information</span>
+                <span style="color: #00008b; font-weight: bold">Professional Information: </span>
             </div>
 
             <div>
 
-                <div style="vertical-align: top; float: left; padding-left: 10px">
-                    <div>
+                <div style="vertical-align: top; float: left; padding-left: 10px;">
+                    <div style="margin-bottom:80px;">
                         <div style="float: left ;margin-bottom:15px">
                             <span>Job Title:</span>
                             <br>
@@ -1036,35 +1066,37 @@
                         <div style="float: left; padding-left: 5px; margin-bottom:25px">
                             <span>Organization:</span>
                             <br>
-                            @Html.DropDownList("Organization", null, "<--Select Organization-->", new { @class = "form-select" })
+                            @Html.DropDownList("Organization", null, "<--Select Organization-->", new { @class = "form-select" , @style = "padding-bottom : 20px;" })
+                            <br/>
                         </div>
-                        <br />
+							  
                     </div>
-                    <br />
-                    <div style="float: left; padding-left: 5px;">
-                        <span class="form-label">Degrees and Certifications:</span>
-                        <br>
-                        <input class="form-control" type="text" value="@Model.degreesandcertifications" name="degreesandcertifications" />
-                    </div>
-                    <div style="float: left; padding-left: 5px">
-                        <span>Website:</span>
-                        <br>
-                        <input class="form-control" type="text" value="@Model.website" name="Website" />
+                    <div style="display : flex">
+                        <div  style="float: left;">
+                            <span class="form-label">Degrees and Certifications:</span>
+							
+                            <input class="form-control" type="text" value="@Model.degreesandcertifications" name="degreesandcertifications" />
+                        </div>
+                        <div style="float: left; padding-left: 5px">
+                            <span>Website:</span>
+                            <br>
+                            <input class="form-control" type="text" value="@Model.website" name="Website" />
 
-                    </div>
-                    <div style="float: left; padding-left: 8px">
-                        <span style="color: black; font-weight: bold">CV @Model.CV</span>
-                        <br>
-                        <input class="form-control" type="file" name="CVfile" value="Upload" id="CVfile" onchange="fileCheckdoc(this);" />
+                        </div>
+                        <div  style="float: left; padding-left: 8px">
+                            <span style="color: black; font-weight: bold">CV @Model.CV</span>
+                            <br>
+                            <input class="form-control" type="file" name="CVfile" value="Upload" id="CVfile" onchange="fileCheckdoc(this);" />
+                        </div>
                     </div>
                     <div>
                         <div style="float: left; margin-top:15px;" class="cvp">
                             <div style="float: left;" class="cvp">
-                                <span>Personal Biography:</span>
+                                <span style="color: #00008b; font-weight: bold">Personal Biography:</span>
                                 <br>
                                 <textarea class="form-control" name="personalbiography" value="@Model.personalbiography" rows="100" cols="10000" style="height: 150px; max-width: 686px; " maxlength="600">@Model.personalbiography</textarea>
                                 <br />
-                                <lable style="width:100%"> About My Organization And My Role:</lable>
+                                <lable style="width:100%; color: #00008b; font-weight: bold"> About My Organization And My Role:</lable>
                                 <br>
                                 <textarea class="form-control" name="aboutmyorganizationandmyrole" value="@Model.aboutmyorganizationandmyrole" rows="100" cols="100" style="height: 150px; max-width: 686px; " maxlength="500">@Model.aboutmyorganizationandmyrole</textarea>
                             </div>

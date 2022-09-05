@@ -226,9 +226,9 @@
                         </h4>
                     </div>
                     <div class="col-6"></div>
-                    <div class="col-2">
-                        <h4 class="magi-justify-content-space-between" style="text-align: right; vertical-align: top; padding:7px">
-                            @Html.ActionLink("Edit", "Registration", "RegistrationNew", new { userID = Model.ID }, new { @class = "btn btn-outline-warning" })
+                    <div class="col-2 p-0">
+                        <h4 class="magi-justify-content-space-between py-2" style="text-align: right; vertical-align: top; ">
+                            @Html.ActionLink("Edit", "Registration", "RegistrationNew", new { userID = Model.ID }, new { @class = "btn btn-outline-warning" , @style = "width :65px;" })
 
                         </h4>
                     </div>
@@ -266,21 +266,21 @@
                         <div class="d-flex flex-column align-items-center text-center py-2">
                             @if (Model.Uimg == null)
                             {
-                                <img alt="" id="image" src="@Url.Content("aa")" style="display:  10px;" height: 278px; width: 266px; />
+                                <img alt="" id="image" src="@Url.Content("aa")" style="display:  10px;" height: 300px; width: 300px; />
                             }
                             else
                             {
                                 if (Model.Uimg != null)
                                 {
-                                    <img alt="" id="image1" src="@Url.Content(Model.Uimg)" style="display: 10px; height: 278px; width: 266px;" />
+                                    <img alt="" id="image1" src="@Url.Content(Model.Uimg)" style="display: 10px; height: 300px; width: 300px;" />
                                 }
 										 
 
                                 else
                                 {
-                                    <img alt="" id="image" src="@Url.Content(Model.Uimg)" style="display: 10px; height: 278px; width: 266px;" />
+                                    <img alt="" id="image" src="@Url.Content(Model.Uimg)" style="display: 10px; height: 300px; width: 300px;" />
                                 }
-                            }
+                            }	
 																				   
 																
 										 
@@ -356,11 +356,11 @@
                                                 <td>@Model.suffixvalue</td>
                                                 @*</tr>
                                                     <tr>*@
-                                                <td style="font-weight:bold">Nick name</td>
+                                                <td style="font-weight:bold">Nick Name</td>
                                                 <td>@Model.nickname</td>
                                             </tr>
                                             <tr>
-                                                <td style="font-weight:bold">Sign In Account ID</td>
+                                                <td style="font-weight:bold">Sign In Account Id</td>
                                                 <td>@Model.signinaccountid</td>
                                                 @*</tr>
                                                     <tr>*@
@@ -406,8 +406,8 @@
                                                     <td>@Model.skypeaddress</td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="font-weight:bold">Linked IN</td>
-											  
+                                                    <td style="font-weight:bold">Linkedin URL</td>	 
+			 
 				  
 				 
 														 

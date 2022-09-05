@@ -101,6 +101,8 @@
 
 
 <body>
+
+  
     <style>
         .form-control:disabled, .form-control[readonly] {
             background-color: #e9ecef0f;
@@ -114,7 +116,7 @@
                     @*@using (Html.BeginForm("Delete", "Portolo", FormMethod.Post))
                         {*@
                     <form action="" method="post">
-
+                       
 
                         @*<form>*@
                         <div class="control-icons">
@@ -239,31 +241,33 @@
                                                 <th onclick="sortTable(2)">Name</th>
                                                 <th onclick="sortTable(3)">Title</th>
                                                 <th onclick="sortTable(4)">Description</th>
-                                                <th onclick="sortTable(5)">Plan</th>
+                                                <th onclick="sortTable(5)">Plan Date</th>
                                                 <th onclick="sortTable(6)">Due Date</th>
                                                 <th onclick="sortTable(7)">Forecast</th>
                                                 <th onclick="sortTable(8)">Category</th>
                                                 <th onclick="sortTable(9)">Status</th>
                                                 <th onclick="sortTable(10)">Most Recent Note</th>
+
                                             </tr>
+
                                         </thead>
 
 
                                         @*<button type="submit" value="Delete" class="btn btn-sm btn-danger rounded-0" onclick="return confirm('Are you sure?')"><i class="fa fa-trash-o"></i> Delete</button>
-                                            <input type="submit" value="Del" />*@
+            <input type="submit" value="Del" />*@
                                         @if (ViewBag.BindList != null)
                                         {
                                             <tbody id="myTable">
+
                                                 @foreach (var item in ViewBag.BindList)
                                                 {
 
                                                     <tr>
 
-
                                                         <td>
                                                             <input type="checkbox" name="ID" value="@item.pKey" class="custom-checkbox chkCheckBoxId" />
                                                             @*<input type="checkbox" value="@item.pKey" class="ItemsCheckboxForAllTasks" id="check" />
-                                                                <input name="ID" value="@item.pKey" hidden />*@
+                                <input name="ID" value="@item.pKey" hidden />*@
                                                         </td>
                                                         <td valign="top">
 
@@ -313,13 +317,16 @@
                                                     </tr>
 
                                                 }
+
                                             </tbody>
+
                                         }
 
 
                                     </table>
-
+                                    <p>@ViewBag.notice</p>
                                 </div>
+
                                 <div @*class="col-md-12 text-center"*@>
                                     <ul class="pagination pagination-lg pager" id="myPager"></ul>
                                 </div>
@@ -373,7 +380,7 @@
 
 
         $("#select-all").click(function (event) {
-           
+
             if (this.checked) {
                 primarykey.length = 0;
                 // Iterate each checkbox
@@ -597,7 +604,7 @@
         };
 
         $(document).ready(function () {
-
+           
             $('#myTable').pageMe({
 
                 pagerSelector: '#myPager',
@@ -688,10 +695,14 @@
             var trs = $("#myTable tr");
             trs.hide();
             trs.slice(0, 50).show();
+
+
         }
     </script>
+
+
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
-    
+
 </body>
 
 </html>

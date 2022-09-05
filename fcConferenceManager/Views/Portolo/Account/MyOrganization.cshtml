@@ -243,10 +243,9 @@
                                         @foreach (System.Data.DataRow dr in ViewBag.CountryTable.Rows)
                                         {
                                             strSelected = "";
-                                            if (@organization.country == @dr["strText"].ToString())
+                                            if (@organization.country == @dr["pkey"].ToString())
                                             {
                                                 strSelected = "selected";
-
                                             }
                                             <option value="@dr["pKey"]" @strSelected>@dr["strText"] </option>
                                         }
@@ -307,7 +306,7 @@
                                 <div class="col-md-8  float-md-end  p-0">
                                     <select id="cbTimeZone" name="cbTimeZone" style="width:100%;">
                                         <option value="0">--Select--</option>
-                                        @foreach (var dr in ViewBag.TimeZoneTable.Rows)
+                                        @foreach (System.Data.DataRow dr in ViewBag.TimeZoneTable.Rows)
                                         {
                                             strSelected = "";
                                             if (@organization.intTimezone_pKey == (int)(@dr["pKey"]))
@@ -383,11 +382,25 @@
                 datatype: 'json',
                 data: { "Country_Pkey": $(this).val() },
                 success: function (response) {
-                    var v = "<option>--Select--</option>";
+                    var v = "<option value='0'>--Select--</option>";
                     $.each(response, function (i, v1) {
                         v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
                     });
                     $("#cbTimeZone").html(v);
+                }
+            })
+
+            $("#cbState").empty();
+            $.ajax({
+                url: "/Account/GetStateDropDown",
+                datatype: 'json',
+                data: { "Country_Pkey": $(this).val() },
+                success: function (response) {
+                    var v = "<option value='0'>--Select--</option>";
+                    $.each(response, function (i, v1) {
+                        v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                    });
+                    $("#cbState").html(v);
                 }
             })
         });

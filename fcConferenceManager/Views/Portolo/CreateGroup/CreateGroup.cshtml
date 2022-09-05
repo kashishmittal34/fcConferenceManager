@@ -153,7 +153,7 @@
                 debugger;
                 if (members == "0") {
                     //location.reload();
-                    
+
                     alert("No member found");
                     setTimeout(
                         function () {
@@ -191,9 +191,33 @@
         });
     </script>
     <style>
+        .toltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .toltip .tooltiptext {
+            visibility: hidden;
+            width: 100px;
+            color: #ffbb33;
+            text-align: center;
+            border-radius: 6px;
+            /* Position the tooltip */
+            position: absolute;
+            z-index: 1;
+        }
+
+        .toltip:hover{
+            cursor:pointer;
+        }
+
+        .toltip:hover .tooltiptext {
+            visibility: visible;
+        }
+
         a:hover {
             color: #ffbb33;
-            cursor:pointer;
+            cursor: pointer;
         }
 
         .active {
@@ -231,10 +255,10 @@
             background-color: #ffc10787;
         }
 
-            #addToGroup:hover {
-                background-color: #ffbb33;
-                color: white;
-            }
+        #addToGroup:hover {
+            background-color: #ffbb33;
+            color: white;
+        }
 
         .btn:hover {
             cursor: pointer;
@@ -259,11 +283,13 @@
             background-color: #6e6c6c;
             color: white
         }
-        td,th{
-            text-align : center;
+
+        td, th {
+            text-align: center;
         }
-        .modal td{
-            text-align:left;
+
+        .modal td {
+            text-align: left;
         }
     </style>
 </head>
@@ -423,7 +449,12 @@
                         <th><input id="membermaincheckbox" type="checkbox" /></th>
                     }
                     <th>ID</th>
-                    <th><a style="color:white" href="~/InterestGroup/CreateGroup?pageNo=@ViewData["Page"]&nameSort=@ViewData["NameSortParm"]&membersPage=true&nameSearch=@ViewData["NameFilter"]&organizationSearch=@ViewData["OrganizationFilter"]&Industry=@ViewData["IndustryFilter"]&answerFilter=@ViewData["Answer"]&groupFilter=@ViewData["Group"]"><label>Name</label></a></th>
+                    <th>
+                        <div class="toltip">
+                            <a style="color:white" href="~/InterestGroup/CreateGroup?pageNo=@ViewData["Page"]&nameSort=@ViewData["NameSortParm"]&membersPage=true&nameSearch=@ViewData["NameFilter"]&organizationSearch=@ViewData["OrganizationFilter"]&Industry=@ViewData["IndustryFilter"]&answerFilter=@ViewData["Answer"]&groupFilter=@ViewData["Group"]">Name</a>
+                            <span class="tooltiptext">(Click to sort)</span>
+                        </div>
+                    </th>
                     <th>Job Title</th>
                     <th>Department</th>
                     <th>Organization</th>
