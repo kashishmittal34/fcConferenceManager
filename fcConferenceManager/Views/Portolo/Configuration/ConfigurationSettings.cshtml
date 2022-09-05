@@ -132,7 +132,7 @@
             color: black;
         }
 
-        textarea:focus {
+        /* textarea:focus {
             outline: none;
         }
 
@@ -145,7 +145,7 @@
             background: none;
             appearance: none;
             border: solid thin;
-        }
+        }*/
     </style>
 </head>
 <body>
@@ -171,7 +171,7 @@
                             <div class="card-header">
                                 <div class="control-icons">
                                     <label class="dt-head-left" style="font-size:large;"><b>Configuration Settings</b></label> &nbsp;
-                                    <a onclick="location.href='@Url.Action("Download", "Configuration",  FormMethod.Post)';return false;" title="ExportExcel"><i class="fa-solid fa-download"></i></a>
+                                    <a onclick="location.href='@Url.Action("Download", "Configuration",  FormMethod.Post)';return false;" title="Download Excel"><i class="fa-solid fa-download"></i></a>
                                 </div>
                             </div>
                         }
@@ -193,20 +193,20 @@
                                   grid.Column("SettingID", header: "Setting Id", canSort: true),
                                   grid.Column("SettingValue", header: "Value", canSort: true),
                                     grid.Column(header: "Edit", format:
-                                                    @<text>
-                                                        @if (item.Id == 3 || item.Id == 4)
-                                                        {
-                                                            <a class="btn" href="/Configuration/TextEditor?id=@item.Id">
-                                                                <i class="fa fa-edit" style="color:orange"></i>
-                                                            </a>                                    
-                                                        }
-                                                        else
-                                                        {
-                                                        <a class="btn" onclick="GetDetails(@item.Id)">
-                                                            <i class="fa fa-edit" style="color:orange"></i>
-                                                        </a>
-                                                        }
-                                                    </text>)));
+                                                            @<text>
+                                                                @if (item.Id == 3 || item.Id == 4)
+                                                                {
+                                                                    <a class="btn" href="/Configuration/TextEditor?id=@item.Id">
+                                                                        <i class="fa fa-edit" style="color:orange"></i>
+                                                                    </a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a class="btn" onclick="GetDetails(@item.Id)">
+                                                                        <i class="fa fa-edit" style="color:orange"></i>
+                                                                    </a>
+                                                                }
+                                                            </text>)));
                                 @Html.Hidden("dir", grid.SortDirection)
                                 @Html.Hidden("col", grid.SortColumn)
 
@@ -291,35 +291,45 @@
             <div class="modal fade" id="modal-Update" tabindex="-1" aria-labelledby="modalOne" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-fullscreen-xl-down form-popup">
                     <div class="modal-content width-550">
-                        <div class="modal-header with-border">
+                        <div class="modal-header">
                             <h3 class="box-title k-dialog-centered"> Update Settings</h3>
                         </div>
                         <div class="modal-body">
 
                             @using (Html.BeginForm("UpdateSetting", "Configuration", FormMethod.Post))
                             {
+                                <div class="model-body">
 
-                                <div class="modal-body">
-
-
-                                    <input type="hidden" id="hfId" name="Id">
-                                    <label for="SettingValue" style="text-size-adjust:auto; font-size:larger"><b>New Value:</b></label>
-                                    <br />
-                                    <br />
-
-                                    <input class="form-control" oninput="this.parentNode.dataset.value = this.value" rows="2" id="txtUpdateName" name="SettingValue" placeholder="Enter Value" required="" />
-                                    <span class="error"></span>
+                                    <div class="row">
+                                        <div class="col-lg-12">
 
 
+                                            <div class="form-box">
+                                                <input type="hidden" id="hfId" name="Id">
+                                                <label for="SettingValue" style="text-size-adjust:auto; font-size:larger"><b>New Value:</b></label>
+                                                <div class="controls">
+                                                    <button type="submit" class="brdr-1 btn-sm btn-outline-primary " id="SubmitButton">Update</button>
+                                                    <button id="closeModal" type="button" class="brdr-1 btn-sm" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                                                </div>
+                                                <br />
+                                                <br />
+                                                <br/>
+                                                <div class="form-group">
+                                                    <textarea class="form-control" @*oninput="this.parentNode.dataset.value = this.value"*@ cols="100" rows="1" id="txtUpdateName" name="SettingValue" placeholder="Enter Value" required=""></textarea>
+                                                    <span class="error"></span>
+
+                                                </div>
+                                                <div class="clearfix"></div>
+                                                <div class="modal-footer">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                                
 
-
-                                <div class="clearfix"></div>
-
-                                <div class="modal-footer">
-                                    <button type="submit" class="brdr-1 btn-sm btn-outline-primary " id="SubmitButton">Update</button>
-                                    <button id="closeModal" type="button" class="brdr-1 btn-sm" data-bs-dismiss="modal" aria-label="Close">Close</button>
-                                </div>
+                                
                             }
 
                         </div>

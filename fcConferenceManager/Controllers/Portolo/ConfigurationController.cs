@@ -352,12 +352,12 @@ namespace fcConferenceManager.Controllers.Portolo
             }
             return terms;
         }
-        public ActionResult TextEditor( int?id)
+        public ActionResult EditConfigurationText( int?id)
         {
             var applicationSetting = GetEditDetails().Find(x => x.Id.Equals(id));
             ViewBag.Application = applicationSetting;
             ApplicationSetting application = applicationSetting;
-            return View("~/Views/Portolo/TextEditor.cshtml",application);
+            return View("~/Views/Portolo/EditConfigurationText.cshtml", application);
         }
        
 

@@ -36,6 +36,7 @@
             $('#SubmitButton').click(function () {
                 if ($('#txtUpdateName').val().trim() == "") {
                     alert("There is no value in textbox");
+                    return false;
                 }
             });
         });
@@ -43,6 +44,8 @@
             $('#AddSubmit').click(function () {
                 if ($('#rolename').val().trim() == "") {
                     alert("There is no value in textbox");
+                    return false;
+
                 }
             });
         });
@@ -84,6 +87,9 @@
         a:hover{
             color : darkorange;
         }
+        .btn:hover{
+            color:blue;
+        }
     </style>
 </head>
 <body>
@@ -123,7 +129,7 @@
                                     <i class="fa-solid fa-arrows-rotate"></i>
                                 </button>
 
-                                <button type="submit" style="border-color: white;border: none;background-color:white;" onclick="location.href='@Url.Action("Download", "Portolo",FormMethod.Post)';return false;" title="ExportExcel"><i class="fa-solid fa-download"></i></button>
+                                <button type="submit" style="border-color: white;border: none;background-color:white;" onclick="location.href='@Url.Action("Download", "Portolo",FormMethod.Post)';return false;" title="Download Excel"><i class="fa-solid fa-download"></i></button>
 
                                 <div class="controls">
 
@@ -213,7 +219,7 @@
 
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary" id="AddSubmit" style="background-color:orange">Submit</button>
+                                            <button type="submit" class="btn brdr-1 btn-sm" id="AddSubmit">Save</button>
                                             <button id="closeModal" type="button" class="brdr-1 btn-sm pull-right" data-bs-dismiss="modal" aria-label="Close">Close</button>
                                         </div>
                                     </form>
@@ -250,7 +256,7 @@
 
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary" id="SubmitButton" style="background-color:orange">Update</button>
+                                            <button type="submit" class="btn brdr-1 btn-sm " id="SubmitButton">Update</button>
                                             <button id="closeModal" type="button" class="brdr-1 btn-sm pull-right" data-bs-dismiss="modal" aria-label="Close">Close</button>
                                         </div>
                                     </form>
