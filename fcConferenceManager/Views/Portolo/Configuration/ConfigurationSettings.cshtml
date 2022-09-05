@@ -132,20 +132,9 @@
             color: black;
         }
 
-        /* textarea:focus {
-            outline: none;
+        btn:hover{
+            color:black;
         }
-
-        textarea {
-            width: 2000px;
-            font: inherit;
-            padding: 0.25em;
-            margin: auto;
-            resize: horizontal;
-            background: none;
-            appearance: none;
-            border: solid thin;
-        }*/
     </style>
 </head>
 <body>
@@ -196,7 +185,7 @@
                                                             @<text>
                                                                 @if (item.Id == 3 || item.Id == 4)
                                                                 {
-                                                                    <a class="btn" href="/Configuration/TextEditor?id=@item.Id">
+                                                                    <a class="btn" href="/Configuration/EditConfigurationText?id=@item.Id">
                                                                         <i class="fa fa-edit" style="color:orange"></i>
                                                                     </a>
                                                                 }
@@ -308,8 +297,8 @@
                                                 <input type="hidden" id="hfId" name="Id">
                                                 <label for="SettingValue" style="text-size-adjust:auto; font-size:larger"><b>New Value:</b></label>
                                                 <div class="controls">
-                                                    <button type="submit" class="brdr-1 btn-sm btn-outline-primary " id="SubmitButton">Update</button>
-                                                    <button id="closeModal" type="button" class="brdr-1 btn-sm" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                                                    <button type="submit" class="brdr-1 btn-sm btn" id="SubmitButton">Update</button>
+                                                    <button id="closeModal" type="button" class="brdr-1 btn-sm btn" data-bs-dismiss="modal" aria-label="Close">Close</button>
                                                 </div>
                                                 <br />
                                                 <br />

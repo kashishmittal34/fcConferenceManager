@@ -1,4 +1,5 @@
-﻿using fcConferenceManager.Models;
+﻿using DocumentFormat.OpenXml.Office.CustomUI;
+using fcConferenceManager.Models;
 using fcConferenceManager.Models.Portolo;
 using MAGI_API.Models;
 using OfficeOpenXml;
@@ -299,8 +300,11 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         public PartialViewResult PublicPage(PublicContentPage publicContent)
         {
-            publicContent.AboutUs = GetAboutUsContent();
-            publicContent.TermsOfUse = GetTermsOfUseContent();
+            string aw = string.Empty, tof = string.Empty;
+            aw = GetAboutUsContent();
+            publicContent.AboutUs = aw.Replace("\"", string.Empty).Trim();
+            tof = GetTermsOfUseContent();
+            publicContent.TermsOfUse = tof.Replace("\"", string.Empty).Trim();
             ViewBag.content = Request.QueryString["AboutUs"];
             return PartialView("~/Views/Portolo/Configuration/PublicPage.cshtml", publicContent);
         }
