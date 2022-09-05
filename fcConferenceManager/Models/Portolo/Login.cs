@@ -183,6 +183,7 @@ namespace Elimar.Models
         public string state { get; set; }
         public string zip { get; set; }
         public string country { get; set; }
+		public string country_pkey { get; set; }										
         public string userName { get; set; }
         public string title { get; set; }
         public string email { get; set; }
