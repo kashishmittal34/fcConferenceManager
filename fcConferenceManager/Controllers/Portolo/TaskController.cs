@@ -80,6 +80,7 @@ namespace fcConferenceManager.Controllers
         [HttpPost]
         public ActionResult TaskList(TaskListRequest request)
         {
+            
             if (request.active == null && request.category == null && request.commondropdownlist ==null && request.duedate == null &&
                 request.editprimarykey == 0 && request.forecast == null && request.number == null && request.pKey == 0 &&
                 request.plandates == null && request.repeat == null && request.reviewed == null && request.status == null &&
@@ -543,13 +544,6 @@ namespace fcConferenceManager.Controllers
                             cmd.Parameters.AddWithValue("@Resources", "");//model.Resources
                             cmd.Parameters.AddWithValue("@ResourcesFileName", "");//model.ResourcesFileName
 	  
-	 
-	 
-   
-	
-	   
-		
-
                             con.Open();
                             SqlDataReader reader = cmd.ExecuteReader();
                             while (reader.Read())
@@ -564,10 +558,6 @@ namespace fcConferenceManager.Controllers
                             con.Close();
                         }
 			
-   
-   
-   
-
                     }
                 }
                 if (model.files != null)
@@ -603,6 +593,7 @@ namespace fcConferenceManager.Controllers
                                     cmd.ExecuteNonQuery();
                                     con.Close();
                                 }
+                                TempData["Source"] = "Source";
                             }
 
                                 }
@@ -746,7 +737,6 @@ namespace fcConferenceManager.Controllers
                 }
             }
         }
-
 
         public ActionResult commonreload()
         {

@@ -9,30 +9,34 @@ using Elimar.Models;
 using System.IO;
 using System;
 using ClosedXML.Excel;			 
+using MAGI_API.Models;
+using System.Drawing; 
 
 namespace fcConferenceManager.Controllers
 {
     public class RegistrationNewController : Controller
     {
         private string baseurl;
-
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
         public RegistrationNewController()
         {
             baseurl = ConfigurationManager.AppSettings["AppURL"].Replace("/forms", ""); 
         }
 
-        public ActionResult Registration(int? userID, int? PortoloKey)
+        public ActionResult Registration(int? userID)
         {
-			
+            ViewBag.GlobalAdmin = false;
+            if (Session["User"] != null)
+                ViewBag.GlobalAdmin = ((loginResponse)Session["User"]).IsGlobalAdmin;
 
-			loginResponse objlt = (loginResponse)Session["User"];
+            loginResponse objlt = (loginResponse)Session["User"];
             //if (objlt == null) return Redirect("~/Account/Portolo");														
-            ViewBag.portolodropdown = getdropdownprtlo();
+            //ViewBag.portolodropdown = getdropdownprtlo();
             ViewBag.Country = GetCountryDropDown();
-            ViewBag.organization = GetOrganizationDropDown();
+            //ViewBag.organization = GetOrganizationDropDown();
             ViewBag.salutation1 = GetSalutationDropDown();
             ViewBag.state = GetStateDropDown("1");
-            ViewBag.timeZone = GetStateDropDown("1");
+            ViewBag.timeZone = GetTimeZoneDropDown("1");
             ViewBag.suffix = GetSuffixDropDown();
             ViewBag.phonetype1 = GetPhoneTypesDropDown();
             ViewBag.phonetype2 = GetPhoneTypesDropDown();
@@ -40,7 +44,7 @@ namespace fcConferenceManager.Controllers
             UserResponse user = new UserResponse();
             if (userID > 0)
             {
-                userList = RegistrationList(userID, PortoloKey);
+                userList = RegistrationList(userID);
                 user.ID = userList[0].ID;
                 user.salutation1 = userList[0].salutation1;
                 user.firstname = userList[0].firstname;
@@ -77,7 +81,7 @@ namespace fcConferenceManager.Controllers
                 user.email = userList[0].email;
                 user.jobTitle = userList[0].jobTitle;
                 user.department = userList[0].department;
-                user.organization = userList[0].organization;
+                user.organization = userList[0].orgName;
                 user.degreesandcertifications = userList[0].degreesandcertifications;
                 user.website = userList[0].website;
                 user.personalbiography = userList[0].personalbiography;
@@ -88,11 +92,17 @@ namespace fcConferenceManager.Controllers
                 user.state_pkey = userList[0].state_pkey;
                 user.salutationzID1 = userList[0].salutationzID1;
                 user.suffixvalue= userList[0].suffixvalue;
+				user.staffmember = userList[0].staffmember;										   
                 ViewBag.userImage = baseurl + userList[0].Uimg;
 
                 //user.Uimg = userList[0].portoloStatus;
                 //function call to get the filename
                 // user.CV = "("+ Path.GetFileName(userList[0].CV).ToString()+")";
+				if (string.IsNullOrEmpty(user.countrypkey))
+                {
+                    user.countrypkey = "1";
+                }
+                ViewBag.CountryCode = CountryCode(user.countrypkey);										   
                 ViewBag.state = GetStateDropDown(user.countrypkey);
                 ViewBag.timeZone = GetTimeZoneDropDown(user.countrypkey);
                 return View("~/Views/Portolo/Registration/RegistrationNew.cshtml", user);
@@ -105,8 +115,20 @@ namespace fcConferenceManager.Controllers
            string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             using (SqlConnection con = new SqlConnection(config))
             {
+			string query = String.Format(@"If NOT EXISTS (select pKey from Organization_List where OrganizationID = '{0}') Insert into Organization_List (OrganizationID)
+                                values ('{0}') select pkey from Organization_List where OrganizationID = '{0}'", request.organization);
+                con.Open();
+                SqlCommand qcmd = new SqlCommand(query, con);
+                SqlDataReader reader = qcmd.ExecuteReader();
+                reader.Read();
+
                 using (SqlCommand cmd = new SqlCommand("SP_InsertRegistrationDataInAccountList", con))
                 {
+                    if(request.ID == 0)
+                    {
+                        SqlOperation sql = new SqlOperation();
+                        request.Password = sql.EncryptMD5(request.Password);
+                    }    	 
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@id", request.ID);
                     cmd.Parameters.AddWithValue("@Salutation1", request.salutation1);
@@ -150,6 +172,9 @@ namespace fcConferenceManager.Controllers
                     cmd.Parameters.AddWithValue("@Organization", request.organization);
                     cmd.Parameters.AddWithValue("@Personalbiography", request.personalbiography);
                     cmd.Parameters.AddWithValue("@Aboutmyorganizationandmyrole", request.aboutmyorganizationandmyrole);
+					cmd.Parameters.AddWithValue("@StaffMember", request.staffmember);
+                    cmd.Parameters.AddWithValue("@Organization_pkey", reader["Pkey"]);
+                    reader.Close();																 
 
                     if ((file != null) && file.ContentLength > 0)
                     {
@@ -204,62 +229,122 @@ namespace fcConferenceManager.Controllers
                     {
                         cmd.Parameters.AddWithValue("@CV", " ");
                     }
-
+                    //if(removeImage.HasValue)
+                    //{
+                    //    RemoveImage(request.ID);
+                    //}
                     con.Open();
                     cmd.ExecuteNonQuery();
                     con.Close();
                 }
             }
             if(save == true) return RedirectToAction("Registration", "RegistrationNew",new { userID = request.ID });
-            return RedirectToAction("ProfilePage", "Account");
-
+            return RedirectToAction("Users", "RegistrationNew");
         }
-        public ActionResult Users(int? id, int? PortoloKey = 0)
+        public ActionResult Users()
         {
             ModelState.Clear();
-            List<UserResponse> userList = RegistrationList(0, PortoloKey);
-            ViewBag.userList = userList;
-            ViewBag.DropdownSelected = PortoloKey;
-            return View("~/Views/Portolo/Registration/Users.cshtml", userList);
 
+            DataTable dt = new DataTable();
+
+            string dbquery = @"Select al.pKey, s.SalutationID, al.Firstname, al.MiddleName, al.Lastname, al.Email, c.CountryID, al.Title, al.Department, o.OrganizationID, al.PersonalBio from Account_List al
+                    left join SYS_Salutations s on Al.Salutation_pKey = s.pKey left join SYS_Countries c on al.Country_pKey = c.pKey left join Organization_List o on o.pKey = al.ParentOrganization_pKey where PortoloUser = 1";
+            con.Open();
+            SqlDataAdapter _da = new SqlDataAdapter(dbquery, con);
+            _da.Fill(dt);
+            con.Close();
+
+            ViewBag.Users = dt;
+
+            return View("~/Views/Portolo/Registration/Users.cshtml");
         }
 
-        public ActionResult UpdatePortoloStatus(string primaryKey, int? PortoloID = 0)
+		[HttpGet]
+        public ActionResult SearchUser(string fname, string lname, string email, string titl, string org, string search)
         {
-            List<int> primaryKeys = primaryKey.Split(',').Select(int.Parse).ToList();
-            foreach (var item in primaryKeys)
-            {
-                string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
-                using (SqlConnection con = new SqlConnection(config))
-                {
-                    using (SqlCommand cmd = new SqlCommand("Updateportolostatus", con))
-                    {
-                        con.Open();
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@RegistrationKey", item);
-                        cmd.Parameters.AddWithValue("@PortoloKey", PortoloID);
-                        cmd.ExecuteNonQuery();
-                        con.Close();
+            DataTable dt = new DataTable();
 
-                    }
-                }
+            string dbquery = String.Format(@"Select al.pKey, s.SalutationID, al.Firstname, al.MiddleName, al.Lastname, al.Email, c.CountryID, al.Title, al.Department, o.OrganizationID, al.PersonalBio from Account_List al
+                    inner join SYS_Salutations s on Al.Salutation_pKey = s.pKey inner join SYS_Countries c on al.Country_pKey = c.pKey inner join Organization_List o on o.pKey = al.ParentOrganization_pKey where
+                    al.Firstname like '%{0}%' and al.Lastname like '%{1}%' and al.Email like '%{2}%' and al.Title like '%{3}%' and o.OrganizationID like '%{4}%' and PortoloUser = 1", fname.Trim(), lname.Trim(), email.Trim(), titl.Trim(), org.Trim());
+
+            con.Open();
+            SqlDataAdapter _da = new SqlDataAdapter(dbquery, con);
+            _da.Fill(dt);
+            con.Close();
+
+            ViewBag.Users = dt;
+
+            if (search != "true")
+            {
+                string FileName = String.Format("Users_{0:yyMMdd_HH.mm}", DateTime.Now);
+                ExportToExcel(dt, FileName);
             }
-            return Json(1, JsonRequestBehavior.AllowGet); ;
+
+            return View("~/Views/Portolo/Registration/Users.cshtml");
         }
 
-         public List<UserResponse> RegistrationList(int? id, int? PortoloKey )
+        [HttpPost]
+        public ActionResult DeleteUser(string ids)
+        {
+            if ((Session["User"] == null) || !((loginResponse)Session["User"]).IsGlobalAdmin)
+                return Redirect("~/Account/Portolo");
+
+            string dbquery = String.Format("delete from Account_List where Pkey in ({0})", ids);
+
+            con.Open();
+            SqlCommand cmd = new SqlCommand(dbquery, con);
+					 
+								   
+																	  
+																			  
+																			  
+            cmd.ExecuteNonQuery();
+            con.Close();
+
+            return RedirectToAction("Users", "Registration");
+				 
+			 
+														   
+               }
+
+        //public ActionResult UpdatePortoloStatus(string primaryKey, int? PortoloID = 0)
+        //{
+        //    List<int> primaryKeys = primaryKey.Split(',').Select(int.Parse).ToList();
+        //    foreach (var item in primaryKeys)
+        //    {
+        //        string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+        //        using (SqlConnection con = new SqlConnection(config))
+        //        {
+        //            using (SqlCommand cmd = new SqlCommand("Updateportolostatus", con))
+        //            {
+        //                con.Open();
+        //                cmd.CommandType = CommandType.StoredProcedure;
+        //                cmd.Parameters.AddWithValue("@RegistrationKey", item);
+        //                cmd.Parameters.AddWithValue("@PortoloKey", PortoloID);
+        //                cmd.ExecuteNonQuery();
+        //                con.Close();
+
+        //            }
+        //        }
+        //    }
+        //    return Json(1, JsonRequestBehavior.AllowGet); ;
+        //}
+
+
+        public List<UserResponse> RegistrationList(int? id)
         {
             if (Session["User"] == null)
             {
                 Redirect("~/account/portolo");
             }
-            loginResponse objlt = (loginResponse)Session["User"];
-               int Id = objlt.Id;
+            //loginResponse objlt = (loginResponse)Session["User"];
+            //   int Id = objlt.Id;
             
-            if (PortoloKey==null)
-            {
-                PortoloKey = 0;
-            }
+            //if (PortoloKey==null)
+            //{
+            //    PortoloKey = 0;
+            //}
            
             List<UserResponse> userList = new List<UserResponse>();
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
@@ -295,7 +380,7 @@ namespace fcConferenceManager.Controllers
                         response.address2 = reader["address2"].ToString();
                         response.zipcode = reader["ZipCode"].ToString();
                         response.State = reader["State"].ToString();
-                        response.timezone = reader["timezone"].ToString();
+                        response.timezone = reader["TimeZone"].ToString();
                         //response.countrycode = reader["countrycode"].ToString();
                         //response.phonenumber = reader["phonenumber"].ToString();
                         //response.extension = reader["extension"].ToString();
@@ -320,18 +405,20 @@ namespace fcConferenceManager.Controllers
                         response.state_pkey = reader["state_pkey"].ToString();
                         response.salutationzID1 = reader["salutationzID1"].ToString();
                         response.suffixvalue = reader["suffixvalue"].ToString();
+						response.orgName = reader["Organization"].ToString();
+                        response.staffmember = (reader["staffmember"].ToString() != "") ? (bool)reader["staffmember"] : false;
                         //response.portoloStatus = reader["PortoloStatus"].ToString();
                         if (reader["Uimg"].ToString() == null || reader["Uimg"].ToString() == "")
                         {
-                            //response.Uimg = baseurl + "/UserDocuments/emptyimage.png";//"https://localhost:44376/"+reader["Uimg"].ToString();
+                            response.Uimg = baseurl + "/UserDocuments/emptyimage.png";//"https://localhost:44376/"+reader["Uimg"].ToString();
                             response.Uimg = Session["AccountImage"].ToString();
                         }
-                        else
-                        {
-                            string filename = Id + "_img.jpg";
-                          //  baseurl + "Accountimages/" + dr["imgpath"].ToString();
-                            response.Uimg = baseurl + "/Accountimages/" + filename;
-                        }
+                        //else
+                        //{
+                        //    string filename = Id + "_img.jpg";
+                        //  //  baseurl + "Accountimages/" + dr["imgpath"].ToString();
+                        //    response.Uimg = baseurl + "/Accountimages/" + filename;
+                        //}
                         if (reader["CV"].ToString() == null || reader["CV"].ToString() == "")
                         {
                             //response.CV =reader["CVfile"].ToString();
@@ -411,54 +498,54 @@ namespace fcConferenceManager.Controllers
 
         }
 
-        public void DownloadExcel()
-        {
-            DataTable dt = new DataTable();
-            dt.Clear();
-            dt.Columns.Add("Profile");
-            dt.Columns.Add("Salutation");
-            dt.Columns.Add("First Name");
-            dt.Columns.Add("Middle Name");
-            dt.Columns.Add("Last Name");
-            dt.Columns.Add("Main Email");
-            dt.Columns.Add("Country");
-            dt.Columns.Add("Job Title");
-            dt.Columns.Add("Department");
-            dt.Columns.Add("Organisation");
-            dt.Columns.Add("Personal Biography");
-            dt.Columns.Add("Portolo Status");
+        //public void DownloadExcel()
+        //{
+        //    DataTable dt = new DataTable();
+        //    dt.Clear();
+        //    dt.Columns.Add("Profile");
+        //    dt.Columns.Add("Salutation");
+        //    dt.Columns.Add("First Name");
+        //    dt.Columns.Add("Middle Name");
+        //    dt.Columns.Add("Last Name");
+        //    dt.Columns.Add("Main Email");
+        //    dt.Columns.Add("Country");
+        //    dt.Columns.Add("Job Title");
+        //    dt.Columns.Add("Department");
+        //    dt.Columns.Add("Organisation");
+        //    dt.Columns.Add("Personal Biography");
+        //    dt.Columns.Add("Portolo Status");
 
-            string FileName = String.Format("PublicTasks_{0:yyMMdd_HH.mm}", DateTime.Now);   
-            List<UserResponse> userList = RegistrationList(0, 0);//TempData["taskListResponse"]; 
+        //    string FileName = String.Format("PublicTasks_{0:yyMMdd_HH.mm}", DateTime.Now);   
+        //    List<UserResponse> userList = RegistrationList(0, 0);//TempData["taskListResponse"]; 
 
-            if (userList != null)
-            {
-                foreach (var item in userList)
-                {
-                    DataRow exceldata = dt.NewRow();
-                    exceldata["Profile"] = item.Uimg;
-                    exceldata["Salutation"] = item.salutation1;
-                    exceldata["First Name"] = item.firstname;
-                    exceldata["Middle Name"] = item.middlename;
-                    exceldata["Last Name"] = item.lastname;
-                    exceldata["Main Email"] = item.mainemail;
-                    exceldata["Country"] = item.country;
-                    exceldata["Job Title"] = item.jobTitle;
-                    exceldata["Department"] = item.department;
-                    exceldata["Organisation"] = item.organization;
-                    exceldata["Personal Biography"] = item.personalbiography;
-                    exceldata["Portolo Status"] = item.portoloStatus;
-                    dt.Rows.Add(exceldata);
-                }
-            }
-            ExportToExcel(dt, FileName);
+        //    if (userList != null)
+        //    {
+        //        foreach (var item in userList)
+        //        {
+        //            DataRow exceldata = dt.NewRow();
+        //            exceldata["Profile"] = item.Uimg;
+        //            exceldata["Salutation"] = item.salutation1;
+        //            exceldata["First Name"] = item.firstname;
+        //            exceldata["Middle Name"] = item.middlename;
+        //            exceldata["Last Name"] = item.lastname;
+        //            exceldata["Main Email"] = item.mainemail;
+        //            exceldata["Country"] = item.country;
+        //            exceldata["Job Title"] = item.jobTitle;
+        //            exceldata["Department"] = item.department;
+        //            exceldata["Organisation"] = item.organization;
+        //            exceldata["Personal Biography"] = item.personalbiography;
+        //            exceldata["Portolo Status"] = item.portoloStatus;
+        //            dt.Rows.Add(exceldata);
+        //        }
+        //    }
+        //    ExportToExcel(dt, FileName);
 
-        }
+        //}
         private void ExportToExcel(DataTable dt, string fileName)
         {
             using (XLWorkbook wb = new XLWorkbook())
             {
-                wb.Worksheets.Add(dt, "Task_List");
+                wb.Worksheets.Add(dt, "User_List");
                 Response.Clear();
                 Response.Buffer = true;
                 Response.Charset = "";
@@ -476,7 +563,9 @@ namespace fcConferenceManager.Controllers
         }
         public List<SelectListItem> GetCountryDropDown()
         {
-            List<SelectListItem> countryList = new List<SelectListItem>();
+             List<SelectListItem> countryList = new List<SelectListItem>();
+																			   
+																				 
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             using (SqlConnection con = new SqlConnection(config))
             {
@@ -489,7 +578,10 @@ namespace fcConferenceManager.Controllers
                     {
                         while (reader.Read())
                         {
+																									 
+							 
                             countryList.Add(new SelectListItem { Text = reader["CountryID"].ToString(), Value = reader["pKey"].ToString() });
+							 
                         }
                     }
                 }
@@ -522,10 +614,11 @@ namespace fcConferenceManager.Controllers
         public List<SelectListItem> GetPhoneTypesDropDown()
         {
             List<SelectListItem> PhoneTypesList = new List<SelectListItem>();
+            PhoneTypesList.Add(new SelectListItem { Text = "Phone", Value = "0"});
             string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
             using (SqlConnection con = new SqlConnection(config))
             {
-                string query = "select * from SYS_PhoneTypes;";
+                string query = "select * from SYS_PhoneTypes order by PhoneTypeID;";
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
                     con.Open();
@@ -534,7 +627,10 @@ namespace fcConferenceManager.Controllers
                     {
                         while (reader.Read())
                         {
-                            PhoneTypesList.Add(new SelectListItem { Text = reader["PhoneTypeID"].ToString(), Value = reader["pKey"].ToString() });
+                            if (reader["pKey"].ToString() != "0")
+                            {
+                                PhoneTypesList.Add(new SelectListItem { Text = reader["PhoneTypeID"].ToString(), Value = reader["pKey"].ToString() });
+                            }
                         }
                     }
                 }
@@ -721,6 +817,58 @@ namespace fcConferenceManager.Controllers
                 }
             }
             return Json(timeZoneList, JsonRequestBehavior.AllowGet);
+        }
+		[HttpPost]
+        public void RemoveImage(int id)
+        {
+            string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(config))
+            {
+                string query = $"update Account_List set AlternateImage = '' where pKey = {id};";
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+            }
+
+        }
+
+        public string CountryCode(string country)
+        {
+            try
+            {
+                string config = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
+                string countryId = "";
+
+                using (SqlConnection con = new SqlConnection(config))
+                {
+                    string query = $"select * from SYS_Countries where pKey = '{country}';";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        con.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                return reader["ISDCode"].ToString();
+                            }
+                        }
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return "";
+        }
+        public JsonResult Country_Bind(string country_id)
+        {
+            return Json(CountryCode(country_id), JsonRequestBehavior.AllowGet);
         }
     }
 }

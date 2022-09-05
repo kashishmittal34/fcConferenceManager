@@ -287,7 +287,7 @@ namespace fcConferenceManager.Controllers
             cmd.ExecuteNonQuery();
             con.Close();
 
-            return RedirectToActionPermanent("Users", "Registration");
+            return RedirectToAction("Users", "Registration");
         }
 		 
 

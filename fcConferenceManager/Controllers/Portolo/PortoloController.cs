@@ -248,6 +248,12 @@ namespace fcConferenceManager.Controllers.Portolo
             DataTable dt = new DataTable();
             dt = dba.TaskList_Select_All1(request);
 
+			if (dt.Rows.Count == 0)
+            {
+
+                TempData["notice"] = "No Records are Not Found";
+               
+            }
             foreach (DataRow dr in dt.Rows)
             {
                 TaskListResponse taskList = new TaskListResponse();
@@ -1360,7 +1366,7 @@ namespace fcConferenceManager.Controllers.Portolo
             dt.Columns.Add("Name");
             dt.Columns.Add("Title");
             dt.Columns.Add("Description");
-            dt.Columns.Add("Plan");
+            dt.Columns.Add("Plan Date");
             dt.Columns.Add("Due Date");
             dt.Columns.Add("Forecast");
             dt.Columns.Add("Category");
@@ -1381,7 +1387,7 @@ namespace fcConferenceManager.Controllers.Portolo
                     exceldata["Name"] = item.name;
                     exceldata["Title"] = item.title;
                     exceldata["Description"] = item.description;
-                    exceldata["plan"] = item.plan;
+                    exceldata["Plan Date"] = item.plan;
                     exceldata["Due Date"] = item.duedate;
                     exceldata["Forecast"] = item.forecast;
                     exceldata["Category"] = item.TaskCategoryID;

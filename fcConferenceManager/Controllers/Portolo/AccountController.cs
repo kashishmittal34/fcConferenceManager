@@ -731,12 +731,13 @@ namespace fcConferenceManager.Controllers
             myOrganisation.phone = reader["PrimaryContactPhone"].ToString();
             myOrganisation.strEmail1 = reader["Email"].ToString();
             myOrganisation.strEmail2 = reader["Email2"].ToString();
-            myOrganisation.intTimezone_pKey = (reader["Timezone_pKey"].ToString() != "") ? (int)reader["Timezone_pKey"] : 0;
+            myOrganisation.intTimezone_pKey = (reader["Timezone_pKey"].ToString() != "")?(int)reader["Timezone_pKey"]:0;
+            myOrganisation.country_pkey = reader["Country_Pkey"].ToString();
 
             ViewBag.SiteTypeTable = dba.BindSiteTypes();
             ViewBag.CountryTable = dba.BindCountry();
             ViewBag.StateTable = dba.BindStates();
-            ViewBag.TimeZoneTable = dba.BindTimeZones(myOrganisation.country);
+            ViewBag.TimeZoneTable = dba.BindTimeZones(myOrganisation.country_pkey);
 
             return View("~/Views/Portolo/Account/MyOrganization.cshtml", myOrganisation);
         }
