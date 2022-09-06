@@ -299,12 +299,9 @@ namespace fcConferenceManager.Controllers.Portolo
             }
         }
         public PartialViewResult PublicPage(PublicContentPage publicContent)
-        {
-            string aw = string.Empty, tof = string.Empty;
-            aw = GetAboutUsContent();
-            publicContent.AboutUs = aw.Replace("\"", string.Empty).Trim();
-            tof = GetTermsOfUseContent();
-            publicContent.TermsOfUse = tof.Replace("\"", string.Empty).Trim();
+        {         
+            publicContent.AboutUs = GetAboutUsContent();    
+            publicContent.TermsOfUse = GetTermsOfUseContent();
             ViewBag.content = Request.QueryString["AboutUs"];
             return PartialView("~/Views/Portolo/Configuration/PublicPage.cshtml", publicContent);
         }
