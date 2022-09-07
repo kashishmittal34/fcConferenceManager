@@ -44,6 +44,9 @@ namespace fcConferenceManager.Controllers
             UserResponse user = new UserResponse();
             if (userID > 0)
             {
+                if ((Session["User"] == null) || (!((loginResponse)Session["User"]).IsGlobalAdmin && !((loginResponse)Session["User"]).staffmember))
+                    return Redirect("~/Account/Portolo");
+
                 userList = RegistrationList(userID);
                 user.ID = userList[0].ID;
                 user.salutation1 = userList[0].salutation1;
@@ -140,7 +143,7 @@ namespace fcConferenceManager.Controllers
                     cmd.Parameters.AddWithValue("@SigninAccountID", request.signinaccountid);
                     cmd.Parameters.AddWithValue("@MainEmailType", request.MainEmailType);
                     cmd.Parameters.AddWithValue("@MainEmail", request.mainemail);
-                   // cmd.Parameters.AddWithValue("@Password", request.Password);
+                    cmd.Parameters.AddWithValue("@Password", request.Password);
                     cmd.Parameters.AddWithValue("@SendEmailTo", request.SendEmailTo);
                     cmd.Parameters.AddWithValue("@Skypeaddress", request.skypeaddress);
                     cmd.Parameters.AddWithValue("@LinkedinURL", request.linkedinURL);
@@ -229,20 +232,20 @@ namespace fcConferenceManager.Controllers
                     {
                         cmd.Parameters.AddWithValue("@CV", " ");
                     }
-                    //if(removeImage.HasValue)
-                    //{
-                    //    RemoveImage(request.ID);
-                    //}
-                    con.Open();
+                    
+					
                     cmd.ExecuteNonQuery();
                     con.Close();
                 }
             }
-            if(save == true) return RedirectToAction("Registration", "RegistrationNew",new { userID = request.ID });
-            return RedirectToAction("Users", "RegistrationNew");
+            if(save == true) return RedirectToAction("Users", "RegistrationNew");
+            return RedirectToAction("Registration", "RegistrationNew");
         }
         public ActionResult Users()
         {
+			 if ((Session["User"] == null) || (!((loginResponse)Session["User"]).IsGlobalAdmin && !((loginResponse)Session["User"]).staffmember))
+                return Redirect("~/Account/Portolo");
+																																	
             ModelState.Clear();
 
             DataTable dt = new DataTable();
@@ -338,8 +341,8 @@ namespace fcConferenceManager.Controllers
             {
                 Redirect("~/account/portolo");
             }
-            //loginResponse objlt = (loginResponse)Session["User"];
-            //   int Id = objlt.Id;
+            loginResponse objlt = (loginResponse)Session["User"];
+            int Id = objlt.Id;
             
             //if (PortoloKey==null)
             //{
@@ -412,13 +415,14 @@ namespace fcConferenceManager.Controllers
                         {
                             response.Uimg = baseurl + "/UserDocuments/emptyimage.png";//"https://localhost:44376/"+reader["Uimg"].ToString();
                             response.Uimg = Session["AccountImage"].ToString();
+
                         }
-                        //else
-                        //{
-                        //    string filename = Id + "_img.jpg";
-                        //  //  baseurl + "Accountimages/" + dr["imgpath"].ToString();
-                        //    response.Uimg = baseurl + "/Accountimages/" + filename;
-                        //}
+                        else
+                        {
+                            string filename = Id + "_img.jpg";
+                            //  baseurl + "Accountimages/" + dr["imgpath"].ToString();
+                            response.Uimg = baseurl + "/Accountimages/" + filename;
+                        }
                         if (reader["CV"].ToString() == null || reader["CV"].ToString() == "")
                         {
                             //response.CV =reader["CVfile"].ToString();

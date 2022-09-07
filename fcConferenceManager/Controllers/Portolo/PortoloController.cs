@@ -27,6 +27,7 @@ namespace fcConferenceManager.Controllers.Portolo
     [CheckActiveEventAttribute]
     public class PortoloController : Controller
     {
+		SqlConnection con = new SqlConnection(ReadConnectionString());
         DBAccessLayer dba = new DBAccessLayer();
         static SqlOperation repository = new SqlOperation();
 
@@ -105,7 +106,7 @@ namespace fcConferenceManager.Controllers.Portolo
         {
             List<SelectListItem> selectListItems = new List<SelectListItem>();
             DataTable dt = new DataTable();
-            dt = dba.TaskCategories_List();
+            dt = TaskCategories_List();
 
             foreach (DataRow dr in dt.Rows)
             {
@@ -121,7 +122,7 @@ namespace fcConferenceManager.Controllers.Portolo
         {
             List<SelectListItem> selectListItems = new List<SelectListItem>();
             DataTable dt = new DataTable();
-            dt = dba.TaskStatuses_Select_All();
+            dt = TaskStatuses_Select_All1();
             foreach (DataRow dr in dt.Rows)
             {
                 SelectListItem selectListItem = new SelectListItem() { Value = dr[0].ToString(), Text = dr[1].ToString() };
@@ -135,7 +136,7 @@ namespace fcConferenceManager.Controllers.Portolo
         {
             List<SelectListItem> selectListItems = new List<SelectListItem>();
             DataTable dt = new DataTable();
-            dt = dba.TaskRepeat_Select_ALL();
+            dt = TaskRepeat_Select_ALL2();
             foreach (DataRow dr in dt.Rows)
             {
                 SelectListItem selectListItem = new SelectListItem() { Value = dr[0].ToString(), Text = dr[1].ToString() };
@@ -147,7 +148,7 @@ namespace fcConferenceManager.Controllers.Portolo
         {
             List<SelectListItem> selectListItems = new List<SelectListItem>();
             DataTable dt = new DataTable();
-            dt = dba.PortoloTaskRepeat_Select_ALL();
+            dt = PortoloTaskRepeat_Select_ALL1();
             foreach (DataRow dr in dt.Rows)
             {
                 SelectListItem selectListItem = new SelectListItem() { Value = dr[0].ToString(), Text = dr[1].ToString() };
@@ -160,6 +161,7 @@ namespace fcConferenceManager.Controllers.Portolo
 
         public ActionResult TaskList(List<TaskListResponse> taskListResponse)
         {
+			ViewBag.notice = TempData["notice"];									
             if (Session["User"] == null)
             {
 
@@ -246,12 +248,12 @@ namespace fcConferenceManager.Controllers.Portolo
             }
             List<TaskListResponse> MainList = new List<TaskListResponse>();
             DataTable dt = new DataTable();
-            dt = dba.TaskList_Select_All1(request);
+            dt = TaskList_Select_All1(request);
 
 			if (dt.Rows.Count == 0)
             {
 
-                TempData["notice"] = "No Records are Not Found";
+                TempData["notice"] = "No Records Found";
                
             }
             foreach (DataRow dr in dt.Rows)
@@ -399,7 +401,7 @@ namespace fcConferenceManager.Controllers.Portolo
                             strpkeys = strpkeys + id.ToString() + ",";
                         }
                     }
-                    msg = dba.CopyTask(strpkeys);
+                     msg = CopyTask(strpkeys);
                     commonreload();
 
 
@@ -440,7 +442,7 @@ namespace fcConferenceManager.Controllers.Portolo
                         {
                             strpkeys = strpkeys + id.ToString() + ",";
                         }
-                        msg = dba.Tasks_Detele(strpkeys);
+                        msg = Tasks_Detele(strpkeys);
                     }
                    
                     commonreload();
@@ -1452,6 +1454,180 @@ namespace fcConferenceManager.Controllers.Portolo
         //    }
         //    return Redirect($"/Portolo/Process");
         //}									 
+        [AcceptVerbs(HttpVerbs.Post)]
+        public string Tasks_Detele(string strpkey)
+        {
+            string qry = "EXEC Portolo_PublicTasks_Detele @strpkey";
+            SqlCommand cmd = new SqlCommand(qry);
+            cmd.CommandType = CommandType.Text;
+            cmd.Connection = con;
+            cmd.Parameters.AddWithValue("@strpkey", strpkey);
+            if (!clsUtility.ExecuteQuery(cmd, null, "Delete Task"))
+            {
+                return "Task Not Deleted";
+            }
+            else
+            {
+                return "Task Deleted";
+            }
+        }
+
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public string CopyTask(string strpkey)
+        {
+            string qry = "EXEC SP_CopyTask @strpkey ";
+            SqlCommand cmd = new SqlCommand(qry);
+            cmd.CommandType = CommandType.Text;
+            cmd.Connection = con;
+            cmd.Parameters.AddWithValue("@strpkey", strpkey);
+            if (!clsUtility.ExecuteQuery(cmd, null, "Delete Task"))
+            {
+                return "Task Not Copied ";
+            }
+            else
+            {
+                return "Task Copied sucessfully";
+            }
+        }
+
+        public DataTable TaskList_Select_All1(TaskListRequest request)
+        {
+            int status = request.status != null ? Convert.ToInt32(request.status) : 0;
+
+            SqlCommand cmd = new SqlCommand("TaskList_All", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 30;
+            cmd.Parameters.AddWithValue("@planType", request.planType);
+            cmd.Parameters.AddWithValue("@DueDate", request.duedate);
+            cmd.Parameters.AddWithValue("@Forecast", request.forecast);
+            cmd.Parameters.AddWithValue("@Number", request.number);
+            cmd.Parameters.AddWithValue("@Title", request.title != null ? request.title : "");
+            cmd.Parameters.AddWithValue("@Status", status);
+            cmd.Parameters.AddWithValue("@TaskCategory_pKey", (request.intcategory));
+            if (request.active != null)
+            {
+                if (Convert.ToBoolean(request.active) == true)
+                {
+                    cmd.Parameters.AddWithValue("@Active", 1);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@Active", 0);
+                }
+            }
+            if (request.reviewed != null)
+            {
+                if (Convert.ToBoolean(request.reviewed) == true)
+                {
+                    cmd.Parameters.AddWithValue("@Reviewed", 1);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@Reviewed", 0);
+                }
+
+            }
+            cmd.Parameters.AddWithValue("@TaskListRange", request.tasklistrange);
+            cmd.Parameters.AddWithValue("@RepeatType_pKey", (request.intRepeat));
+            cmd.Parameters.AddWithValue("@pKey", request.pKey);
+            DataTable dt = new DataTable();
+
+            if (clsUtility.GetDataTableStored(con, cmd, ref dt))
+            {
+                return dt;
+            }
+            return dt;
+
+        }
+
+        public DataTable TaskRepeat_Select_ALL2()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                string dbquery = "EXEC TaskRepeat_Select_ALL";
+                con.Open();
+                SqlDataAdapter sda = new SqlDataAdapter(dbquery, con);
+                sda.Fill(dt);
+                con.Close();
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                con.Close();
+            }
+            return dt;
+        }
+
+        public DataTable PortoloTaskRepeat_Select_ALL1()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                string dbquery = "EXEC PortoloTaskRepeat_Select_ALL";
+                con.Open();
+                SqlDataAdapter sda = new SqlDataAdapter(dbquery, con);
+                sda.Fill(dt);
+                con.Close();
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                con.Close();
+            }
+            return dt;
+        }
+
+        public DataTable TaskStatuses_Select_All1()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                string dbquery = "EXEC TaskStatuses_Select_All";
+                con.Open();
+                SqlDataAdapter sda = new SqlDataAdapter(dbquery, con);
+                sda.Fill(dt);
+                con.Close();
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                con.Close();
+            }
+            return dt;
+        }
+
+        public DataTable TaskCategories_List()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                string dbquery = "EXEC TaskCategories_List";
+                con.Open();
+                SqlDataAdapter sda = new SqlDataAdapter(dbquery, con);
+                sda.Fill(dt);
+                con.Close();
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                con.Close();
+            }
+            return dt;
+        }
     }
 }
 

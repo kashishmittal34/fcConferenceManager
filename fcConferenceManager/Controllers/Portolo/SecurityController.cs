@@ -50,12 +50,14 @@ namespace fcConferenceManager.Controllers
                 }
             }
         }
-        public ActionResult SecurityGroup()
+        public ActionResult SecurityGroup(string groupName)
         {
             loginResponse objlt = (loginResponse)Session["User"];
             if (objlt == null || !view) return Redirect("~/Account/Portolo");
             List<SecurityGroup> groupList = new List<SecurityGroup>();
-            string query = $"select * from Portolo_SecurityGroup ";
+            groupName = !string.IsNullOrEmpty(groupName)?groupName.Trim():"";
+            ViewBag.groupName = groupName;
+            string query = $"select * from Portolo_SecurityGroup where SecurityGroupID like '%{groupName}%' ";
             using (SqlConnection con = new SqlConnection(config))
             {
                 using (SqlCommand cmd = new SqlCommand(query, con))
@@ -226,6 +228,7 @@ namespace fcConferenceManager.Controllers
                         user.ID = int.Parse(reader["pKEy"].ToString());
                         user.email = reader["Email"].ToString();
                         user.organization = reader["organizationId"].ToString();
+                        user.staffmember = string.IsNullOrEmpty(reader["StaffMember"].ToString()) ? false : bool.Parse(reader["StaffMember"].ToString());
                         userList.Add(user);
                     }
                     reader.Close();
@@ -270,7 +273,7 @@ namespace fcConferenceManager.Controllers
                 {
                     using (SqlConnection con = new SqlConnection(config))
                     {
-                        string query = $"If not exists (select pKey from Portolo_SecurityGroupMembers where Account_pKey={item} and SecurityGroup_pKey={PK} ) begin Insert into Portolo_SecurityGroupMembers(Account_pKey, SecurityGroup_pKey) values({item}, {PK}) end; ";
+                        string query = $"If not exists (select pKey from Portolo_SecurityGroupMembers where Account_pKey={item} and SecurityGroup_pKey={PK} ) begin Insert into Portolo_SecurityGroupMembers(Account_pKey, SecurityGroup_pKey) values({item}, {PK}) end; update Account_List set StaffMember = 'true' where pkey = {item} ";
                         using (SqlCommand cmd = new SqlCommand(query, con))
                         {
                             con.Open();
