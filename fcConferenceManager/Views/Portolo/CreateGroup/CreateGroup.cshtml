@@ -337,8 +337,8 @@
                                 <input id="groupName" style="width:100%" class="form-control" type="text" />
                             </div>
                             <div class="modal-footer p-1">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button id="addGroup" type="button" class="btn btn-outline-warning">Save</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
@@ -370,7 +370,7 @@
                                 <td>@item.NoOfMembers</td>
                                 @if ((bool)@ViewData["groupEdit"])
                                 {
-                                    <td><button class="btn p-0" data-bs-toggle="modal" data-bs-target="#EditGroupModal" id="@item.GroupName.Trim()"><i class="fa-solid fa-gear editGroupIcon"></i></button></td>
+                                    <td><button class="btn p-0" data-bs-toggle="modal" data-bs-target="#EditGroupModal" id="@item.GroupName.Trim()"><i class="fa-solid fa-pen-to-square editGroupIcon"></i></button></td>
                                 }
                             </tr>
                         }
@@ -388,8 +388,8 @@
                                 <input id="groupName" style="width:100%" class="form-control" type="text" />
                             </div>
                             <div class="modal-footer p-1">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button id="EditGroup" type="button" class="btn btn-outline-warning">Save</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
@@ -483,7 +483,7 @@
                         <td class="px-5" style="text-align : right">@item.NoOfMembers</td>
                         @if ((bool)@ViewData["memberDelete"])
                         {
-                            <td class="editMemberGroup"><button class="btn p-0" data-bs-toggle="modal" data-bs-target="#RemoveGroupModal"><i class="fa-solid fa-gear "></i></button></td>
+                            <td class="editMemberGroup"><button class="btn p-0" data-bs-toggle="modal" data-bs-target="#RemoveGroupModal"><i class="fa-solid fa-pen-to-square"></i></button></td>
                         }
                     </tr>
                 }

@@ -47,11 +47,22 @@
         var PK = '@ViewData["PK"]'
         debugger;
         $("#save").click(function () {
-
+            var member
             $("input:checkbox:checked").each(function () {
-                    array.push($(this).val());
-                    debugger;
+                member = $(this).parent().siblings(".staffMember").text();
+
+                array.push($(this).val());
+                debugger;
             });
+            if (member == "False") {
+                if (confirm("Selected account is not staff member are you sure you want to make this account staff member")) {
+                    
+                }
+                else {
+                    return false;
+
+                }
+            }
             debugger;
             $.ajax({
                 type: "POST",
@@ -151,13 +162,13 @@
         </div>
     </form>
 
-
     <div style="max-height: 70%; overflow: auto; border: 2px solid #6e6c6c">
         <table style="margin:auto;" class="table table-responsive table-striped">
             <thead>
                 <tr style="background-color: #6e6c6c; color: white;">
                     <th><input type="checkbox" id="mainCheckbox" /></th>
                     <th>ID</th>
+                    <th>Staff Member</th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Organization</th>
@@ -166,9 +177,10 @@
             <tbody id="members">
                 @foreach (var item in Model)
                 {
-                    <tr >
+                    <tr>
                         <td><input type="checkbox" value="@item.ID" /></td>
                         <td>@item.ID</td>
+                        <td class="staffMember">@item.staffmember</td>
                         <td>@item.name</td>
                         <td>@item.email</td>
                         <td>@item.organization</td>

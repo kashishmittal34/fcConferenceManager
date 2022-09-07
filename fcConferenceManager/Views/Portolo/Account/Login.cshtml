@@ -48,6 +48,7 @@
                                     </ul>
 
                                 </li>
+                               
                                 <li class="menu-item dropdown">
                                     <a class="nav__link" href="#">Contact</a>
                                     <ul class="sub-nav">
@@ -76,54 +77,39 @@
                 <div class="col-lg-12">
                     <div class="form-wrap card">
                         <H2>PORTOLO <span>LOGIN</span></H2>
-                       @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+                        @using (Html.BeginForm("Login", "Account", FormMethod.Post))
                         {
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Username</label>
                                 @*@Html.EditorFor(model => model.UserName, new { @class = "form-control" })*@
                                 @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", id = "id_username", style = "width: 94%; float:left" } })
 
-																				   
-								  
-			   
-					   
-									  
-
                                 @*@Html.ValidationMessageFor(model => model.UserName)*@
-									 
 
-                            </div>					 
-						<br />		
+                            </div>
+                            <br />
                             <div class="form-group mb-6 ">
-                                <div  >
+                                <div>
 
-                                    <label  for="exampleInputPassword1">Password</label>
-                                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { type = "password", @class = "form-control", id = "id_password",style="width: 94%; float:left" } })
+                                    <label for="exampleInputPassword1">Password</label>
+                                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { type = "password", @class = "form-control", id = "id_password", style = "width: 94%; float:left" } })
 
                                     @Html.ValidationMessageFor(model => model.Password)
-                                
+
                                 </div>
                                 <div style="width: 5%; float:right">
                                     <img src="~/images/icons/eye.gif" id="togglePassword" @*style="margin-left: 235px; cursor: pointer;"*@ alt="eye" />
 
                                 </div>
                             </div>
-                            <div class="form-group error" style="margin:45px">
-                                @if (@ViewBag.Failedcount != null)
-                                {
+                           @*<div  style="height: 28px;">
+                               <br />
+                           </div>*@
+                              <br />
+                            <p style="width: 93%; "> @ViewBag.NotValidUser</p>
+                   
+                            <input type="submit" value="Login" class="btn btn-primary" />
 
-                                    <label> Failed Attempt count is: @ViewBag.Failedcount</label>
-                                }
-
-                                @if (ViewBag.NotValidUser != null)
-                                {
-
-                                    <label> @ViewBag.NotValidUser</label>
-                                }
-                            </div>
-                            
-                                <input type="submit" value="Login" class="btn btn-primary" />
-                          
                             <label class="checkbox">
                                 <input type="checkbox" value="remember-me" id="remember_me"> Remember me next time
                             </label>
@@ -134,7 +120,7 @@
                                 @*<a href="javascript:void(0)" id="cmdSignInWithPasscode" class="m-2 mt-0 mb-0">Sign in with passcode</a>*@
                                 <a href="~/Registrationnew/Registration">Create account?</a>
                             </div>
-                        }                
+                        }
                     </div>
                 </div>
             </div>
@@ -146,9 +132,9 @@
                 <div class="modal-header modalBlueHeader">
                     <h5 class="modal-title">Need help signing in?</h5>
                     <div>
-                        <button id="NeedHelpProceed" type="button" style="border-width:thin"  @*class="btn btnYellow"*@>Proceed</button>
+                        <button id="NeedHelpProceed" type="button" class="brdr-1 btn-sm">Proceed</button>
                         
-                        <button id="NeedHelpCancel" type="button" style="border-width:thin" @*class="btn"*@ data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        <button id="NeedHelpCancel" type="button" class="brdr-1 btn-sm" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                     </div>
                 </div>
                 <div class="modal-body p-0">
@@ -173,7 +159,7 @@
                         </div>
                         <div class="col-xs-12 mt-1 mb-2">
                             <label class="mb-2 mb-lg-0">Enter your email address:</label>
-                            <input type="text" id="txtEmailAddressNeedHelp" name="txtEmailAddressNeedHelp" style="width: 100%; padding: 12px 20px; margin: 8px 0; border: 3px solid #ccc; " class="txtRequired Font11" value="" tabindex="0" />
+                            <input type="text" id="txtEmailAddressNeedHelp" name="txtEmailAddressNeedHelp" style="width: 100%; padding: 12px 20px; margin: 8px 0; border: 3px solid orange; " class="txtRequired Font11" value="" tabindex="0" />
                             @*<input type="text"/>*@
                         </div>
                         @*<div class="col-md-12 mt-1">
@@ -193,6 +179,7 @@
             </div>
         </div>
     </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
             integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
             crossorigin="anonymous"></script>
@@ -234,7 +221,6 @@
             }
         });
 
-        
     </script>
 
     <script>

@@ -143,7 +143,7 @@
 <div>
     <iframe id="frame" style="position: absolute; left: 8%; top: 19%; height: 70%; width: 83%; display: none; border: 2px solid #6e6c6c" src="~/Security/AddMember?PK=@Model.SecurtiyGroupPkey"></iframe>
 </div>
-<form action="~/Security/EditSecurityGroup" method="post" enctype="multipart/form-data" class="container">
+<form action="~/Security/EditSecurityGroup" method="post" enctype="multipart/form-data" class="container" style="margin-top:15px;">
     <input value="@Model.SecurtiyGroupPkey" id="SecurtiyGroupPkey" name="SecurtiyGroupPkey" hidden />
     <div class="row" >
         <div class="col-12">
@@ -151,7 +151,7 @@
             <div style="float:right; align-content:center ">
                 <input id="apply" type="button" style="width: 70px; padding: 2px; background-color: white;" class="btn btn-outline-warning" value="Apply" />
                 <input id="save" type="submit" style="width: 70px; padding: 2px; background-color: white; " class="btn btn-outline-warning" value="Save" />
-                <a href="~/security/Securitygroup"><input id="cancel" type="button" style="width: 70px; padding:2px; background-color: white; " class="btn btn-outline-warning" value="cancel" /></a>
+                <a href="~/security/Securitygroup"><input id="cancel" type="button" style="width: 70px; padding:2px; background-color: white; " class="btn btn-outline-warning" value="Cancel" /></a>
             </div>
         </div>
     </div>
@@ -161,12 +161,12 @@
             <input id="Name" style="border-left: 5px solid #FF8800; width: 500px;" class="form-control" value="@Model.Name" name="Name" />
             <label style="font-size:12px">Description</label><br />
             <textarea id="Description" class="form-control" name="Description" style="width: 500px; resize:none;height:100px;">@Model.Description</textarea><br />
-            <label class="form-control px-1" style="border:none; font-size:18px; width:300px; color:black">Members</label>
+            <label class="form-control px-1" style="border: none; font-size: 20px; width: 300px; color: #FF8800">Members</label>
             <div class="row">
                 <div class="col">
                     <a href="#" id="add"><i class="fa-solid fa-plus"></i></a>
                     <a href="#" id="remove"><i class="fa-solid fa-minus"></i></a>
-                    <a href="#" id="export"><i class="fa-solid fa-file-excel"></i></a>
+                    @*<a href="#" id="export"><i class="fa-solid fa-file-excel"></i></a>*@
                 </div>
             </div>
             <table id="members" class="table table-striped">

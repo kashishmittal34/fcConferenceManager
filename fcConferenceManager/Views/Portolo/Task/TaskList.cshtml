@@ -45,9 +45,8 @@
 
 
 
+
 <html>
-
-
 
 <head>
 
@@ -102,7 +101,7 @@
 
 <body>
 
-  
+
     <style>
         .form-control:disabled, .form-control[readonly] {
             background-color: #e9ecef0f;
@@ -116,7 +115,7 @@
                     @*@using (Html.BeginForm("Delete", "Portolo", FormMethod.Post))
                         {*@
                     <form action="" method="post">
-                       
+
 
                         @*<form>*@
                         <div class="control-icons">
@@ -152,7 +151,7 @@
                                     <label for="exampleFormControlSelect1"></label>
                                     @*<input type="date" class="form-control form-control-sm">*@
                                     <label for="exampleFormControlSelect1">From:</label>
-                                    <input type="text" class="form-control form-control-sm" name="duedate" id="datepicker" @*value="@String.Format("{0:D}", @ViewBag.Request.duedate !=null?ViewBag.Request.duedate:DateTime.Now.ToString("MM\\/dd\\/yyyy"))"*@
+                                    <input type="text" class="form-control form-control-sm" name="duedate" id="datepicker" value="@ViewBag.Request.duedate" @*value="@String.Format("{0:D}", @ViewBag.Request.duedate !=null?ViewBag.Request.duedate:DateTime.Now.ToString("MM\\/dd\\/yyyy"))"*@
                                            placeholder="mm/dd/yy" readonly="readonly" />
                                     <input type="text" style="display: none" value="@ViewBag.Request.duedate" name="duedate" id="duedatehidden" />
                                 </div>
@@ -254,7 +253,7 @@
 
 
                                         @*<button type="submit" value="Delete" class="btn btn-sm btn-danger rounded-0" onclick="return confirm('Are you sure?')"><i class="fa fa-trash-o"></i> Delete</button>
-            <input type="submit" value="Del" />*@
+                                            <input type="submit" value="Del" />*@
                                         @if (ViewBag.BindList != null)
                                         {
                                             <tbody id="myTable">
@@ -267,7 +266,7 @@
                                                         <td>
                                                             <input type="checkbox" name="ID" value="@item.pKey" class="custom-checkbox chkCheckBoxId" />
                                                             @*<input type="checkbox" value="@item.pKey" class="ItemsCheckboxForAllTasks" id="check" />
-                                <input name="ID" value="@item.pKey" hidden />*@
+                                                                <input name="ID" value="@item.pKey" hidden />*@
                                                         </td>
                                                         <td valign="top">
 
@@ -340,8 +339,6 @@
             </div>
         </div>
     </section>
-
-
 
     <footer>
         <div class="container">
@@ -604,7 +601,7 @@
         };
 
         $(document).ready(function () {
-           
+
             $('#myTable').pageMe({
 
                 pagerSelector: '#myPager',
@@ -617,21 +614,22 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#datepicker").datepicker({ format: "MM/dd/y" });
-            $("#datepicker1").datepicker({ format: "MM/dd/y" });
+            $("#datepicker").datepicker({ format: "MM/dd/y", changeMonth: true, changeYear: true, showOtherMonths: true, selectOtherMonths: true});
+            $("#datepicker1").datepicker({ format: "MM/dd/y", changeMonth: true, changeYear: true, showOtherMonths: true, selectOtherMonths: true });
 
             $(function () {
-
+              
                 $("#datepicker").datepicker({
-                    dateFormat: "mm/dd/y"
-
+                    changeMonth: true, changeYear: true, showOtherMonths: true, selectOtherMonths: true, dateFormat: "mm/dd/y"
+                   
                 });
             });
 
             $(function () {
 
                 $("#datepicker1").datepicker({
-                    dateFormat: "mm/dd/y"
+                    changeMonth: true, changeYear: true, showOtherMonths: true, selectOtherMonths: true, dateFormat: "mm/dd/y"
+                   
                 });
             });
         });
@@ -700,9 +698,8 @@
         }
     </script>
 
-
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
-
+  
 </body>
 
 </html>

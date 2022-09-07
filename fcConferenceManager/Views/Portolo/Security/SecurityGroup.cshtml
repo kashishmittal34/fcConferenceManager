@@ -8,7 +8,7 @@
             var groupName = $("#groupName").val().trim();
             debugger;
             if (groupName == "") {
-                return alert("please enter modal name");
+                return alert("please enter group name");
             }
             debugger;
             $.get("AddGroup", { groupName }, function (data) {
@@ -64,9 +64,18 @@
     }
 </style>
 <div class="container">
-    <div>
-        <button id="removeGroup" style="float:right;" class="btn btn-outline-secondary my-2 mx-2">Delete group</button>
-        <button data-bs-toggle="modal" data-bs-target="#AddGroupmodal" style="float:right;" class="btn btn-outline-warning my-2">Add new group</button>
+    <h2 style="color: #FF8800; margin-bottom:8px;">Security Groups</h2>
+    <div class="row">
+        <form class="col-8" action="/Security/SecurityGroup" enctype="multipart/form-data">
+            <label class="my-3 mx-2">Group Name:</label>
+            <input class="form-control my-3" name="groupName" value="@ViewBag.groupName" style="display:initial" type="text" />
+            <button type="submit" class="btn"><i class="fa-solid fa-magnifying-glass fa-2x"></i></button>
+            <a href="~/Security/SecurityGroup" class="btn"><i class="fa-solid fa-rotate-left fa-2x"></i></a>
+        </form>
+        <div class="col-4">
+            <button id="removeGroup" style="float:right;" class="btn btn-outline-warning my-3 mx-3">Delete group</button>
+            <button data-bs-toggle="modal" data-bs-target="#AddGroupmodal" style="float:right;" class="btn btn-outline-warning my-3">Add new group</button>
+        </div>
     </div>
     <div class="modal fade" id="AddGroupmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -102,13 +111,13 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td><input type="checkbox"  value="@item.SecurtiyGroupPkey" /></td>
+                    <td><input type="checkbox" value="@item.SecurtiyGroupPkey" /></td>
                     <td style="width:50px;">@item.SecurtiyGroupPkey</td>
                     <td style="width:300px;">@item.Name</td>
                     <td style="width:500px;">@item.Description</td>
                     <td style="width:800px;">@string.Join(", ", item.members.Select(member => member.AccountName).ToList())</td>
                     <td style="text-align:center;">@item.members.Count</td>
-                    <td><a href="~/Security/EditSecurityGroup?PK=@item.SecurtiyGroupPkey"><i class="fa-solid fa-gear"></i></a></td>
+                    <td><a href="~/Security/EditSecurityGroup?PK=@item.SecurtiyGroupPkey"><i class="fa-solid fa-pen-to-square"></i></a></td>
                 </tr>
             }
         </tbody>

@@ -109,7 +109,7 @@
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </button>
 
-                            <a href="~/Registration/Users"><i class="fa-solid fa-arrows-rotate"></i></a>
+                            <a href="~/RegistrationNew/Users"><i class="fa-solid fa-arrows-rotate"></i></a>
 
                             <div class="controls">
                                 <a class="brdr-1 btn" href="/RegistrationNew/Registration" style="width:98px;height:33px;"> Join Portolo</a>
@@ -196,8 +196,8 @@
                                                 <td> @item["Department"] </td>
                                                 <td> @item["OrganizationID"]</td>
                                                 <td> @item["PersonalBio"] </td>
-                                                <td>
-                                                    <a href="/RegistrationNew/Registration?userID=@item["pKey"]">Edit</a>
+                                                <td style="text-align:center;">
+                                                    <a href="/RegistrationNew/Registration?userID=@item["pKey"]"><i class="fa-solid fa-edit" style="color:orange"></i></a>
                                                 </td>
                                             </tr>
                                         }

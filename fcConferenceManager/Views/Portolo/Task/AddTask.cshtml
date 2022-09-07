@@ -116,21 +116,24 @@
         $(function () {
 
             $("#datepicker2").datepicker({
-                dateFormat: "mm/dd/y"
+                changeMonth: true, changeYear: true, showOtherMonths: true, selectOtherMonths: true, dateFormat: "mm/dd/y"
+               
             });
         });
 
         $(function () {
 
             $("#datepicker3").datepicker({
-                dateFormat: "mm/dd/y"
+                changeMonth: true, changeYear: true, showOtherMonths: true, selectOtherMonths: true, dateFormat: "mm/dd/y"
+              
             });
         });
 
         $(function () {
 
             $("#datepicker4").datepicker({
-                dateFormat: "mm/dd/y"
+                changeMonth: true, changeYear: true, showOtherMonths: true, selectOtherMonths: true, dateFormat: "mm/dd/y"
+               
             });
         });
     </script>
@@ -247,7 +250,7 @@
                                                                 <label for="exampleFormControlSelect1">Status:</label>
 
                                                                 @Html.DropDownListFor(n => n.taskListResponse.status, new SelectList(Model.commondropdownlist.statusdropdowns,
-                                         "pkey", "TaskStatusID", Model.taskListResponse.status), new { @class = "form-control", @onchange = "SelectedIndexChangedStatus(this.value)" })
+                                         "pkey", "TaskStatusID", Model.taskListResponse.status), new { @class = "form-control", @onchange = "SelectedIndexChangedStatus(this.value)" ,style= "padding: 5px;  height: 31px;" })
                                                                 <input type="text" name="status" id="dropdownStatus" style="visibility:hidden;display:none" />
 
                                                             </div>
@@ -296,10 +299,10 @@
 
                                             @Html.TextBoxFor(model => model.files, "", new { @type = "file", @multiple = "multiple", id = "file" })
 
-                                            <a id="removeFile"><i class="fa-solid fa-trash"></i> </a>
+                                            <a id="removeFile"><i class="fa-solid fa-trash" style="color: orange;"></i> </a>
                                             @if (Model.taskListResponse.pKey != null && Model.taskListResponse.pKey != "")
                                             {
-                                                <button name="submit" type="submit" style="border-width: thin;" id="process" value="Upload">
+                                                <button name="submit" class="brdr-1 btn-sm" type="submit" style="border-width: thin;" id="process" value="Upload">
                                                     Upload
                                                 </button>
                                             }
@@ -471,7 +474,7 @@
                     success: function (result) {
                        
                           
-                        debugger;
+                       
                         var baseUrl = "@Url.Action("EditTask", "Task", new { id = "PublicTaskId" })";
                         baseUrl = baseUrl.replace("PublicTaskId", publicTaskId);
                         window.location.href = baseUrl;
@@ -529,7 +532,7 @@
 
                     document.body.classList.toggle(className);
                 }
-                debugger;
+               
                 if ("@ViewBag.Source" == "Source") {
                     
                     resourcesShow();

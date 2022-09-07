@@ -137,6 +137,7 @@
       
    function fileCheck(elm)
    {
+	 $("#result").show();					
     var fn = String($(elm).val());
     var filename = fn.match(/[^\\/]*$/)[0]; // remove C:\fakename
     var imageurl = '@Url.Content("~/User-images/imagename")';
@@ -189,6 +190,7 @@
    }
 
     function validateInputs(e) {
+	var dd = $('#imgCropped').val($('#result').attr('src'));															
     var Salutation1 = $.trim($('#Salutation1').val());
     var firstName = $.trim($('#firstNameid').val());
     var LastName = $.trim($('#LastName').val());
@@ -607,11 +609,11 @@
     <form class="container" action="/RegistrationNew/RegistrationSubmit" method="post" enctype="multipart/form-data" onsubmit="validateInputs(e);" style="padding: 5px;">
         <input class="form-control" name="ID" value="@Model.ID" hidden />
         <div style="text-align:right;vertical-align:top;float:right">
-            @if (Model.ID != 0 && Model.ID != null)
+             @if (Model.ID != 0)
             {
                 <input class="btn btn-outline-warning" type="submit" id="Saveid" style="width:78px;" value="Apply" onclick="return validateInputs(event);" />
-                <input class="btn btn-outline-warning" type="submit" id="Udateid" style="width:78px;" value="Update" onclick="return validateInputs(event);" />
-                <a href="~/Account/ProfilePage" class="btn btn-outline-warning" style="width:78px;">Cancel</a>
+                //<input class="btn btn-outline-warning" type="submit" id="Udateid" style="width:78px;" value="Update" onclick="return validateInputs(event);" />
+                <a class="btn btn-outline-warning" style="width:78px;" onclick="history.back()">Cancel</a>
 
             }
             else
@@ -641,8 +643,8 @@
                                         <input class="form-control" type="text" style="display:none" id="userimageName" value="@Model.Uimg" />
 
 
-                                        <!--<img class="form-control" alt="" id="result" src="@Url.Content(Model.Uimg)" style="display:  10px;" height="350" width="80" />
-                                        -->
+                                       <img class="form-control" alt="" id="result" src="@Url.Content(Model.Uimg)" style="display:  10px;" height="350" width="80" />
+                                        
 
 
 
@@ -680,6 +682,7 @@
 
                             <div>
 									  
+                                <label class="form-label" for="file">Upload Profile Picture</label>
 
 
 
@@ -963,6 +966,8 @@
                                             </div>
                                         </td>
                                     </tr>
+
+                                    @if (ViewBag.GlobalAdmin)
                                     {
                                         <tr>
                                             <td style="text-align: right">
@@ -974,8 +979,8 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                     }    						 
-                                </tbody>
+                                     }    
+                                    </tbody>
                             </table>
                         </td>
                         <td style="padding-left: 40px; padding-top: 20px; vertical-align: top">
@@ -1066,29 +1071,36 @@
                         <div style="float: left; padding-left: 5px; margin-bottom:25px">
                             <span>Organization:</span>
                             <br>
-                            @Html.DropDownList("Organization", null, "<--Select Organization-->", new { @class = "form-select" , @style = "padding-bottom : 20px;" })
-                            <br/>
+                            <input type="text" class="form-control" name="Organization" value="@Model.organization" id="Organization" required />
+                            @*@Html.DropDownList("Organization", null, "<--Select Organization-->", new { @class = "form-select", @style = "padding-bottom : 20px;" })*@
+                            <br />
                         </div>
+                    </div>
+
+                    <div style="float: left; padding-left: 5px;">
+                        <span class="form-label">Degrees and Certifications:</span>
+                        <br>
+                        <input class="form-control" type="text" value="@Model.degreesandcertifications" name="degreesandcertifications" />
+                    </div>
+												
+												   
+																					   
+	   
+																																			  
+							  
+                    <div style="float: left; padding-left: 5px">
+                        <span>Website:</span>
+                        <br>
+                        <input class="form-control" type="text" value="@Model.website" name="Website" />
+
+                    </div>
+                    <div style="float: left; padding-left: 8px">
+                        <span style="color: black; font-weight: bold">CV @Model.CV</span>
+                        <br>
+                        <input class="form-control" type="file" name="CVfile" value="Upload" id="CVfile" onchange="fileCheckdoc(this);" />
 							  
                     </div>
-                    <div style="display : flex">
-                        <div  style="float: left;">
-                            <span class="form-label">Degrees and Certifications:</span>
-							
-                            <input class="form-control" type="text" value="@Model.degreesandcertifications" name="degreesandcertifications" />
-                        </div>
-                        <div style="float: left; padding-left: 5px">
-                            <span>Website:</span>
-                            <br>
-                            <input class="form-control" type="text" value="@Model.website" name="Website" />
 
-                        </div>
-                        <div  style="float: left; padding-left: 8px">
-                            <span style="color: black; font-weight: bold">CV @Model.CV</span>
-                            <br>
-                            <input class="form-control" type="file" name="CVfile" value="Upload" id="CVfile" onchange="fileCheckdoc(this);" />
-                        </div>
-                    </div>
                     <div>
                         <div style="float: left; margin-top:15px;" class="cvp">
                             <div style="float: left;" class="cvp">
@@ -1112,6 +1124,18 @@
         </div>
     </form>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
