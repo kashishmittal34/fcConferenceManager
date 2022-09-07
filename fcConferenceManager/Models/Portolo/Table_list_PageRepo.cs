@@ -271,7 +271,7 @@ namespace fcConferenceManager.Models.Portolo
                         Id = Convert.ToInt32(dr["pkey"]),
                         Role = Convert.ToString(dr["RoleID"]),
                         SecurityRole = secGrp,
-                        Widget = getWidget(Convert.ToInt32(dr["pkey"]))
+                        //Widget = getWidget(Convert.ToInt32(dr["pkey"]))
 
                     });
             }
@@ -332,33 +332,33 @@ namespace fcConferenceManager.Models.Portolo
         }
 
 
-        public List<Widget> getWidgetList()
-        {
-            List<Widget> tables = new List<Widget>();
-            connection();
+        //public List<Widget> getWidgetList()
+        //{
+        //    List<Widget> tables = new List<Widget>();
+        //    connection();
 
-            SqlCommand cmd = new SqlCommand("SELECT * FROM SYS_Widgets order by WidgetID", conn);
-            SqlDataAdapter sda = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
+        //    SqlCommand cmd = new SqlCommand("SELECT * FROM SYS_Widgets order by WidgetID", conn);
+        //    SqlDataAdapter sda = new SqlDataAdapter(cmd);
+        //    DataTable dt = new DataTable();
 
-            conn.Open();
-            sda.Fill(dt);
-            conn.Close();
+        //    conn.Open();
+        //    sda.Fill(dt);
+        //    conn.Close();
 
 
-            foreach (DataRow dr in dt.Rows)
-            {
-                tables.Add(
-                    new Widget()
-                    {
-                        id = Convert.ToInt32(dr["pkey"]),
-                        WidgetID = Convert.ToString(dr["WidgetID"])
-                    }
-                    );
-            }
+        //    foreach (DataRow dr in dt.Rows)
+        //    {
+        //        tables.Add(
+        //            new Widget()
+        //            {
+        //                id = Convert.ToInt32(dr["pkey"]),
+        //                WidgetID = Convert.ToString(dr["WidgetID"])
+        //            }
+        //            );
+        //    }
 
-            return tables;
-        }
+        //    return tables;
+        //}
 
 
         public bool EditRegistration(int id, string Networking, bool coupon)
