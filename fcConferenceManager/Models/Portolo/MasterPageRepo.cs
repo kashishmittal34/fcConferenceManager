@@ -1,9 +1,6 @@
-﻿using System;
+﻿using MAGI_API.Models;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.Mvc;
@@ -35,7 +32,7 @@ namespace fcConferenceManager.Models.Portolo
             {
                 ans.Add(Convert.ToString(dr["TableName"]));
                 ans.Add(Convert.ToString(dr["LookupField"]));
-                
+
             }
 
             return ans;
@@ -45,14 +42,12 @@ namespace fcConferenceManager.Models.Portolo
         public bool deleteLookUp(string tableName, int id)
         {
             connection();
-
-            SqlCommand cmd = new SqlCommand("delete from " + tableName + " where pkey = @id", conn);
+            string pkey = GetColumnName(tableName);
+            SqlCommand cmd = new SqlCommand("delete from " + tableName + " where " + pkey + " = @id", conn);
             cmd.Parameters.AddWithValue("@id", id);
-
             conn.Open();
             int i = cmd.ExecuteNonQuery();
             conn.Close();
-
             if (i >= 1)
             {
                 return true;
@@ -61,20 +56,18 @@ namespace fcConferenceManager.Models.Portolo
             {
                 return false;
             }
-
         }
 
-        public bool EditEntryLookUp(int eID, string newName, string tableName)
+        public bool EditEntryLookUp(int eID, string newName, string tableName, string lookUpField)
         {
             connection();
-            SqlCommand cmd = new SqlCommand("UPDATE " + tableName + " SET Name = @newName WHERE pkey = @id", conn);
+            string Id = GetColumnName(tableName);
+            SqlCommand cmd = new SqlCommand("UPDATE " + tableName + " SET "+ lookUpField + " = @newName WHERE "+Id+" = @id", conn);
             cmd.Parameters.AddWithValue("@newName", newName);
             cmd.Parameters.AddWithValue("@id", eID);
-
             conn.Open();
             int i = cmd.ExecuteNonQuery();
             conn.Close();
-
             if (i >= 1)
             {
                 return true;
@@ -86,16 +79,14 @@ namespace fcConferenceManager.Models.Portolo
 
         }
 
-        public bool AddNewDataLookUp(string tableName,string lookUpField, string NewName)
+        public bool AddNewDataLookUp(string tableName, string lookUpField, string NewName)
         {
             connection();
-            SqlCommand cmd = new SqlCommand("INSERT INTO " + tableName + "("+ lookUpField+")  VALUES (@newName)", conn);
+            SqlCommand cmd = new SqlCommand("INSERT INTO " + tableName + "(" + lookUpField + ")  VALUES (@newName)", conn);
             cmd.Parameters.AddWithValue("@newName", NewName);
-
             conn.Open();
             int i = cmd.ExecuteNonQuery();
             conn.Close();
-
             if (i >= 1)
             {
                 return true;
@@ -104,8 +95,6 @@ namespace fcConferenceManager.Models.Portolo
             {
                 return false;
             }
-
-
         }
 
         public List<SelectListItem> getDropDownLookUp()
@@ -118,22 +107,20 @@ namespace fcConferenceManager.Models.Portolo
             conn.Open();
             sda.Fill(dt);
             conn.Close();
-
             foreach (DataRow dr in dt.Rows)
             {
                 list.Add(new SelectListItem() { Text = Convert.ToString(dr["DisplayName"]), Value = Convert.ToString(dr["Pkey"]) });
             }
-
             return list;
-
         }
         public List<LookUp> getDataLookUp(string tableName, string lookUpField)
         {
+            string Id = GetColumnName(tableName);
             List<LookUp> tables = new List<LookUp>();
 
             connection();
 
-            SqlCommand cmd = new SqlCommand("Select * from " + tableName + " order by "+ lookUpField, conn);
+            SqlCommand cmd = new SqlCommand("Select * from " + tableName + " order by " + lookUpField, conn);
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
 
@@ -146,7 +133,7 @@ namespace fcConferenceManager.Models.Portolo
                 tables.Add(
                     new LookUp
                     {
-                        Id = Convert.ToInt32(dr["pkey"]),
+                        Id = Convert.ToInt32(dr[Id]),
                         Name = Convert.ToString(dr[lookUpField])
                     }
                     );
@@ -202,7 +189,7 @@ namespace fcConferenceManager.Models.Portolo
             }
 
         }
-        
+
         public List<RegistrationSetting> getDataRegistrationSetting()
         {
             List<RegistrationSetting> tables = new List<RegistrationSetting>();
@@ -219,7 +206,7 @@ namespace fcConferenceManager.Models.Portolo
 
             foreach (DataRow dr in dt.Rows)
             {
-                
+
                 string coupon = "";
                 if (dr["AllowCoupons"] != DBNull.Value && Convert.ToInt32(dr["AllowCoupons"]) == 1)
                 {
@@ -236,7 +223,7 @@ namespace fcConferenceManager.Models.Portolo
                         RegistrationLevelID = Convert.ToString(dr["RegistrationLevelID"]),
                         Networking = Convert.ToInt32(dr["NetworkingContacts"]),
                         Coupons = coupon
-                    }) ;
+                    });
             }
 
             return tables;
@@ -260,23 +247,40 @@ namespace fcConferenceManager.Models.Portolo
             foreach (DataRow dr in dt.Rows)
             {
                 int secGrp = 0;
-                if(dr["SecurityGroup_pKey"] != DBNull.Value)
+                if (dr["SecurityGroup_pKey"] != DBNull.Value)
                 {
                     secGrp = Convert.ToInt32(dr["SecurityGroup_pKey"]);
                 }
-                
+
                 tables.Add(
                     new EventRole
                     {
                         Id = Convert.ToInt32(dr["pkey"]),
                         Role = Convert.ToString(dr["RoleID"]),
                         SecurityRole = secGrp
-                        
+
                     });
             }
 
             return tables;
 
+        }
+        public bool EditDataEvent(int id, string role)
+        {
+            connection();
+            SqlCommand cmd = new SqlCommand("UPDATE SYS_EventRoles SET RoleID = '" + role + "' WHERE pKey = "+id+" ", conn);
+            conn.Open();
+            int i = cmd.ExecuteNonQuery();
+            conn.Close();
+
+            if (i >= 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public bool EditRegistration(int id, string Networking, bool coupon)
@@ -312,7 +316,7 @@ namespace fcConferenceManager.Models.Portolo
         public List<SelectListItem> getDropDownSecurityRole()
         {
             List<SelectListItem> list = new List<SelectListItem>();
-            
+
             SqlCommand cmd = new SqlCommand("SELECT * FROM SecurityGroup_List order by SecurityGroupID", conn);
 
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
@@ -323,10 +327,31 @@ namespace fcConferenceManager.Models.Portolo
 
             foreach (DataRow dr in dt.Rows)
             {
-                list.Add(new SelectListItem() { Text = Convert.ToString(dr["SecurityGroupID"]), Value = Convert.ToString(dr["Pkey"]) });
+                list.Add(new SelectListItem() { Value = Convert.ToString(dr["SecurityGroupID"]), Text = Convert.ToString(dr["Pkey"]) });
             }
 
             return list;
+        }
+        public string GetColumnName(string tableName)
+        {
+            connection();
+            string Id = string.Empty;
+            string query = "SELECT * FROM " + tableName + " ";
+
+
+            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            conn.Open();
+            sda.Fill(dt);
+            conn.Close();
+            foreach (DataColumn column in dt.Columns)
+            {
+                Id = column.ColumnName;
+                break;
+            }
+
+            return Id;
         }
     }
 }

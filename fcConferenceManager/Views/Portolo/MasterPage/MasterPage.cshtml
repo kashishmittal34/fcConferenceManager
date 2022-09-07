@@ -4,620 +4,636 @@
     ViewBag.Title = "MasterPage";
     Layout = "~/Views/Portolo/Shared/_Layout.cshtml";
 }
-<h2>Configration</h2>
+
 <br />
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="wXWPE7+C5Hf7XhIYRLVnYzwDuNv9+IDtq275TZhyGBmZsCHkp/b27NRuUQ50t0uqvZFUJzzYlOy+E5YV0XISSgTN+UECYByz6yzX5h1rCZm3HzYX8BRtyKWPY7U//IUu" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
-<div style="margin-bottom:50px">
-    <div style="display:flex">
-        <div style="width:45%; border:1px solid; border-radius:2%; margin-left:50px; height:400px">
+<body>
+    <section class="task-list-form center">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    
+                        <h3>Master Configuration Setting</h3>
+                        <div style="margin-bottom:50px">
+                            <div style="display:flex">
+                                <div style="width:600px; border:1px solid; border-radius:2%; margin-left:8px; height:400px">
 
-            <div style="background-color: deepskyblue; color: white; border-radius: 10%; display:flex">
-                <p style="margin:0 5px">LookUp List </p><a onclick="ExportToExcelLookUp();"><img src="~/Images/excel.png" style="border-radius:50% ;width:20px; height:20px" /></a>
-            </div>
+                                    <div style="background-color: black; color: white; border-radius: 10px;display:flex">
+                                     
+                                                    <p style="margin:0 5px">LookUp List </p>&nbsp; <a class="excel" onclick="ExportToExcelLookUp()" title="Download Excel"><i class="fa-solid fa-download"></i></a>
+                                            </div>
 
-            @using (Html.BeginForm("MasterPage", "MasterPage", FormMethod.Post, new { style = "float:left" }))
-            {
-                @Html.DropDownList("tableId", new SelectList(ViewBag.LookUpTable, "Value", "Text"), new { style = "height:25px; width:150px;margin-left:10px;border-radius: 5px; margin-top:10px", onchange = "RoleDropDownChange()", @id = "tableRoleDropDown" })
-                <input type="submit" id="submitBtn" style="display:none" />
-            }
-
-            <button data-bs-toggle="modal" data-bs-target="#myModal" style="float: right; margin-top: 10px; margin-right:10px; border:hidden; background:white" id="btnShowModal"><img src="~/Images/plus.png" width="30" height="30" /></button>
-            <button id="DeleteButton" style="display: none; float: right; margin-top:10px; border:hidden; background:white"><img src="~/Images/minus.png" width="30" height="30" style="border-radius:50%" /></button>
-            <div class="modal" id="myModal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-
-                        <!-- Modal Header -->
-                        <div class="modal-header">
-                            <h4 class="modal-title">Adding New Row</h4>
-                        </div>
-
-                        <!-- Modal body -->
-                        <div class="modal-body">
-                            <label for="newName" class="col-md-3 col-form-label">Enter Name:</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" id="newName">
-                            </div>
-                        </div>
-                        <br />
-                        <!-- Modal footer -->
-                        <div class="modal-footer">
-                            <button id="createNewBtn" type="submit" class="btn btn-success" onclick="createNewEntry();">Submit</button>
-                            <button id="btnHideModal" type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <br />
-            <br />
-            <br />
-
-            @using (Html.BeginForm("BatchDelete", "MasterPage", FormMethod.Post))
-            {
-                <div style="display:none">
-                    @Html.TextBox("RoleTableIds")
-                </div>
-
-                <input type="submit" id="SubmitDeleteBtn" style="display:none " />
-
-                <table style="margin-left: 10px;width: 98%">
-                    <tr>
-                        <td style="padding-left: 3px">
-                            <div class="RadGrid RadGrid_Metro" style="width:98%;" tabindex="0">
-
-                                <div class="rgHeaderWrapper">
-                                    <div class="rgHeaderDiv" style="overflow: hidden; margin-right: 17px;">
-
-                                        <table style="width:100%;table-layout:fixed;overflow:hidden;empty-cells:show;">
-                                            <colgroup>
-                                                <col style="width:35px">
-                                                <col style="width:50px">
-                                                <col>
-                                                <col style="width:35px">
-                                            </colgroup>
-                                            <thead>
-                                                <tr style="background-color:deepskyblue;color:white">
-                                                    <th style="text-align:center;">
-                                                        <input type="checkbox" id="selecctall" />
-                                                    </th>
-                                                    <th style="text-align: center;">
-                                                        @Html.DisplayNameFor(m => Model.LookUps.FirstOrDefault().Id)
-                                                    </th>
-                                                    <th style="text-align: center;">
-                                                        @Html.DisplayNameFor(m => Model.LookUps.FirstOrDefault().Name)
-                                                    </th>
-                                                    <th style="text-align: center;">Edit</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody style="display:none;"><tr><td colspan="4"></td></tr></tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="rgDataDiv" style="overflow-y:scroll;width:100%;height:270px;">
-
-                                    <table style="width:100%;table-layout:fixed;overflow:hidden;empty-cells:show;">
-                                        <colgroup>
-                                            <col style="width:35px">
-                                            <col style="width:50px">
-                                            <col>
-                                            <col style="width:35px">
-                                        </colgroup>
-                                        <thead style="display:none;">
-                                            <tr>
-                                                <th scope="col"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @if (Model.LookUps.Count() == 0)
+                                            @using (Html.BeginForm("MasterPage", "MasterPage", FormMethod.Post, new { style = "float:left" }))
                                             {
-
-                                                <tr>
-
-                                                    <td colspan="4">
-                                                        NO RECORD !!!
-                                                    </td>
-                                                </tr>
+                                                @Html.DropDownList("tableId", new SelectList(ViewBag.LookUpTable, "Value", "Text"), new { style = "height:25px; width:150px;margin-left:10px;border-radius: 5px; margin-top:10px", onchange = "RoleDropDownChange()", @id = "tableRoleDropDown" })
+                                                <input type="submit" id="submitBtn" style="display:none" />
                                             }
-                                            else
+
+                                            <button class="excel" data-bs-toggle="modal" data-bs-target="#myModal" style="float: right; margin-top: 10px; margin-right:10px; " id="btnShowModal" title="Add Row"><i class='fas fa-plus'></i></button>
+                                            <button class="excel" id="DeleteButton" style="display: none; float: right; margin-top:10px; " title="Delete Row"><i class='fas fa-minus'></i></button>
+                                            <div class="modal" id="myModal">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+
+                                                        <!-- Modal Header -->
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Add New Row</h4>
+                                                        </div>
+
+                                                        <!-- Modal body -->
+                                                        <div class="modal-body">
+                                                            <label for="newName" class="col-md-3 col-form-label">Enter Name:</label>
+                                                            <div class="col-md-9">
+                                                                <input type="text" class="form-control" id="newName">
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                        <!-- Modal footer -->
+                                                        <div class="modal-footer">
+                                                            <button id="createNewBtn" type="submit" class=" brdr-1 btn-sm" onclick="createNewEntry();">Submit</button>
+                                                            <button id="btnHideModal" type="button" class=" brdr-1 btn-sm" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <br />
+                                            <br />
+                                            <br />
+
+                                            @using (Html.BeginForm("BatchDelete", "MasterPage", FormMethod.Post))
                                             {
+                                                <div style="display:none">
+                                                    @Html.TextBox("RoleTableIds")
+                                                </div>
 
-                                                foreach (var item in Model.LookUps)
-                                                {
+                                                <input type="submit" id="SubmitDeleteBtn" style="display:none " />
 
-                                                    <tr style="height:25px">
-                                                        <td>
-                                                            <input class="checkbox" type="checkbox" name="check" value="@item.Id" style="margin:0 auto" onchange="showDeleteButton()" />
-                                                        </td>
-                                                        <td style="text-align: center;">
-                                                            @Html.DisplayFor(modelItem => item.Id)
-                                                        </td>
-                                                        <td style="text-align: center;">
-                                                            @Html.DisplayFor(modelItem => item.Name)
-                                                        </td>
-                                                        <td style="text-align: center;">
-                                                            <a onclick="editNameLookUp(this)" data-Id="@item.Id" data-Name="@item.Name" style="border:hidden; background:white"><img src="~/Images/gridgray.png" width="22" /></a>
+                                                <table style="margin-left: 10px;width: 98%">
+                                                    <tr>
+                                                        <td style="padding-left: 3px">
+                                                            <div class="RadGrid RadGrid_Metro" style="width:98%;" tabindex="0">
+
+                                                                <div class="rgHeaderWrapper">
+                                                                    <div class="rgHeaderDiv" style="overflow: hidden; margin-right: 17px;">
+
+                                                                        <table style="width:100%;table-layout:fixed;overflow:hidden;empty-cells:show;">
+                                                                            <colgroup>
+                                                                                <col style="width:35px">
+                                                                                <col style="width:50px">
+                                                                                <col>
+                                                                                <col style="width:35px">
+                                                                            </colgroup>
+                                                                            <thead>
+                                                                                <tr style="background-color:black;color:white">
+                                                                                    <th style="text-align:center;">
+                                                                                        <input type="checkbox" id="selecctall" />
+                                                                                    </th>
+                                                                                    <th style="text-align: center;">
+                                                                                        @Html.DisplayNameFor(m => Model.LookUps.FirstOrDefault().Id)
+                                                                                    </th>
+                                                                                    <th style="text-align: center;">
+                                                                                        @Html.DisplayNameFor(m => Model.LookUps.FirstOrDefault().Name)
+                                                                                    </th>
+                                                                                    <th style="text-align: center;">Edit</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody style="display:none;"><tr><td colspan="4"></td></tr></tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="rgDataDiv" style="overflow-y:scroll;width:100%;height:270px;">
+
+                                                                    <table style="width:100%;table-layout:fixed;overflow:hidden;empty-cells:show;">
+                                                                        <colgroup>
+                                                                            <col style="width:35px">
+                                                                            <col style="width:50px">
+                                                                            <col>
+                                                                            <col style="width:35px">
+                                                                        </colgroup>
+                                                                        <thead style="display:none;">
+                                                                            <tr>
+                                                                                <th scope="col"></th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            @if (Model.LookUps.Count() == 0)
+                                                                            {
+
+                                                                                <tr>
+
+                                                                                    <td colspan="4">
+                                                                                        NO RECORD !!!
+                                                                                    </td>
+                                                                                </tr>
+                                                                            }
+                                                                            else
+                                                                            {
+
+                                                                                foreach (var item in Model.LookUps)
+                                                                                {
+
+                                                                                    <tr style="height:25px">
+                                                                                        <td>
+                                                                                            <input class="checkbox" type="checkbox" name="check" value="@item.Id" style="margin:0 auto" onchange="showDeleteButton()" />
+                                                                                        </td>
+                                                                                        <td style="text-align: center;">
+                                                                                            @Html.DisplayFor(modelItem => item.Id)
+                                                                                        </td>
+                                                                                        <td style="text-align: center;">
+                                                                                            @Html.DisplayFor(modelItem => item.Name)
+                                                                                        </td>
+                                                                                        <td style="text-align: center;">
+                                                                                            <a onclick="editNameLookUp(this)" data-Id="@item.Id" data-Name="@item.Name" style="border:hidden; background:white"> <i class="fa fa-edit" style="color:orange"></i></a>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+
+                                                                        </tbody>
+
+                                                                    </table>
+                                                                </div>
+
+                                                            </div>
+
                                                         </td>
                                                     </tr>
-                                                }
+                                                </table>
+
+
                                             }
+                                            <br />
+                                            <button id="editModalBtn" data-bs-toggle="modal" data-bs-target="#editModal" style="display:none"></button>
 
-                                        </tbody>
+                                            <div class="modal" id="editModal">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
 
-                                    </table>
-                                </div>
+                                                        <!-- Modal Header -->
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Update Row</h4>
+                                                        </div>
+                                                        <!-- Modal body -->
+                                                        <div class="modal-body">
+                                                            <label for="updateName" class="col-md-3 col-form-label">Enter Name:</label>
+                                                            <div class="col-md-9">
+                                                                <input type="text" class="form-control" id="updateName">
+                                                            </div>
+                                                            <input type="text" class="form-control-plaintext" id="updateId" style="display:none">
+                                                            <input type="text" class="form-control-plaintext" id="updateTableId" style="display:none">
+                                                        </div>
+                                                        <br />
+                                                        <!-- Modal footer -->
+                                                        <div class="modal-footer">
+                                                            <button id="updateBtn" type="submit" class=" brdr-1 btn-sm" onclick="updateEntry()">Update</button>
+                                                            <button id="hideEditModalBtn" type="button" class=" brdr-1 btn-sm" data-bs-dismiss="modal">Close</button>
+                                                        </div>
 
-                            </div>
-
-                        </td>
-                    </tr>
-                </table>
-
-
-            }
-            <br />
-            <button id="editModalBtn" data-bs-toggle="modal" data-bs-target="#editModal" style="display:none"></button>
-
-            <div class="modal" id="editModal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-
-                        <!-- Modal Header -->
-                        <div class="modal-header">
-                            <h4 class="modal-title">Editing Row</h4>
-                        </div>
-                        <!-- Modal body -->
-                        <div class="modal-body">
-                            <label for="updateName" class="col-md-3 col-form-label">Enter Name:</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" id="updateName">
-                            </div>
-                            <input type="text" class="form-control-plaintext" id="updateId" style="display:none">
-                            <input type="text" class="form-control-plaintext" id="updateTableId" style="display:none">
-                        </div>
-                        <br />
-                        <!-- Modal footer -->
-                        <div class="modal-footer">
-                            <button id="updateBtn" type="submit" class="btn btn-success" onclick="updateEntry()">Update</button>
-                            <button id="hideEditModalBtn" type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
 
 
-        </div>
+                                        </div>
 
-        <div style="width:45%; border:1px solid; border-radius:2%; margin-left:50px">
-            <div style="background-color: deepskyblue; color: white; border-radius: 10%; display:flex">
-                <p style="margin:0 5px">Global Setting </p><a onclick="ExportToExcelGlobalSetting();"><img src="~/Images/excel.png" style="border-radius:50% ;width:20px; height:20px" /></a>
-            </div>
-            <br />
-            <div>
-                <table style="margin-left: 10px;width: 98%">
-                    <tr>
-                        <td style="padding-left: 3px">
-                            <div class="RadGrid RadGrid_Metro" style="width:98%;" tabindex="0">
-                                <div class="rgHeaderWrapper">
-                                    <div class="rgHeaderDiv" style="overflow: hidden; margin-right: 17px;">
+                                <div style="width:600px; border:1px solid; border-radius:2%; margin-left:40px; height:400px">
 
-                                        <table style="width:100%;table-layout:fixed;overflow:hidden;empty-cells:show;">
-                                            <colgroup>
-                                                <col style="width:50px">
-                                                <col>
-                                                <col>
-                                                <col style="width:35px">
-                                            </colgroup>
-                                            <thead>
-                                                <tr style="background-color:deepskyblue;color:white">
-                                                    <th style="text-align:center;">
-                                                        @Html.DisplayNameFor(m => Model.GlobalSettings.FirstOrDefault().Id)
-                                                    </th>
-                                                    <th style="text-align: center;">
-                                                        @Html.DisplayNameFor(m => Model.GlobalSettings.FirstOrDefault().Setting)
-                                                    </th>
-                                                    <th style="text-align: center;">
-                                                        @Html.DisplayNameFor(m => Model.GlobalSettings.FirstOrDefault().Value)
-                                                    </th>
-                                                    <th style="text-align: center;">Edit</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody style="display:none;"><tr><td colspan="4"></td></tr></tbody>
-                                        </table>
+                                    <div style="background-color: black; color: white; border-radius: 10px; display:flex">
+                                        <p style="margin:0 5px">Global Setting </p><a  class="excel" onclick="ExportToExcelGlobalSetting();" title="Download Excel"><i class="fa-solid fa-download"></i></a>
                                     </div>
-                                </div>
-                                <div class="rgDataDiv" style="overflow-y:scroll;width:100%;height:320px;">
-
-                                    <table style="width:100%;table-layout:fixed;overflow:hidden;empty-cells:show;">
-                                        <colgroup>
-                                            <col style="width:50px">
-                                            <col>
-                                            <col>
-
-                                            <col style="width:35px">
-                                        </colgroup>
-                                        <thead style="display:none;">
+                                    <br />
+                                    <div>
+                                        <table style="margin-left: 10px;width: 98%">
                                             <tr>
-                                                <th scope="col"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @if (Model.GlobalSettings.Count() == 0)
-                                            {
+                                                <td style="padding-left: 3px">
+                                                    <div class="RadGrid RadGrid_Metro" style="width:98%;" tabindex="0">
+                                                        <div class="rgHeaderWrapper">
+                                                            <div class="rgHeaderDiv" style="overflow: hidden; margin-right: 17px;">
 
-                                                <tr>
-                                                    <td colspan="4">
-                                                        NO RECORD !!!
-                                                    </td>
-                                                </tr>
-                                            }
-                                            else
-                                            {
-                                                foreach (var item in Model.GlobalSettings)
-                                                {
+                                                                <table style="width:100%;table-layout:fixed;overflow:hidden;empty-cells:show;">
+                                                                    <colgroup>
+                                                                        <col style="width:50px">
+                                                                        <col>
+                                                                        <col>
+                                                                        <col style="width:35px">
+                                                                    </colgroup>
+                                                                    <thead>
+                                                                        <tr style="background-color:black;color:white">
+                                                                            <th style="text-align:center;">
+                                                                                @Html.DisplayNameFor(m => Model.GlobalSettings.FirstOrDefault().Id)
+                                                                            </th>
+                                                                            <th style="text-align: center;">
+                                                                                @Html.DisplayNameFor(m => Model.GlobalSettings.FirstOrDefault().Setting)
+                                                                            </th>
+                                                                            <th style="text-align: center;">
+                                                                                @Html.DisplayNameFor(m => Model.GlobalSettings.FirstOrDefault().Value)
+                                                                            </th>
+                                                                            <th style="text-align: center;">Edit</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody style="display:none;"><tr><td colspan="4"></td></tr></tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="rgDataDiv" style="overflow-y:scroll;width:100%;height:320px;">
 
-                                                    <tr style="height:25px">
-                                                        <td style="text-align: center;">
-                                                            @Html.DisplayFor(modelItem => item.Id)
-                                                        </td>
-                                                        <td style="text-align: center; overflow-x:hidden">
-                                                            @Html.DisplayFor(modelItem => item.Setting)
-                                                        </td>
-                                                        <td style="text-align: center; overflow-x: hidden
+                                                            <table style="width:100%;table-layout:fixed;overflow:hidden;empty-cells:show;">
+                                                                <colgroup>
+                                                                    <col style="width:50px">
+                                                                    <col>
+                                                                    <col>
+
+                                                                    <col style="width:35px">
+                                                                </colgroup>
+                                                                <thead style="display:none;">
+                                                                    <tr>
+                                                                        <th scope="col"></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @if (Model.GlobalSettings.Count() == 0)
+                                                                    {
+
+                                                                        <tr>
+                                                                            <td colspan="4">
+                                                                                NO RECORD !!!
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        foreach (var item in Model.GlobalSettings)
+                                                                        {
+
+                                                                            <tr style="height:25px">
+                                                                                <td style="text-align: center;">
+                                                                                    @Html.DisplayFor(modelItem => item.Id)
+                                                                                </td>
+                                                                                <td style="text-align: center; overflow-x:hidden">
+                                                                                    @Html.DisplayFor(modelItem => item.Setting)
+                                                                                </td>
+                                                                                <td style="text-align: center; overflow-x: hidden
 
 ">
-                                                            @Html.DisplayFor(modelItem => item.Value)
-                                                        </td>
-                                                        <td style="text-align: center;">
-                                                            <a onclick="editGlobalSetting(this)" data-Setting="@item.Setting" data-Id="@item.Id" data-Value="@item.Value" style="border:hidden; background:white"><img src="~/Images/gridgray.png" width="22" /></a>
-                                                        </td>
-                                                    </tr>
-                                                }
-                                            }
+                                                                                    @Html.DisplayFor(modelItem => item.Value)
+                                                                                </td>
+                                                                                <td style="text-align: center;">
+                                                                                    <a onclick="editGlobalSetting(this)" data-Setting="@item.Setting" data-Id="@item.Id" data-Value="@item.Value" style="border:hidden; background:white"> <i class="fa fa-edit" style="color:orange"></i></a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        }
+                                                                    }
 
-                                        </tbody>
+                                                                </tbody>
 
-                                    </table>
-                                </div>
+                                                            </table>
+                                                        </div>
 
-                            </div>
+                                                    </div>
 
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-
-            <button id="editGlobalSettingModal" data-bs-toggle="modal" data-bs-target="editGlobalModal" style="display:none"></button>
-            <div id="editGlobalModal" class="modal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-
-                        <!-- Modal Header -->
-                        <div class="modal-header">
-                            <h4 class="modal-title">Editing Global Setting</h4>
-                        </div>
-                        <!-- Modal body -->
-                        <div class="modal-body">
-
-                            <label for="updateSettingGlobal" class="col-md-3 col-form-label">Setting:</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" id="updateSettingGlobal" disabled>
-                            </div>
-                            <br />
-                            <br />
-                            <label for="updateValueGlobal" class="col-md-3 col-form-label">Value:</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" id="updateValueGlobal">
-                            </div>
-
-                            <input type="text" class="form-control-plaintext" id="updateGlobalId" style="display:none">
-
-                        </div>
-
-                        <br />
-                        <!-- Modal footer -->
-                        <div class="modal-footer">
-                            <button id="updateGlobalBtn" type="submit" class="btn btn-success" onclick="updateEntryGlobal()">Update</button>
-                            <button id="hideEditModalBtn" type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <br />
-    <div style="display:flex">
-
-        <div style="width:30%; border:1px solid; border-radius:2%; margin-left:50px; height:200px">
-            <div style="background-color: deepskyblue; color: white; border-radius: 10%; display:flex">
-                <p style="margin:0 5px">Registration Setting </p>
-            </div>
-
-
-
-            <div style="margin-top:10px">
-                <table style="margin-left: 10px;width: 98%">
-                    <tr>
-                        <td style="padding-left: 3px">
-                            <div class="RadGrid RadGrid_Metro" style="width:98%;" tabindex="0">
-                                <div class="rgHeaderWrapper">
-                                    <div class="rgHeaderDiv" style="overflow: hidden; margin-right: 7px;">
-
-                                        <table style="width:97%;table-layout:fixed;overflow:hidden;empty-cells:show;background-color:deepskyblue;color:white;">
-                                            <colgroup>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col style="width:60px">
-                                            </colgroup>
-                                            <thead>
-                                                <tr style="background-color:deepskyblue;color:white;">
-                                                    <th style="text-align:center;">
-                                                        @Html.DisplayNameFor(m => Model.RegistrationSettings.FirstOrDefault().RegistrationLevelID)
-                                                    </th>
-                                                    <th style="text-align: center;">
-                                                        @Html.DisplayNameFor(m => Model.RegistrationSettings.FirstOrDefault().Networking)
-                                                    </th>
-                                                    <th style="text-align: center;">
-                                                        @Html.DisplayNameFor(m => Model.RegistrationSettings.FirstOrDefault().Coupons)
-                                                    </th>
-                                                    <th valign="top" style="text-align:center;">Edit</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody style="display:none;"><tr><td colspan="4"></td></tr></tbody>
+                                                </td>
+                                            </tr>
                                         </table>
                                     </div>
+
+
+                                    <button id="editGlobalSettingModal" data-bs-toggle="modal" data-bs-target="editGlobalModal" style="display:none"></button>
+                                    <div id="editGlobalModal" class="modal">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Update Global Setting</h4>
+                                                </div>
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+
+                                                    <label for="updateSettingGlobal" class="col-md-3 col-form-label">Setting:</label>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control" id="updateSettingGlobal" disabled>
+                                                    </div>
+                                                    <br />
+                                                    <br />
+                                                    <label for="updateValueGlobal" class="col-md-3 col-form-label">Value:</label>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control" id="updateValueGlobal">
+                                                    </div>
+
+                                                    <input type="text" class="form-control-plaintext" id="updateGlobalId" style="display:none">
+
+                                                </div>
+
+                                                <br />
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <button id="updateGlobalBtn" type="submit" class=" brdr-1 btn-sm" onclick="updateEntryGlobal()">Update</button>
+                                                    <button id="hideEditModalBtn" type="button" class="brdr-1 btn-sm" data-bs-dismiss="modal">Close</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="rgDataDiv" style="overflow-y:scroll;width:100%;height:140px;">
-                                    <table style="width:100%;table-layout:fixed;overflow:hidden;empty-cells:show;">
-                                        <colgroup>
-                                            <col>
-                                            <col>
-                                            <col>
+                            </div>
+                            <br />
+                            <div style="display:flex">
 
-                                            <col style="width:60px">
-                                        </colgroup>
-                                        <thead style="display:none;">
+                                <div style="width:600px; border:1px solid; border-radius:10px; margin-left:8px; height:200px">
+
+                                    <div style="background-color: black; color: white; border-radius: 10px; display:flex">
+                                        <p style="margin:0 5px">Registration Setting </p>
+                                    </div>
+
+
+
+                                    <div style="margin-top:10px">
+                                        <table style="margin-left: 10px;width: 98%">
                                             <tr>
-                                                <th scope="col"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @if (Model.GlobalSettings.Count() == 0)
-                                            {
+                                                <td style="padding-left: 3px">
+                                                    <div class="RadGrid RadGrid_Metro" style="width:98%;" tabindex="0">
+                                                        <div class="rgHeaderWrapper">
+                                                            <div class="rgHeaderDiv" style="overflow: hidden; margin-right: 7px;">
 
-                                                <tr>
-                                                    <td colspan="4">
-                                                        NO RECORD !!!
-                                                    </td>
-                                                </tr>
-                                            }
-                                            else
-                                            {
-                                                foreach (var item in Model.RegistrationSettings)
-                                                {
+                                                                <table style="width:97%;table-layout:fixed;overflow:hidden;empty-cells:show;background-color:black;color:white;">
+                                                                    <colgroup>
+                                                                        <col>
+                                                                        <col>
+                                                                        <col>
+                                                                        <col style="width:60px">
+                                                                    </colgroup>
+                                                                    <thead>
+                                                                        <tr style="background-color:black;color:white;">
+                                                                            <th style="text-align:center;">
+                                                                                @Html.DisplayNameFor(m => Model.RegistrationSettings.FirstOrDefault().RegistrationLevelID)
+                                                                            </th>
+                                                                            <th style="text-align: center;">
+                                                                                @Html.DisplayNameFor(m => Model.RegistrationSettings.FirstOrDefault().Networking)
+                                                                            </th>
+                                                                            <th style="text-align: center;">
+                                                                                @Html.DisplayNameFor(m => Model.RegistrationSettings.FirstOrDefault().Coupons)
+                                                                            </th>
+                                                                            <th valign="top" style="text-align:center;">Edit</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody style="display:none;"><tr><td colspan="4"></td></tr></tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="rgDataDiv" style="overflow-y:scroll;width:100%;height:140px;">
+                                                            <table style="width:100%;table-layout:fixed;overflow:hidden;empty-cells:show;">
+                                                                <colgroup>
+                                                                    <col>
+                                                                    <col>
+                                                                    <col>
 
-                                                    <tr style="height:25px">
-                                                        <td style="text-align: center;">
-                                                            @Html.DisplayFor(modelItem => item.RegistrationLevelID)
-                                                        </td>
-                                                        <td style="text-align: center; overflow-x:hidden">
-                                                            @Html.DisplayFor(modelItem => item.Networking)
-                                                        </td>
-                                                        <td style="text-align: center; overflow-x: hidden
+                                                                    <col style="width:60px">
+                                                                </colgroup>
+                                                                <thead style="display:none;">
+                                                                    <tr>
+                                                                        <th scope="col"></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @if (Model.GlobalSettings.Count() == 0)
+                                                                    {
+
+                                                                        <tr>
+                                                                            <td colspan="4">
+                                                                                NO RECORD !!!
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        foreach (var item in Model.RegistrationSettings)
+                                                                        {
+
+                                                                            <tr style="height:25px">
+                                                                                <td style="text-align: center;">
+                                                                                    @Html.DisplayFor(modelItem => item.RegistrationLevelID)
+                                                                                </td>
+                                                                                <td style="text-align: center; overflow-x:hidden">
+                                                                                    @Html.DisplayFor(modelItem => item.Networking)
+                                                                                </td>
+                                                                                <td style="text-align: center; overflow-x: hidden
 
 ">
-                                                            @Html.DisplayFor(modelItem => item.Coupons)
-                                                        </td>
-                                                        <td style="text-align: center;">
-                                                            <a onclick="editRegistrationSetting(this)" data-type="@item.RegistrationLevelID" data-Id="@item.Id" data-Networking="@item.Networking" data-Coupon="@item.Coupons" style="border:hidden; background:white"><img src="~/Images/gridgray.png" width="22" /></a>
-                                                        </td>
-                                                    </tr>
-                                                }
-                                            }
+                                                                                    @Html.DisplayFor(modelItem => item.Coupons)
+                                                                                </td>
+                                                                                <td style="text-align: center;">
+                                                                                    <a onclick="editRegistrationSetting(this)" data-type="@item.RegistrationLevelID" data-Id="@item.Id" data-Networking="@item.Networking" data-Coupon="@item.Coupons" style="border:hidden; background:white"> <i class="fa fa-edit" style="color:orange"></i></a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        }
+                                                                    }
 
-                                        </tbody>
+                                                                </tbody>
 
-                                    </table>
-                                </div>
+                                                            </table>
+                                                        </div>
 
-                            </div>
+                                                    </div>
 
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <button id="editRegistrationSettingModal" data-bs-toggle="modal" data-bs-target="editRegistrationModal" style="display:none"></button>
-
-            <div id="editRegistrationModal" class="modal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-
-                        <!-- Modal Header -->
-                        <div class="modal-header">
-                            <h4 class="modal-title" id="RegistrationSettingName"></h4>
-
-                        </div>
-                        <!-- Modal body -->
-                        <div class="modal-body">
-
-                            <label for="updateValueGlobal" class="col-md-3 col-form-label">Networking:</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" id="updateRegistrationNetworking">
-                            </div>
-                            <br />
-                            <br />
-                            <label for="updateValueGlobal" class="col-md-3 col-form-label">Coupons:</label>
-                            <input type="checkbox" style="margin-left:15px" id="updateRegistrationCoupon" />
-                            <input type="text" class="form-control-plaintext" id="updateRegistrationId" style="display:none">
-
-                        </div>
-
-
-                        <br />
-                        <!-- Modal footer -->
-                        <div class="modal-footer">
-                            <button id="updateRegistrationBtn" type="submit" class="btn btn-success" onclick="updateEntryRegistration()">Update</button>
-                            <button id="hideEditModalBtn" type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-
-
-        <div style="width: 30%;border:1px solid; border-radius: 2%; margin-left: 22px; height: 200px">
-
-            <div style="background-color: deepskyblue; color: white; border-radius: 10%; display:flex">
-                <p style="margin:0 5px">Event Role </p>
-            </div>
-
-            <div style="margin-top:10px">
-                <table style="margin-left: 10px;width: 98%">
-                    <tr>
-                        <td style="padding-left: 3px">
-                            <div class="RadGrid RadGrid_Metro" style="width:98%;" tabindex="0">
-                                <div class="rgHeaderWrapper">
-                                    <div class="rgHeaderDiv" style="overflow: hidden; margin-right: 7px;">
-
-                                        <table style="width:97%;table-layout:fixed;overflow:hidden;empty-cells:show;background-color:deepskyblue;color:white;">
-                                            <colgroup>
-                                                <col style="width:20px">
-                                                <col>
-                                                <col style="width:60px">
-
-
-                                            </colgroup>
-                                            <thead>
-                                                <tr style="background-color:deepskyblue;color:white;">
-                                                    <th style="text-align:center;">
-                                                        @Html.DisplayNameFor(m => Model.EventRoles.FirstOrDefault().Id)
-                                                    </th>
-                                                    <th style="text-align: center;">
-                                                        @Html.DisplayNameFor(m => Model.EventRoles.FirstOrDefault().Role)
-                                                    </th>
-
-                                                    <th valign="top" style="text-align:center;">Edit</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody style="display:none;"><tr><td colspan="3"></td></tr></tbody>
+                                                </td>
+                                            </tr>
                                         </table>
                                     </div>
+                                    <button id="editRegistrationSettingModal" data-bs-toggle="modal" data-bs-target="editRegistrationModal" style="display:none"></button>
+
+                                    <div id="editRegistrationModal" class="modal">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" id="RegistrationSettingName"></h4>
+
+                                                </div>
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+
+                                                    <label for="updateValueGlobal" class="col-md-3 col-form-label">Networking:</label>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control" id="updateRegistrationNetworking">
+                                                    </div>
+                                                    <br />
+                                                    <br />
+                                                    <label for="updateValueGlobal" class="col-md-3 col-form-label">Coupons:</label>
+                                                    <input type="checkbox" style="margin-left:15px" id="updateRegistrationCoupon" />
+                                                    <input type="text" class="form-control-plaintext" id="updateRegistrationId" style="display:none">
+
+                                                </div>
+
+
+                                                <br />
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <button id="updateRegistrationBtn" type="submit" class=" brdr-1 btn-sm" onclick="updateEntryRegistration()">Update</button>
+                                                    <button id="hideEditModalBtn" type="button" class="brdr-1 btn-sm" data-bs-dismiss="modal">Close</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
-                                <div class="rgDataDiv" style="overflow-y:scroll;width:100%;height:140px;">
-                                    <table style="width:100%;table-layout:fixed;overflow:hidden;empty-cells:show;">
-                                        <colgroup>
-                                            <col style="width:20px">
-                                            <col>
-                                            <col style="width:60px">
-                                        </colgroup>
-                                        <thead style="display:none;">
+
+
+
+                                <div style="width:600px; border:1px solid; border-radius:10px; margin-left:40px; height:200px">
+
+                                    <div style="background-color: black; color: white; border-radius: 10px; display:flex">
+                                        <p style="margin:0 5px">Event Role </p>
+                                    </div>
+
+                                    <div style="margin-top:10px">
+                                        <table style="margin-left: 10px;width: 98%">
                                             <tr>
-                                                <th scope="col"></th>
+                                                <td style="padding-left: 3px">
+                                                    <div class="RadGrid RadGrid_Metro" style="width:98%;" tabindex="0">
+                                                        <div class="rgHeaderWrapper">
+                                                            <div class="rgHeaderDiv" style="overflow: hidden; margin-right: 7px;">
+
+                                                                <table style="width:97%;table-layout:fixed;overflow:hidden;empty-cells:show;background-color:black;color:white;">
+                                                                    <colgroup>
+                                                                        <col style="width:20px">
+                                                                        <col>
+                                                                        <col style="width:60px">
+
+
+                                                                    </colgroup>
+                                                                    <thead>
+                                                                        <tr style="background-color:black;color:white;">
+                                                                            <th style="text-align:center;">
+                                                                                @Html.DisplayNameFor(m => Model.EventRoles.FirstOrDefault().Id)
+                                                                            </th>
+                                                                            <th style="text-align: center;">
+                                                                                @Html.DisplayNameFor(m => Model.EventRoles.FirstOrDefault().Role)
+                                                                            </th>
+
+                                                                            <th valign="top" style="text-align:center;">Edit</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody style="display:none;"><tr><td colspan="3"></td></tr></tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="rgDataDiv" style="overflow-y:scroll;width:100%;height:140px;">
+                                                            <table style="width:100%;table-layout:fixed;overflow:hidden;empty-cells:show;">
+                                                                <colgroup>
+                                                                    <col style="width:20px">
+                                                                    <col>
+                                                                    <col style="width:60px">
+                                                                </colgroup>
+                                                                <thead style="display:none;">
+                                                                    <tr>
+                                                                        <th scope="col"></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @if (Model.GlobalSettings.Count() == 0)
+                                                                    {
+
+                                                                        <tr>
+                                                                            <td colspan="3">
+                                                                                NO RECORD !!!
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+
+                                                                    else
+                                                                    {
+                                                                        foreach (var item in Model.EventRoles)
+                                                                        {
+
+                                                                            <tr style="height:25px">
+                                                                                <td style="text-align: center;">
+                                                                                    @Html.DisplayFor(modelItem => item.Id)
+                                                                                </td>
+                                                                                <td style="text-align: center; overflow-x:hidden">
+                                                                                    @Html.DisplayFor(modelItem => item.Role)
+                                                                                </td>
+                                                                                <td style="text-align: center;">
+                                                                                    <a onclick="editEventRolex(this)" data-role="@item.Role" data-Id="@item.Id" data-SecGrp="@item.SecurityRole" style="border:hidden; background:white"> <i class="fa fa-edit" style="color:orange"></i></a>
+                                                                                </td>
+
+                                                                            </tr>
+                                                                        }
+                                                                    }
+
+                                                                </tbody>
+
+                                                            </table>
+                                                        </div>
+
+                                                    </div>
+
+                                                </td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            @if (Model.GlobalSettings.Count() == 0)
-                                            {
+                                        </table>
+                                    </div>
 
-                                                <tr>
-                                                    <td colspan="3">
-                                                        NO RECORD !!!
-                                                    </td>
-                                                </tr>
-                                            }
 
-                                            else
-                                            {
-                                                foreach (var item in Model.EventRoles)
-                                                {
+                                    <button id="editEventRoleModal" data-bs-toggle="modal" data-bs-target="editEventModal" style="display:none"></button>
 
-                                                    <tr style="height:25px">
-                                                        <td style="text-align: center;">
-                                                            @Html.DisplayFor(modelItem => item.Id)
-                                                        </td>
-                                                        <td style="text-align: center; overflow-x:hidden">
-                                                            @Html.DisplayFor(modelItem => item.Role)
-                                                        </td>
-                                                        <td style="text-align: center;">
-                                                            <a onclick="editEventRolex(this)" data-role="@item.Role" data-Id="@item.Id" data-SecGrp="@item.SecurityRole" style="border:hidden; background:white"><img src="~/Images/gridgray.png" width="22" /></a>
-                                                        </td>
+                                    <div id="editEventModal" class="modal">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                @*Modal Header*@
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" id="EventRoleName">Edit Event Role</h4>
 
-                                                    </tr>
-                                                }
-                                            }
+                                                </div>
+                                                @*Modal body*@
+                                            <div class="modal-body">
 
-                                        </tbody>
+                                                <label for="Role" class="col-md-3 col-form-label">New Role:</label>
+                                                <div class="col-md-8">
+                                                    @Html.DropDownList("Role", new SelectList(ViewBag.SecurityRole, "Text", "Value"), "Security Group:", new { @class = "form-control", style = "height:40px;margin-left:2px;border-radius: 5px; margin-top:10px; width:500px" , @onChange = "SelectedValue(this)", required = "required" })
+                                                </div>
+                                                <br />
+                                                <br />
 
-                                    </table>
+                                                <input type="text" class="form-control-plaintext" id="updateEventId" name="Id" style="display:none">
+
+                                            </div>
+
+
+                                                <br />
+                                                @*Modal footer*@
+                                                <div class="modal-footer">
+                                                    <button class="hidden" id="updateRegistrationBtn" type="submit" onclick="updateEntryRole(this);">Update</button>
+                                                    <button id="hideEditModalBtn" type="button"  class=" brdr-1 btn-sm" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
 
+
+                                @*<div style="width: 30%; border: 1px solid; border-radius: 2%; margin-left: 22px; height: 200px"></div>*@
                             </div>
-
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-
-            <button id="editEventRoleModal" data-bs-toggle="modal" data-bs-target="editEventModal" style="display:none"></button>
-
-            <div id="editEventModal" class="modal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        @*Modal Header*@
-                        <div class="modal-header">
-                            <h4 class="modal-title" id="EventRoleName"></h4>
-
-                        </div>
-                        @*Modal body*@
-                        <div class="modal-body">
-
-                            
-                            <div class="col-md-8">
-                                
-                                @Html.DropDownList("updateEventSecurityRole", new SelectList(ViewBag.SecurityRole, "Value", "Text"), "Security Group:", new { @class = "form-control", style = "height:40px;margin-left:10px;border-radius: 5px; margin-top:10px; width:500px" })
-                            </div>
-                            <br />
-                            <br />
-                            
-                            <input type="text" class="form-control-plaintext" id="updateEventId" style="display:none">
-
-                        </div>
-
-
-                        <br />
-                        @*Modal footer*@
-                        <div class="modal-footer">
-                            <button id="updateRegistrationBtn" type="submit" class="btn btn-success" onclick="updateEntryRegistration()">Update</button>
-                            <button id="hideEditModalBtn" type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                        </div>
 
                     </div>
                 </div>
             </div>
-
         </div>
-
-
-        <div style="width: 30%; border: 1px solid; border-radius: 2%; margin-left: 22px; height: 200px"></div>
-    </div>
-
-</div>
-
+    </section>
+</body>
 <style>
 
     tr:nth-child(even) {
@@ -638,6 +654,16 @@
 
     .RoleTableId {
         display: none;
+    }
+    .excel {
+        background: orange;
+        
+        color: #fff;
+        border-radius: 50px;
+        margin-left: 5px;
+    }
+    .btn-sm:hover{
+        color:black;
     }
 </style>
 
@@ -784,23 +810,38 @@
         button.click();
     }
 
-
+    function ExportToExcelGlobalSetting()
+    {
+        window.location.href = "/MasterPage/DownloadExcel";
+    }
     function createNewEntry() {
+        if ($('#newName').val().trim() == "") {
+            alert("There is no value in textbox");
+            return false;
+        }
         var x = document.getElementById("newName").value;
+       
         var y = document.getElementById("tableRoleDropDown").value;
 
         window.location.href = "/MasterPage/AddNewEntry?RoleTableId=" + y + "&NewName=" + x;
     }
 
     function updateEntry() {
+        if ($('#updateName').val().trim() == "") {
+            alert("There is no value in textbox");
+            return false;
+        }
         var x = document.getElementById("updateName").value;
         var y = document.getElementById("updateId").value;
         var z = document.getElementById("updateTableId").value;
-
         window.location.href = "/MasterPage/EditEntry?updateName=" + x + "&updateId=" + y + "&updateTableId=" + z;
     }
 
     function updateEntryGlobal() {
+        if ($('#updateValueGlobal').val().trim() == "") {
+            alert("There is no value in textbox");
+            return false;
+        }
         var x = document.getElementById("updateGlobalId").value;
         var y = document.getElementById("updateValueGlobal").value;
 
@@ -809,7 +850,19 @@
 
 
     function editEventRolex(d) {
+        document.getElementById("Role").value = d.getAttribute("data-role");
+        document.getElementById("updateEventId").value = d.getAttribute("data-Id");
         document.getElementById("editEventRoleModal").click();
     }
-
+    function updateEntryRole(d) {
+        var x = document.getElementById("updateEventId").value;  
+        window.location.href = "/MasterPage/EditEventRole?id=" + x + "&role=" + d;
+    }
+    function SelectedValue(ddlObject) {
+        //Selected value of dropdownlist  
+        var selectedValue = ddlObject.value;
+        //Selected text of dropdownlist  
+        var selectedText = ddlObject.options[ddlObject.selectedIndex].innerHTML;
+        updateEntryRole(selectedText).click();
+    }  
 </script>

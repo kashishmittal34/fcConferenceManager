@@ -6,6 +6,10 @@ using System.Web.Mvc;
 using fcConferenceManager.Models.Portolo;
 using OfficeOpenXml;
 using System.IO;
+using System.Data;
+using OfficeOpenXml.Table;
+using MAGI_API.Models;
+
 namespace fcConferenceManager.Controllers.Portolo
 {
 
@@ -40,7 +44,7 @@ namespace fcConferenceManager.Controllers.Portolo
                 RegistrationSettings = dataRegistrationSetting,
                 EventRoles = dataEventRole
             };
-            return View(masterTable);
+            return View("~/Views/Portolo/MasterPage/MasterPage.cshtml", masterTable);
         }
         public ActionResult ExportToExcel(int role)
         {
@@ -87,7 +91,7 @@ namespace fcConferenceManager.Controllers.Portolo
 
             List<string> tableName = repo.findTableLookUP(tID);
 
-            bool ans = repo.EditEntryLookUp(eID, updateName, tableName[0]);
+            bool ans = repo.EditEntryLookUp(eID, updateName, tableName[0], tableName[1]);
 
             if (ans)
             {
@@ -155,6 +159,49 @@ namespace fcConferenceManager.Controllers.Portolo
 
             return RedirectToAction("MasterPage");
         }
+        public ActionResult EditEventRole(int id,string role)
+        {
+            MasterPageRepo repo = new MasterPageRepo();
+            bool ans = repo.EditDataEvent(id, role);
 
+            return RedirectToAction("MasterPage");
+        }
+        public ActionResult DownloadExcel()
+        {
+            string reportname = $"ConfigurationSettings_{DateTime.Now.ToString("dddd, dd MMMM yyyy")}.xlsx";
+            MasterPageRepo repo = new MasterPageRepo();
+            var list = repo.getDataGlobalSetting();
+            DataTable dt = new DataTable();
+            dt.Clear();
+            dt.Columns.Add("S.No");
+            dt.Columns.Add("Setting");
+            dt.Columns.Add("Value");
+            if (list.Count > 0)
+            {
+                foreach (var item in list)
+                {
+                    DataRow dataRow = dt.NewRow();
+                    dataRow["S.No"] = item.Id;
+                    dataRow["Setting"] = item.Setting;
+                    dataRow["Value"] = item.Value;
+                    dt.Rows.Add(dataRow);
+                }
+                var exportbytes = ExportingExcel(dt, reportname);
+                return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
+            }
+            else
+            {
+                TempData["Message"] = "No Data to Export";
+                return RedirectToAction("MasterPage", "MasterPage");
+            }
+        }
+        public byte[] ExportingExcel(DataTable table, string filename)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            ExcelPackage pack = new ExcelPackage();
+            ExcelWorksheet ws = pack.Workbook.Worksheets.Add(filename);
+            ws.Cells["A2"].LoadFromDataTable(table, true, TableStyles.Medium12);
+            return pack.GetAsByteArray();
+        }
     }
 }
