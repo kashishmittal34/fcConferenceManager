@@ -18,7 +18,7 @@ using System.IO;
 using fcConferenceManager.Models.Portolo;
 using System.Data.SqlClient;
 using OfficeOpenXml;
-using OfficeOpenXml.Table;					
+using OfficeOpenXml.Table;
 //using PagedList.Mvc;
 //using PagedList;					
 
@@ -983,9 +983,15 @@ namespace fcConferenceManager.Controllers.Portolo
             }
             return uploadlist;
         }
-        public JsonResult GetFilePath(int? id)
+        public ActionResult GetFilePath(int? id)
         {
             var customer = GetFileDetails().Find(x => x.FileId.Equals(id));
+            string fullName = Server.MapPath("~" + customer.FileUrl);
+            if (!System.IO.File.Exists(fullName))
+            {
+                TempData["AlertMessage"] = "Sorry! This file does not exist";
+                return RedirectToAction("MyFiles");
+            }
             return Json(customer, JsonRequestBehavior.AllowGet);
         }
       public ActionResult ProcessLibrary(ProcessLibrary library,string search)
@@ -1297,6 +1303,11 @@ namespace fcConferenceManager.Controllers.Portolo
         {
 
             string fullName = Server.MapPath("~" + filePath);
+            if(!System.IO.File.Exists(fullName))
+            {
+                TempData["AlertMessage"] = "Sorry! This file does not Exist!";
+                return RedirectToAction("MyFiles");
+            }
 
             var fileName = Path.GetFileName(fullName);
             byte[] fileBytes = GetFile(fullName);
@@ -1327,7 +1338,7 @@ namespace fcConferenceManager.Controllers.Portolo
         }
          public ActionResult Download()
         {
-            string reportname = $"ProcessLibrary_{DateTime.Now.ToString("yyyyMMddHHmmssfff")}.xlsx";
+            string reportname = string.Format("ProcessLibrary_{0:yyMMdd_HH.mm}", DateTime.Now);
             var list = GetProcessDetails();
 											
             DataTable dt = new DataTable();
@@ -1348,8 +1359,10 @@ namespace fcConferenceManager.Controllers.Portolo
                     dataRow["Process Name"] = item.Process;
                     dt.Rows.Add(dataRow);
                 }
-                var exportbytes = ExporttoExcel(dt, reportname);
-                return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
+
+                ExportToExcel(dt, reportname, "Portolo_ProcessLibrary");
+                return Redirect(Request.UrlReferrer.ToString());
+          
             }
             else
             {
@@ -1493,7 +1506,7 @@ namespace fcConferenceManager.Controllers.Portolo
 
         public DataTable TaskList_Select_All1(TaskListRequest request)
         {
-            int status = request.status != null ? Convert.ToInt32(request.status) : 0;
+            int status = request.status != 0 ? Convert.ToInt32(request.status) : 0;
 
             SqlCommand cmd = new SqlCommand("TaskList_All", con);
             cmd.CommandType = CommandType.StoredProcedure;

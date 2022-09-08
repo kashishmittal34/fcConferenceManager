@@ -22,6 +22,7 @@ namespace fcConferenceManager.Controllers.Portolo
         public ActionResult ContactUs(PortoloContactUs PortoloContactUs)
         {
             PortoloContactUs.ContactList = GetContactDetails();
+            ViewBag.ContactImage =  Session["AccountImage"].ToString();           
             return View("~/Views/Portolo/Contact/ContactUs.cshtml", PortoloContactUs.ContactList);
         }
         private List<PortoloContactUs> GetContactDetails()
@@ -55,6 +56,7 @@ namespace fcConferenceManager.Controllers.Portolo
         {
             PortoloContactUs.ContactList = GetContactDetails();
             ViewBag.Message = TempData["Message"];
+            ViewBag.ContactImage = Session["AccountImage"].ToString();
             return View("~/Views/Portolo/Contact/PortoloPublicStaff.cshtml", PortoloContactUs);
         }
         [HttpPost]

@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Office.CustomUI;
+﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Office.CustomUI;
 using fcConferenceManager.Models;
 using fcConferenceManager.Models.Portolo;
 using MAGI_API.Models;
@@ -70,7 +71,7 @@ namespace fcConferenceManager.Controllers.Portolo
                 }
                 AccountImg.SaveAs(path);
                 model.AccountImg = filepath;
-                TempData["Message"] = "Uploaded Successfully !!";
+                TempData["Message"] = "Account Image Uploaded!";
             }
             else
             {
@@ -103,7 +104,7 @@ namespace fcConferenceManager.Controllers.Portolo
                 }
                 OrganizationImg.SaveAs(path);
                 model.OrganizationImg = filepath;
-                TempData["Message"] = "Uploaded Successfully !!";
+                TempData["Message"] = "Organization Image Uploaded!";
             }
             else
             {
@@ -262,17 +263,18 @@ namespace fcConferenceManager.Controllers.Portolo
                 }
             }
         }
-        public byte[] ExporttoExcel(DataTable table, string filename)
-        {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            ExcelPackage pack = new ExcelPackage();
-            ExcelWorksheet ws = pack.Workbook.Worksheets.Add(filename);
-            ws.Cells["A2"].LoadFromDataTable(table, true, TableStyles.Medium12);
-            return pack.GetAsByteArray();
-        }
+        //public byte[] ExporttoExcel(DataTable table, string filename)
+        //{
+        //    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        //    ExcelPackage pack = new ExcelPackage();
+        //    ExcelWorksheet ws = pack.Workbook.Worksheets.Add(filename);
+        //    ws.Cells["A2"].LoadFromDataTable(table, true, TableStyles.Medium12);
+        //    return pack.GetAsByteArray();
+        //}
         public ActionResult Download()
         {
-            string reportname = $"ConfigurationSettings_{DateTime.Now.ToString("dddd, dd MMMM yyyy")}.xlsx";
+            string reportname = string.Format("ConfigurationSettings_{0:yyMMdd_HH.mm}", DateTime.Now);
+
             var list = GetSettingDetails();
             DataTable dt = new DataTable();
             dt.Clear();
@@ -289,13 +291,33 @@ namespace fcConferenceManager.Controllers.Portolo
                     dataRow["Value"] = item.SettingValue;
                     dt.Rows.Add(dataRow);
                 }
-                var exportbytes = ExporttoExcel(dt, reportname);
-                return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
+                ExportToExcel(dt, reportname,"ConfigurationSettingsList");
+                return Redirect(Request.UrlReferrer.ToString());
+                //return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
             }
             else
             {
                 TempData["Message"] = "No Data to Export";
                 return RedirectToAction("ConfigurationSettings", "Configuration");
+            }
+        }
+        private void ExportToExcel(DataTable dt, string fileName, string sheetname)
+        {
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dt, sheetname);
+                Response.Clear();
+                Response.Buffer = true;
+                Response.Charset = "";
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("content-disposition", "attachment;filename=" + fileName.ToString() + ".xlsx");
+                using (MemoryStream MyMemoryStream = new MemoryStream())
+                {
+                    wb.SaveAs(MyMemoryStream);
+                    MyMemoryStream.WriteTo(Response.OutputStream);
+                    Response.Flush();
+                    Response.End();
+                }
             }
         }
         public PartialViewResult PublicPage(PublicContentPage publicContent)

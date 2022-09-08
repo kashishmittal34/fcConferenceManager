@@ -121,8 +121,13 @@ namespace fcConferenceManager.Controllers
                         Session["LastName"] = response.lastname;
                     }
                     if (redirectTo != null) return Redirect("~/" + redirectTo);
-                   
+                      
                      Session["AccountImage"] = configuration.GetAccountName();
+                    
+                    if (!System.IO.File.Exists(response.Uimg))
+                    {
+                        response.Uimg = Session["AccountImage"].ToString();
+                    }
                     return Redirect("~/Dashboard/Portolo");
 
                 }

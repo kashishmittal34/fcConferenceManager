@@ -414,14 +414,20 @@ namespace fcConferenceManager.Controllers
                         if (reader["Uimg"].ToString() == null || reader["Uimg"].ToString() == "")
                         {
                             response.Uimg = baseurl + "/UserDocuments/emptyimage.png";//"https://localhost:44376/"+reader["Uimg"].ToString();
-                            response.Uimg = Session["AccountImage"].ToString();
-
+                            if (!System.IO.File.Exists(response.Uimg))
+                            {
+                                response.Uimg = Session["AccountImage"].ToString();
+                            }
                         }
                         else
                         {
                             string filename = Id + "_img.jpg";
                             //  baseurl + "Accountimages/" + dr["imgpath"].ToString();
                             response.Uimg = baseurl + "/Accountimages/" + filename;
+                            if (!System.IO.File.Exists(response.Uimg))
+                            {
+                                response.Uimg = Session["AccountImage"].ToString();
+                            }
                         }
                         if (reader["CV"].ToString() == null || reader["CV"].ToString() == "")
                         {

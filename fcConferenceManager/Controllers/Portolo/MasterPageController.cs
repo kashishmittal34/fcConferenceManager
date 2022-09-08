@@ -9,6 +9,8 @@ using System.IO;
 using System.Data;
 using OfficeOpenXml.Table;
 using MAGI_API.Models;
+using StackExchange.Redis;
+using ClosedXML.Excel;
 
 namespace fcConferenceManager.Controllers.Portolo
 {
@@ -168,7 +170,8 @@ namespace fcConferenceManager.Controllers.Portolo
         }
         public ActionResult DownloadExcel()
         {
-            string reportname = $"ConfigurationSettings_{DateTime.Now.ToString("dddd, dd MMMM yyyy")}.xlsx";
+           
+            string reportname = string.Format("MasterGlobalSettings_{0:yyMMdd_HH.mm}", DateTime.Now);
             MasterPageRepo repo = new MasterPageRepo();
             var list = repo.getDataGlobalSetting();
             DataTable dt = new DataTable();
@@ -186,8 +189,9 @@ namespace fcConferenceManager.Controllers.Portolo
                     dataRow["Value"] = item.Value;
                     dt.Rows.Add(dataRow);
                 }
-                var exportbytes = ExportingExcel(dt, reportname);
-                return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
+                ExportToExcel(dt, reportname, "MasterGlobalSettings");
+                // return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
+                return Redirect(Request.UrlReferrer.ToString());
             }
             else
             {
@@ -195,13 +199,25 @@ namespace fcConferenceManager.Controllers.Portolo
                 return RedirectToAction("MasterPage", "MasterPage");
             }
         }
-        public byte[] ExportingExcel(DataTable table, string filename)
+       
+        private void ExportToExcel(DataTable dt, string fileName, string sheetname)
         {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            ExcelPackage pack = new ExcelPackage();
-            ExcelWorksheet ws = pack.Workbook.Worksheets.Add(filename);
-            ws.Cells["A2"].LoadFromDataTable(table, true, TableStyles.Medium12);
-            return pack.GetAsByteArray();
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dt, sheetname);
+                Response.Clear();
+                Response.Buffer = true;
+                Response.Charset = "";
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("content-disposition", "attachment;filename=" + fileName.ToString() + ".xlsx");
+                using (MemoryStream MyMemoryStream = new MemoryStream())
+                {
+                    wb.SaveAs(MyMemoryStream);
+                    MyMemoryStream.WriteTo(Response.OutputStream);
+                    Response.Flush();
+                    Response.End();
+                }
+            }
         }
     }
 }

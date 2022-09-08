@@ -2556,8 +2556,9 @@
     <Content Include="Views\Portolo\Contact\PortoloPublicStaff.cshtml" />
     <Content Include="Views\Portolo\Account\ResetPassword.cshtml" />
     <Content Include="Views\Portolo\Security\SecurityGroup.cshtml" />
-    <Content Include="Views\Portolo\EditConfigurationText.cshtml" />
+    <Content Include="Views\Portolo\EditConfigurationTexting.cshtml" />
     <Content Include="Scripts\tinymce\langs\README.md" />
+    <Content Include="Views\Portolo\EditConfigurationText.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
