@@ -110,7 +110,7 @@
                                                         <i class="fa-solid fa-magnifying-glass"> </i>
                                                     </button>
                                                     &nbsp;
-                                                    <a style="border: hidden;" onclick="location.href='@Url.Action("MyFiles", "Portolo")';return false;" title="Reset">
+                                                    <a style="border: hidden;" href="~/Portolo/MyFiles" @*onclick="location.href='@Url.Action("MyFiles", "Portolo")"*@ title="Reset">
                                                         <i class="fa-solid fa-arrows-rotate"></i>
                                                     </a>
                                                 </div>
@@ -139,7 +139,7 @@
                          grid.Column(header: "Copy Link", format:
                                             @<text>
                                                 <input type="hidden" value="@ViewBag.apppath" id="sourcePath" />
-                                                <a class="clipboard" onclick="funcCopyToClipboard(@item.FileId)"><img src="~/Images/Icons/Copylnk.png" style="width: 30px; height: 20px; align-content:flex-start" /></a>
+                                                <a class="clipboard" href="#" onclick="funcCopyToClipboard(@item.FileId)"><img src="~/Images/Icons/Copylnk.png" style="width: 30px; height: 20px; align-content:flex-start" /></a>
                                             </text>),
                    grid.Column(header: "Delete", format:
                                         @<text>

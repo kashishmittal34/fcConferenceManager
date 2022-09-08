@@ -88,7 +88,7 @@
             color : darkorange;
         }
         .btn:hover{
-            color:blue;
+            color:black;
         }
     </style>
 </head>
@@ -118,8 +118,8 @@
                             <div class="control-icons">
                                 <h5>Search</h5>
 
-                                <input type="text" name="search" class="form-control form-control-sm d-inline-block" placeholder="Process Name" value=@ViewBag.search />
-
+                                @*<input type="text" name="search" class="form-control d-inline-block" placeholder="Process Name" value=@ViewBag.search />*@
+                                @Html.TextBox("search", null, new { @class = "form-control d-inline-block", @placeholder = "Process Name" })
 
                                 <button type="submit" value="Search" title="Search" style="border-color: white;border: none;background-color:white;">
                                     <i class="fa-solid fa-magnifying-glass"> </i>
@@ -163,7 +163,7 @@
                                                  grid.Column(header: "Actions", format:
                                                                                         @<text>
 
-                                                                                            <a onclick="GetDetails(@item.pkey)">
+                                                                                            <a  href="#" onclick="GetDetails(@item.pkey)">
 
                                                                                                 <i class="fa fa-edit"></i>
                                                                                             </a>
