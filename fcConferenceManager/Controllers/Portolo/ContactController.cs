@@ -69,7 +69,7 @@ namespace fcConferenceManager.Controllers.Portolo
             }
             if (InsertContact(PortoloContactUs))
             {
-                TempData["Message"] = "Added New Contact Successfully !!";
+                TempData["Message"] = "Added New Contact !!";
                 return RedirectToAction("PublicStaff", "Contact");
             }
             else
@@ -135,7 +135,7 @@ namespace fcConferenceManager.Controllers.Portolo
                     int result = cmd.ExecuteNonQuery();
                     if (result == 1)
                     {
-                        TempData["Message"] = "Contact Values Updated Successfully";
+                        TempData["Message"] = "Contact Values Updated !";
                         ModelState.Clear();
                     }
                     else
@@ -164,7 +164,7 @@ namespace fcConferenceManager.Controllers.Portolo
                     con.Close();
                     if (result == 1)
                     {
-                        TempData["Message"] = "Contact Deleted Successfully";
+                        TempData["Message"] = "Contact  Deleted!";
                         ModelState.Clear();
                     }
                     else

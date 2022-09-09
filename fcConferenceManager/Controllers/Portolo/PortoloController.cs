@@ -872,7 +872,7 @@ namespace fcConferenceManager.Controllers.Portolo
                 if (SaveFile(model))
                 {
                     files.SaveAs(path);
-                    TempData["AlertMessage"] = "Uploaded Successfully !!";
+                    TempData["AlertMessage"] = "File is Uploaded!!";
                     return RedirectToAction("MyFiles", "Portolo");
                 }
                 else
@@ -907,7 +907,7 @@ namespace fcConferenceManager.Controllers.Portolo
 
                     }
                 }
-                TempData["AlertMessage"] = "Deleted Successfully !!";
+                TempData["AlertMessage"] = "File is Deleted!!";
             }
             catch (Exception)
             {
@@ -989,7 +989,7 @@ namespace fcConferenceManager.Controllers.Portolo
             string fullName = Server.MapPath("~" + customer.FileUrl);
             if (!System.IO.File.Exists(fullName))
             {
-                TempData["AlertMessage"] = "Sorry! This file does not exist";
+                TempData["AlertMessage"] = "This file does not exist!";
                 return RedirectToAction("MyFiles");
             }
             return Json(customer, JsonRequestBehavior.AllowGet);
@@ -1029,7 +1029,7 @@ namespace fcConferenceManager.Controllers.Portolo
                 if (SaveProcess(model))
                 {
 
-                    TempData["Message"] = "Added Successfully !!";
+                    TempData["Message"] = "Added new Process !!";
                     return RedirectToAction("ProcessLibrary", "Portolo");
                 }
                 else
@@ -1126,7 +1126,7 @@ namespace fcConferenceManager.Controllers.Portolo
                     con.Close();
                      if (result == 1)
                     {
-                        TempData["Message"] = "Process Deleted Successfully";
+                        TempData["Message"] = "Process Deleted!";
                         ModelState.Clear();
                     }
                     else
@@ -1159,7 +1159,7 @@ namespace fcConferenceManager.Controllers.Portolo
                         int result = cmd.ExecuteNonQuery();
                     if (result == 1)
                     {
-                        TempData["Message"] = "Process Updated Successfully";
+                        TempData["Message"] = "Process Updated!";
                         ModelState.Clear();
                     }
                     else
@@ -1305,7 +1305,7 @@ namespace fcConferenceManager.Controllers.Portolo
             string fullName = Server.MapPath("~" + filePath);
             if(!System.IO.File.Exists(fullName))
             {
-                TempData["AlertMessage"] = "Sorry! This file does not Exist!";
+                TempData["AlertMessage"] = "This file does not Exist!";
                 return RedirectToAction("MyFiles");
             }
 

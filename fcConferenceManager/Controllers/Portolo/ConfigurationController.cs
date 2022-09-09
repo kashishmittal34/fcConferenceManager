@@ -1,10 +1,7 @@
 ﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Office.CustomUI;
 using fcConferenceManager.Models;
 using fcConferenceManager.Models.Portolo;
 using MAGI_API.Models;
-using OfficeOpenXml;
-using OfficeOpenXml.Table;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -17,10 +14,10 @@ using System.Web.Mvc;
 
 namespace fcConferenceManager.Controllers.Portolo
 {
-   
+
     public interface IConfigurationController
     {
-       string GetAccountName();
+        string GetAccountName();
     }
     public class ConfigurationController : Controller, IConfigurationController
     {
@@ -193,7 +190,7 @@ namespace fcConferenceManager.Controllers.Portolo
             {
                 setlist.Add(new ApplicationSetting
                 {
-                    pkey = @dr["PrimaryKey"].ToString(),                  
+                    pkey = @dr["PrimaryKey"].ToString(),
                     SettingID = @dr["SettingID"].ToString(),
                     SettingValue = dr["SettingValue"].ToString(),
                     Id = Convert.ToInt32(@dr["pKey"]),
@@ -228,7 +225,7 @@ namespace fcConferenceManager.Controllers.Portolo
         public JsonResult EditSetting(int id)
         {
             var customer = GetEditDetails().Find(x => x.Id.Equals(id));
-           
+
             return Json(customer, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
@@ -246,7 +243,7 @@ namespace fcConferenceManager.Controllers.Portolo
                     int result = cmd.ExecuteNonQuery();
                     if (result == 1)
                     {
-                        TempData["Message"] = "Setting Value Updated Successfully";
+                        TempData["Message"] = "Setting Value Updated!";
                         ModelState.Clear();
                     }
                     else
@@ -255,7 +252,7 @@ namespace fcConferenceManager.Controllers.Portolo
                         ModelState.Clear();
                     }
                     con.Close();
-                    if(setting.Id <=4)
+                    if (setting.Id <= 4)
                     {
                         return RedirectToAction("ConfigurationSettings");
                     }
@@ -291,7 +288,7 @@ namespace fcConferenceManager.Controllers.Portolo
                     dataRow["Value"] = item.SettingValue;
                     dt.Rows.Add(dataRow);
                 }
-                ExportToExcel(dt, reportname,"ConfigurationSettingsList");
+                ExportToExcel(dt, reportname, "ConfigurationSettingsList");
                 return Redirect(Request.UrlReferrer.ToString());
                 //return File(exportbytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportname);
             }
@@ -321,8 +318,8 @@ namespace fcConferenceManager.Controllers.Portolo
             }
         }
         public PartialViewResult PublicPage(PublicContentPage publicContent)
-        {         
-            publicContent.AboutUs = GetAboutUsContent();    
+        {
+            publicContent.AboutUs = GetAboutUsContent();
             publicContent.TermsOfUse = GetTermsOfUseContent();
             ViewBag.content = Request.QueryString["AboutUs"];
             return PartialView("~/Views/Portolo/Configuration/PublicPage.cshtml", publicContent);
@@ -375,14 +372,14 @@ namespace fcConferenceManager.Controllers.Portolo
             }
             return terms;
         }
-        public ActionResult EditConfigurationText( int?id)
+        public ActionResult EditConfigurationText(int? id)
         {
             var applicationSetting = GetEditDetails().Find(x => x.Id.Equals(id));
             ViewBag.Application = applicationSetting;
             ApplicationSetting application = applicationSetting;
             return View("~/Views/Portolo/EditConfigurationText.cshtml", application);
         }
-       
+
 
     }
 }
